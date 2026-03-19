@@ -1,0 +1,17 @@
+{
+  "name": "research-os",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.6.3",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "dev:web": "corepack pnpm --filter @research-os/web dev",
+    "dev:mobile": "corepack pnpm --filter @research-os/mobile start",
+    "dev": "corepack pnpm -r --parallel --if-present dev",
+    "build": "corepack pnpm -r --if-present build",
+    "lint": "corepack pnpm -r --if-present lint",
+    "typecheck": "corepack pnpm -r --if-present typecheck"
+  }
+}

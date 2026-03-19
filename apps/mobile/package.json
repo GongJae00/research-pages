@@ -1,0 +1,12 @@
+{
+  "name": "@research-os/mobile",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Mobile app placeholder for ResearchPages",
+  "scripts": {
+    "start": "echo Mobile scaffold pending",
+    "build": "echo Mobile scaffold pending",
+    "lint": "echo Mobile scaffold pending",
+    "typecheck": "echo Mobile scaffold pending"
+  }
+}
