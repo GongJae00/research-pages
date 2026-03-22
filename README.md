@@ -1,41 +1,55 @@
 # ResearchPages
 
-ResearchPages is a cross-platform workspace for graduate students, professors, and labs.
+ResearchPages is a web-first platform for graduate students, professors, and labs.
 
-The goal is not a generic note app. The product is a structured operating system for researcher administration and knowledge:
+The goal is not a generic note app. The product focuses on structured researcher administration and reusable knowledge:
 
 - profile and affiliation timeline
-- funding, payroll, scholarship, and project history
+- funding, scholarship, and project history
 - research plan and application document bank
-- paper, PPT template, and portfolio archive
-- lab-level collaboration and future public profile sites
+- paper, presentation template, and portfolio archive
+- lab collaboration and public publishing surfaces
 
-This repository is intentionally starting with a light monorepo skeleton so it can move cleanly from this Windows machine to a Linux machine later.
+This repository uses a portable pnpm monorepo so the same workspace can move cleanly across Linux and Windows environments.
 
-## Chosen direction
+## Current workspace map
 
-- `apps/web`: main workstation app for heavy document and admin workflows
-- `apps/mobile`: companion app for quick lookup, upload, and review on phone
-- `packages/types`: shared schema and contract definitions
-- `packages/ui`: shared design tokens and reusable UI primitives
-- `packages/config`: shared lint and TypeScript configuration
+- `apps/web`: active Next.js product surface for marketing, authenticated workspaces, and public profile or lab pages
+- `apps/mobile`: placeholder package for the future Expo companion app
+- `packages/types`: shared Zod-backed domain schemas and inferred TypeScript types
+- `packages/ui`: reserved for shared design tokens and reusable primitives
+- `packages/config`: reserved for shared lint, TypeScript, and tooling presets
 
-## Recommended stack
+## Implemented today
 
-- frontend web: Next.js + TypeScript
-- mobile: Expo React Native + TypeScript
-- backend: Supabase (Postgres, Auth, Storage, RLS)
-- docs/editor: Tiptap or block editor later, after domain model is stable
-- search: Postgres full-text first, vector search only if it proves useful
+- locale-aware Next.js web app with marketing, authenticated workspace, and public publishing routes
+- profile, affiliations, funding, documents, timetable, and lab workspace screens
+- mock-auth collaboration flow stored in browser storage for UX validation
+- demo preview and access-gated internal review flow for deployed previews
+- shared schema package and Supabase-oriented runtime boundaries for later production wiring
 
-## Why this stack
+## Recommended reading order
 
-- Web is the main experience for document-heavy workflows.
-- Mobile can focus on lookup, capture, and lightweight management.
-- TypeScript monorepo keeps agents and humans aligned in one codebase.
-- Supabase gives a strong default for auth, storage, and row-level security without forcing early DevOps overhead.
-- The structure is portable to Linux and does not depend on Windows-only tooling.
-- The workspace stays intentionally lean until the core product model is proven.
+1. `AGENTS.md`
+2. `docs/00-product-vision.md`
+3. `docs/02-architecture.md`
+4. `docs/03-roadmap.md`
+5. `docs/04-agent-playbook.md`
+6. `docs/09-subagent-quickstart.md`
+7. `docs/10-subagent-prompt-templates.md`
+8. `docs/11-agent-capability-matrix.md`
+9. `docs/12-continuous-improvement-loop.md`
+10. `docs/05-auth-collaboration-slice.md`
+11. `docs/08-repo-exploration.md`
+12. `docs/08-internal-preview.md`
+
+## Development commands
+
+- `corepack pnpm dev:web`
+- `corepack pnpm dev:mobile`
+- `corepack pnpm build`
+- `corepack pnpm lint`
+- `corepack pnpm typecheck`
 
 ## Security stance
 
@@ -48,22 +62,13 @@ Perfect security does not exist. The correct approach is security-first architec
 - secrets kept out of the repo
 - legal review before any external system integration such as IRIS
 
-## Current status
+## Current product direction
 
-This first pass creates the project structure and product documents. It does not install heavy app dependencies yet.
+- The web app remains the primary surface for heavy document and admin workflows.
+- Mobile stays focused on lookup, upload, alerts, and lightweight edits until the core data model is stable.
+- Mock auth and browser storage are deliberate validation steps, not the intended production architecture.
+- Public researcher and lab pages should be derived from structured private data, not managed as separate copy-paste surfaces.
 
-Read these first:
+## Contributor note
 
-- `docs/00-product-vision.md`
-- `docs/01-kickoff-notes.md`
-- `docs/02-architecture.md`
-- `docs/03-roadmap.md`
-
-## Immediate next build step
-
-In the next session, scaffold:
-
-1. a Next.js web app in `apps/web`
-2. an Expo app in `apps/mobile`
-3. shared domain schemas in `packages/types`
-4. Supabase project configuration and first database tables
+Read `docs/04-agent-playbook.md` for the ownership model, `docs/09-subagent-quickstart.md` for the operator workflow, `docs/10-subagent-prompt-templates.md` for copy-paste launch prompts, `docs/11-agent-capability-matrix.md` for skill routing, and `docs/12-continuous-improvement-loop.md` for recurring improvement runs. Together they define the roster, serialized hot files, handoff rules, specialist overlays, and repeatable quality loops for parallel sub-agent work.
