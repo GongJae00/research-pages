@@ -124,7 +124,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
     eyebrow: "Agent control layer",
     title: "Set up your assistant\nand multi-agent team from the homepage",
     body:
-      "Developers can attach local Codex, Claude Code, and Gemini CLI sessions, while the assistant assigns those connections to teams and exposes the operating flow. This becomes the base layer for future fine-tuned or knowledge-grounded school and lab LLM operations.",
+      "Pick a CLI and team, copy the command, and run it locally to reflect connection state and team assignment immediately.",
     assistantLabel: "Dedicated assistant",
     assistantSummary: "Current operating promise",
     directiveLabel: "Current directive",
@@ -135,7 +135,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
     setupBuilderLabel: "Homepage setup builder",
     setupBuilderTitle: "Pick a provider, pick a team, run the command",
     setupBuilderBody:
-      "Choose the CLI and team, copy the command, and run it locally to update the board immediately.",
+      "Choose the CLI and team, then run the generated connect or assign command.",
     connectCommand: "Copy connect command",
     assignCommand: "Copy assign command",
     copied: "Copied",
@@ -447,21 +447,6 @@ export function HomepageAgentControlSection({
                 </Link>
               </div>
             ) : null}
-
-            <div className={styles.setupQuickSummary}>
-              <div className={styles.setupQuickItem}>
-                <span className={styles.metaLabel}>01</span>
-                <p>{copy.chooseProvider}</p>
-              </div>
-              <div className={styles.setupQuickItem}>
-                <span className={styles.metaLabel}>02</span>
-                <p>{copy.connectCommand}</p>
-              </div>
-              <div className={styles.setupQuickItem}>
-                <span className={styles.metaLabel}>03</span>
-                <p>{copy.openBrief}</p>
-              </div>
-            </div>
 
             <div className={styles.stepList}>
               <span className={styles.metaLabel}>{copy.setupStepsLabel}</span>

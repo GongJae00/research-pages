@@ -1282,6 +1282,9 @@ async function runCodexExecutor(team, taskPacket, loopCount, operatorDirective, 
 
   const outputPath = path.join(researchOsStateDir, "codex-autonomy-execution-last.json");
   const prompt = buildExecutionPrompt(team, taskPacket, operatorDirective, workItem);
+  let rawStdout = "";
+  let rawStderr = "";
+  let rawOutputFile = "";
 
   try {
     const { stdout, stderr, outputFile, value } = await runCodexExecWithPrompt(
@@ -1293,6 +1296,9 @@ async function runCodexExecutor(team, taskPacket, loopCount, operatorDirective, 
         maxBuffer: 4 * 1024 * 1024,
       },
     );
+    rawStdout = stdout;
+    rawStderr = stderr;
+    rawOutputFile = outputFile;
 
     const result = value;
     if (isLowQualityExecutionResult(result, workItem)) {
@@ -1345,17 +1351,36 @@ async function runCodexExecutor(team, taskPacket, loopCount, operatorDirective, 
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    const validation = guidance.validationCommands.map((command) => ({
-      label: command,
-      status: "not-run",
-      detail: "Skipped because execution failed before validation.",
-    }));
-    const result = {
-      summary: `${team.name} execution failed before a safe validation packet could be produced.`,
-      operatorBrief: `${team.lead} needs the execution failure reviewed before this lane continues.`,
-      nextAction: "Inspect the execution artifact and restart the bounded slice after the failure is understood.",
-      outcome: "blocked",
-    };
+    const changedFiles = await listDirtyOwnedPaths(guidance.ownedPaths);
+    const validation = changedFiles.length
+      ? await Promise.all(guidance.validationCommands.map((command) => runValidationCommand(command)))
+      : guidance.validationCommands.map((command) => ({
+          label: command,
+          status: "not-run",
+          detail: "Skipped because execution failed before validation.",
+        }));
+    const salvaged = changedFiles.length > 0;
+    const result = salvaged
+      ? {
+          summary: `${team.name} changed owned files but did not return a valid execution packet. Review the bounded diff and validation output before continuing.`,
+          operatorBrief: `${team.lead} completed a bounded slice in ${changedFiles.join(", ")}, but the execution packet was incomplete. The board kept the file changes and attached validation results for review.`,
+          nextAction:
+            validation.some((entry) => entry.status === "failed")
+              ? "Review the changed files and failed validation output before another lane opens."
+              : "Review the changed files, then queue the next bounded slice once the operator is satisfied.",
+          outcome: "changed",
+        }
+      : {
+          summary: `${team.name} execution failed before a safe validation packet could be produced.`,
+          operatorBrief: `${team.lead} needs the execution failure reviewed before this lane continues.`,
+          nextAction: "Inspect the execution artifact and restart the bounded slice after the failure is understood.",
+          outcome: "blocked",
+        };
+    const outcome = salvaged
+      ? validation.some((entry) => entry.status === "failed")
+        ? "failed"
+        : "changed"
+      : "failed";
     const artifactPath = await writeExecutionArtifact({
       loopCount,
       providerId: "codex",
@@ -1363,12 +1388,13 @@ async function runCodexExecutor(team, taskPacket, loopCount, operatorDirective, 
       team,
       prompt,
       result,
-      changedFiles: [],
+      changedFiles,
       validation,
-      outcome: "failed",
+      outcome,
       raw: {
-        stdout: error?.stdout ?? "",
-        stderr: error?.stderr ?? "",
+        stdout: error?.stdout ?? rawStdout ?? "",
+        stderr: error?.stderr ?? rawStderr ?? "",
+        outputFile: rawOutputFile,
       },
       errorMessage: message,
     });
@@ -1379,10 +1405,10 @@ async function runCodexExecutor(team, taskPacket, loopCount, operatorDirective, 
       providerId: "codex",
       providerLabel: "Codex CLI",
       result,
-      changedFiles: [],
+      changedFiles,
       validation,
       artifactPath,
-      outcome: "failed",
+      outcome,
       workItem,
     });
   }
