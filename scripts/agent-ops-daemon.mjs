@@ -75,8 +75,8 @@ const laneGuidance = {
       "apps/web/src/components/sidebar.tsx",
       "apps/web/src/components/language-switcher.tsx",
       "apps/web/src/components/preview-mode-banner.tsx",
-      "apps/web/src/components/agent-operations-control-room.tsx",
-      "apps/web/src/components/agent-operations-dashboard.module.css",
+      "apps/web/src/components/homepage-agent-control-section.tsx",
+      "apps/web/src/components/homepage-agent-control-section.module.css",
     ],
     validation: "Review /ko and /en shell surfaces and avoid route, auth, or contract changes.",
     nonGoals: "Do not touch shared contracts, auth boundaries, or non-shell workspace features.",
@@ -92,7 +92,12 @@ const laneGuidance = {
       "apps/web/src/app/[locale]/profile",
       "apps/web/src/app/[locale]/documents",
       "apps/web/src/app/[locale]/lab",
-      "apps/web/src/components",
+      "apps/web/src/components/profile-workspace.tsx",
+      "apps/web/src/components/document-workspace.tsx",
+      "apps/web/src/components/document-evidence-picker.tsx",
+      "apps/web/src/components/document-intake-panel.tsx",
+      "apps/web/src/components/compact-document-row.tsx",
+      "apps/web/src/components/lab-workspace.tsx",
     ],
     validation: "Improve one real researcher workflow and keep the slice bounded to one surface.",
     nonGoals: "Do not widen into architecture, Supabase contracts, or unrelated UI churn.",
@@ -123,8 +128,6 @@ const laneGuidance = {
     ownedPaths: [
       "docs/12-continuous-improvement-loop.md",
       "docs/13-agent-operations-model.md",
-      "docs/14-terminal-ops-bridge.md",
-      "docs/15-local-autonomy-daemon.md",
     ],
     validation: "Keep operator docs and queue rules aligned with actual control-plane behavior.",
     nonGoals: "Do not rewrite product scope, architecture, or public workflows.",
@@ -132,6 +135,133 @@ const laneGuidance = {
     executionFocus:
       "Keep operator docs, queue wording, and internal control-plane guidance aligned with the actual behavior.",
   },
+};
+
+const workItemCatalog = {
+  "shell-experience": [
+    {
+      id: "homepage-control-density",
+      title: "Tighten homepage agent control density",
+      targetFiles: [
+        "apps/web/src/app/[locale]/page.tsx",
+        "apps/web/src/components/homepage-agent-control-section.tsx",
+        "apps/web/src/components/homepage-agent-control-section.module.css",
+      ],
+      objective:
+        "Reduce above-the-fold waste and make the assistant or CLI setup story more immediately scannable on the homepage.",
+      instruction:
+        "Compress the homepage agent-control section above the fold. Reduce repeated copy, tighten card spacing, and make the CLI setup flow easier to scan without touching unrelated routes.",
+      acceptance:
+        "One visible density or hierarchy improvement lands in the homepage control section without expanding scope beyond the public shell.",
+    },
+    {
+      id: "shell-navigation-clarity",
+      title: "Clarify shell navigation hierarchy",
+      targetFiles: [
+        "apps/web/src/components/header.tsx",
+        "apps/web/src/components/sidebar.tsx",
+        "apps/web/src/components/preview-mode-banner.tsx",
+      ],
+      objective:
+        "Make navigation labels, entry points, and internal preview affordances easier to scan without redesigning unrelated surfaces.",
+      instruction:
+        "Improve one navigation or preview entry affordance so internal ops and public shell routes are easier to distinguish at a glance.",
+      acceptance:
+        "Navigation or preview affordances become clearer and denser in one bounded shell slice.",
+    },
+  ],
+  "workflow-systems": [
+    {
+      id: "profile-workspace-clarity",
+      title: "Tighten profile workspace scanning",
+      targetFiles: [
+        "apps/web/src/app/[locale]/profile/page.tsx",
+        "apps/web/src/components/profile-workspace.tsx",
+      ],
+      objective:
+        "Reduce copy friction and make the profile workspace easier to scan in one bounded improvement.",
+      instruction:
+        "Tighten one profile editing or summary block by reducing repeated copy and making the key fields or actions easier to scan.",
+      acceptance:
+        "One profile editing or summary section becomes clearer without changing storage, contracts, or auth.",
+    },
+    {
+      id: "document-workspace-density",
+      title: "Tighten document workspace queue and list density",
+      targetFiles: [
+        "apps/web/src/app/[locale]/documents/page.tsx",
+        "apps/web/src/components/document-workspace.tsx",
+        "apps/web/src/components/document-intake-panel.tsx",
+        "apps/web/src/components/compact-document-row.tsx",
+      ],
+      objective:
+        "Make the document upload queue or repository list easier to understand and quicker to act on.",
+      instruction:
+        "Improve one document queue or repository list slice so the next action is clearer and the list feels denser without changing document storage behavior.",
+      acceptance:
+        "One document workflow action or hierarchy becomes clearer in the queue or repository view.",
+    },
+    {
+      id: "lab-workspace-structure",
+      title: "Clarify lab workspace structure",
+      targetFiles: [
+        "apps/web/src/app/[locale]/lab/page.tsx",
+        "apps/web/src/components/lab-workspace.tsx",
+      ],
+      objective:
+        "Make one lab workflow slice easier to scan without widening into public lab pages or contracts.",
+      instruction:
+        "Clarify one lab workspace section with denser structure or clearer labels, but keep the change inside the private lab workspace only.",
+      acceptance:
+        "One bounded layout or copy improvement lands in the lab workspace only.",
+    },
+  ],
+  "reliability-desk": [
+    {
+      id: "ops-runtime-guard",
+      title: "Harden ops runtime merge guards",
+      targetFiles: [
+        "apps/web/src/lib/agent-ops-runtime.ts",
+        "apps/web/src/app/api/ops-state/route.ts",
+      ],
+      objective:
+        "Tighten low-risk runtime handling so malformed or partial control-plane data degrades more cleanly.",
+      instruction:
+        "Improve one low-risk runtime guard or merge edge case so malformed control-plane data produces clearer, safer behavior.",
+      acceptance:
+        "One bounded guard or merge-path improvement lands without changing shared contracts.",
+    },
+    {
+      id: "terminal-bridge-clarity",
+      title: "Improve ops terminal bridge reliability feedback",
+      targetFiles: [
+        "apps/web/src/app/api/ops-terminal/route.ts",
+        "apps/web/src/lib/ops-terminal-manager.ts",
+      ],
+      objective:
+        "Make the local ops terminal bridge report failures and session state more predictably.",
+      instruction:
+        "Improve one terminal route or session-manager behavior so failures or session transitions are easier to understand and recover from.",
+      acceptance:
+        "One bounded reliability improvement lands in terminal route or session-manager glue.",
+    },
+  ],
+  "executive-desk": [
+    {
+      id: "operator-loop-doc-sync",
+      title: "Sync operator docs with the bounded autonomy loop",
+      targetFiles: [
+        "docs/12-continuous-improvement-loop.md",
+        "docs/13-agent-operations-model.md",
+      ],
+      objective:
+        "Keep the operator-facing docs aligned with what the bounded autonomy loop actually does today.",
+      instruction:
+        "Clarify one operator-facing docs section so it matches the bounded autonomy loop's current behavior without broad documentation churn.",
+      acceptance:
+        "One doc clarification lands that matches current control-plane behavior without widening product scope.",
+    },
+  ],
 };
 
 const plannerSchema = {
@@ -199,17 +329,64 @@ function getLaneGuidance(teamId) {
   };
 }
 
-function buildFallbackPlan(team, providerLabel) {
+function getWorkItems(teamId) {
+  return workItemCatalog[teamId] ?? [];
+}
+
+function selectWorkItem(teamId, loopCount, operatorDirective = null) {
+  const items = getWorkItems(teamId);
+  if (!items.length) {
+    return {
+      id: `${teamId}-default`,
+      title: "Bounded improvement slice",
+      targetFiles: getLaneGuidance(teamId).ownedPaths,
+      objective: "Make one safe bounded improvement in the owned paths.",
+      instruction: "Make one safe bounded improvement in the owned paths only.",
+      acceptance: "Land one small safe improvement or return blocked with a precise reason.",
+    };
+  }
+
+  const directiveText =
+    operatorDirective && typeof operatorDirective.body === "string"
+      ? operatorDirective.body.toLowerCase()
+      : "";
+
+  if (teamId === "shell-experience") {
+    if (directiveText.includes("홈페이지") || directiveText.includes("homepage")) {
+      return items.find((item) => item.id === "homepage-control-density") ?? items[0];
+    }
+    if (directiveText.includes("네비") || directiveText.includes("navigation")) {
+      return items.find((item) => item.id === "shell-navigation-clarity") ?? items[0];
+    }
+  }
+
+  if (teamId === "workflow-systems") {
+    if (directiveText.includes("document") || directiveText.includes("문서")) {
+      return items.find((item) => item.id === "document-workspace-density") ?? items[0];
+    }
+    if (directiveText.includes("profile") || directiveText.includes("프로필")) {
+      return items.find((item) => item.id === "profile-workspace-clarity") ?? items[0];
+    }
+    if (directiveText.includes("lab") || directiveText.includes("연구실")) {
+      return items.find((item) => item.id === "lab-workspace-structure") ?? items[0];
+    }
+  }
+
+  const teamTurnIndex = Math.max(0, Math.floor((loopCount - 1) / teamCycle.length));
+  return items[teamTurnIndex % items.length];
+}
+
+function buildFallbackPlan(team, providerLabel, workItem) {
   return {
-    summary: `${team.name} is currently advancing the ${team.lane} with ${providerLabel} keeping the slice bounded.`,
-    operatorBrief: `${team.lead} is holding ${team.name}; latest deliverable: ${team.deliverable}`,
-    nextAction: `${providerLabel} should stay on ${team.name} until ${team.nextHandoff}`,
-    teamDispatch: `${team.name} should keep the ${team.lane} bounded and report the next clean handoff.`,
-    checkpoint: `${team.name} should pause at the next clean checkpoint and return one concise report packet.`,
+    summary: `${team.name} is advancing ${workItem.title} within the ${team.lane}, with ${providerLabel} keeping the slice bounded.`,
+    operatorBrief: `${team.lead} is holding ${team.name} on ${workItem.title}; latest deliverable: ${team.deliverable}`,
+    nextAction: `${providerLabel} should keep ${workItem.title} moving until ${team.nextHandoff}`,
+    teamDispatch: `${team.lead} should execute ${workItem.title} inside the owned paths only. ${workItem.instruction}`,
+    checkpoint: `${team.name} should pause after ${workItem.title} reaches one safe checkpoint and return one concise report packet.`,
   };
 }
 
-function buildPlannerPrompt(team, context = {}) {
+function buildPlannerPrompt(team, context = {}, workItem) {
   const guidance = getLaneGuidance(team.id);
   const ownedPaths =
     guidance.ownedPaths.length > 0 ? guidance.ownedPaths.map((entry) => `- ${entry}`).join("\n") : "- none";
@@ -247,6 +424,12 @@ function buildPlannerPrompt(team, context = {}) {
     `Objective: ${team.objective}`,
     `Deliverable: ${team.deliverable}`,
     `Next handoff: ${team.nextHandoff}`,
+    `Concrete work item: ${workItem.title}`,
+    `Concrete objective: ${workItem.objective}`,
+    `Implementation instruction: ${workItem.instruction}`,
+    "Target files:",
+    workItem.targetFiles.map((entry) => `- ${entry}`).join("\n"),
+    `Acceptance: ${workItem.acceptance}`,
     operatorDirective,
     lastExecution,
     lastReport,
@@ -566,12 +749,37 @@ function isLowQualityPlan(plan) {
   ].some((pattern) => text.includes(pattern));
 }
 
+function isOffTargetPlan(plan, team, workItem) {
+  const text = [
+    plan.summary,
+    plan.operatorBrief,
+    plan.nextAction,
+    plan.teamDispatch,
+    plan.checkpoint,
+  ]
+    .join(" ")
+    .toLowerCase();
+
+  const currentSignals = [team.name, team.lead, workItem.title]
+    .map((entry) => entry.toLowerCase())
+    .filter(Boolean);
+  const otherTeamSignals = teamCycle
+    .filter((entry) => entry.id !== team.id)
+    .map((entry) => entry.name.toLowerCase());
+
+  const mentionsCurrent = currentSignals.some((entry) => text.includes(entry));
+  const mentionsOtherTeam = otherTeamSignals.some((entry) => text.includes(entry));
+
+  return !mentionsCurrent || mentionsOtherTeam;
+}
+
 function buildTaskPacket({
   loopCount,
   team,
   providerId,
   providerLabel,
   plan,
+  workItem,
   artifactPath,
   status,
 }) {
@@ -589,6 +797,8 @@ function buildTaskPacket({
     nextAction: plan.nextAction,
     teamDispatch: plan.teamDispatch,
     checkpoint: plan.checkpoint,
+    workItemTitle: workItem.title,
+    workItemFiles: workItem.targetFiles,
     artifactPath,
     status,
   };
@@ -717,7 +927,7 @@ async function runValidationCommand(command) {
   }
 }
 
-function buildExecutionPrompt(team, taskPacket, operatorDirective) {
+function buildExecutionPrompt(team, taskPacket, operatorDirective, workItem) {
   const guidance = getLaneGuidance(team.id);
   const ownedPaths =
     guidance.ownedPaths.length > 0 ? guidance.ownedPaths.map((entry) => `- ${entry}`).join("\n") : "- none";
@@ -736,12 +946,19 @@ function buildExecutionPrompt(team, taskPacket, operatorDirective) {
     "Make exactly one small safe improvement in the owned paths only.",
     "Do not touch architecture, privacy boundaries, shared contracts, auth boundaries, or unrelated files.",
     "If the task would require broader scope, make no edits and return outcome `blocked`.",
+    "You are not waiting for a task. The concrete work item below is the task.",
     "Prefer visible clarity improvements, smaller UI friction, denser information hierarchy, or tighter workflow copy over broad redesign.",
     `Team: ${team.name}`,
     `Lane: ${team.lane}`,
     `Lead: ${team.lead}`,
     `Objective: ${team.objective}`,
     `Deliverable: ${team.deliverable}`,
+    `Concrete work item: ${workItem.title}`,
+    `Concrete objective: ${workItem.objective}`,
+    `Implementation instruction: ${workItem.instruction}`,
+    "Target files for this slice:",
+    workItem.targetFiles.map((entry) => `- ${entry}`).join("\n"),
+    `Acceptance: ${workItem.acceptance}`,
     `Planning summary: ${taskPacket.summary}`,
     `Team dispatch: ${taskPacket.teamDispatch}`,
     `Next action requested: ${taskPacket.nextAction}`,
@@ -767,6 +984,7 @@ function buildExecutionRecord({
   validation,
   artifactPath,
   outcome,
+  workItem,
 }) {
   return {
     id: `exec-${loopCount}-${team.id}`,
@@ -779,13 +997,36 @@ function buildExecutionRecord({
     operatorBrief: result.operatorBrief,
     changedFiles,
     nextAction: result.nextAction,
+    workItemTitle: workItem.title,
+    workItemFiles: workItem.targetFiles,
     artifactPath,
     outcome,
     validation,
   };
 }
 
-async function runCodexExecutor(team, taskPacket, loopCount, operatorDirective) {
+function isLowQualityExecutionResult(result, workItem) {
+  const text = [result.summary, result.operatorBrief, result.nextAction]
+    .join(" ")
+    .toLowerCase();
+
+  const genericPatterns = [
+    "bounded execution worker role assumed",
+    "waiting for the concrete task",
+    "waiting for the current task",
+    "operate within repo instructions",
+    "keep scope tight",
+    "role assumed",
+  ];
+
+  const mentionsWorkItem = [workItem.title, ...workItem.targetFiles]
+    .map((entry) => entry.toLowerCase())
+    .some((entry) => text.includes(entry));
+
+  return genericPatterns.some((entry) => text.includes(entry)) || !mentionsWorkItem;
+}
+
+async function runCodexExecutor(team, taskPacket, loopCount, operatorDirective, workItem) {
   await ensureAutonomyAssets();
   const guidance = getLaneGuidance(team.id);
   const dirtyBefore = await listDirtyOwnedPaths(guidance.ownedPaths);
@@ -807,7 +1048,7 @@ async function runCodexExecutor(team, taskPacket, loopCount, operatorDirective) 
       providerId: "codex",
       providerLabel: "Codex CLI",
       team,
-      prompt: buildExecutionPrompt(team, taskPacket, operatorDirective),
+      prompt: buildExecutionPrompt(team, taskPacket, operatorDirective, workItem),
       result,
       changedFiles: [],
       validation,
@@ -826,11 +1067,12 @@ async function runCodexExecutor(team, taskPacket, loopCount, operatorDirective) 
       validation,
       artifactPath,
       outcome: "blocked",
+      workItem,
     });
   }
 
   const outputPath = path.join(researchOsStateDir, "codex-autonomy-execution-last.json");
-  const prompt = buildExecutionPrompt(team, taskPacket, operatorDirective);
+  const prompt = buildExecutionPrompt(team, taskPacket, operatorDirective, workItem);
 
   try {
     const { stdout, stderr } = await execFile(
@@ -858,6 +1100,9 @@ async function runCodexExecutor(team, taskPacket, loopCount, operatorDirective) 
 
     const raw = await readFile(outputPath, "utf8");
     const result = extractJsonObject(raw);
+    if (isLowQualityExecutionResult(result, workItem)) {
+      throw new Error("Codex returned a generic execution packet without acting on the concrete work item.");
+    }
     const changedFiles = await listDirtyOwnedPaths(guidance.ownedPaths);
     const validation = changedFiles.length
       ? await Promise.all(guidance.validationCommands.map((command) => runValidationCommand(command)))
@@ -901,6 +1146,7 @@ async function runCodexExecutor(team, taskPacket, loopCount, operatorDirective) 
       validation,
       artifactPath,
       outcome,
+      workItem,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
@@ -942,14 +1188,15 @@ async function runCodexExecutor(team, taskPacket, loopCount, operatorDirective) 
       validation,
       artifactPath,
       outcome: "failed",
+      workItem,
     });
   }
 }
 
-async function runCodexPlanner(team, loopCount, context) {
+async function runCodexPlanner(team, loopCount, context, workItem) {
   await ensureAutonomyAssets();
   const outputPath = path.join(researchOsStateDir, "codex-autonomy-last.json");
-  const prompt = buildPlannerPrompt(team, context);
+  const prompt = buildPlannerPrompt(team, context, workItem);
 
   const { stdout, stderr } = await execFile(
     "cmd.exe",
@@ -977,7 +1224,7 @@ async function runCodexPlanner(team, loopCount, context) {
 
   const raw = await readFile(outputPath, "utf8");
   const plan = extractJsonObject(raw);
-  if (isLowQualityPlan(plan)) {
+  if (isLowQualityPlan(plan) || isOffTargetPlan(plan, team, workItem)) {
     throw new Error("Codex returned a generic planning packet without lane-specific guidance.");
   }
   const artifactPath = await writePlannerArtifact({
@@ -1001,13 +1248,14 @@ async function runCodexPlanner(team, loopCount, context) {
     providerId: "codex",
     providerLabel: "Codex CLI",
     plan,
+    workItem,
     artifactPath,
     status: "planned",
   });
 }
 
-async function runGeminiPlanner(team, loopCount, context) {
-  const prompt = buildPlannerPrompt(team, context);
+async function runGeminiPlanner(team, loopCount, context, workItem) {
+  const prompt = buildPlannerPrompt(team, context, workItem);
   const { stdout, stderr } = await execFile(
     "cmd.exe",
     [
@@ -1028,7 +1276,7 @@ async function runGeminiPlanner(team, loopCount, context) {
   );
 
   const plan = extractJsonObject(stdout);
-  if (isLowQualityPlan(plan)) {
+  if (isLowQualityPlan(plan) || isOffTargetPlan(plan, team, workItem)) {
     throw new Error("Gemini returned a generic planning packet without lane-specific guidance.");
   }
   const artifactPath = await writePlannerArtifact({
@@ -1051,12 +1299,14 @@ async function runGeminiPlanner(team, loopCount, context) {
     providerId: "gemini",
     providerLabel: "Gemini CLI",
     plan,
+    workItem,
     artifactPath,
     status: "planned",
   });
 }
 
 async function runPlannerWithFallback(team, loopCount, provider, context) {
+  const workItem = selectWorkItem(team.id, loopCount, context.operatorDirective);
   const availableProviders = new Set(
     provider.providerHealth.filter((entry) => entry.available).map((entry) => entry.providerId),
   );
@@ -1078,20 +1328,21 @@ async function runPlannerWithFallback(team, loopCount, provider, context) {
 
       try {
       if (plannerId === "codex") {
-        return await runCodexPlanner(team, loopCount, context);
+        return await runCodexPlanner(team, loopCount, context, workItem);
       }
 
       if (plannerId === "gemini") {
-        return await runGeminiPlanner(team, loopCount, context);
+        return await runGeminiPlanner(team, loopCount, context, workItem);
       }
 
-      const fallbackPlan = buildFallbackPlan(team, provider.activeProviderLabel);
+      const fallbackPlan = buildFallbackPlan(team, provider.activeProviderLabel, workItem);
       return buildTaskPacket({
         loopCount,
         team,
         providerId: "mock",
         providerLabel: "Mock planner",
         plan: fallbackPlan,
+        workItem,
         artifactPath: null,
         status: "fallback",
       });
@@ -1111,14 +1362,14 @@ async function runPlannerWithFallback(team, loopCount, provider, context) {
   }
 
   if (failures.length > 0) {
-    const fallbackPlan = buildFallbackPlan(team, provider.activeProviderLabel);
+    const fallbackPlan = buildFallbackPlan(team, provider.activeProviderLabel, workItem);
     const primaryFailure = failures[0];
     const artifactPath = await writePlannerArtifact({
       loopCount,
       providerId: primaryFailure.providerId,
       providerLabel: primaryFailure.providerLabel,
       team,
-      prompt: buildPlannerPrompt(team, context),
+      prompt: buildPlannerPrompt(team, context, workItem),
       plan: fallbackPlan,
       status: "failed",
       raw: { failures },
@@ -1131,18 +1382,20 @@ async function runPlannerWithFallback(team, loopCount, provider, context) {
       providerId: primaryFailure.providerId,
       providerLabel: primaryFailure.providerLabel,
       plan: fallbackPlan,
+      workItem,
       artifactPath,
       status: "failed",
     });
   }
 
-  const fallbackPlan = buildFallbackPlan(team, provider.activeProviderLabel);
+  const fallbackPlan = buildFallbackPlan(team, provider.activeProviderLabel, workItem);
   return buildTaskPacket({
     loopCount,
     team,
     providerId: "mock",
     providerLabel: "Mock planner",
     plan: fallbackPlan,
+    workItem,
     artifactPath: null,
     status: "fallback",
   });
@@ -1156,6 +1409,35 @@ function buildQueue(loopCount, currentTeamId) {
     title: `${team.lane} - ${team.name}`,
     status: team.id === currentTeamId ? "running" : index < (loopCount % teamCycle.length) ? "reported" : "queued",
   }));
+}
+
+function selectTeamForCycle(state, loopCount) {
+  const directiveText =
+    state.currentDirective && typeof state.currentDirective.body === "string"
+      ? state.currentDirective.body.toLowerCase()
+      : "";
+
+  if (directiveText.includes("홈페이지") || directiveText.includes("homepage")) {
+    return teamCycle.find((team) => team.id === "shell-experience") ?? teamCycle[0];
+  }
+
+  if (directiveText.includes("프로필") || directiveText.includes("profile")) {
+    return teamCycle.find((team) => team.id === "workflow-systems") ?? teamCycle[0];
+  }
+
+  if (directiveText.includes("문서") || directiveText.includes("document")) {
+    return teamCycle.find((team) => team.id === "workflow-systems") ?? teamCycle[0];
+  }
+
+  if (directiveText.includes("연구실") || directiveText.includes("lab")) {
+    return teamCycle.find((team) => team.id === "workflow-systems") ?? teamCycle[0];
+  }
+
+  if (directiveText.includes("신뢰성") || directiveText.includes("reliability")) {
+    return teamCycle.find((team) => team.id === "reliability-desk") ?? teamCycle[0];
+  }
+
+  return teamCycle[(loopCount - 1) % teamCycle.length];
 }
 
 function buildReport(team, loopCount, taskPacket, executionRecord = null) {
@@ -1236,6 +1518,7 @@ function buildExecutionMemberUpdates(team, executionRecord, taskPacket) {
 }
 
 async function runExecutionStep(team, loopCount, taskPacket, state, provider) {
+  const workItem = selectWorkItem(team.id, loopCount, state.currentDirective);
   if (taskPacket.status === "failed") {
     return {
       id: `exec-${loopCount}-${team.id}`,
@@ -1248,6 +1531,8 @@ async function runExecutionStep(team, loopCount, taskPacket, state, provider) {
       operatorBrief: `Execution was skipped for ${team.name} until the planner failure is reviewed.`,
       changedFiles: [],
       nextAction: "Review the failed planner artifact, then rerun the bounded slice.",
+      workItemTitle: workItem.title,
+      workItemFiles: workItem.targetFiles,
       artifactPath: taskPacket.artifactPath,
       outcome: "blocked",
       validation: getLaneGuidance(team.id).validationCommands.map((command) => ({
@@ -1271,6 +1556,8 @@ async function runExecutionStep(team, loopCount, taskPacket, state, provider) {
       operatorBrief: "Reconnect Codex CLI before enabling autonomous code changes.",
       changedFiles: [],
       nextAction: "Reconnect Codex CLI and restart the autonomy loop.",
+      workItemTitle: workItem.title,
+      workItemFiles: workItem.targetFiles,
       artifactPath: null,
       outcome: "blocked",
       validation: getLaneGuidance(team.id).validationCommands.map((command) => ({
@@ -1281,7 +1568,7 @@ async function runExecutionStep(team, loopCount, taskPacket, state, provider) {
     };
   }
 
-  return runCodexExecutor(team, taskPacket, loopCount, state.currentDirective);
+  return runCodexExecutor(team, taskPacket, loopCount, state.currentDirective, workItem);
 }
 
 async function runAutonomyCycle() {
@@ -1298,7 +1585,7 @@ async function runAutonomyCycle() {
   }
 
   const loopCount = Number(state.autonomy.loopCount ?? 0) + 1;
-  const team = teamCycle[(loopCount - 1) % teamCycle.length];
+  const team = selectTeamForCycle(state, loopCount);
   const provider = await detectProviderHealth();
   const plannerContext = buildPlannerContext(state, team.id);
   const taskPacket = await runPlannerWithFallback(team, loopCount, provider, plannerContext);

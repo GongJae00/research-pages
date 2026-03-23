@@ -5,6 +5,106 @@
   padding-bottom: 2rem;
 }
 
+.operationsWorkbench {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.82fr);
+  align-items: start;
+}
+
+.assistantConsole {
+  display: grid;
+  gap: 0.95rem;
+}
+
+.assistantConsoleHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.9rem;
+}
+
+.assistantConsoleGrid {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, 0.92fr);
+}
+
+.assistantMiniStack,
+.assistantMiniList {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.assistantMiniPanel {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.9rem;
+  border-radius: 18px;
+  border: 1px solid rgba(226, 232, 240, 0.88);
+  background: rgba(248, 250, 252, 0.9);
+}
+
+.assistantMiniRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.assistantMiniRow strong {
+  color: #0f172a;
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.teamSwitchboard {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.teamSwitchCard {
+  display: grid;
+  gap: 0.55rem;
+  width: 100%;
+  padding: 0.85rem 0.9rem;
+  border-radius: 18px;
+  border: 1px solid rgba(203, 213, 225, 0.74);
+  background: rgba(248, 250, 252, 0.92);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    background-color 140ms ease;
+}
+
+.teamSwitchCard:hover {
+  transform: translateY(-1px);
+  border-color: rgba(94, 234, 212, 0.72);
+}
+
+.teamSwitchCardActive {
+  border-color: rgba(20, 184, 166, 0.55);
+  background: linear-gradient(180deg, rgba(240, 253, 250, 0.96), rgba(236, 252, 203, 0.76));
+  box-shadow: 0 12px 24px rgba(20, 184, 166, 0.12);
+}
+
+.teamSwitchMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.legacyHidden {
+  display: none;
+}
+
 .controlRoomPrime {
   display: grid;
   gap: 0.9rem;
@@ -412,13 +512,27 @@
 }
 
 .terminalComposer {
+  margin-top: 0;
+}
+
+.terminalWorkbenchGrid {
+  display: grid;
+  gap: 0.9rem;
   margin-top: 1rem;
+  grid-template-columns: minmax(0, 1.2fr) minmax(18rem, 0.92fr);
+  align-items: start;
+}
+
+.terminalSessionColumn,
+.terminalCommandColumn {
+  display: grid;
+  gap: 0.9rem;
+  align-content: start;
 }
 
 .terminalSessionPanel {
   display: grid;
   gap: 0.9rem;
-  margin-top: 1rem;
   padding: 1rem;
   border-radius: 22px;
   border: 1px solid rgba(203, 213, 225, 0.78);
@@ -470,7 +584,7 @@
 .terminalInput {
   width: 100%;
   resize: vertical;
-  min-height: 5.8rem;
+  min-height: 4.6rem;
   border-radius: 18px;
   border: 1px solid rgba(148, 163, 184, 0.32);
   background: #0f172a;
@@ -543,7 +657,33 @@
   background: rgba(254, 226, 226, 0.8);
 }
 
+.terminalAuxButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.55rem;
+  padding: 0.55rem 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.34);
+  border-radius: 999px;
+  background: rgba(241, 245, 249, 0.96);
+  color: #0f172a;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.terminalAuxButton:hover {
+  transform: translateY(-1px);
+  border-color: rgba(45, 212, 191, 0.55);
+  background: rgba(240, 253, 250, 0.96);
+}
+
 .terminalRunButton:disabled,
+.terminalAuxButton:disabled,
 .shellPresetButton:disabled,
 .commandPresetCard:disabled,
 .terminalSecondaryButton:disabled {
@@ -708,6 +848,8 @@
 
 .terminalOutputBlock pre {
   margin: 0;
+  max-height: 8rem;
+  overflow: auto;
   overflow-x: auto;
   white-space: pre-wrap;
   color: #e2e8f0;
@@ -726,8 +868,8 @@
 }
 
 .sessionTranscript {
-  min-height: 15rem;
-  max-height: 30rem;
+  min-height: 9rem;
+  max-height: 16rem;
   overflow: auto;
   margin: 0;
   padding: 0.9rem;
@@ -767,6 +909,11 @@
   display: grid;
   gap: 1rem;
   margin-top: 1rem;
+}
+
+.controlTowerStage > .reportStack,
+.controlTowerStage > .tracePanel {
+  display: none;
 }
 
 .commandRail {
@@ -905,6 +1052,95 @@
   display: grid;
   gap: 1rem;
   grid-template-columns: minmax(18rem, 0.9fr) minmax(0, 1.1fr);
+}
+
+.teamTopologyStage {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.teamTopologyGrid {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.teamTopologyCard {
+  display: grid;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.85rem 0.9rem;
+  border-radius: 18px;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.95));
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    background-color 140ms ease;
+}
+
+.teamTopologyCard:hover {
+  transform: translateY(-1px);
+  border-color: rgba(94, 234, 212, 0.72);
+}
+
+.teamTopologyCardActive {
+  border-color: rgba(20, 184, 166, 0.55);
+  background: linear-gradient(180deg, rgba(240, 253, 250, 0.96), rgba(236, 252, 203, 0.76));
+  box-shadow: 0 12px 24px rgba(20, 184, 166, 0.12);
+}
+
+.teamTopologyHead,
+.teamTopologyMemberRow,
+.teamTopologyFooter,
+.handoffRoute,
+.executionMicroRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.teamTopologyHead strong,
+.teamTopologyMemberRow strong,
+.teamTopologyFooter strong,
+.handoffRoute strong,
+.executionMicroRow strong {
+  color: #0f172a;
+}
+
+.teamTopologyHead span,
+.teamTopologyMemberRow span,
+.teamTopologyFooter span {
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.teamTopologyMeta,
+.teamTopologyMembers,
+.handoffRail,
+.executionMicroList {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.interactionBoard {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.handoffRow {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.75rem 0.8rem;
+  border-radius: 16px;
+  border: 1px solid rgba(226, 232, 240, 0.88);
+  background: rgba(248, 250, 252, 0.9);
 }
 
 .memberSwarmStage {
@@ -1651,10 +1887,13 @@
 }
 
 @media (max-width: 1200px) {
+  .operationsWorkbench,
+  .terminalWorkbenchGrid,
   .controlRoomPrimeGrid,
   .hero,
   .liveDeckGrid,
   .commandRail,
+  .interactionBoard,
   .executionLaneGrid,
   .reportCardGrid,
   .autonomyMetricGrid,
@@ -1668,7 +1907,10 @@
   .scheduleGrid,
   .modeGrid,
   .teamLeadGrid,
-  .runtimeGrid {
+  .runtimeGrid,
+  .assistantConsoleGrid,
+  .teamSwitchboard,
+  .teamTopologyGrid {
     grid-template-columns: 1fr;
   }
 
@@ -1695,6 +1937,7 @@
   .primeStatusHead,
   .primeProviderRow,
   .primeValidationRow,
+  .assistantConsoleHead,
   .assistantHead,
   .modeCardHead,
   .terminalSessionHead,
@@ -1728,13 +1971,24 @@
   .teamLeadHead,
   .providerHead,
   .providerMetaRow,
-  .teamCardMeta {
+  .teamCardMeta,
+  .assistantMiniRow,
+  .teamSwitchMeta,
+  .teamTopologyHead,
+  .teamTopologyMemberRow,
+  .teamTopologyFooter,
+  .handoffRoute,
+  .executionMicroRow {
     flex-direction: column;
     align-items: flex-start;
   }
 
   .memberSwarmGrid,
+  .terminalWorkbenchGrid,
   .primeChipRow,
+  .assistantConsoleGrid,
+  .teamSwitchboard,
+  .teamTopologyGrid,
   .traceRow {
     grid-template-columns: 1fr;
   }

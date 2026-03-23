@@ -22,6 +22,7 @@ const navItems = [
   { key: "funding", href: "/funding" },
   { key: "documents", href: "/documents" },
   { key: "timetable", href: "/timetable" },
+  { key: "ops", href: "/ops" },
 ] as const;
 
 function getPageTitle(pathname: string, locale: string, dict: Dictionary): string {

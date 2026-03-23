@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Calendar, FileText, FlaskConical, LogOut, Plus, User, Users, Wallet } from "lucide-react";
+import { Calendar, FileText, FlaskConical, LayoutGrid, LogOut, Plus, User, Users, Wallet } from "lucide-react";
 
 import type { Dictionary } from "@/lib/i18n";
 import { t } from "@/lib/i18n";
@@ -21,6 +21,10 @@ const personalNavItems = [
   { key: "timetable", icon: Calendar, href: "/timetable" },
 ] as const;
 
+const internalNavItems = [
+  { key: "ops", icon: LayoutGrid, href: "/ops" },
+] as const;
+
 export function Sidebar({ locale, dict }: SidebarProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -30,6 +34,7 @@ export function Sidebar({ locale, dict }: SidebarProps) {
     locale === "ko"
       ? {
           personal: "내 공간",
+          internal: "시스템",
           labs: "연구실",
           labHub: "연구실 허브",
           openLab: "연구실 열기",
@@ -38,6 +43,7 @@ export function Sidebar({ locale, dict }: SidebarProps) {
         }
       : {
           personal: "Personal",
+          internal: "Internal",
           labs: "Labs",
           labHub: "Lab hub",
           openLab: "Open labs",
@@ -63,6 +69,27 @@ export function Sidebar({ locale, dict }: SidebarProps) {
             <span className="sidebar-group-title">{copy.personal}</span>
           </div>
           {personalNavItems.map((item) => {
+            const active = isActive(item.href);
+            const Icon = item.icon;
+
+            return (
+              <Link
+                key={item.key}
+                href={`/${locale}${item.href}`}
+                className={`sidebar-link${active ? " sidebar-link-active" : ""}`}
+              >
+                <Icon size={18} />
+                <span>{t(dict, `nav.${item.key}`)}</span>
+              </Link>
+            );
+          })}
+        </div>
+
+        <div className="sidebar-group">
+          <div className="sidebar-group-header">
+            <span className="sidebar-group-title">{copy.internal}</span>
+          </div>
+          {internalNavItems.map((item) => {
             const active = isActive(item.href);
             const Icon = item.icon;
 

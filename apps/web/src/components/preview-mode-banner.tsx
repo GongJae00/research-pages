@@ -37,10 +37,7 @@ export function PreviewModeBanner({ locale }: PreviewModeBannerProps) {
   return (
     <div className="preview-mode-banner-shell">
       <div className="preview-mode-banner">
-        <div className="preview-mode-banner-copy">
-          <span className="preview-mode-banner-label">{copy.label}</span>
-          <p>{copy.body}</p>
-        </div>
+        <span className="preview-mode-banner-label">{copy.label}</span>
         <div className="preview-mode-banner-links">
           <Link href={`/${locale}/profile`} className="preview-mode-banner-link">
             {copy.workspace}
