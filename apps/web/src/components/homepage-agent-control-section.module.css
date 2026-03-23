@@ -1,6 +1,6 @@
 .shell {
   display: grid;
-  gap: 1.15rem;
+  gap: 0.95rem;
 }
 
 .header,
@@ -12,10 +12,11 @@
 .futureList,
 .setupPickerGrid,
 .setupCommands,
+.setupQuickSummary,
 .stepList,
 .setupNotesGrid {
   display: grid;
-  gap: 0.95rem;
+  gap: 0.75rem;
 }
 
 .header,
@@ -40,7 +41,7 @@
 }
 
 .lead {
-  padding: 1.45rem;
+  padding: 1.2rem;
   background:
     radial-gradient(circle at top right, rgba(249, 115, 22, 0.14), transparent 32%),
     radial-gradient(circle at left bottom, rgba(14, 165, 233, 0.14), transparent 28%),
@@ -66,17 +67,17 @@
 }
 
 .title {
-  margin: 1rem 0 0;
+  margin: 0.75rem 0 0;
   white-space: pre-line;
-  font-size: clamp(1.9rem, 3.4vw, 2.7rem);
-  line-height: 1.02;
+  font-size: clamp(1.8rem, 3.2vw, 2.45rem);
+  line-height: 1;
   letter-spacing: -0.04em;
 }
 
 .body {
-  margin: 0.9rem 0 0;
+  margin: 0.75rem 0 0;
   color: rgba(226, 232, 240, 0.9);
-  line-height: 1.65;
+  line-height: 1.55;
 }
 
 .summaryGrid {
@@ -85,8 +86,8 @@
 
 .summaryCard {
   display: grid;
-  gap: 0.5rem;
-  padding: 1rem;
+  gap: 0.35rem;
+  padding: 0.9rem;
 }
 
 .summaryCard strong {
@@ -108,7 +109,7 @@
 .teamFlowCard,
 .setupBuilderCard,
 .copyCard {
-  padding: 1rem;
+  padding: 0.9rem;
 }
 
 .cardHead,
@@ -145,15 +146,14 @@
 .flowPanel h3,
 .futurePanel h3 {
   margin: 0.15rem 0 0;
-  font-size: 1.18rem;
+  font-size: 1.08rem;
 }
 
 .infoBlock,
 .providerMeta,
-.commandBlock,
 .futureList {
   display: grid;
-  gap: 0.45rem;
+  gap: 0.35rem;
 }
 
 .infoBlock p,
@@ -163,7 +163,7 @@
 .futureRow p {
   margin: 0;
   color: #475569;
-  line-height: 1.58;
+  line-height: 1.5;
 }
 
 .inlineMeta {
@@ -174,7 +174,7 @@
 
 .actionRow {
   display: grid;
-  gap: 0.55rem;
+  gap: 0.45rem;
 }
 
 .primaryLink {
@@ -205,18 +205,18 @@
 }
 
 .panelBody {
-  margin-top: 0.35rem;
+  margin-top: 0.2rem;
 }
 
 .providerGrid,
 .teamFlowGrid {
-  margin-top: 1rem;
+  margin-top: 0.8rem;
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .providerCard {
   display: grid;
-  gap: 0.7rem;
+  gap: 0.55rem;
 }
 
 .setupBuilderCard,
@@ -231,25 +231,30 @@
 
 .setupBuilderCard {
   display: grid;
-  gap: 0.95rem;
-  margin-top: 1rem;
+  gap: 0.8rem;
+  margin-top: 0.8rem;
 }
 
 .setupPickerGrid,
-.setupCommands {
+.setupCommands,
+.setupQuickSummary {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.setupQuickSummary {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .setupPicker {
   display: grid;
-  gap: 0.65rem;
-  padding: 0.9rem;
+  gap: 0.55rem;
+  padding: 0.75rem;
 }
 
 .optionRow {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.45rem;
+  gap: 0.35rem;
 }
 
 .optionButton,
@@ -286,7 +291,7 @@
 
 .copyCard {
   display: grid;
-  gap: 0.65rem;
+  gap: 0.55rem;
 }
 
 .copyHead {
@@ -304,7 +309,23 @@
 }
 
 .stepList {
-  margin-top: 0.1rem;
+  margin-top: 0.05rem;
+}
+
+.setupQuickItem {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.7rem 0.75rem;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 18px;
+  background: rgba(248, 250, 252, 0.86);
+}
+
+.setupQuickItem p {
+  margin: 0;
+  color: #0f172a;
+  font-weight: 700;
+  line-height: 1.35;
 }
 
 .setupNotesGrid {
@@ -313,8 +334,8 @@
 
 .noteCard {
   display: grid;
-  gap: 0.5rem;
-  padding: 0.9rem;
+  gap: 0.4rem;
+  padding: 0.75rem;
 }
 
 .noteCard p {
@@ -326,14 +347,14 @@
 .stepRow {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
-  padding: 0.78rem 0.85rem;
+  gap: 0.65rem;
+  padding: 0.68rem 0.75rem;
 }
 
 .stepRow p {
   margin: 0;
   color: #475569;
-  line-height: 1.55;
+  line-height: 1.45;
 }
 
 .stepIndex {
@@ -381,20 +402,6 @@
 
 .providerMeta {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.commandBlock {
-  padding: 0.78rem 0.85rem;
-  border-radius: 16px;
-  background: rgba(248, 250, 252, 0.92);
-  border: 1px solid rgba(226, 232, 240, 0.92);
-}
-
-.commandBlock code {
-  overflow-wrap: anywhere;
-  color: #0f172a;
-  font-size: 0.82rem;
-  line-height: 1.55;
 }
 
 .badgeRow {
@@ -452,6 +459,7 @@
   .providerMeta,
   .setupPickerGrid,
   .setupCommands,
+  .setupQuickSummary,
   .setupNotesGrid {
     grid-template-columns: 1fr;
   }

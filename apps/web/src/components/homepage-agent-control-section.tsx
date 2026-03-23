@@ -129,13 +129,13 @@ function getCopy(locale: string, opsEnabled: boolean) {
     assistantSummary: "Current operating promise",
     directiveLabel: "Current directive",
     providersLabel: "CLI connections",
-    providersTitle: "Explain and track terminal bridges directly from the homepage",
+    providersTitle: "Scan bridge status and team assignment at a glance",
     providersBody:
-      "The browser does not control a local terminal directly, but each developer can register a local CLI session with the bridge and monitor its state from this page.",
+      "Each developer registers a local CLI session with the bridge, and this page keeps connection state and team ownership visible.",
     setupBuilderLabel: "Homepage setup builder",
-    setupBuilderTitle: "Pick a provider and team to generate the bridge command",
+    setupBuilderTitle: "Pick a provider, pick a team, run the command",
     setupBuilderBody:
-      "Choose the CLI and team you want, copy the command, and run it in the local terminal to reflect the connection on the board immediately.",
+      "Choose the CLI and team, copy the command, and run it locally to update the board immediately.",
     connectCommand: "Copy connect command",
     assignCommand: "Copy assign command",
     copied: "Copied",
@@ -356,10 +356,6 @@ export function HomepageAgentControlSection({
                   </div>
                 </div>
 
-                <div className={styles.commandBlock}>
-                  <span className={styles.metaLabel}>{copy.setupCommand}</span>
-                  <code>{provider.command}</code>
-                </div>
               </article>
             ))}
           </div>
@@ -451,6 +447,21 @@ export function HomepageAgentControlSection({
                 </Link>
               </div>
             ) : null}
+
+            <div className={styles.setupQuickSummary}>
+              <div className={styles.setupQuickItem}>
+                <span className={styles.metaLabel}>01</span>
+                <p>{copy.chooseProvider}</p>
+              </div>
+              <div className={styles.setupQuickItem}>
+                <span className={styles.metaLabel}>02</span>
+                <p>{copy.connectCommand}</p>
+              </div>
+              <div className={styles.setupQuickItem}>
+                <span className={styles.metaLabel}>03</span>
+                <p>{copy.openBrief}</p>
+              </div>
+            </div>
 
             <div className={styles.stepList}>
               <span className={styles.metaLabel}>{copy.setupStepsLabel}</span>

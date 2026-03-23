@@ -1,4 +1,4 @@
-import { execFile as execFileCallback } from "node:child_process";
+import { execFile as execFileCallback, spawn as spawnCallback } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
@@ -333,6 +333,10 @@ function getWorkItems(teamId) {
   return workItemCatalog[teamId] ?? [];
 }
 
+function containsKeyword(text, keywords) {
+  return keywords.some((keyword) => text.includes(keyword));
+}
+
 function selectWorkItem(teamId, loopCount, operatorDirective = null) {
   const items = getWorkItems(teamId);
   if (!items.length) {
@@ -350,6 +354,27 @@ function selectWorkItem(teamId, loopCount, operatorDirective = null) {
     operatorDirective && typeof operatorDirective.body === "string"
       ? operatorDirective.body.toLowerCase()
       : "";
+
+  if (teamId === "shell-experience") {
+    if (containsKeyword(directiveText, ["홈페이지", "homepage", "landing", "home"])) {
+      return items.find((item) => item.id === "homepage-control-density") ?? items[0];
+    }
+    if (containsKeyword(directiveText, ["네비", "navigation", "sidebar", "header"])) {
+      return items.find((item) => item.id === "shell-navigation-clarity") ?? items[0];
+    }
+  }
+
+  if (teamId === "workflow-systems") {
+    if (containsKeyword(directiveText, ["document", "documents", "문서"])) {
+      return items.find((item) => item.id === "document-workspace-density") ?? items[0];
+    }
+    if (containsKeyword(directiveText, ["profile", "profiles", "프로필"])) {
+      return items.find((item) => item.id === "profile-workspace-clarity") ?? items[0];
+    }
+    if (containsKeyword(directiveText, ["lab", "labs", "연구실", "랩"])) {
+      return items.find((item) => item.id === "lab-workspace-structure") ?? items[0];
+    }
+  }
 
   if (teamId === "shell-experience") {
     if (directiveText.includes("홈페이지") || directiveText.includes("homepage")) {
@@ -437,7 +462,8 @@ function buildPlannerPrompt(team, context = {}, workItem) {
     ownedPaths,
     `Validation target: ${guidance.validation}`,
     `Non-goals: ${guidance.nonGoals}`,
-    "Return only a JSON object matching the provided schema.",
+    "Return only a JSON object with exactly these string keys: summary, operatorBrief, nextAction, teamDispatch, checkpoint.",
+    "Do not wrap the JSON in markdown or add any extra prose.",
   ].join("\n");
 }
 
@@ -707,7 +733,31 @@ async function detectProviderHealth() {
 
 function extractJsonObject(raw) {
   const trimmed = raw.replace(/```json|```/gi, "").trim();
-  const start = trimmed.indexOf("{");
+  if (!trimmed) {
+    throw new Error("No JSON object found in Codex output.");
+  }
+
+  try {
+    return JSON.parse(trimmed);
+  } catch {
+    // fall through
+  }
+
+  const lines = trimmed.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  for (let index = lines.length - 1; index >= 0; index -= 1) {
+    const candidate = lines[index].replace(/^`|`$/g, "").trim();
+    if (!candidate.startsWith("{") || !candidate.endsWith("}")) {
+      continue;
+    }
+
+    try {
+      return JSON.parse(candidate);
+    } catch {
+      // continue scanning
+    }
+  }
+
+  const start = trimmed.lastIndexOf("{");
   const end = trimmed.lastIndexOf("}");
 
   if (start === -1 || end === -1 || end <= start) {
@@ -715,6 +765,160 @@ function extractJsonObject(raw) {
   }
 
   return JSON.parse(trimmed.slice(start, end + 1));
+}
+
+async function readCodexJsonResponse(outputPath, stdout) {
+  const candidates = [];
+
+  try {
+    const outputFile = await readFile(outputPath, "utf8");
+    if (outputFile.trim()) {
+      candidates.push({ source: "output-last-message", raw: outputFile });
+    }
+  } catch {
+    // ignore missing or empty file
+  }
+
+  if (stdout.trim()) {
+    candidates.push({ source: "stdout", raw: stdout });
+  }
+
+  let lastError = null;
+  for (const candidate of candidates) {
+    try {
+      return {
+        source: candidate.source,
+        raw: candidate.raw,
+        value: extractJsonObject(candidate.raw),
+      };
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError ?? new Error("No JSON object found in Codex output.");
+}
+
+async function runCommandWithInput(command, args, input, { timeout, maxBuffer }) {
+  return new Promise((resolve, reject) => {
+    const child = spawnCallback(command, args, {
+      cwd: process.cwd(),
+      windowsHide: true,
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+
+    let stdout = "";
+    let stderr = "";
+    let settled = false;
+    let totalBytes = 0;
+    let timer = null;
+
+    const fail = (error) => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      if (timer) {
+        clearTimeout(timer);
+      }
+      error.stdout = stdout;
+      error.stderr = stderr;
+      try {
+        child.kill();
+      } catch {
+        // ignore
+      }
+      reject(error);
+    };
+
+    timer = setTimeout(() => {
+      fail(new Error(`Process timed out after ${timeout}ms.`));
+    }, timeout);
+
+    const append = (kind, chunk) => {
+      totalBytes += chunk.length;
+      if (totalBytes > maxBuffer) {
+        fail(new Error(`Process output exceeded ${maxBuffer} bytes.`));
+        return;
+      }
+
+      const text = chunk.toString("utf8");
+      if (kind === "stdout") {
+        stdout += text;
+      } else {
+        stderr += text;
+      }
+    };
+
+    child.stdout.on("data", (chunk) => {
+      append("stdout", chunk);
+    });
+
+    child.stderr.on("data", (chunk) => {
+      append("stderr", chunk);
+    });
+
+    child.on("error", (error) => {
+      fail(error);
+    });
+
+    child.on("close", (code) => {
+      if (settled) {
+        return;
+      }
+      settled = true;
+      if (timer) {
+        clearTimeout(timer);
+      }
+
+      if (code === 0) {
+        resolve({ stdout, stderr });
+        return;
+      }
+
+      const error = new Error(`Process exited with code ${code}.`);
+      error.code = code;
+      error.stdout = stdout;
+      error.stderr = stderr;
+      reject(error);
+    });
+
+    child.stdin.end(input, "utf8");
+  });
+}
+
+async function runCodexExecWithPrompt(prompt, outputPath, args, { timeout, maxBuffer }) {
+  await writeFile(outputPath, "", "utf8");
+  const { stdout, stderr } = await runCommandWithInput(
+    "cmd.exe",
+    [
+      "/d",
+      "/s",
+      "/c",
+      "codex.cmd",
+      "exec",
+      "-C",
+      process.cwd(),
+      "--skip-git-repo-check",
+      "-c",
+      "mcp_servers.linear.enabled=false",
+      "--color",
+      "never",
+      "--output-last-message",
+      outputPath,
+      ...args,
+    ],
+    prompt,
+    { timeout, maxBuffer },
+  );
+
+  const response = await readCodexJsonResponse(outputPath, stdout);
+  return {
+    stdout,
+    stderr,
+    outputFile: response.source === "output-last-message" ? response.raw : "",
+    value: response.value,
+  };
 }
 
 function isLowQualityPlan(plan) {
@@ -970,7 +1174,12 @@ function buildExecutionPrompt(team, taskPacket, operatorDirective, workItem) {
     `Non-goals: ${guidance.nonGoals}`,
     "After editing, run these validation commands if you made changes:",
     validationCommands,
-    "Return only a JSON object matching the provided schema.",
+    "Return only a JSON object with exactly these keys:",
+    "- summary: string",
+    "- operatorBrief: string",
+    "- nextAction: string",
+    "- outcome: one of changed, noop, blocked",
+    "Do not wrap the JSON in markdown or add any extra prose.",
   ].join("\n");
 }
 
@@ -1075,31 +1284,17 @@ async function runCodexExecutor(team, taskPacket, loopCount, operatorDirective, 
   const prompt = buildExecutionPrompt(team, taskPacket, operatorDirective, workItem);
 
   try {
-    const { stdout, stderr } = await execFile(
-      "cmd.exe",
-      [
-        "/c",
-        "codex.cmd",
-        "exec",
-        "-C",
-        process.cwd(),
-        "--skip-git-repo-check",
-        "--full-auto",
-        "--output-schema",
-        executionSchemaPath,
-        "--output-last-message",
-        outputPath,
-        prompt,
-      ],
+    const { stdout, stderr, outputFile, value } = await runCodexExecWithPrompt(
+      prompt,
+      outputPath,
+      ["--full-auto"],
       {
-        windowsHide: true,
         timeout: 600000,
         maxBuffer: 4 * 1024 * 1024,
       },
     );
 
-    const raw = await readFile(outputPath, "utf8");
-    const result = extractJsonObject(raw);
+    const result = value;
     if (isLowQualityExecutionResult(result, workItem)) {
       throw new Error("Codex returned a generic execution packet without acting on the concrete work item.");
     }
@@ -1132,7 +1327,7 @@ async function runCodexExecutor(team, taskPacket, loopCount, operatorDirective, 
       raw: {
         stdout,
         stderr,
-        outputFile: raw,
+        outputFile,
       },
     });
 
@@ -1198,32 +1393,17 @@ async function runCodexPlanner(team, loopCount, context, workItem) {
   const outputPath = path.join(researchOsStateDir, "codex-autonomy-last.json");
   const prompt = buildPlannerPrompt(team, context, workItem);
 
-  const { stdout, stderr } = await execFile(
-    "cmd.exe",
-    [
-      "/c",
-      "codex.cmd",
-      "exec",
-      "-C",
-      process.cwd(),
-      "--skip-git-repo-check",
-      "--sandbox",
-      "read-only",
-      "--output-schema",
-      autonomySchemaPath,
-      "--output-last-message",
-      outputPath,
-      prompt,
-    ],
+  const { stdout, stderr, outputFile, value } = await runCodexExecWithPrompt(
+    prompt,
+    outputPath,
+    ["--sandbox", "read-only"],
     {
-      windowsHide: true,
       timeout: 180000,
       maxBuffer: 2 * 1024 * 1024,
     },
   );
 
-  const raw = await readFile(outputPath, "utf8");
-  const plan = extractJsonObject(raw);
+  const plan = value;
   if (isLowQualityPlan(plan) || isOffTargetPlan(plan, team, workItem)) {
     throw new Error("Codex returned a generic planning packet without lane-specific guidance.");
   }
@@ -1238,7 +1418,7 @@ async function runCodexPlanner(team, loopCount, context, workItem) {
     raw: {
       stdout,
       stderr,
-      outputFile: raw,
+      outputFile,
     },
   });
 
@@ -1411,11 +1591,31 @@ function buildQueue(loopCount, currentTeamId) {
   }));
 }
 
-function selectTeamForCycle(state, loopCount) {
+function selectPreferredTeamForCycle(state, loopCount) {
   const directiveText =
     state.currentDirective && typeof state.currentDirective.body === "string"
       ? state.currentDirective.body.toLowerCase()
       : "";
+
+  if (containsKeyword(directiveText, ["홈페이지", "homepage", "landing", "home"])) {
+    return teamCycle.find((team) => team.id === "shell-experience") ?? teamCycle[0];
+  }
+
+  if (containsKeyword(directiveText, ["profile", "profiles", "프로필"])) {
+    return teamCycle.find((team) => team.id === "workflow-systems") ?? teamCycle[0];
+  }
+
+  if (containsKeyword(directiveText, ["document", "documents", "문서"])) {
+    return teamCycle.find((team) => team.id === "workflow-systems") ?? teamCycle[0];
+  }
+
+  if (containsKeyword(directiveText, ["lab", "labs", "연구실", "랩"])) {
+    return teamCycle.find((team) => team.id === "workflow-systems") ?? teamCycle[0];
+  }
+
+  if (containsKeyword(directiveText, ["reliability", "reliable", "신뢰성", "안정성"])) {
+    return teamCycle.find((team) => team.id === "reliability-desk") ?? teamCycle[0];
+  }
 
   if (directiveText.includes("홈페이지") || directiveText.includes("homepage")) {
     return teamCycle.find((team) => team.id === "shell-experience") ?? teamCycle[0];
@@ -1438,6 +1638,34 @@ function selectTeamForCycle(state, loopCount) {
   }
 
   return teamCycle[(loopCount - 1) % teamCycle.length];
+}
+
+async function selectTeamForCycle(state, loopCount) {
+  const preferredTeam = selectPreferredTeamForCycle(state, loopCount);
+  const orderedTeams = [preferredTeam, ...teamCycle.filter((team) => team.id !== preferredTeam.id)];
+  let blockedPreferredPaths = [];
+
+  for (const team of orderedTeams) {
+    const dirtyPaths = await listDirtyOwnedPaths(getLaneGuidance(team.id).ownedPaths);
+
+    if (!dirtyPaths.length) {
+      return {
+        team,
+        reroutedFromTeamId: team.id === preferredTeam.id ? null : preferredTeam.id,
+        blockedPreferredPaths,
+      };
+    }
+
+    if (team.id === preferredTeam.id) {
+      blockedPreferredPaths = dirtyPaths;
+    }
+  }
+
+  return {
+    team: preferredTeam,
+    reroutedFromTeamId: null,
+    blockedPreferredPaths,
+  };
 }
 
 function buildReport(team, loopCount, taskPacket, executionRecord = null) {
@@ -1585,7 +1813,8 @@ async function runAutonomyCycle() {
   }
 
   const loopCount = Number(state.autonomy.loopCount ?? 0) + 1;
-  const team = selectTeamForCycle(state, loopCount);
+  const teamSelection = await selectTeamForCycle(state, loopCount);
+  const team = teamSelection.team;
   const provider = await detectProviderHealth();
   const plannerContext = buildPlannerContext(state, team.id);
   const taskPacket = await runPlannerWithFallback(team, loopCount, provider, plannerContext);
@@ -1685,6 +1914,18 @@ async function runAutonomyCycle() {
     subject: "Autonomy checkpoint",
     body: `${taskPacket.checkpoint} ${executionRecord.changedFiles.length ? `Changed: ${executionRecord.changedFiles.join(", ")}.` : executionRecord.nextAction}`,
   });
+
+  if (teamSelection.reroutedFromTeamId) {
+    const reroutedFrom = teamCycle.find((entry) => entry.id === teamSelection.reroutedFromTeamId);
+    pushEvent(state, {
+      channel: "assistant",
+      teamId: team.id,
+      from: "Mission Control",
+      to: "Operator Liaison",
+      subject: "Autonomy reroute",
+      body: `${reroutedFrom?.name ?? "Preferred lane"} was skipped because its owned paths were already dirty. ${team.name} took the next clean lane instead.`,
+    });
+  }
 
   await saveState(state);
   console.log(

@@ -2193,21 +2193,36 @@ export function LabWorkspace({ locale, initialDocuments, initialTimetableEntries
       <section className="card document-library-section lab-homepage-section">
         <div className="card-header">
           <div>
-            <h3>People</h3>
+            <h3>{isKo ? "연구실 구성" : "People roster"}</h3>
             <p className="card-support-text">
               {isKo
-                ? "연구실 페이지는 Professor, Members, Alumni 순서로 사람 구조를 먼저 보여줍니다."
-                : "The lab page should lead with a People structure organized into Professor, Members, and Alumni."}
+                ? "지도교수, 현재 멤버, 동문 순서로 연구실 구성을 빠르게 훑어볼 수 있습니다."
+                : "Scan the lab structure in one pass with professor, current members, and alumni grouped separately."}
             </p>
           </div>
         </div>
-          <div className="lab-people-stack">
-            <div className="lab-people-group">
-              <div className="lab-people-group-head">
-                <div className="lab-people-group-title">
-                  <h4>{isKo ? "Professor" : "Professor"}</h4>
-                </div>
+        <div className="lab-publication-pill-row" aria-label={isKo ? "연구실 구성 요약" : "Lab roster summary"}>
+          <span className="pill pill-gray">
+            {isKo ? `지도교수 ${professorRoster.length}` : `Professor ${professorRoster.length}`}
+          </span>
+          <span className="pill pill-gray">
+            {isKo ? `멤버 ${memberRoster.length}` : `Members ${memberRoster.length}`}
+          </span>
+          <span className="pill pill-gray">
+            {isKo ? `동문 ${alumniRoster.length}` : `Alumni ${alumniRoster.length}`}
+          </span>
+        </div>
+        <div className="lab-people-stack">
+          <div className="lab-people-group">
+            <div className="lab-people-group-head">
+              <div className="lab-people-group-title">
+                <h4>{isKo ? "지도교수" : "Professor"}</h4>
+                <p className="card-support-text">
+                  {isKo ? "연구실을 대표하는 책임 연구자입니다." : "Lead investigator for this private lab workspace."}
+                </p>
               </div>
+              <span className="pill pill-gray">{professorRoster.length}</span>
+            </div>
             <div className="lab-people-grid">
               {professorRoster.length ? (
                 professorRoster.map(renderPersonCard)
@@ -2218,13 +2233,16 @@ export function LabWorkspace({ locale, initialDocuments, initialTimetableEntries
               )}
             </div>
           </div>
-
-            <div className="lab-people-group">
-              <div className="lab-people-group-head">
-                <div className="lab-people-group-title">
-                  <h4>{isKo ? "Members" : "Members"}</h4>
-                </div>
+          <div className="lab-people-group">
+            <div className="lab-people-group-head">
+              <div className="lab-people-group-title">
+                <h4>{isKo ? "현재 멤버" : "Current members"}</h4>
+                <p className="card-support-text">
+                  {isKo ? "현재 함께 일하는 연구실 구성원입니다." : "Researchers currently active in this lab."}
+                </p>
               </div>
+              <span className="pill pill-gray">{memberRoster.length}</span>
+            </div>
             <div className="lab-people-grid">
               {memberRoster.length ? (
                 memberRoster.map(renderPersonCard)
@@ -2235,13 +2253,16 @@ export function LabWorkspace({ locale, initialDocuments, initialTimetableEntries
               )}
             </div>
           </div>
-
-            <div className="lab-people-group">
-              <div className="lab-people-group-head">
-                <div className="lab-people-group-title">
-                  <h4>{isKo ? "Alumni" : "Alumni"}</h4>
-                </div>
+          <div className="lab-people-group">
+            <div className="lab-people-group-head">
+              <div className="lab-people-group-title">
+                <h4>{isKo ? "동문" : "Alumni"}</h4>
+                <p className="card-support-text">
+                  {isKo ? "연구실 이력을 남겨두는 졸업 및 이전 멤버입니다." : "Former members retained for lab history and reference."}
+                </p>
               </div>
+              <span className="pill pill-gray">{alumniRoster.length}</span>
+            </div>
             <div className="lab-people-grid">
               {alumniRoster.length ? (
                 alumniRoster.map(renderPersonCard)
