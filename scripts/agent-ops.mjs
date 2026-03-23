@@ -33,6 +33,8 @@ function makeDefaultAutonomy(updatedAt) {
     reports: [],
     currentTask: null,
     taskHistory: [],
+    currentExecution: null,
+    executionHistory: [],
     providerHealth: [
       {
         providerId: "mock",
@@ -65,6 +67,7 @@ function makeDefaultState() {
     },
     conversationFeed: [],
     teamUpdates: [],
+    memberUpdates: [],
     providerConnections: [],
     autonomy: makeDefaultAutonomy(updatedAt),
   };
@@ -73,11 +76,23 @@ function makeDefaultState() {
 async function loadState() {
   try {
     const state = JSON.parse(await readFile(stateFile, "utf8"));
+    if (!Array.isArray(state.memberUpdates)) {
+      state.memberUpdates = [];
+    }
     if (!Array.isArray(state.providerConnections)) {
       state.providerConnections = [];
     }
     if (!state.autonomy || typeof state.autonomy !== "object") {
       state.autonomy = makeDefaultAutonomy(state.updatedAt ?? nowIso());
+    }
+    if (!Array.isArray(state.autonomy.taskHistory)) {
+      state.autonomy.taskHistory = [];
+    }
+    if (!Array.isArray(state.autonomy.executionHistory)) {
+      state.autonomy.executionHistory = [];
+    }
+    if (state.autonomy.currentExecution === undefined) {
+      state.autonomy.currentExecution = null;
     }
     return state;
   } catch {
@@ -161,6 +176,21 @@ function printStatus(state) {
       console.log(`Current task next action: ${state.autonomy.currentTask.nextAction}`);
       if (state.autonomy.currentTask.artifactPath) {
         console.log(`Current task artifact: ${state.autonomy.currentTask.artifactPath}`);
+      }
+    }
+    if (state.autonomy.currentExecution) {
+      console.log(
+        `Current execution: [${state.autonomy.currentExecution.outcome}] ${state.autonomy.currentExecution.teamLabel} via ${state.autonomy.currentExecution.providerLabel}`,
+      );
+      if (state.autonomy.currentExecution.changedFiles.length) {
+        console.log(
+          `Current execution files: ${state.autonomy.currentExecution.changedFiles.join(", ")}`,
+        );
+      }
+      if (state.autonomy.currentExecution.artifactPath) {
+        console.log(
+          `Current execution artifact: ${state.autonomy.currentExecution.artifactPath}`,
+        );
       }
     }
   }

@@ -11,7 +11,7 @@ It is not a full always-on swarm yet. It is the first control-plane layer that k
 - `scripts/agent-ops.mjs`
   - operator bridge for `directive`, `focus`, `pause`, `resume`, provider connect or assign, and autonomy on or off
 - `scripts/agent-ops-daemon.mjs`
-  - long-running local loop that reads the shared state file, generates a structured planning packet, and advances one bounded lane per cycle
+  - long-running local loop that reads the shared state file, generates a structured planning packet, attempts one bounded execution slice, and advances one bounded lane per cycle
 - `apps/web/src/app/api/ops-state/route.ts`
   - board API for the current merged ops snapshot
 - `apps/web/src/app/api/ops-terminal/route.ts`
@@ -32,10 +32,16 @@ On each cycle it:
 - chooses the next lane
 - asks a live provider for a structured planning packet when possible
 - saves the planning artifact under `.researchos/autonomy-artifacts/`
+- tries one bounded write pass through `Codex CLI` when the lane is executable
+- skips execution when owned paths are already dirty or when the planner failed
+- runs bounded validation commands for the lane after real file changes
+- saves execution artifacts under `.researchos/autonomy-executions/`
 - updates the current directive
 - refreshes the selected team and deliverable
 - appends a bottom-up report packet
 - stores the latest task packet and recent planning history
+- stores the latest execution packet and recent execution history
+- refreshes member-level runtime state for the selected team
 - updates the board queue and next run time
 
 ## Planning artifacts
@@ -57,6 +63,33 @@ The ops board reads the latest packet into:
 
 - `autonomy.currentTask`
 - `autonomy.taskHistory`
+
+## Execution artifacts
+
+Every bounded execution attempt can write an artifact file under:
+
+- `.researchos/autonomy-executions/`
+
+Each execution artifact records:
+
+- loop number
+- provider used
+- team and lane
+- prompt
+- normalized execution packet
+- changed files
+- validation results
+- raw provider output or error context
+
+The ops board reads the latest execution state into:
+
+- `autonomy.currentExecution`
+- `autonomy.executionHistory`
+
+The runtime bridge also updates:
+
+- `memberUpdates`
+  - per-team member task, state, and last-update overrides for the live board
 
 ## Provider reality boundary
 
@@ -111,8 +144,19 @@ Inspect the latest planning artifacts:
 dir .researchos\autonomy-artifacts
 ```
 
+Inspect the latest execution artifacts:
+
+```bash
+dir .researchos\autonomy-executions
+```
+
 ## Current limitation
 
-This loop now produces live planning packets and a real artifact trail, but it still does not make real code changes by itself.
+This loop now attempts real bounded code changes, but it is still not a full always-on swarm.
 
-The next step is provider adapters with authenticated long-running execution sessions so the autonomy daemon can hand bounded tasks to real Codex, Claude, or Gemini workers, validate the result, and then schedule the next slice from actual file changes instead of planning output alone.
+Current boundaries:
+
+- it still depends on `Codex CLI` producing a usable packet or on the fallback packet being specific enough to execute safely
+- it will block itself when owned paths are already dirty, which is intentional to avoid overlapping edits
+- it still uses one local worker loop, not multiple true long-running collaborative provider sessions
+- it still needs better provider-specific adapters if you want Codex, Gemini, and Claude to all execute as distinct live team members instead of one bounded write worker

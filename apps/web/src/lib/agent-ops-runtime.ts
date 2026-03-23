@@ -79,6 +79,7 @@ function normalizeRuntimeState(candidate: unknown, locale: string): AgentOpsRunt
         : fallback.currentDirective,
     conversationFeed: Array.isArray(value.conversationFeed) ? value.conversationFeed : [],
     teamUpdates: Array.isArray(value.teamUpdates) ? value.teamUpdates : [],
+    memberUpdates: Array.isArray(value.memberUpdates) ? value.memberUpdates : [],
     providerConnections: Array.isArray(value.providerConnections) ? value.providerConnections : [],
     autonomy:
       value.autonomy && typeof value.autonomy === "object"
@@ -97,6 +98,13 @@ function normalizeRuntimeState(candidate: unknown, locale: string): AgentOpsRunt
             taskHistory: Array.isArray(value.autonomy.taskHistory)
               ? value.autonomy.taskHistory
               : createDefaultAutonomyRuntime(locale, fallback.updatedAt).taskHistory,
+            currentExecution:
+              value.autonomy.currentExecution && typeof value.autonomy.currentExecution === "object"
+                ? value.autonomy.currentExecution
+                : createDefaultAutonomyRuntime(locale, fallback.updatedAt).currentExecution,
+            executionHistory: Array.isArray(value.autonomy.executionHistory)
+              ? value.autonomy.executionHistory
+              : createDefaultAutonomyRuntime(locale, fallback.updatedAt).executionHistory,
           }
         : createDefaultAutonomyRuntime(locale, fallback.updatedAt),
   };
@@ -114,12 +122,33 @@ async function readRuntimeState(locale: string) {
 
 function mergeTeamUpdates(teams: TeamUnit[], runtimeState: AgentOpsRuntimeState) {
   const updates = new Map(runtimeState.teamUpdates.map((entry) => [entry.teamId, entry]));
+  const memberUpdates = runtimeState.memberUpdates;
 
   return teams.map((team) => {
     const update = updates.get(team.id);
+    const runtimeMembers = memberUpdates.filter((entry) => entry.teamId === team.id);
+    const mergedMembers = runtimeMembers.length
+      ? team.members.map((member) => {
+          const runtimeMember = runtimeMembers.find((entry) => entry.memberName === member.name);
+
+          if (!runtimeMember) {
+            return member;
+          }
+
+          return {
+            ...member,
+            state: runtimeMember.state ?? member.state,
+            currentTask: runtimeMember.currentTask ?? member.currentTask,
+            lastUpdate: runtimeMember.lastUpdate ?? member.lastUpdate,
+          };
+        })
+      : team.members;
 
     if (!update) {
-      return team;
+      return {
+        ...team,
+        members: mergedMembers,
+      };
     }
 
     return {
@@ -128,6 +157,7 @@ function mergeTeamUpdates(teams: TeamUnit[], runtimeState: AgentOpsRuntimeState)
       objective: update.objective ?? team.objective,
       currentDeliverable: update.currentDeliverable ?? team.currentDeliverable,
       nextHandoff: update.nextHandoff ?? team.nextHandoff,
+      members: mergedMembers,
     };
   });
 }

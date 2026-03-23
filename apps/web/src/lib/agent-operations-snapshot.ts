@@ -170,6 +170,28 @@ export interface AutonomyTaskPacket {
   status: "planned" | "fallback" | "failed";
 }
 
+export interface AutonomyExecutionValidation {
+  label: string;
+  status: "passed" | "failed" | "not-run";
+  detail: string;
+}
+
+export interface AutonomyExecutionRecord {
+  id: string;
+  time: string;
+  providerId: AgentProviderId | "mock";
+  providerLabel: string;
+  teamId: string;
+  teamLabel: string;
+  summary: string;
+  operatorBrief: string;
+  changedFiles: string[];
+  nextAction: string;
+  artifactPath: string | null;
+  outcome: "changed" | "noop" | "blocked" | "failed";
+  validation: AutonomyExecutionValidation[];
+}
+
 export interface AutonomyRuntimeStatus {
   enabled: boolean;
   status: "stopped" | "running" | "paused";
@@ -187,6 +209,8 @@ export interface AutonomyRuntimeStatus {
   providerHealth: AutonomyProviderHealth[];
   currentTask: AutonomyTaskPacket | null;
   taskHistory: AutonomyTaskPacket[];
+  currentExecution: AutonomyExecutionRecord | null;
+  executionHistory: AutonomyExecutionRecord[];
 }
 
 export interface RuntimeBridgeStatus {
@@ -211,6 +235,14 @@ export interface TeamRuntimeUpdate {
   objective?: string;
 }
 
+export interface TeamMemberRuntimeUpdate {
+  teamId: string;
+  memberName: string;
+  state?: AgentState;
+  currentTask?: string;
+  lastUpdate?: string;
+}
+
 export interface ProviderConnectionRuntime {
   providerId: AgentProviderId;
   status: ProviderStatus;
@@ -228,6 +260,7 @@ export interface AgentOpsRuntimeState {
   currentDirective: OperatorDirective;
   conversationFeed: ConversationEvent[];
   teamUpdates: TeamRuntimeUpdate[];
+  memberUpdates: TeamMemberRuntimeUpdate[];
   providerConnections: ProviderConnectionRuntime[];
   autonomy: AutonomyRuntimeStatus;
 }
@@ -321,6 +354,8 @@ export function createDefaultAutonomyRuntime(locale = "en", updatedAt = new Date
     ],
     currentTask: null,
     taskHistory: [],
+    currentExecution: null,
+    executionHistory: [],
     };
   }
 
@@ -348,6 +383,8 @@ export function createDefaultAutonomyRuntime(locale = "en", updatedAt = new Date
     ],
     currentTask: null,
     taskHistory: [],
+    currentExecution: null,
+    executionHistory: [],
   };
 }
 
@@ -363,6 +400,7 @@ export function createDefaultAgentOpsRuntimeState(locale = "en"): AgentOpsRuntim
     currentDirective: createDefaultOperatorDirective(locale, updatedAt),
     conversationFeed: [],
     teamUpdates: [],
+    memberUpdates: [],
     providerConnections: [],
     autonomy: createDefaultAutonomyRuntime(locale, updatedAt),
   };

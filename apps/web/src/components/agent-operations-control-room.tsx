@@ -269,6 +269,26 @@ function getTaskPacketStatusLabel(
   }
 }
 
+function getExecutionOutcomeLabel(
+  locale: string,
+  outcome: "changed" | "noop" | "blocked" | "failed",
+) {
+  if (!isKoreanLocale(locale)) {
+    return outcome;
+  }
+
+  switch (outcome) {
+    case "changed":
+      return "변경됨";
+    case "noop":
+      return "변경 없음";
+    case "blocked":
+      return "보류";
+    case "failed":
+      return "실패";
+  }
+}
+
 function getChannelLabel(locale: string, channel: "assistant" | "team" | "review") {
   if (!isKoreanLocale(locale)) {
     return channel;
@@ -576,12 +596,16 @@ function getAutonomyPanelCopy(locale: string) {
       providerHealth: "provider 상태",
       currentTask: "현재 planning packet",
       taskHistory: "최근 planning history",
+      currentExecution: "현재 execution",
+      executionHistory: "최근 execution history",
       taskArtifact: "artifact",
       artifactMissing: "artifact 없음",
       taskObjective: "목표",
       taskDispatch: "팀 지시",
       taskNextAction: "다음 액션",
       taskCheckpoint: "체크포인트",
+      executionFiles: "변경 파일",
+      executionValidation: "검증",
       taskTeam: "팀",
       enabled: "활성",
       disabled: "비활성",
@@ -611,12 +635,16 @@ function getAutonomyPanelCopy(locale: string) {
     providerHealth: "Provider health",
     currentTask: "Current planning packet",
     taskHistory: "Recent planning history",
+    currentExecution: "Current execution",
+    executionHistory: "Recent execution history",
     taskArtifact: "Artifact",
     artifactMissing: "No artifact",
     taskObjective: "Objective",
     taskDispatch: "Dispatch",
     taskNextAction: "Next action",
     taskCheckpoint: "Checkpoint",
+    executionFiles: "Changed files",
+    executionValidation: "Validation",
     taskTeam: "Team",
     enabled: "Enabled",
     disabled: "Disabled",
@@ -1064,6 +1092,25 @@ export function AgentOperationsControlRoom({
     "corepack pnpm ops -- directive \"Focus on homepage quality next.\"",
     "git status --short",
   ];
+  const latestExecution = snapshot.autonomy.currentExecution;
+  const currentTaskStatusClass =
+    !snapshot.autonomy.currentTask
+      ? styles.statusDone
+      : snapshot.autonomy.currentTask.status === "failed"
+      ? styles.statusReview
+      : snapshot.autonomy.currentTask.status === "fallback"
+        ? styles.statusDone
+        : styles.statusActive;
+  const currentExecutionStatusClass =
+    !latestExecution
+      ? styles.statusDone
+      : latestExecution.outcome === "failed"
+      ? styles.statusReview
+      : latestExecution.outcome === "blocked"
+        ? styles.statusDone
+        : latestExecution.outcome === "noop"
+          ? styles.statusDone
+          : styles.statusActive;
 
   const runTerminalCommand = async (commandValue?: string) => {
     const normalizedCommand = (commandValue ?? terminalCommand).trim();
@@ -1267,8 +1314,352 @@ export function AgentOperationsControlRoom({
     }
   };
 
+  const controlTowerOverview = (
+    <div className={styles.controlTowerStage}>
+      <div className={styles.commandRail}>
+        <article className={`${styles.commandTowerCard} ${styles.commandTowerOperator}`}>
+          <div className={styles.commandTowerHead}>
+            <span className={styles.flowNodeLabel}>{liveCopy.operatorNode}</span>
+            <span className={`${styles.statusBadge} ${styles.directiveBadge}`}>
+              {getDirectiveStatusLabel(locale, snapshot.currentDirective.status)}
+            </span>
+          </div>
+          <div className={styles.commandTowerTitle}>
+            <UserRoundSearch size={18} />
+            <strong>{stageCopy.operatorTitle}</strong>
+          </div>
+          <p className={styles.commandTowerBody}>{snapshot.currentDirective.body}</p>
+          <div className={styles.commandTowerMetaRow}>
+            <span className={styles.commandTowerChip}>
+              {stageCopy.targetTeam}: {selectedTeam?.name}
+            </span>
+            <span className={styles.commandTowerChip}>
+              {stageCopy.activeShell}: {activeSession?.shellLabel ?? sessionCopy.noSession}
+            </span>
+          </div>
+        </article>
+
+        <div className={styles.commandRailBridge}>
+          <span className={styles.flowNodeLabel}>{liveCopy.topDownLabel}</span>
+          <div className={styles.commandRailTrack} />
+          <ArrowRightLeft size={18} />
+          <div className={styles.commandRailTrack} />
+        </div>
+
+        <article className={`${styles.commandTowerCard} ${styles.commandTowerAssistant}`}>
+          <div className={styles.commandTowerHead}>
+            <span className={styles.flowNodeLabel}>{liveCopy.assistantNode}</span>
+            <span className={`${styles.statusBadge} ${styles.statusActive}`}>
+              {assistantMode.label}
+            </span>
+          </div>
+          <div className={styles.commandTowerTitle}>
+            <Bot size={18} />
+            <strong>{snapshot.assistant.name}</strong>
+          </div>
+          <p className={styles.commandTowerBody}>{assistantMode.teamInstruction}</p>
+          <div className={styles.commandTowerMetaRow}>
+            <span className={styles.commandTowerChip}>
+              {formatDirectiveTitle(locale, snapshot.currentDirective.title)}
+            </span>
+            <span className={styles.commandTowerChip}>{snapshot.assistant.currentFocus}</span>
+          </div>
+        </article>
+      </div>
+
+      <div className={styles.executionLaneGrid}>
+        <article className={`${styles.commandTowerCard} ${styles.commandTowerLead}`}>
+          <div className={styles.commandTowerHead}>
+            <span className={styles.flowNodeLabel}>{stageCopy.teamLead}</span>
+            <span className={`${styles.statusBadge} ${teamClassMap[selectedTeam.state]}`}>
+              {getTeamStateLabel(locale, selectedTeam.state)}
+            </span>
+          </div>
+          <div className={styles.commandTowerTitle}>
+            <GitBranchPlus size={18} />
+            <strong>{selectedTeam.lead}</strong>
+          </div>
+          <p className={styles.commandTowerBody}>{selectedTeam.objective}</p>
+          <div className={styles.commandTowerMetaRow}>
+            <span className={styles.commandTowerChip}>
+              {stageCopy.lane}: {selectedTeam.lane}
+            </span>
+            <span className={styles.commandTowerChip}>
+              {stageCopy.deliverable}: {selectedTeam.currentDeliverable}
+            </span>
+          </div>
+          <div className={styles.providerDockRow}>
+            <span className={styles.flowNodeLabel}>{stageCopy.attachedCli}</span>
+            <div className={styles.commandTowerMetaRow}>
+              {selectedProviders.length ? (
+                selectedProviders.map((provider) => (
+                  <span className={styles.commandTowerChip} key={provider.providerId}>
+                    {provider.label}
+                  </span>
+                ))
+              ) : (
+                <span className={styles.commandTowerChipMuted}>{liveCopy.noCli}</span>
+              )}
+            </div>
+          </div>
+        </article>
+
+        <section className={styles.memberSwarmStage}>
+          <div className={styles.memberSwarmHead}>
+            <div>
+              <span className={styles.flowNodeLabel}>{stageCopy.teamMembers}</span>
+              <h3 className={styles.swarmTitle}>{stageCopy.swarmTitle}</h3>
+              <p className={styles.swarmBody}>{stageCopy.swarmBody}</p>
+            </div>
+            <Users2 size={18} />
+          </div>
+          <div className={styles.memberSwarmGrid}>
+            {selectedTeam.members.map((member) => (
+              <article className={styles.memberSignalCard} key={member.name}>
+                <div className={styles.memberSignalHead}>
+                  <div>
+                    <strong>{member.name}</strong>
+                    <span>{member.title}</span>
+                  </div>
+                  <span className={`${styles.stateBadge} ${stateClassMap[member.state]}`}>
+                    {getAgentStateLabel(locale, member.state)}
+                  </span>
+                </div>
+                <p className={styles.memberSignalBody}>{member.currentTask}</p>
+                <div className={styles.commandTowerMetaRow}>
+                  {member.ownedPaths.slice(0, 2).map((path) => (
+                    <span className={styles.commandTowerChip} key={`${member.name}-${path}`}>
+                      {path}
+                    </span>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      <div className={styles.reportStack}>
+        <div className={styles.reportCardGrid}>
+          <article className={`${styles.reportCard} ${styles.reportCardPrimary}`}>
+            <span className={styles.flowNodeLabel}>{liveCopy.deliverableNode}</span>
+            <strong>{selectedTeam.currentDeliverable}</strong>
+            <p>{selectedTeam.nextHandoff}</p>
+          </article>
+
+          <article className={styles.reportCard}>
+            <span className={styles.flowNodeLabel}>{liveCopy.packetNode}</span>
+            <strong>{stageCopy.latestPacket}</strong>
+            <p>{snapshot.assistant.responsePacket}</p>
+          </article>
+
+          <article className={`${styles.reportCard} ${styles.reportCardAccent}`}>
+            <span className={styles.flowNodeLabel}>{liveCopy.receiptNode}</span>
+            <strong>
+              {latestVisibleConversation
+                ? formatConversationSubject(locale, latestVisibleConversation.subject)
+                : liveCopy.noEvents}
+            </strong>
+            <p>
+              {latestVisibleConversation
+                ? latestVisibleConversation.body
+                : snapshot.currentDirective.body}
+            </p>
+          </article>
+        </div>
+      </div>
+
+      <div className={styles.tracePanel}>
+        <div className={styles.traceHead}>
+          <div>
+            <span className={styles.flowNodeLabel}>{stageCopy.traceLabel}</span>
+            <h3 className={styles.swarmTitle}>{stageCopy.traceTitle}</h3>
+            <p className={styles.swarmBody}>{stageCopy.traceBody}</p>
+          </div>
+          <CalendarClock size={18} />
+        </div>
+
+        {interactionTrace.length ? (
+          <div className={styles.traceList}>
+            {interactionTrace.map((event) => (
+              <article className={styles.traceRow} key={event.id}>
+                <div className={`${styles.traceBubble} ${styles.traceBubbleFrom}`}>
+                  <span className={styles.traceActor}>{formatActorLabel(locale, event.from)}</span>
+                  <strong>{formatConversationSubject(locale, event.subject)}</strong>
+                </div>
+                <div className={styles.traceArrow}>
+                  <ArrowRightLeft size={16} />
+                </div>
+                <div className={`${styles.traceBubble} ${styles.traceBubbleTo}`}>
+                  <span className={styles.traceActor}>{formatActorLabel(locale, event.to)}</span>
+                  <p>{event.body}</p>
+                  <span className={styles.traceMeta}>
+                    {getChannelLabel(locale, event.channel)} ·{" "}
+                    {formatBoardTimestamp(locale, event.time)}
+                  </span>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className={styles.terminalEmpty}>{stageCopy.noTrace}</div>
+        )}
+      </div>
+    </div>
+  );
+
+  const missionStatusAside = (
+    <div className={styles.primeSideStack}>
+      <article className={`${styles.panel} ${styles.sectionPanel} ${styles.primeStripPanel}`}>
+        <div className={styles.primeChipRow}>
+          {snapshot.metrics.map((metric) => (
+            <div
+              key={metric.label}
+              className={`${styles.primeMetricCard} ${metricToneClass(metric)}`}
+            >
+              <span className={styles.primeMetricValue}>{metric.value}</span>
+              <span className={styles.primeMetricLabel}>{metric.label}</span>
+            </div>
+          ))}
+        </div>
+      </article>
+
+      <article className={`${styles.panel} ${styles.sectionPanel}`}>
+        <div className={styles.primeStatusHead}>
+          <div>
+            <span className={styles.sectionLabel}>{autonomyCopy.currentTask}</span>
+            <h3 className={styles.sectionTitle}>
+              {snapshot.autonomy.currentTask?.teamLabel ?? selectedTeam.name}
+            </h3>
+          </div>
+          <span className={`${styles.statusBadge} ${currentTaskStatusClass}`}>
+            {snapshot.autonomy.currentTask
+              ? getTaskPacketStatusLabel(locale, snapshot.autonomy.currentTask.status)
+              : autonomyCopy.artifactMissing}
+          </span>
+        </div>
+        <div className={styles.primeStatusStack}>
+          <p className={styles.sectionBody}>
+            {snapshot.autonomy.currentTask?.summary ?? snapshot.autonomy.latestSummary}
+          </p>
+          <div className={styles.commandTowerMetaRow}>
+            <span className={styles.commandTowerChip}>
+              {autonomyCopy.provider}: {snapshot.autonomy.activeProviderLabel}
+            </span>
+            <span className={styles.commandTowerChip}>
+              {autonomyCopy.loopCount}: {snapshot.autonomy.loopCount}
+            </span>
+          </div>
+          <span className={styles.runtimeMeta}>
+            {snapshot.autonomy.currentTask?.artifactPath ?? autonomyCopy.artifactMissing}
+          </span>
+        </div>
+      </article>
+
+      <article className={`${styles.panel} ${styles.sectionPanel}`}>
+        <div className={styles.primeStatusHead}>
+          <div>
+            <span className={styles.sectionLabel}>{autonomyCopy.currentExecution}</span>
+            <h3 className={styles.sectionTitle}>
+              {latestExecution?.providerLabel ?? snapshot.autonomy.activeProviderLabel}
+            </h3>
+          </div>
+          <span className={`${styles.statusBadge} ${currentExecutionStatusClass}`}>
+            {latestExecution
+              ? getExecutionOutcomeLabel(locale, latestExecution.outcome)
+              : autonomyCopy.artifactMissing}
+          </span>
+        </div>
+        <div className={styles.primeStatusStack}>
+          <p className={styles.sectionBody}>
+            {latestExecution?.summary ?? snapshot.autonomy.operatorBrief}
+          </p>
+          <div className={styles.primeValidationList}>
+            {(latestExecution?.validation ?? []).slice(0, 2).map((item) => (
+              <div className={styles.primeValidationRow} key={item.label}>
+                <strong>{item.label}</strong>
+                <span
+                  className={`${styles.statusBadge} ${
+                    item.status === "failed"
+                      ? styles.statusReview
+                      : item.status === "passed"
+                        ? styles.statusActive
+                        : styles.statusDone
+                  }`}
+                >
+                  {item.status}
+                </span>
+              </div>
+            ))}
+          </div>
+          {latestExecution?.changedFiles.length ? (
+            <div className={styles.commandTowerMetaRow}>
+              {latestExecution.changedFiles.slice(0, 3).map((file) => (
+                <span className={styles.commandTowerChip} key={file}>
+                  {file}
+                </span>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      </article>
+
+      <article className={`${styles.panel} ${styles.sectionPanel}`}>
+        <div className={styles.primeStatusHead}>
+          <div>
+            <span className={styles.sectionLabel}>{copy.terminalBridge}</span>
+            <h3 className={styles.sectionTitle}>{copy.providersTitle}</h3>
+          </div>
+          <span
+            className={`${styles.statusBadge} ${
+              snapshot.runtime.terminalConnected ? styles.statusActive : styles.statusDone
+            }`}
+          >
+            {snapshot.runtime.terminalConnected ? copy.terminalConnected : copy.terminalWaiting}
+          </span>
+        </div>
+        <div className={styles.primeProviderList}>
+          {snapshot.providerConnections.slice(0, 3).map((provider) => (
+            <div className={styles.primeProviderRow} key={provider.providerId}>
+              <strong>{provider.label}</strong>
+              <span>{provider.assignedTeamLabel}</span>
+            </div>
+          ))}
+        </div>
+      </article>
+    </div>
+  );
+
   return (
     <div className={styles.shell}>
+      <section className={styles.controlRoomPrime}>
+        <div className={styles.primeHeader}>
+          <div>
+            <span className={styles.sectionLabel}>{copy.heroEyebrow}</span>
+            <h2 className={styles.primeTitle}>{snapshot.headline}</h2>
+            <p className={styles.sectionBody}>{snapshot.summary}</p>
+          </div>
+          <div className={styles.primeHeaderMeta}>
+            <span className={styles.commandTowerChip}>
+              {copy.snapshotUpdated} {snapshot.generatedAt}
+            </span>
+            <span className={styles.commandTowerChip}>
+              {autonomyCopy.provider}: {snapshot.autonomy.activeProviderLabel}
+            </span>
+            <span className={styles.commandTowerChip}>
+              {autonomyCopy.loopCount}: {snapshot.autonomy.loopCount}
+            </span>
+          </div>
+        </div>
+
+        <div className={styles.controlRoomPrimeGrid}>
+          <article className={`${styles.panel} ${styles.sectionPanel}`}>
+            {controlTowerOverview}
+          </article>
+          {missionStatusAside}
+        </div>
+      </section>
+
       <section className={styles.hero}>
         <article className={`${styles.panel} ${styles.heroPanel}`}>
           <span className={styles.eyebrow}>

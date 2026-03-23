@@ -9,7 +9,9 @@ const stateFile = path.join(process.cwd(), ".researchos", "agent-ops-state.json"
 const tickMs = Number(process.env.RESEARCH_OS_AUTONOMY_TICK_MS ?? "90000");
 const researchOsStateDir = path.join(process.cwd(), ".researchos");
 const autonomyArtifactDir = path.join(researchOsStateDir, "autonomy-artifacts");
+const autonomyExecutionDir = path.join(researchOsStateDir, "autonomy-executions");
 const autonomySchemaPath = path.join(researchOsStateDir, "autonomy-plan-schema.json");
+const executionSchemaPath = path.join(researchOsStateDir, "autonomy-execution-schema.json");
 
 const teamCycle = [
   {
@@ -58,6 +60,13 @@ const teamCycle = [
   },
 ];
 
+const teamMemberRoster = {
+  "executive-desk": ["Operator Liaison", "Mission Control"],
+  "shell-experience": ["Shell Builder", "Ops Board Builder"],
+  "workflow-systems": ["Profile Steward", "Document Systems", "Lab Publishing Lead"],
+  "reliability-desk": ["Release Guard", "Docs Drift Agent"],
+};
+
 const laneGuidance = {
   "shell-experience": {
     ownedPaths: [
@@ -66,9 +75,17 @@ const laneGuidance = {
       "apps/web/src/components/sidebar.tsx",
       "apps/web/src/components/language-switcher.tsx",
       "apps/web/src/components/preview-mode-banner.tsx",
+      "apps/web/src/components/agent-operations-control-room.tsx",
+      "apps/web/src/components/agent-operations-dashboard.module.css",
     ],
     validation: "Review /ko and /en shell surfaces and avoid route, auth, or contract changes.",
     nonGoals: "Do not touch shared contracts, auth boundaries, or non-shell workspace features.",
+    validationCommands: [
+      "corepack pnpm --filter @research-os/web typecheck",
+      "corepack pnpm --filter @research-os/web lint",
+    ],
+    executionFocus:
+      "Improve the homepage shell or internal ops control room in one small visible slice. Favor clarity, density, command visibility, and team-flow readability.",
   },
   "workflow-systems": {
     ownedPaths: [
@@ -79,6 +96,12 @@ const laneGuidance = {
     ],
     validation: "Improve one real researcher workflow and keep the slice bounded to one surface.",
     nonGoals: "Do not widen into architecture, Supabase contracts, or unrelated UI churn.",
+    validationCommands: [
+      "corepack pnpm --filter @research-os/web typecheck",
+      "corepack pnpm --filter @research-os/web lint",
+    ],
+    executionFocus:
+      "Tighten one real workflow slice with small copy, structure, or validation improvements only.",
   },
   "reliability-desk": {
     ownedPaths: [
@@ -89,6 +112,12 @@ const laneGuidance = {
     ],
     validation: "Watch route health, CLI bridge stability, and low-risk runtime regressions only.",
     nonGoals: "Do not introduce new infrastructure or contract changes without review.",
+    validationCommands: [
+      "corepack pnpm --filter @research-os/web typecheck",
+      "corepack pnpm --filter @research-os/web lint",
+    ],
+    executionFocus:
+      "Fix one low-risk reliability issue in runtime glue, route health, or operator docs without changing shared contracts.",
   },
   "executive-desk": {
     ownedPaths: [
@@ -99,6 +128,9 @@ const laneGuidance = {
     ],
     validation: "Keep operator docs and queue rules aligned with actual control-plane behavior.",
     nonGoals: "Do not rewrite product scope, architecture, or public workflows.",
+    validationCommands: [],
+    executionFocus:
+      "Keep operator docs, queue wording, and internal control-plane guidance aligned with the actual behavior.",
   },
 };
 
@@ -113,6 +145,22 @@ const plannerSchema = {
     nextAction: { type: "string" },
     teamDispatch: { type: "string" },
     checkpoint: { type: "string" },
+  },
+};
+
+const executionSchema = {
+  $schema: "http://json-schema.org/draft-07/schema#",
+  type: "object",
+  additionalProperties: false,
+  required: ["summary", "operatorBrief", "nextAction", "outcome"],
+  properties: {
+    summary: { type: "string" },
+    operatorBrief: { type: "string" },
+    nextAction: { type: "string" },
+    outcome: {
+      type: "string",
+      enum: ["changed", "noop", "blocked"],
+    },
   },
 };
 
@@ -136,7 +184,9 @@ function sanitizePathSegment(value) {
 
 async function ensureAutonomyAssets() {
   await mkdir(autonomyArtifactDir, { recursive: true });
+  await mkdir(autonomyExecutionDir, { recursive: true });
   await writeFile(autonomySchemaPath, JSON.stringify(plannerSchema, null, 2));
+  await writeFile(executionSchemaPath, JSON.stringify(executionSchema, null, 2));
 }
 
 function getLaneGuidance(teamId) {
@@ -144,6 +194,8 @@ function getLaneGuidance(teamId) {
     ownedPaths: [],
     validation: "Stay within one bounded slice.",
     nonGoals: "Do not expand scope.",
+    validationCommands: [],
+    executionFocus: "Make one safe bounded improvement only.",
   };
 }
 
@@ -157,10 +209,24 @@ function buildFallbackPlan(team, providerLabel) {
   };
 }
 
-function buildPlannerPrompt(team) {
+function buildPlannerPrompt(team, context = {}) {
   const guidance = getLaneGuidance(team.id);
   const ownedPaths =
     guidance.ownedPaths.length > 0 ? guidance.ownedPaths.map((entry) => `- ${entry}`).join("\n") : "- none";
+  const operatorDirective =
+    context.operatorDirective &&
+    typeof context.operatorDirective.body === "string" &&
+    context.operatorDirective.body.trim()
+      ? `Operator directive: ${context.operatorDirective.body}`
+      : "Operator directive: none";
+  const lastExecution =
+    context.lastExecution && typeof context.lastExecution.summary === "string"
+      ? `Latest execution outcome: ${context.lastExecution.summary}`
+      : "Latest execution outcome: none";
+  const lastReport =
+    context.lastReport && typeof context.lastReport.summary === "string"
+      ? `Latest report summary: ${context.lastReport.summary}`
+      : "Latest report summary: none";
 
   return [
     "You are the local autonomy planner for the ResearchOS internal agent ops board.",
@@ -181,6 +247,9 @@ function buildPlannerPrompt(team) {
     `Objective: ${team.objective}`,
     `Deliverable: ${team.deliverable}`,
     `Next handoff: ${team.nextHandoff}`,
+    operatorDirective,
+    lastExecution,
+    lastReport,
     "Owned paths:",
     ownedPaths,
     `Validation target: ${guidance.validation}`,
@@ -252,6 +321,7 @@ function makeDefaultState() {
     },
     conversationFeed: [],
     teamUpdates: [],
+    memberUpdates: [],
     providerConnections: [],
     autonomy: {
       enabled: false,
@@ -278,13 +348,34 @@ function makeDefaultState() {
       ],
       currentTask: null,
       taskHistory: [],
+      currentExecution: null,
+      executionHistory: [],
     },
   };
 }
 
 async function loadState() {
   try {
-    return JSON.parse(await readFile(stateFile, "utf8"));
+    const state = JSON.parse(await readFile(stateFile, "utf8"));
+    if (!Array.isArray(state.memberUpdates)) {
+      state.memberUpdates = [];
+    }
+    if (!Array.isArray(state.providerConnections)) {
+      state.providerConnections = [];
+    }
+    if (!state.autonomy || typeof state.autonomy !== "object") {
+      state.autonomy = makeDefaultState().autonomy;
+    }
+    if (!Array.isArray(state.autonomy.taskHistory)) {
+      state.autonomy.taskHistory = [];
+    }
+    if (!Array.isArray(state.autonomy.executionHistory)) {
+      state.autonomy.executionHistory = [];
+    }
+    if (state.autonomy.currentExecution === undefined) {
+      state.autonomy.currentExecution = null;
+    }
+    return state;
   } catch {
     return makeDefaultState();
   }
@@ -313,6 +404,13 @@ function upsertTeamUpdate(state, teamId, updates) {
   }
 
   state.teamUpdates.push({ teamId, ...updates });
+}
+
+function replaceMemberUpdates(state, teamId, updates) {
+  state.memberUpdates = [
+    ...state.memberUpdates.filter((entry) => entry.teamId !== teamId),
+    ...updates,
+  ];
 }
 
 function upsertProviderConnection(state, providerId, updates) {
@@ -496,10 +594,362 @@ function buildTaskPacket({
   };
 }
 
-async function runCodexPlanner(team, loopCount) {
+function buildExecutionArtifactFilePath(loopCount, teamId, providerId) {
+  const timestamp = nowIso().replace(/[:.]/g, "-");
+  return path.join(
+    autonomyExecutionDir,
+    `${timestamp}-loop-${String(loopCount).padStart(3, "0")}-${sanitizePathSegment(teamId)}-${sanitizePathSegment(providerId)}.json`,
+  );
+}
+
+async function writeExecutionArtifact({
+  loopCount,
+  providerId,
+  providerLabel,
+  team,
+  prompt,
+  result,
+  changedFiles,
+  validation,
+  outcome,
+  raw,
+  errorMessage = null,
+}) {
+  await ensureAutonomyAssets();
+  const artifactPath = buildExecutionArtifactFilePath(loopCount, team.id, providerId);
+  const relativeArtifactPath = path.relative(process.cwd(), artifactPath).replace(/\\/g, "/");
+  await writeFile(
+    artifactPath,
+    JSON.stringify(
+      {
+        generatedAt: nowIso(),
+        loopCount,
+        providerId,
+        providerLabel,
+        teamId: team.id,
+        teamName: team.name,
+        lane: team.lane,
+        outcome,
+        prompt,
+        result,
+        changedFiles,
+        validation,
+        raw,
+        errorMessage,
+      },
+      null,
+      2,
+    ),
+  );
+  return relativeArtifactPath;
+}
+
+function parseGitStatusPaths(stdout) {
+  return stdout
+    .split(/\r?\n/)
+    .map((line) => line.trimEnd())
+    .filter(Boolean)
+    .map((line) => line.slice(3).trim())
+    .map((filePath) => {
+      const renamedPath = filePath.includes(" -> ")
+        ? filePath.split(" -> ").pop()
+        : filePath;
+      return (renamedPath ?? filePath).replace(/\\/g, "/");
+    });
+}
+
+async function listDirtyOwnedPaths(ownedPaths) {
+  if (!ownedPaths.length) {
+    return [];
+  }
+
+  try {
+    const { stdout } = await execFile(
+      "git",
+      ["status", "--porcelain", "--", ...ownedPaths],
+      {
+        cwd: process.cwd(),
+        windowsHide: true,
+        timeout: 20000,
+      },
+    );
+
+    return parseGitStatusPaths(stdout);
+  } catch {
+    return [];
+  }
+}
+
+function trimTerminalBlock(value, maxLength = 700) {
+  const trimmed = value.trim();
+
+  if (!trimmed) {
+    return "";
+  }
+
+  return trimmed.length > maxLength ? `${trimmed.slice(0, maxLength)}...` : trimmed;
+}
+
+async function runValidationCommand(command) {
+  try {
+    const { stdout, stderr } = await execFile("cmd.exe", ["/c", command], {
+      cwd: process.cwd(),
+      windowsHide: true,
+      timeout: 300000,
+      maxBuffer: 4 * 1024 * 1024,
+    });
+
+    return {
+      label: command,
+      status: "passed",
+      detail: trimTerminalBlock(stdout || stderr || "Passed."),
+    };
+  } catch (error) {
+    const stdout = error?.stdout ?? "";
+    const stderr = error?.stderr ?? "";
+    const message = error instanceof Error ? error.message : String(error);
+
+    return {
+      label: command,
+      status: "failed",
+      detail: trimTerminalBlock(stderr || stdout || message || "Validation failed."),
+    };
+  }
+}
+
+function buildExecutionPrompt(team, taskPacket, operatorDirective) {
+  const guidance = getLaneGuidance(team.id);
+  const ownedPaths =
+    guidance.ownedPaths.length > 0 ? guidance.ownedPaths.map((entry) => `- ${entry}`).join("\n") : "- none";
+  const validationCommands =
+    guidance.validationCommands.length > 0
+      ? guidance.validationCommands.map((entry) => `- ${entry}`).join("\n")
+      : "- no additional validation commands";
+  const directiveText =
+    operatorDirective && typeof operatorDirective.body === "string" && operatorDirective.body.trim()
+      ? operatorDirective.body
+      : "No extra operator directive.";
+
+  return [
+    "You are the bounded execution worker for the ResearchOS internal agent ops loop.",
+    "Respect AGENTS.md, docs/00-product-vision.md, docs/02-architecture.md, docs/12-continuous-improvement-loop.md, and docs/13-agent-operations-model.md.",
+    "Make exactly one small safe improvement in the owned paths only.",
+    "Do not touch architecture, privacy boundaries, shared contracts, auth boundaries, or unrelated files.",
+    "If the task would require broader scope, make no edits and return outcome `blocked`.",
+    "Prefer visible clarity improvements, smaller UI friction, denser information hierarchy, or tighter workflow copy over broad redesign.",
+    `Team: ${team.name}`,
+    `Lane: ${team.lane}`,
+    `Lead: ${team.lead}`,
+    `Objective: ${team.objective}`,
+    `Deliverable: ${team.deliverable}`,
+    `Planning summary: ${taskPacket.summary}`,
+    `Team dispatch: ${taskPacket.teamDispatch}`,
+    `Next action requested: ${taskPacket.nextAction}`,
+    `Operator directive: ${directiveText}`,
+    `Execution focus: ${guidance.executionFocus}`,
+    "Owned paths:",
+    ownedPaths,
+    `Validation target: ${guidance.validation}`,
+    `Non-goals: ${guidance.nonGoals}`,
+    "After editing, run these validation commands if you made changes:",
+    validationCommands,
+    "Return only a JSON object matching the provided schema.",
+  ].join("\n");
+}
+
+function buildExecutionRecord({
+  loopCount,
+  team,
+  providerId,
+  providerLabel,
+  result,
+  changedFiles,
+  validation,
+  artifactPath,
+  outcome,
+}) {
+  return {
+    id: `exec-${loopCount}-${team.id}`,
+    time: nowIso(),
+    providerId,
+    providerLabel,
+    teamId: team.id,
+    teamLabel: team.name,
+    summary: result.summary,
+    operatorBrief: result.operatorBrief,
+    changedFiles,
+    nextAction: result.nextAction,
+    artifactPath,
+    outcome,
+    validation,
+  };
+}
+
+async function runCodexExecutor(team, taskPacket, loopCount, operatorDirective) {
+  await ensureAutonomyAssets();
+  const guidance = getLaneGuidance(team.id);
+  const dirtyBefore = await listDirtyOwnedPaths(guidance.ownedPaths);
+
+  if (dirtyBefore.length) {
+    const result = {
+      summary: `${team.name} skipped execution because owned paths already contain local changes.`,
+      operatorBrief: `Execution stayed blocked to avoid overlapping edits in ${team.name}.`,
+      nextAction: "Wait for the owned paths to become clean, then rerun the bounded slice.",
+      outcome: "blocked",
+    };
+    const validation = guidance.validationCommands.map((command) => ({
+      label: command,
+      status: "not-run",
+      detail: "Skipped because the owned paths were already dirty.",
+    }));
+    const artifactPath = await writeExecutionArtifact({
+      loopCount,
+      providerId: "codex",
+      providerLabel: "Codex CLI",
+      team,
+      prompt: buildExecutionPrompt(team, taskPacket, operatorDirective),
+      result,
+      changedFiles: [],
+      validation,
+      outcome: "blocked",
+      raw: { dirtyBefore },
+      errorMessage: `Dirty owned paths: ${dirtyBefore.join(", ")}`,
+    });
+
+    return buildExecutionRecord({
+      loopCount,
+      team,
+      providerId: "codex",
+      providerLabel: "Codex CLI",
+      result,
+      changedFiles: [],
+      validation,
+      artifactPath,
+      outcome: "blocked",
+    });
+  }
+
+  const outputPath = path.join(researchOsStateDir, "codex-autonomy-execution-last.json");
+  const prompt = buildExecutionPrompt(team, taskPacket, operatorDirective);
+
+  try {
+    const { stdout, stderr } = await execFile(
+      "cmd.exe",
+      [
+        "/c",
+        "codex.cmd",
+        "exec",
+        "-C",
+        process.cwd(),
+        "--skip-git-repo-check",
+        "--full-auto",
+        "--output-schema",
+        executionSchemaPath,
+        "--output-last-message",
+        outputPath,
+        prompt,
+      ],
+      {
+        windowsHide: true,
+        timeout: 600000,
+        maxBuffer: 4 * 1024 * 1024,
+      },
+    );
+
+    const raw = await readFile(outputPath, "utf8");
+    const result = extractJsonObject(raw);
+    const changedFiles = await listDirtyOwnedPaths(guidance.ownedPaths);
+    const validation = changedFiles.length
+      ? await Promise.all(guidance.validationCommands.map((command) => runValidationCommand(command)))
+      : guidance.validationCommands.map((command) => ({
+          label: command,
+          status: "not-run",
+          detail: "Skipped because no owned files changed.",
+        }));
+    const outcome =
+      validation.some((entry) => entry.status === "failed")
+        ? "failed"
+        : changedFiles.length
+          ? "changed"
+          : result.outcome === "blocked"
+            ? "blocked"
+            : "noop";
+    const artifactPath = await writeExecutionArtifact({
+      loopCount,
+      providerId: "codex",
+      providerLabel: "Codex CLI",
+      team,
+      prompt,
+      result,
+      changedFiles,
+      validation,
+      outcome,
+      raw: {
+        stdout,
+        stderr,
+        outputFile: raw,
+      },
+    });
+
+    return buildExecutionRecord({
+      loopCount,
+      team,
+      providerId: "codex",
+      providerLabel: "Codex CLI",
+      result,
+      changedFiles,
+      validation,
+      artifactPath,
+      outcome,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    const validation = guidance.validationCommands.map((command) => ({
+      label: command,
+      status: "not-run",
+      detail: "Skipped because execution failed before validation.",
+    }));
+    const result = {
+      summary: `${team.name} execution failed before a safe validation packet could be produced.`,
+      operatorBrief: `${team.lead} needs the execution failure reviewed before this lane continues.`,
+      nextAction: "Inspect the execution artifact and restart the bounded slice after the failure is understood.",
+      outcome: "blocked",
+    };
+    const artifactPath = await writeExecutionArtifact({
+      loopCount,
+      providerId: "codex",
+      providerLabel: "Codex CLI",
+      team,
+      prompt,
+      result,
+      changedFiles: [],
+      validation,
+      outcome: "failed",
+      raw: {
+        stdout: error?.stdout ?? "",
+        stderr: error?.stderr ?? "",
+      },
+      errorMessage: message,
+    });
+
+    return buildExecutionRecord({
+      loopCount,
+      team,
+      providerId: "codex",
+      providerLabel: "Codex CLI",
+      result,
+      changedFiles: [],
+      validation,
+      artifactPath,
+      outcome: "failed",
+    });
+  }
+}
+
+async function runCodexPlanner(team, loopCount, context) {
   await ensureAutonomyAssets();
   const outputPath = path.join(researchOsStateDir, "codex-autonomy-last.json");
-  const prompt = buildPlannerPrompt(team);
+  const prompt = buildPlannerPrompt(team, context);
 
   const { stdout, stderr } = await execFile(
     "cmd.exe",
@@ -556,8 +1006,8 @@ async function runCodexPlanner(team, loopCount) {
   });
 }
 
-async function runGeminiPlanner(team, loopCount) {
-  const prompt = buildPlannerPrompt(team);
+async function runGeminiPlanner(team, loopCount, context) {
+  const prompt = buildPlannerPrompt(team, context);
   const { stdout, stderr } = await execFile(
     "cmd.exe",
     [
@@ -606,7 +1056,7 @@ async function runGeminiPlanner(team, loopCount) {
   });
 }
 
-async function runPlannerWithFallback(team, loopCount, provider) {
+async function runPlannerWithFallback(team, loopCount, provider, context) {
   const availableProviders = new Set(
     provider.providerHealth.filter((entry) => entry.available).map((entry) => entry.providerId),
   );
@@ -626,13 +1076,13 @@ async function runPlannerWithFallback(team, loopCount, provider) {
       continue;
     }
 
-    try {
+      try {
       if (plannerId === "codex") {
-        return await runCodexPlanner(team, loopCount);
+        return await runCodexPlanner(team, loopCount, context);
       }
 
       if (plannerId === "gemini") {
-        return await runGeminiPlanner(team, loopCount);
+        return await runGeminiPlanner(team, loopCount, context);
       }
 
       const fallbackPlan = buildFallbackPlan(team, provider.activeProviderLabel);
@@ -668,7 +1118,7 @@ async function runPlannerWithFallback(team, loopCount, provider) {
       providerId: primaryFailure.providerId,
       providerLabel: primaryFailure.providerLabel,
       team,
-      prompt: buildPlannerPrompt(team),
+      prompt: buildPlannerPrompt(team, context),
       plan: fallbackPlan,
       status: "failed",
       raw: { failures },
@@ -708,15 +1158,130 @@ function buildQueue(loopCount, currentTeamId) {
   }));
 }
 
-function buildReport(team, loopCount, taskPacket) {
+function buildReport(team, loopCount, taskPacket, executionRecord = null) {
   return {
     id: `report-${loopCount}-${team.id}`,
     time: nowIso(),
     teamId: team.id,
     source: team.lead,
-    summary: taskPacket.summary,
-    nextAction: taskPacket.nextAction,
+    summary: executionRecord?.operatorBrief ?? taskPacket.summary,
+    nextAction: executionRecord?.nextAction ?? taskPacket.nextAction,
   };
+}
+
+function buildPlannerContext(state, teamId) {
+  const lastReport = [...(state.autonomy?.reports ?? [])].find((entry) => entry.teamId === teamId);
+  const lastExecution = [...(state.autonomy?.executionHistory ?? [])].find(
+    (entry) => entry.teamId === teamId,
+  );
+
+  return {
+    operatorDirective: state.currentDirective,
+    lastReport,
+    lastExecution,
+  };
+}
+
+function buildExecutionMemberUpdates(team, executionRecord, taskPacket) {
+  const updatedAt = new Date().toLocaleTimeString("en-CA", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "Asia/Seoul",
+  });
+  const memberNames = teamMemberRoster[team.id] ?? [team.lead];
+  const primaryMember = memberNames[0];
+  const secondaryMember = memberNames[1];
+  const activeState =
+    executionRecord.outcome === "failed"
+      ? "reviewing"
+      : executionRecord.outcome === "blocked"
+        ? "queued"
+        : "running";
+
+  const updates = [];
+
+  if (primaryMember) {
+    updates.push({
+      teamId: team.id,
+      memberName: primaryMember,
+      state: activeState,
+      currentTask:
+        executionRecord.outcome === "blocked"
+          ? executionRecord.summary
+          : taskPacket.teamDispatch,
+      lastUpdate: updatedAt,
+    });
+  }
+
+  if (secondaryMember) {
+    updates.push({
+      teamId: team.id,
+      memberName: secondaryMember,
+      state:
+        executionRecord.changedFiles.length > 0
+          ? "running"
+          : executionRecord.outcome === "failed"
+            ? "reviewing"
+            : "queued",
+      currentTask:
+        executionRecord.changedFiles.length > 0
+          ? `${executionRecord.providerLabel} touched ${executionRecord.changedFiles.join(", ")}`
+          : executionRecord.nextAction,
+      lastUpdate: updatedAt,
+    });
+  }
+
+  return updates;
+}
+
+async function runExecutionStep(team, loopCount, taskPacket, state, provider) {
+  if (taskPacket.status === "failed") {
+    return {
+      id: `exec-${loopCount}-${team.id}`,
+      time: nowIso(),
+      providerId: taskPacket.providerId,
+      providerLabel: taskPacket.providerLabel,
+      teamId: team.id,
+      teamLabel: team.name,
+      summary: `${team.name} stayed in planning mode because the planner failed before it could hand off a usable bounded slice.`,
+      operatorBrief: `Execution was skipped for ${team.name} until the planner failure is reviewed.`,
+      changedFiles: [],
+      nextAction: "Review the failed planner artifact, then rerun the bounded slice.",
+      artifactPath: taskPacket.artifactPath,
+      outcome: "blocked",
+      validation: getLaneGuidance(team.id).validationCommands.map((command) => ({
+        label: command,
+        status: "not-run",
+        detail: "Skipped because planning failed before execution could start.",
+      })),
+    };
+  }
+
+  const codexHealth = provider.providerHealth.find((entry) => entry.providerId === "codex");
+  if (!codexHealth?.available) {
+    return {
+      id: `exec-${loopCount}-${team.id}`,
+      time: nowIso(),
+      providerId: "mock",
+      providerLabel: "Execution blocked",
+      teamId: team.id,
+      teamLabel: team.name,
+      summary: `${team.name} could not start a bounded write pass because Codex CLI is unavailable.`,
+      operatorBrief: "Reconnect Codex CLI before enabling autonomous code changes.",
+      changedFiles: [],
+      nextAction: "Reconnect Codex CLI and restart the autonomy loop.",
+      artifactPath: null,
+      outcome: "blocked",
+      validation: getLaneGuidance(team.id).validationCommands.map((command) => ({
+        label: command,
+        status: "not-run",
+        detail: "Skipped because the execution provider was unavailable.",
+      })),
+    };
+  }
+
+  return runCodexExecutor(team, taskPacket, loopCount, state.currentDirective);
 }
 
 async function runAutonomyCycle() {
@@ -735,50 +1300,68 @@ async function runAutonomyCycle() {
   const loopCount = Number(state.autonomy.loopCount ?? 0) + 1;
   const team = teamCycle[(loopCount - 1) % teamCycle.length];
   const provider = await detectProviderHealth();
-  const taskPacket = await runPlannerWithFallback(team, loopCount, provider);
-  const report = buildReport(team, loopCount, taskPacket);
+  const plannerContext = buildPlannerContext(state, team.id);
+  const taskPacket = await runPlannerWithFallback(team, loopCount, provider, plannerContext);
+  const executionRecord = await runExecutionStep(team, loopCount, taskPacket, state, provider);
+  const report = buildReport(team, loopCount, taskPacket, executionRecord);
 
   state.autonomy = {
     ...(state.autonomy ?? makeDefaultState().autonomy),
     enabled: true,
     status: "running",
-    activeProviderId: taskPacket.providerId,
-    activeProviderLabel: taskPacket.providerLabel,
+    activeProviderId:
+      executionRecord.providerId !== "mock" ? executionRecord.providerId : taskPacket.providerId,
+    activeProviderLabel:
+      executionRecord.providerId !== "mock" ? executionRecord.providerLabel : taskPacket.providerLabel,
     loopCount,
     currentTeamId: team.id,
     currentLane: team.lane,
     lastRunAt: nowIso(),
     nextRunAt: futureIso(tickMs),
-    latestSummary: taskPacket.summary,
-    operatorBrief: taskPacket.operatorBrief,
+    latestSummary: executionRecord.summary,
+    operatorBrief: executionRecord.operatorBrief,
     queue: buildQueue(loopCount, team.id),
     reports: [report, ...(state.autonomy?.reports ?? [])].slice(0, 8),
     providerHealth: provider.providerHealth,
     currentTask: taskPacket,
     taskHistory: [taskPacket, ...(state.autonomy?.taskHistory ?? [])].slice(0, 12),
+    currentExecution: executionRecord,
+    executionHistory: [executionRecord, ...(state.autonomy?.executionHistory ?? [])].slice(0, 12),
   };
 
   state.selectedTeamId = team.id;
   state.assistantMode = "briefing";
-  state.currentDirective = {
-    source: "autonomy daemon",
-    issuedAt: nowIso(),
-    status: "active",
-    title: `Autonomy cycle #${loopCount}`,
-    body: taskPacket.teamDispatch,
-  };
+  if (state.currentDirective?.source !== "terminal bridge") {
+    state.currentDirective = {
+      source: "autonomy daemon",
+      issuedAt: nowIso(),
+      status: "active",
+      title: `Autonomy cycle #${loopCount}`,
+      body: taskPacket.teamDispatch,
+    };
+  }
   upsertTeamUpdate(state, team.id, {
-    state: "delivering",
+    state: executionRecord.outcome === "failed" ? "syncing" : "delivering",
     objective: team.objective,
-    currentDeliverable: team.deliverable,
-    nextHandoff: team.nextHandoff,
+    currentDeliverable:
+      executionRecord.changedFiles.length > 0
+        ? `${team.deliverable} Updated files: ${executionRecord.changedFiles.join(", ")}`
+        : team.deliverable,
+    nextHandoff:
+      executionRecord.outcome === "failed"
+        ? `Review failed execution before the next lane. ${executionRecord.nextAction}`
+        : team.nextHandoff,
   });
+  replaceMemberUpdates(state, team.id, buildExecutionMemberUpdates(team, executionRecord, taskPacket));
 
-  if (taskPacket.providerId !== "mock") {
-    upsertProviderConnection(state, taskPacket.providerId, {
+  if (executionRecord.providerId !== "mock" && executionRecord.providerId !== "failed") {
+    upsertProviderConnection(state, executionRecord.providerId, {
       status: "connected",
       teamId: team.id,
-      note: `${taskPacket.providerLabel} is attached to ${team.name}.`,
+      note:
+        executionRecord.changedFiles.length > 0
+          ? `${executionRecord.providerLabel} updated ${executionRecord.changedFiles.join(", ")} for ${team.name}.`
+          : `${executionRecord.providerLabel} is attached to ${team.name}.`,
     });
     state.terminalConnected = true;
   }
@@ -789,7 +1372,7 @@ async function runAutonomyCycle() {
     from: "Operator Liaison",
     to: "You",
     subject: "Autonomy update",
-    body: `${state.autonomy.operatorBrief}${taskPacket.artifactPath ? ` Artifact: ${taskPacket.artifactPath}` : ""}`,
+    body: `${executionRecord.operatorBrief}${executionRecord.artifactPath ? ` Artifact: ${executionRecord.artifactPath}` : ""}`,
   });
   pushEvent(state, {
     channel: "team",
@@ -800,16 +1383,26 @@ async function runAutonomyCycle() {
     body: taskPacket.teamDispatch,
   });
   pushEvent(state, {
-    channel: "review",
+    channel: "team",
     teamId: team.id,
     from: team.lead,
+    to: executionRecord.providerLabel,
+    subject: "Execution slice",
+    body: executionRecord.summary,
+  });
+  pushEvent(state, {
+    channel: "review",
+    teamId: team.id,
+    from: executionRecord.providerLabel,
     to: "Operator Liaison",
     subject: "Autonomy checkpoint",
-    body: taskPacket.checkpoint,
+    body: `${taskPacket.checkpoint} ${executionRecord.changedFiles.length ? `Changed: ${executionRecord.changedFiles.join(", ")}.` : executionRecord.nextAction}`,
   });
 
   await saveState(state);
-  console.log(`[autonomy] cycle ${loopCount} -> ${team.name} (${taskPacket.providerLabel})`);
+  console.log(
+    `[autonomy] cycle ${loopCount} -> ${team.name} (${taskPacket.providerLabel}) execution=${executionRecord.outcome}`,
+  );
   return true;
 }
 

@@ -1,8 +1,114 @@
 .shell {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
   padding-bottom: 2rem;
+}
+
+.controlRoomPrime {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.primeHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.primeTitle {
+  margin: 0.25rem 0 0.45rem;
+  color: #0f172a;
+  font-size: clamp(1.6rem, 2.2vw, 2.2rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.primeHeaderMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  justify-content: flex-end;
+}
+
+.controlRoomPrimeGrid {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.75fr);
+  align-items: start;
+}
+
+.primeSideStack,
+.primeProviderList,
+.primeValidationList {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.primeStripPanel {
+  padding: 0.8rem;
+}
+
+.primeChipRow {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.primeMetricCard {
+  display: grid;
+  gap: 0.18rem;
+  padding: 0.7rem 0.75rem;
+  border-radius: 18px;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+}
+
+.primeMetricValue {
+  color: #0f172a;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.primeMetricLabel {
+  color: #0f172a;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.primeStatusHead,
+.primeProviderRow,
+.primeValidationRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.primeStatusStack {
+  display: grid;
+  gap: 0.72rem;
+}
+
+.primeProviderRow,
+.primeValidationRow {
+  padding: 0.72rem 0.8rem;
+  border-radius: 16px;
+  border: 1px solid rgba(226, 232, 240, 0.88);
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.primeProviderRow strong,
+.primeValidationRow strong {
+  color: #0f172a;
+}
+
+.primeProviderRow span,
+.primeValidationRow span {
+  color: #475569;
+  font-size: 0.82rem;
+  font-weight: 600;
 }
 
 .hero {
@@ -53,7 +159,7 @@
 
 .metricPanel,
 .sectionPanel {
-  padding: 1.15rem;
+  padding: 0.95rem;
 }
 
 .sectionPanel {
@@ -280,12 +386,11 @@
 .liveDeckGrid {
   display: grid;
   gap: 1.1rem;
-  grid-template-columns: minmax(360px, 1.05fr) minmax(0, 1fr);
+  grid-template-columns: 1fr;
 }
 
 .structureStack {
-  display: grid;
-  gap: 1rem;
+  display: none;
 }
 
 .modeCard {
@@ -692,9 +797,9 @@
 .memberSwarmStage,
 .reportCard {
   display: grid;
-  gap: 0.75rem;
-  padding: 1rem;
-  border-radius: 22px;
+  gap: 0.65rem;
+  padding: 0.85rem;
+  border-radius: 20px;
   border: 1px solid rgba(203, 213, 225, 0.72);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.95));
   box-shadow:
@@ -1546,6 +1651,7 @@
 }
 
 @media (max-width: 1200px) {
+  .controlRoomPrimeGrid,
   .hero,
   .liveDeckGrid,
   .commandRail,
@@ -1565,6 +1671,10 @@
   .runtimeGrid {
     grid-template-columns: 1fr;
   }
+
+  .primeHeader {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 720px) {
@@ -1580,6 +1690,11 @@
   }
 
   .heroFooter,
+  .primeHeader,
+  .primeHeaderMeta,
+  .primeStatusHead,
+  .primeProviderRow,
+  .primeValidationRow,
   .assistantHead,
   .modeCardHead,
   .terminalSessionHead,
@@ -1619,6 +1734,7 @@
   }
 
   .memberSwarmGrid,
+  .primeChipRow,
   .traceRow {
     grid-template-columns: 1fr;
   }
