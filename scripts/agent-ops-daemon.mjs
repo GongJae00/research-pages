@@ -1,5 +1,5 @@
 import { execFile as execFileCallback, spawn as spawnCallback } from "node:child_process";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { promisify } from "node:util";
@@ -10,6 +10,7 @@ const tickMs = Number(process.env.RESEARCH_OS_AUTONOMY_TICK_MS ?? "90000");
 const researchOsStateDir = path.join(process.cwd(), ".researchos");
 const autonomyArtifactDir = path.join(researchOsStateDir, "autonomy-artifacts");
 const autonomyExecutionDir = path.join(researchOsStateDir, "autonomy-executions");
+const autonomyLockPath = path.join(researchOsStateDir, "autonomy.lock.json");
 const autonomySchemaPath = path.join(researchOsStateDir, "autonomy-plan-schema.json");
 const executionSchemaPath = path.join(researchOsStateDir, "autonomy-execution-schema.json");
 
@@ -317,6 +318,71 @@ async function ensureAutonomyAssets() {
   await mkdir(autonomyExecutionDir, { recursive: true });
   await writeFile(autonomySchemaPath, JSON.stringify(plannerSchema, null, 2));
   await writeFile(executionSchemaPath, JSON.stringify(executionSchema, null, 2));
+}
+
+async function acquireAutonomyLock() {
+  await mkdir(researchOsStateDir, { recursive: true });
+  const token = `${process.pid}-${Date.now()}`;
+  const payload = {
+    token,
+    pid: process.pid,
+    acquiredAt: nowIso(),
+  };
+
+  try {
+    await writeFile(autonomyLockPath, JSON.stringify(payload, null, 2), {
+      flag: "wx",
+    });
+    return {
+      acquired: true,
+      token,
+      payload,
+    };
+  } catch (error) {
+    if (error?.code !== "EEXIST") {
+      throw error;
+    }
+
+    try {
+      const raw = await readFile(autonomyLockPath, "utf8");
+      const currentLock = JSON.parse(raw);
+      const acquiredAt = Date.parse(currentLock.acquiredAt ?? "");
+      const staleAfterMs = Math.max(tickMs * 2, 15 * 60 * 1000);
+
+      if (Number.isFinite(acquiredAt) && Date.now() - acquiredAt > staleAfterMs) {
+        await rm(autonomyLockPath, { force: true });
+        return acquireAutonomyLock();
+      }
+
+      return {
+        acquired: false,
+        token: null,
+        payload: currentLock,
+      };
+    } catch {
+      return {
+        acquired: false,
+        token: null,
+        payload: null,
+      };
+    }
+  }
+}
+
+async function releaseAutonomyLock(token) {
+  if (!token) {
+    return;
+  }
+
+  try {
+    const raw = await readFile(autonomyLockPath, "utf8");
+    const currentLock = JSON.parse(raw);
+    if (currentLock.token === token) {
+      await rm(autonomyLockPath, { force: true });
+    }
+  } catch {
+    // ignore
+  }
 }
 
 function getLaneGuidance(teamId) {
@@ -1838,126 +1904,138 @@ async function runAutonomyCycle() {
     return false;
   }
 
-  const loopCount = Number(state.autonomy.loopCount ?? 0) + 1;
-  const teamSelection = await selectTeamForCycle(state, loopCount);
-  const team = teamSelection.team;
-  const provider = await detectProviderHealth();
-  const plannerContext = buildPlannerContext(state, team.id);
-  const taskPacket = await runPlannerWithFallback(team, loopCount, provider, plannerContext);
-  const executionRecord = await runExecutionStep(team, loopCount, taskPacket, state, provider);
-  const report = buildReport(team, loopCount, taskPacket, executionRecord);
+  const lock = await acquireAutonomyLock();
+  if (!lock.acquired) {
+    console.log(
+      `[autonomy] lock held by another worker${lock.payload?.pid ? ` (pid ${lock.payload.pid})` : ""}; skipping cycle.`,
+    );
+    return true;
+  }
 
-  state.autonomy = {
-    ...(state.autonomy ?? makeDefaultState().autonomy),
-    enabled: true,
-    status: "running",
-    activeProviderId:
-      executionRecord.providerId !== "mock" ? executionRecord.providerId : taskPacket.providerId,
-    activeProviderLabel:
-      executionRecord.providerId !== "mock" ? executionRecord.providerLabel : taskPacket.providerLabel,
-    loopCount,
-    currentTeamId: team.id,
-    currentLane: team.lane,
-    lastRunAt: nowIso(),
-    nextRunAt: futureIso(tickMs),
-    latestSummary: executionRecord.summary,
-    operatorBrief: executionRecord.operatorBrief,
-    queue: buildQueue(loopCount, team.id),
-    reports: [report, ...(state.autonomy?.reports ?? [])].slice(0, 8),
-    providerHealth: provider.providerHealth,
-    currentTask: taskPacket,
-    taskHistory: [taskPacket, ...(state.autonomy?.taskHistory ?? [])].slice(0, 12),
-    currentExecution: executionRecord,
-    executionHistory: [executionRecord, ...(state.autonomy?.executionHistory ?? [])].slice(0, 12),
-  };
+  try {
+    const loopCount = Number(state.autonomy.loopCount ?? 0) + 1;
+    const teamSelection = await selectTeamForCycle(state, loopCount);
+    const team = teamSelection.team;
+    const provider = await detectProviderHealth();
+    const plannerContext = buildPlannerContext(state, team.id);
+    const taskPacket = await runPlannerWithFallback(team, loopCount, provider, plannerContext);
+    const executionRecord = await runExecutionStep(team, loopCount, taskPacket, state, provider);
+    const report = buildReport(team, loopCount, taskPacket, executionRecord);
 
-  state.selectedTeamId = team.id;
-  state.assistantMode = "briefing";
-  if (state.currentDirective?.source !== "terminal bridge") {
-    state.currentDirective = {
-      source: "autonomy daemon",
-      issuedAt: nowIso(),
-      status: "active",
-      title: `Autonomy cycle #${loopCount}`,
-      body: taskPacket.teamDispatch,
+    state.autonomy = {
+      ...(state.autonomy ?? makeDefaultState().autonomy),
+      enabled: true,
+      status: "running",
+      activeProviderId:
+        executionRecord.providerId !== "mock" ? executionRecord.providerId : taskPacket.providerId,
+      activeProviderLabel:
+        executionRecord.providerId !== "mock" ? executionRecord.providerLabel : taskPacket.providerLabel,
+      loopCount,
+      currentTeamId: team.id,
+      currentLane: team.lane,
+      lastRunAt: nowIso(),
+      nextRunAt: futureIso(tickMs),
+      latestSummary: executionRecord.summary,
+      operatorBrief: executionRecord.operatorBrief,
+      queue: buildQueue(loopCount, team.id),
+      reports: [report, ...(state.autonomy?.reports ?? [])].slice(0, 8),
+      providerHealth: provider.providerHealth,
+      currentTask: taskPacket,
+      taskHistory: [taskPacket, ...(state.autonomy?.taskHistory ?? [])].slice(0, 12),
+      currentExecution: executionRecord,
+      executionHistory: [executionRecord, ...(state.autonomy?.executionHistory ?? [])].slice(0, 12),
     };
-  }
-  upsertTeamUpdate(state, team.id, {
-    state: executionRecord.outcome === "failed" ? "syncing" : "delivering",
-    objective: team.objective,
-    currentDeliverable:
-      executionRecord.changedFiles.length > 0
-        ? `${team.deliverable} Updated files: ${executionRecord.changedFiles.join(", ")}`
-        : team.deliverable,
-    nextHandoff:
-      executionRecord.outcome === "failed"
-        ? `Review failed execution before the next lane. ${executionRecord.nextAction}`
-        : team.nextHandoff,
-  });
-  replaceMemberUpdates(state, team.id, buildExecutionMemberUpdates(team, executionRecord, taskPacket));
 
-  if (executionRecord.providerId !== "mock" && executionRecord.providerId !== "failed") {
-    upsertProviderConnection(state, executionRecord.providerId, {
-      status: "connected",
-      teamId: team.id,
-      note:
+    state.selectedTeamId = team.id;
+    state.assistantMode = "briefing";
+    if (state.currentDirective?.source !== "terminal bridge") {
+      state.currentDirective = {
+        source: "autonomy daemon",
+        issuedAt: nowIso(),
+        status: "active",
+        title: `Autonomy cycle #${loopCount}`,
+        body: taskPacket.teamDispatch,
+      };
+    }
+    upsertTeamUpdate(state, team.id, {
+      state: executionRecord.outcome === "failed" ? "syncing" : "delivering",
+      objective: team.objective,
+      currentDeliverable:
         executionRecord.changedFiles.length > 0
-          ? `${executionRecord.providerLabel} updated ${executionRecord.changedFiles.join(", ")} for ${team.name}.`
-          : `${executionRecord.providerLabel} is attached to ${team.name}.`,
+          ? `${team.deliverable} Updated files: ${executionRecord.changedFiles.join(", ")}`
+          : team.deliverable,
+      nextHandoff:
+        executionRecord.outcome === "failed"
+          ? `Review failed execution before the next lane. ${executionRecord.nextAction}`
+          : team.nextHandoff,
     });
-    state.terminalConnected = true;
-  }
+    replaceMemberUpdates(state, team.id, buildExecutionMemberUpdates(team, executionRecord, taskPacket));
 
-  pushEvent(state, {
-    channel: "assistant",
-    teamId: "executive-desk",
-    from: "Operator Liaison",
-    to: "You",
-    subject: "Autonomy update",
-    body: `${executionRecord.operatorBrief}${executionRecord.artifactPath ? ` Artifact: ${executionRecord.artifactPath}` : ""}`,
-  });
-  pushEvent(state, {
-    channel: "team",
-    teamId: team.id,
-    from: "Mission Control",
-    to: team.lead,
-    subject: "Autonomy lane dispatch",
-    body: taskPacket.teamDispatch,
-  });
-  pushEvent(state, {
-    channel: "team",
-    teamId: team.id,
-    from: team.lead,
-    to: executionRecord.providerLabel,
-    subject: "Execution slice",
-    body: executionRecord.summary,
-  });
-  pushEvent(state, {
-    channel: "review",
-    teamId: team.id,
-    from: executionRecord.providerLabel,
-    to: "Operator Liaison",
-    subject: "Autonomy checkpoint",
-    body: `${taskPacket.checkpoint} ${executionRecord.changedFiles.length ? `Changed: ${executionRecord.changedFiles.join(", ")}.` : executionRecord.nextAction}`,
-  });
+    if (executionRecord.providerId !== "mock" && executionRecord.providerId !== "failed") {
+      upsertProviderConnection(state, executionRecord.providerId, {
+        status: "connected",
+        teamId: team.id,
+        note:
+          executionRecord.changedFiles.length > 0
+            ? `${executionRecord.providerLabel} updated ${executionRecord.changedFiles.join(", ")} for ${team.name}.`
+            : `${executionRecord.providerLabel} is attached to ${team.name}.`,
+      });
+      state.terminalConnected = true;
+    }
 
-  if (teamSelection.reroutedFromTeamId) {
-    const reroutedFrom = teamCycle.find((entry) => entry.id === teamSelection.reroutedFromTeamId);
     pushEvent(state, {
       channel: "assistant",
+      teamId: "executive-desk",
+      from: "Operator Liaison",
+      to: "You",
+      subject: "Autonomy update",
+      body: `${executionRecord.operatorBrief}${executionRecord.artifactPath ? ` Artifact: ${executionRecord.artifactPath}` : ""}`,
+    });
+    pushEvent(state, {
+      channel: "team",
       teamId: team.id,
       from: "Mission Control",
-      to: "Operator Liaison",
-      subject: "Autonomy reroute",
-      body: `${reroutedFrom?.name ?? "Preferred lane"} was skipped because its owned paths were already dirty. ${team.name} took the next clean lane instead.`,
+      to: team.lead,
+      subject: "Autonomy lane dispatch",
+      body: taskPacket.teamDispatch,
     });
-  }
+    pushEvent(state, {
+      channel: "team",
+      teamId: team.id,
+      from: team.lead,
+      to: executionRecord.providerLabel,
+      subject: "Execution slice",
+      body: executionRecord.summary,
+    });
+    pushEvent(state, {
+      channel: "review",
+      teamId: team.id,
+      from: executionRecord.providerLabel,
+      to: "Operator Liaison",
+      subject: "Autonomy checkpoint",
+      body: `${taskPacket.checkpoint} ${executionRecord.changedFiles.length ? `Changed: ${executionRecord.changedFiles.join(", ")}.` : executionRecord.nextAction}`,
+    });
 
-  await saveState(state);
-  console.log(
-    `[autonomy] cycle ${loopCount} -> ${team.name} (${taskPacket.providerLabel}) execution=${executionRecord.outcome}`,
-  );
-  return true;
+    if (teamSelection.reroutedFromTeamId) {
+      const reroutedFrom = teamCycle.find((entry) => entry.id === teamSelection.reroutedFromTeamId);
+      pushEvent(state, {
+        channel: "assistant",
+        teamId: team.id,
+        from: "Mission Control",
+        to: "Operator Liaison",
+        subject: "Autonomy reroute",
+        body: `${reroutedFrom?.name ?? "Preferred lane"} was skipped because its owned paths were already dirty. ${team.name} took the next clean lane instead.`,
+      });
+    }
+
+    await saveState(state);
+    console.log(
+      `[autonomy] cycle ${loopCount} -> ${team.name} (${taskPacket.providerLabel}) execution=${executionRecord.outcome}`,
+    );
+    return true;
+  } finally {
+    await releaseAutonomyLock(lock.token);
+  }
 }
 
 async function main() {

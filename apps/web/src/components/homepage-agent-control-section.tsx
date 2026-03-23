@@ -70,7 +70,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
       eyebrow: "에이전트 컨트롤 레이어",
       title: "홈페이지에서 바로\n비서와 멀티 에이전트 팀을 세팅합니다",
       body:
-        "개발자는 자신의 Codex, Claude Code, Gemini CLI 세션을 연결하고, 비서는 그 연결을 팀 단위로 배정해 관제 흐름으로 보여줍니다. 이 레이어는 나중에 학교/랩 지식이 들어간 파인튜닝 LLM 운영면으로 확장하기 위한 기반입니다.",
+        "CLI 세션을 연결하고 팀을 배정하여 즉시 운영을 시작하세요. 연결된 에이전트의 상태와 할당 흐름을 실시간으로 확인할 수 있습니다.",
       assistantLabel: "전담 비서 상태",
       assistantSummary: "현재 운영 약속",
       directiveLabel: "현재 지시",
@@ -124,7 +124,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
     eyebrow: "Agent control layer",
     title: "Set up your assistant\nand multi-agent team from the homepage",
     body:
-      "Pick a CLI and team, copy the command, and run it locally to reflect connection state and team assignment immediately.",
+      "Connect CLI sessions and assign teams to start operations. Monitor agent status and allocation flows in real-time.",
     assistantLabel: "Dedicated assistant",
     assistantSummary: "Current operating promise",
     directiveLabel: "Current directive",
@@ -447,16 +447,6 @@ export function HomepageAgentControlSection({
                 </Link>
               </div>
             ) : null}
-
-            <div className={styles.stepList}>
-              <span className={styles.metaLabel}>{copy.setupStepsLabel}</span>
-              {copy.setupSteps.map((item, index) => (
-                <div className={styles.stepRow} key={item}>
-                  <span className={styles.stepIndex}>{String(index + 1).padStart(2, "0")}</span>
-                  <p>{item}</p>
-                </div>
-              ))}
-            </div>
 
             {setupManifest ? (
               <div className={styles.setupNotesGrid}>
