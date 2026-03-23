@@ -1,6 +1,10 @@
 import { documentRecordSchema, type DocumentRecord } from "@research-os/types";
 
-import { canUseBrowserStorage, readFirstJsonFromStorage } from "./browser-json-store";
+import {
+  canUseBrowserStorage,
+  readFirstJsonFromStorage,
+  writeJsonToStorage,
+} from "./browser-json-store";
 import { inferCategoryFromType, type DocumentType } from "./document-taxonomy";
 import {
   buildScopedStorageKey,
@@ -68,4 +72,22 @@ export function loadBrowserDocumentsForAccount(
   } catch {
     return initialDocuments;
   }
+}
+
+export function saveBrowserDocuments(documents: DocumentRecord[]): void {
+  saveBrowserDocumentsForAccount(null, documents);
+}
+
+export function saveBrowserDocumentsForAccount(
+  accountId: string | null,
+  documents: DocumentRecord[],
+): void {
+  if (!canUseBrowserStorage()) {
+    return;
+  }
+
+  const key = accountId
+    ? buildScopedStorageKeyForAccount(currentStorageBaseKey, accountId)
+    : buildScopedStorageKey(currentStorageBaseKey);
+  writeJsonToStorage(key, documents);
 }

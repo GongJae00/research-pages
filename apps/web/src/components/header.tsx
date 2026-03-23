@@ -26,6 +26,9 @@ const navItems = [
 
 function getPageTitle(pathname: string, locale: string, dict: Dictionary): string {
   const segment = pathname.replace(`/${locale}`, "").split("/").filter(Boolean)[0] ?? "profile";
+  if (segment === "ops") {
+    return locale === "ko" ? "에이전트 관제실" : "Agent Ops";
+  }
   return t(dict, `nav.${segment}`);
 }
 

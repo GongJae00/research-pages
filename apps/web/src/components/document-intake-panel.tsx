@@ -52,7 +52,7 @@ export function DocumentIntakePanel({
       <div className="card-header document-upload-header">
         <div>
           <h3>{title}</h3>
-          <p className="card-support-text">{description}</p>
+          {description ? <p className="card-support-text">{description}</p> : null}
         </div>
 
         <button
@@ -76,7 +76,7 @@ export function DocumentIntakePanel({
           <UploadCloud size={22} />
         </div>
         <strong>{dropTitle}</strong>
-        <p>{dropDescription}</p>
+        {dropDescription ? <p>{dropDescription}</p> : null}
         <button
           type="button"
           className="secondary-cta"

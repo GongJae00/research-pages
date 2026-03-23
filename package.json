@@ -10,6 +10,8 @@
     "dev:web": "corepack pnpm --filter @research-os/web dev",
     "dev:mobile": "corepack pnpm --filter @research-os/mobile start",
     "dev": "corepack pnpm -r --parallel --if-present dev",
+    "ops": "node scripts/agent-ops.mjs",
+    "ops:autonomy": "node scripts/agent-ops-daemon.mjs",
     "build": "corepack pnpm -r --if-present build",
     "lint": "corepack pnpm -r --if-present lint",
     "typecheck": "corepack pnpm -r --if-present typecheck"

@@ -1,0 +1,1638 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-bottom: 2rem;
+}
+
+.hero {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: minmax(0, 1.6fr) minmax(320px, 1fr);
+}
+
+.sectionGridTwo,
+.metricGrid,
+.agentGrid,
+.feedList,
+.laneGrid,
+.policyGrid,
+.scheduleGrid,
+.teamList,
+.memberGrid,
+.providerGrid,
+.allocationList {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1rem;
+}
+
+.sectionGridTwo,
+.agentGrid,
+.laneGrid,
+.policyGrid,
+.scheduleGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.panel {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.95));
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+}
+
+.heroPanel {
+  padding: 1.75rem;
+  background:
+    radial-gradient(circle at top right, rgba(20, 184, 166, 0.15), transparent 34%),
+    radial-gradient(circle at left bottom, rgba(14, 165, 233, 0.16), transparent 30%),
+    linear-gradient(160deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.94));
+  color: #f8fafc;
+}
+
+.metricPanel,
+.sectionPanel {
+  padding: 1.15rem;
+}
+
+.sectionPanel {
+  align-content: start;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  background: rgba(148, 163, 184, 0.14);
+  color: rgba(226, 232, 240, 0.94);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.eyebrowDot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: #34d399;
+  box-shadow: 0 0 0 6px rgba(52, 211, 153, 0.12);
+}
+
+.heroTitle {
+  margin: 1rem 0 0;
+  font-size: clamp(2rem, 3.8vw, 3rem);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+}
+
+.heroSummary {
+  margin: 1rem 0 0;
+  max-width: 52rem;
+  color: rgba(226, 232, 240, 0.92);
+  line-height: 1.65;
+}
+
+.ruleBox {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 1.35rem;
+  padding: 1rem 1.1rem;
+  border-radius: 22px;
+  background: rgba(15, 23, 42, 0.24);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.ruleLabel,
+.sectionLabel,
+.agentLabel,
+.feedTime,
+.cardMeta {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ruleLabel {
+  color: rgba(148, 163, 184, 0.92);
+}
+
+.ruleValue {
+  font-size: 1.12rem;
+  font-weight: 700;
+}
+
+.ruleBody,
+.sectionBody,
+.assistantBody,
+.modeSummary {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.sectionBodyTight {
+  max-width: 42rem;
+}
+
+.ruleBody {
+  color: rgba(226, 232, 240, 0.86);
+}
+
+.heroFooter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem 1.2rem;
+  margin-top: 1.35rem;
+  color: rgba(226, 232, 240, 0.86);
+  font-size: 0.92rem;
+}
+
+.heroMeta,
+.cardMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.heroMeta svg,
+.cardMeta svg,
+.guaranteeRow svg,
+.promiseRow svg {
+  color: #14b8a6;
+}
+
+.metricHeading {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.sectionLabel,
+.agentLabel,
+.feedTime,
+.cardMeta {
+  color: #64748b;
+}
+
+.sectionTitle {
+  margin: 0;
+  color: #0f172a;
+  font-size: 1.18rem;
+  line-height: 1.15;
+}
+
+.sectionBody,
+.assistantBody,
+.modeSummary,
+.teamCard p,
+.feedRow p,
+.pipelineCard p,
+.laneBody p,
+.policyCard p,
+.scheduleCard p,
+.promiseRow span,
+.memberCard p,
+.assistantLine p,
+.modeBlock p,
+.teamLeadHead p {
+  color: #475569;
+}
+
+.metricCard,
+.pipelineCard,
+.agentCard,
+.feedRow,
+.laneCard,
+.policyCard,
+.scheduleCard,
+.assistantHeroCard,
+.modeCard,
+.teamCard,
+.teamLeadCard,
+.memberCard {
+  border-radius: 20px;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.95));
+}
+
+.metricCard,
+.pipelineCard,
+.agentCard,
+.feedRow,
+.laneCard,
+.policyCard,
+.scheduleCard,
+.assistantHeroCard,
+.modeCard,
+.teamLeadCard,
+.memberCard {
+  padding: 0.95rem;
+}
+
+.metricBlue {
+  background: linear-gradient(180deg, rgba(239, 246, 255, 0.96), rgba(224, 242, 254, 0.96));
+}
+
+.metricGreen {
+  background: linear-gradient(180deg, rgba(240, 253, 250, 0.96), rgba(204, 251, 241, 0.96));
+}
+
+.metricAmber {
+  background: linear-gradient(180deg, rgba(255, 251, 235, 0.96), rgba(254, 243, 199, 0.96));
+}
+
+.metricRose {
+  background: linear-gradient(180deg, rgba(255, 241, 242, 0.96), rgba(255, 228, 230, 0.96));
+}
+
+.metricValue {
+  display: block;
+  color: #0f172a;
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.metricLabel {
+  display: block;
+  margin-top: 0.25rem;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.metricNote {
+  display: block;
+  margin-top: 0.45rem;
+  color: #475569;
+  line-height: 1.45;
+}
+
+.assistantHeroCard,
+.modeCard,
+.teamLeadCard {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.liveDeckGrid {
+  display: grid;
+  gap: 1.1rem;
+  grid-template-columns: minmax(360px, 1.05fr) minmax(0, 1fr);
+}
+
+.structureStack {
+  display: grid;
+  gap: 1rem;
+}
+
+.modeCard {
+  margin-top: 0.95rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.88),
+    0 10px 24px rgba(15, 23, 42, 0.05);
+}
+
+.terminalComposer,
+.terminalHistory,
+.flowPanel {
+  display: grid;
+  gap: 0.8rem;
+  padding: 0.95rem;
+  border-radius: 20px;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.95));
+}
+
+.terminalComposer {
+  margin-top: 1rem;
+}
+
+.terminalSessionPanel {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 22px;
+  border: 1px solid rgba(203, 213, 225, 0.78);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(248, 250, 252, 0.98)),
+    rgba(255, 255, 255, 0.96);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.88),
+    0 16px 36px rgba(15, 23, 42, 0.06);
+}
+
+.terminalSessionHead,
+.terminalSessionLaunchRow,
+.sessionCardHead,
+.sessionCardMeta,
+.sessionInputMeta,
+.sessionActionRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.9rem;
+}
+
+.terminalSessionTitle {
+  display: block;
+  color: #0f172a;
+  font-size: 1.02rem;
+  font-weight: 800;
+}
+
+.terminalSessionBody {
+  margin: 0.3rem 0 0;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.terminalComposerHead,
+.terminalHistoryHead,
+.terminalRunHead,
+.terminalActionRow,
+.terminalRunMeta,
+.flowMiniRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.9rem;
+}
+
+.terminalInput {
+  width: 100%;
+  resize: vertical;
+  min-height: 5.8rem;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.32);
+  background: #0f172a;
+  color: #e2e8f0;
+  padding: 0.95rem 1rem;
+  font: inherit;
+  line-height: 1.6;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.terminalInput::placeholder {
+  color: rgba(148, 163, 184, 0.9);
+}
+
+.terminalRunButton,
+.shellPresetButton,
+.commandPresetCard {
+  border: 1px solid rgba(203, 213, 225, 0.9);
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.terminalRunButton:hover,
+.shellPresetButton:hover,
+.commandPresetCard:hover {
+  transform: translateY(-1px);
+}
+
+.terminalRunButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.55rem;
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #0f172a, #172554);
+  color: #f8fafc;
+  font-weight: 700;
+  box-shadow:
+    0 8px 20px rgba(15, 23, 42, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.terminalSecondaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.55rem;
+  padding: 0.55rem 1rem;
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  border-radius: 999px;
+  background: rgba(127, 29, 29, 0.08);
+  color: #b91c1c;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background-color 140ms ease;
+}
+
+.terminalSecondaryButton:hover {
+  transform: translateY(-1px);
+  border-color: rgba(248, 113, 113, 0.55);
+  background: rgba(254, 226, 226, 0.8);
+}
+
+.terminalRunButton:disabled,
+.shellPresetButton:disabled,
+.commandPresetCard:disabled,
+.terminalSecondaryButton:disabled {
+  cursor: wait;
+  opacity: 0.7;
+  transform: none;
+}
+
+.shellPresetRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.shellPresetButton {
+  min-height: 2.2rem;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  background: rgba(248, 250, 252, 0.92);
+  color: #0f172a;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.commandPresetGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: 0.6rem;
+}
+
+.commandPresetCard {
+  display: flex;
+  width: 100%;
+  min-height: 3rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  border-radius: 16px;
+  padding: 0.72rem 0.85rem;
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(241, 245, 249, 0.96));
+  color: #0f172a;
+  text-align: left;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.45;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 10px 22px rgba(15, 23, 42, 0.05);
+}
+
+.terminalInlineError,
+.terminalEmpty {
+  padding: 0.9rem 0.95rem;
+  border-radius: 16px;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.terminalInlineError {
+  display: grid;
+  gap: 0.2rem;
+  background: rgba(255, 241, 242, 0.94);
+  border: 1px solid rgba(253, 164, 175, 0.6);
+  color: #9f1239;
+}
+
+.sessionList {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.sessionCard {
+  display: grid;
+  gap: 0.55rem;
+  width: 100%;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid rgba(203, 213, 225, 0.78);
+  border-radius: 18px;
+  background: rgba(248, 250, 252, 0.9);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.sessionCard:hover {
+  transform: translateY(-1px);
+  border-color: rgba(94, 234, 212, 0.72);
+}
+
+.sessionCardActive {
+  border-color: rgba(45, 212, 191, 0.72);
+  background: linear-gradient(180deg, rgba(236, 253, 245, 0.92), rgba(240, 249, 255, 0.96));
+  box-shadow: 0 12px 26px rgba(20, 184, 166, 0.08);
+}
+
+.sessionCardMeta {
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 600;
+  align-items: flex-start;
+}
+
+.terminalEmpty {
+  background: rgba(248, 250, 252, 0.92);
+  border: 1px dashed rgba(148, 163, 184, 0.45);
+  color: #64748b;
+}
+
+.terminalRunList,
+.flowRail,
+.flowMemberList {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.terminalRunCard,
+.flowNode {
+  position: relative;
+  display: grid;
+  gap: 0.7rem;
+  padding: 0.9rem 0.95rem;
+  border-radius: 18px;
+  border: 1px solid rgba(226, 232, 240, 0.92);
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.terminalRunMetaBlock {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.terminalRunMetaBlock strong,
+.flowNodeTitle,
+.flowMiniRow strong {
+  color: #0f172a;
+}
+
+.terminalRunMeta {
+  color: #64748b;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.terminalRunMeta code {
+  color: #334155;
+  overflow-wrap: anywhere;
+}
+
+.terminalOutputBlock {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.82rem 0.88rem;
+  border-radius: 16px;
+  background: #0f172a;
+  border: 1px solid rgba(30, 41, 59, 0.9);
+}
+
+.terminalOutputBlock pre {
+  margin: 0;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  color: #e2e8f0;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+}
+
+.sessionTranscriptCard {
+  display: grid;
+  gap: 0.8rem;
+  padding: 0.95rem;
+  border-radius: 20px;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.94));
+}
+
+.sessionTranscript {
+  min-height: 15rem;
+  max-height: 30rem;
+  overflow: auto;
+  margin: 0;
+  padding: 0.9rem;
+  border-radius: 16px;
+  background: rgba(2, 6, 23, 0.52);
+  color: #dbeafe;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.sessionInputMeta {
+  color: #cbd5e1;
+  font-size: 0.82rem;
+  align-items: flex-start;
+}
+
+.sessionTranscriptCard .runtimeMeta,
+.sessionTranscriptCard .agentLabel {
+  color: #cbd5e1;
+}
+
+.terminalErrorBlock {
+  background: #1f0b12;
+  border-color: rgba(159, 18, 57, 0.4);
+}
+
+.flowSplit {
+  display: grid;
+  gap: 0.95rem;
+  margin-top: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.controlTowerStage {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.commandRail {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: stretch;
+}
+
+.commandRailBridge {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 0.5rem;
+  min-width: 4.5rem;
+  color: #0f766e;
+}
+
+.commandRailTrack {
+  width: 2px;
+  min-height: 2.8rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(45, 212, 191, 0.18), rgba(15, 118, 110, 0.58));
+}
+
+.commandTowerCard,
+.tracePanel,
+.memberSwarmStage,
+.reportCard {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 22px;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.95));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    0 16px 36px rgba(15, 23, 42, 0.06);
+}
+
+.commandTowerOperator {
+  background:
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.12), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(239, 246, 255, 0.96));
+}
+
+.commandTowerAssistant {
+  background:
+    radial-gradient(circle at top right, rgba(45, 212, 191, 0.14), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(240, 253, 250, 0.96));
+}
+
+.commandTowerLead {
+  background:
+    radial-gradient(circle at top right, rgba(249, 115, 22, 0.14), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 247, 237, 0.96));
+}
+
+.commandTowerHead,
+.memberSwarmHead,
+.reportStackHead,
+.traceHead,
+.memberSignalHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+
+.commandTowerTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: #0f172a;
+}
+
+.commandTowerTitle strong,
+.swarmTitle,
+.reportCard strong,
+.traceBubble strong,
+.traceActor {
+  color: #0f172a;
+}
+
+.swarmTitle {
+  margin: 0.2rem 0 0;
+  font-size: 1.02rem;
+  font-weight: 800;
+}
+
+.commandTowerBody,
+.commandTowerNote,
+.swarmBody,
+.memberSignalBody,
+.reportCard p,
+.traceBubble p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.commandTowerNote {
+  color: #64748b;
+}
+
+.commandTowerMetaRow,
+.providerDockRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.commandTowerChip,
+.commandTowerChipMuted {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.commandTowerChip {
+  background: rgba(226, 232, 240, 0.8);
+  color: #334155;
+}
+
+.commandTowerChipMuted {
+  background: rgba(241, 245, 249, 0.92);
+  color: #64748b;
+}
+
+.executionLaneGrid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(18rem, 0.9fr) minmax(0, 1.1fr);
+}
+
+.memberSwarmStage {
+  align-content: start;
+  background:
+    radial-gradient(circle at top right, rgba(20, 184, 166, 0.08), transparent 38%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.95));
+}
+
+.memberSwarmGrid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.memberSignalCard {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.9rem;
+  border-radius: 18px;
+  border: 1px solid rgba(226, 232, 240, 0.86);
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.memberSignalHead strong {
+  display: block;
+}
+
+.memberSignalHead span,
+.memberSignalMeta,
+.traceMeta {
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.reportStack {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.reportCardGrid {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.reportCardPrimary {
+  background:
+    radial-gradient(circle at top right, rgba(45, 212, 191, 0.1), transparent 45%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(240, 253, 250, 0.95));
+}
+
+.reportCardAccent {
+  background:
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.1), transparent 45%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(239, 246, 255, 0.95));
+}
+
+.tracePanel {
+  background:
+    radial-gradient(circle at top right, rgba(15, 23, 42, 0.05), transparent 44%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.95));
+}
+
+.traceList {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.traceRow {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: minmax(0, 0.88fr) auto minmax(0, 1.12fr);
+  align-items: start;
+}
+
+.traceArrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  color: #0f766e;
+}
+
+.traceBubble {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 18px;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+}
+
+.traceBubbleFrom {
+  background: rgba(248, 250, 252, 0.96);
+}
+
+.traceBubbleTo {
+  background:
+    radial-gradient(circle at top right, rgba(45, 212, 191, 0.08), transparent 45%),
+    rgba(240, 253, 250, 0.92);
+}
+
+.flowPanel {
+  align-content: start;
+}
+
+.flowNode:not(:first-child)::before {
+  content: "";
+  position: absolute;
+  top: -0.8rem;
+  left: 1.2rem;
+  width: 2px;
+  height: 0.8rem;
+  background: linear-gradient(180deg, rgba(20, 184, 166, 0), rgba(20, 184, 166, 0.45));
+}
+
+.flowNodeLabel,
+.flowNodeMeta {
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.flowNodeBody,
+.flowMiniRow span {
+  margin: 0;
+  color: #475569;
+  line-height: 1.55;
+}
+
+.runtimeGrid {
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.runtimeCard {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.78rem 0.85rem;
+  border-radius: 16px;
+  background: rgba(248, 250, 252, 0.92);
+  border: 1px solid rgba(226, 232, 240, 0.92);
+}
+
+.runtimeHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.runtimeHead strong {
+  color: #0f172a;
+  line-height: 1.25;
+}
+
+.runtimeCard p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.runtimeMeta {
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.autonomyPanel,
+.autonomyStack,
+.autonomyGrid,
+.autonomyQueueList,
+.autonomyReportList {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.autonomyPanel {
+  margin-top: 0.85rem;
+  padding: 1rem;
+  border-radius: 22px;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  background:
+    radial-gradient(circle at top right, rgba(20, 184, 166, 0.08), transparent 44%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.95));
+}
+
+.autonomyHead,
+.providerHealthHead,
+.autonomyQueueRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.autonomyTitle {
+  display: block;
+  color: #0f172a;
+  font-size: 1.02rem;
+  font-weight: 800;
+}
+
+.autonomyBody,
+.autonomyReportRow p,
+.providerHealthCard p {
+  margin: 0.25rem 0 0;
+  color: #475569;
+  line-height: 1.58;
+}
+
+.autonomyMetricGrid,
+.autonomyGrid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.autonomyGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.autonomyCard,
+.providerHealthCard {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.9rem;
+  border-radius: 18px;
+  border: 1px solid rgba(226, 232, 240, 0.88);
+  background: rgba(248, 250, 252, 0.9);
+}
+
+.autonomyQueueRow strong,
+.autonomyReportRow strong,
+.providerHealthHead strong {
+  color: #0f172a;
+}
+
+.autonomyReportRow {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.autonomyTaskCard,
+.autonomyTaskStack {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.autonomyTaskHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.autonomyTaskHead strong {
+  color: #0f172a;
+}
+
+.directiveBadge {
+  background: rgba(15, 23, 42, 0.08);
+  color: #334155;
+}
+
+.assistantHead,
+.modeCardHead,
+.teamCardHead,
+.agentHead,
+.memberHead,
+.feedTop,
+.laneHead,
+.teamLeadHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.assistantStatus,
+.feedSubject {
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.assistantLine,
+.agentLine,
+.laneMeta,
+.modeBlock {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.guaranteeList,
+.promiseList {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.guaranteeRow,
+.promiseRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.7rem 0.82rem;
+  border-radius: 16px;
+  background: rgba(240, 253, 250, 0.72);
+  border: 1px solid rgba(167, 243, 208, 0.78);
+}
+
+.promiseList {
+  gap: 0.6rem;
+}
+
+.promiseRow {
+  align-items: center;
+  padding: 0.72rem 0.8rem;
+  background: linear-gradient(180deg, rgba(248, 252, 252, 0.98), rgba(240, 253, 250, 0.86));
+  border-color: rgba(153, 246, 228, 0.7);
+}
+
+.promiseIcon {
+  display: inline-flex;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(153, 246, 228, 0.72);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.promiseCopy {
+  display: grid;
+  gap: 0.18rem;
+  min-width: 0;
+}
+
+.promiseTitle {
+  color: #0f172a;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.promiseCopy p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.45;
+}
+
+.promptDeck {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip,
+.promptChip,
+.stateBadge,
+.laneBadge,
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.chip,
+.promptChip {
+  padding: 0.38rem 0.7rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.chip {
+  background: rgba(226, 232, 240, 0.85);
+  color: #334155;
+}
+
+.promptChip {
+  background: rgba(15, 23, 42, 0.08);
+  color: #0f172a;
+}
+
+.modeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 1.05rem;
+  width: fit-content;
+  max-width: 100%;
+  padding: 0.35rem;
+  border-radius: 18px;
+  border: 1px solid rgba(203, 213, 225, 0.88);
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(241, 245, 249, 0.92));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.providerGrid + .setupBuilderCard,
+.teamList + .teamDetailStack,
+.providerGrid + .allocationList {
+  margin-top: 1rem;
+}
+
+.modeButton,
+.teamCard {
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.modeButton {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  min-height: 2.45rem;
+  padding: 0.55rem 1rem;
+  background: transparent;
+  color: #334155;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.modeButton:hover,
+.teamCard:hover {
+  transform: translateY(-1px);
+}
+
+.modeButtonActive {
+  background: linear-gradient(180deg, #0f172a, #172554);
+  color: #f8fafc;
+  border-color: rgba(15, 23, 42, 0.8);
+  box-shadow:
+    0 8px 20px rgba(15, 23, 42, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.modeGrid,
+.teamLeadGrid {
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.modeBlock {
+  padding: 0.78rem 0.85rem;
+  border-radius: 16px;
+  background: rgba(248, 250, 252, 0.92);
+  border: 1px solid rgba(226, 232, 240, 0.92);
+}
+
+.pipelineGrid {
+  display: grid;
+  gap: 0.95rem;
+  margin-top: 1rem;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.pipelineCard {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.pipelineIndex {
+  display: inline-flex;
+  width: 2rem;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #0f172a;
+  color: #f8fafc;
+  font-weight: 700;
+}
+
+.pipelineCard h3,
+.agentMeta h3,
+.laneHead h3,
+.policyCard h3,
+.scheduleCard h3,
+.modeCardHead h3 {
+  margin: 0;
+  color: #0f172a;
+}
+
+.teamList,
+.memberGrid {
+  grid-template-columns: 1fr;
+}
+
+.teamCard {
+  display: grid;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.teamCard strong,
+.memberCard strong,
+.teamLeadHead strong {
+  color: #0f172a;
+}
+
+.teamCard span,
+.memberHead span,
+.teamCardMeta {
+  color: #64748b;
+}
+
+.teamCardActive {
+  border-color: rgba(20, 184, 166, 0.55);
+  background: linear-gradient(180deg, rgba(240, 253, 250, 0.96), rgba(236, 252, 203, 0.76));
+  box-shadow: 0 12px 24px rgba(20, 184, 166, 0.12);
+}
+
+.teamCardMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.86rem;
+}
+
+.teamDetailStack {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1rem;
+}
+
+.teamLeadHead p {
+  margin: 0.25rem 0 0;
+}
+
+.memberGrid {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.providerGrid,
+.allocationList {
+  grid-template-columns: 1fr;
+}
+
+.providerCard,
+.allocationCard {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.95rem;
+  border-radius: 20px;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.95));
+}
+
+.providerHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.providerHead strong,
+.providerMetaRow strong,
+.allocationCard strong {
+  color: #0f172a;
+}
+
+.providerHead span,
+.allocationCard span {
+  color: #64748b;
+}
+
+.providerCard p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.55;
+}
+
+.providerMetaList,
+.providerCommandBlock {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.providerMetaRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.providerCommandBlock {
+  padding: 0.78rem 0.85rem;
+  border-radius: 16px;
+  background: rgba(248, 250, 252, 0.92);
+  border: 1px solid rgba(226, 232, 240, 0.92);
+}
+
+.providerCommandBlock code {
+  overflow-wrap: anywhere;
+  color: #0f172a;
+  font-size: 0.83rem;
+  line-height: 1.55;
+}
+
+.providerBadgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.providerBadge,
+.providerEmpty {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+  border-radius: 999px;
+  padding: 0.35rem 0.72rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.providerBadge {
+  background: rgba(15, 23, 42, 0.08);
+  color: #0f172a;
+}
+
+.providerEmpty {
+  background: rgba(226, 232, 240, 0.72);
+  color: #64748b;
+}
+
+.memberCard {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.memberHead {
+  align-items: flex-start;
+}
+
+.memberHead div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.memberUpdate {
+  color: #64748b;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.agentCard,
+.laneCard {
+  display: grid;
+  gap: 0.78rem;
+}
+
+.agentMeta {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.agentRole,
+.laneOwner,
+.feedRoute {
+  color: #334155;
+  font-weight: 700;
+}
+
+.feedTop {
+  margin-bottom: 0.55rem;
+}
+
+.feedChannelBadge {
+  background: rgba(226, 232, 240, 0.82);
+  color: #334155;
+}
+
+.feedRow {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.feedSubject {
+  margin-bottom: 0.1rem;
+}
+
+.stateBadge,
+.laneBadge,
+.statusBadge {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.stateRunning,
+.laneActive,
+.statusActive,
+.teamDelivering {
+  background: rgba(20, 184, 166, 0.12);
+  color: #0f766e;
+}
+
+.stateReviewing,
+.laneNext,
+.statusReview,
+.teamSyncing {
+  background: rgba(14, 165, 233, 0.12);
+  color: #0369a1;
+}
+
+.stateQueued,
+.laneScheduled,
+.statusArmed,
+.teamQueued {
+  background: rgba(245, 158, 11, 0.13);
+  color: #b45309;
+}
+
+.stateStandby,
+.laneGuarded,
+.statusDone,
+.teamWaiting {
+  background: rgba(148, 163, 184, 0.17);
+  color: #475569;
+}
+
+@media (max-width: 1200px) {
+  .hero,
+  .liveDeckGrid,
+  .commandRail,
+  .executionLaneGrid,
+  .reportCardGrid,
+  .autonomyMetricGrid,
+  .autonomyGrid,
+  .sectionGridTwo,
+  .flowSplit,
+  .pipelineGrid,
+  .agentGrid,
+  .laneGrid,
+  .policyGrid,
+  .scheduleGrid,
+  .modeGrid,
+  .teamLeadGrid,
+  .runtimeGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .heroPanel,
+  .metricPanel,
+  .sectionPanel {
+    padding: 1rem;
+    border-radius: 24px;
+  }
+
+  .heroTitle {
+    font-size: 2rem;
+  }
+
+  .heroFooter,
+  .assistantHead,
+  .modeCardHead,
+  .terminalSessionHead,
+  .terminalSessionLaunchRow,
+  .commandTowerHead,
+  .autonomyHead,
+  .providerHealthHead,
+  .autonomyQueueRow,
+  .memberSwarmHead,
+  .reportStackHead,
+  .traceHead,
+  .terminalComposerHead,
+  .terminalHistoryHead,
+  .terminalRunHead,
+  .terminalActionRow,
+  .terminalRunMeta,
+  .sessionCardHead,
+  .sessionCardMeta,
+  .sessionInputMeta,
+  .sessionActionRow,
+  .commandTowerTitle,
+  .commandTowerMetaRow,
+  .providerDockRow,
+  .flowMiniRow,
+  .teamCardHead,
+  .agentHead,
+  .memberHead,
+  .memberSignalHead,
+  .feedTop,
+  .laneHead,
+  .teamLeadHead,
+  .providerHead,
+  .providerMetaRow,
+  .teamCardMeta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .memberSwarmGrid,
+  .traceRow {
+    grid-template-columns: 1fr;
+  }
+
+  .commandRailBridge,
+  .traceArrow {
+    width: 100%;
+    min-width: 0;
+    justify-content: flex-start;
+  }
+
+  .commandRailTrack {
+    width: 100%;
+    height: 2px;
+    min-height: 0;
+  }
+}

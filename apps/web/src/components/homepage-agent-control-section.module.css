@@ -1,0 +1,479 @@
+.shell {
+  display: grid;
+  gap: 1.15rem;
+}
+
+.header,
+.heroGrid,
+.bottomGrid,
+.summaryGrid,
+.providerGrid,
+.teamFlowGrid,
+.futureList,
+.setupPickerGrid,
+.setupCommands,
+.stepList,
+.setupNotesGrid {
+  display: grid;
+  gap: 0.95rem;
+}
+
+.header,
+.heroGrid,
+.bottomGrid {
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 1fr);
+}
+
+.lead,
+.summaryCard,
+.heroCard,
+.providerPanel,
+.flowPanel,
+.futurePanel,
+.providerCard,
+.teamFlowCard,
+.futureRow {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.94));
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+}
+
+.lead {
+  padding: 1.45rem;
+  background:
+    radial-gradient(circle at top right, rgba(249, 115, 22, 0.14), transparent 32%),
+    radial-gradient(circle at left bottom, rgba(14, 165, 233, 0.14), transparent 28%),
+    linear-gradient(160deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.95));
+  color: #f8fafc;
+}
+
+.eyebrow,
+.metaLabel {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.45rem 0.78rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(226, 232, 240, 0.94);
+}
+
+.title {
+  margin: 1rem 0 0;
+  white-space: pre-line;
+  font-size: clamp(1.9rem, 3.4vw, 2.7rem);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+}
+
+.body {
+  margin: 0.9rem 0 0;
+  color: rgba(226, 232, 240, 0.9);
+  line-height: 1.65;
+}
+
+.summaryGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.summaryCard {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.summaryCard strong {
+  color: #0f172a;
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.metaLabel {
+  color: #64748b;
+}
+
+.heroCard,
+.providerPanel,
+.flowPanel,
+.futurePanel,
+.providerCard,
+.teamFlowCard,
+.setupBuilderCard,
+.copyCard {
+  padding: 1rem;
+}
+
+.cardHead,
+.panelHead,
+.providerHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.cardHead strong,
+.panelHead h3,
+.providerHead strong,
+.providerMeta strong,
+.futureRow p,
+.teamFlowCard strong {
+  color: #0f172a;
+}
+
+.cardHead span,
+.providerHead span {
+  color: #64748b;
+}
+
+.cardHead svg,
+.panelHead svg,
+.futureIcon svg,
+.providerMiniBadge svg {
+  color: #0f766e;
+}
+
+.heroCard h3,
+.providerPanel h3,
+.flowPanel h3,
+.futurePanel h3 {
+  margin: 0.15rem 0 0;
+  font-size: 1.18rem;
+}
+
+.infoBlock,
+.providerMeta,
+.commandBlock,
+.futureList {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.infoBlock p,
+.panelBody,
+.providerCard p,
+.teamFlowCard p,
+.futureRow p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.58;
+}
+
+.inlineMeta {
+  color: #64748b;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.actionRow {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.primaryLink {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  padding: 0.62rem 0.95rem;
+  background: #0f172a;
+  color: #f8fafc;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.secondaryLink {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 999px;
+  padding: 0.58rem 0.92rem;
+  border: 1px solid rgba(203, 213, 225, 0.9);
+  background: rgba(248, 250, 252, 0.96);
+  color: #0f172a;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.panelBody {
+  margin-top: 0.35rem;
+}
+
+.providerGrid,
+.teamFlowGrid {
+  margin-top: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.providerCard {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.setupBuilderCard,
+.copyCard,
+.setupPicker,
+.stepRow,
+.noteCard {
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.95));
+}
+
+.setupBuilderCard {
+  display: grid;
+  gap: 0.95rem;
+  margin-top: 1rem;
+}
+
+.setupPickerGrid,
+.setupCommands {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.setupPicker {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.9rem;
+}
+
+.optionRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.optionButton,
+.copyButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  min-height: 2.2rem;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid rgba(203, 213, 225, 0.9);
+  background: rgba(248, 250, 252, 0.96);
+  color: #334155;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background-color 140ms ease,
+    color 140ms ease;
+}
+
+.optionButton:hover,
+.copyButton:hover {
+  transform: translateY(-1px);
+}
+
+.optionButtonActive {
+  border-color: rgba(15, 23, 42, 0.8);
+  background: linear-gradient(180deg, #0f172a, #172554);
+  color: #f8fafc;
+}
+
+.copyCard {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.copyHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+.copyCard code {
+  overflow-wrap: anywhere;
+  color: #0f172a;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.stepList {
+  margin-top: 0.1rem;
+}
+
+.setupNotesGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.noteCard {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.9rem;
+}
+
+.noteCard p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.55;
+}
+
+.stepRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.78rem 0.85rem;
+}
+
+.stepRow p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.55;
+}
+
+.stepIndex {
+  display: inline-flex;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #0f172a;
+  color: #f8fafc;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.statusBadge,
+.providerMiniBadge,
+.emptyBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.statusConnected {
+  background: rgba(20, 184, 166, 0.12);
+  color: #0f766e;
+}
+
+.statusReady {
+  background: rgba(148, 163, 184, 0.17);
+  color: #475569;
+}
+
+.statusAttention {
+  background: rgba(245, 158, 11, 0.13);
+  color: #b45309;
+}
+
+.providerMeta {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.commandBlock {
+  padding: 0.78rem 0.85rem;
+  border-radius: 16px;
+  background: rgba(248, 250, 252, 0.92);
+  border: 1px solid rgba(226, 232, 240, 0.92);
+}
+
+.commandBlock code {
+  overflow-wrap: anywhere;
+  color: #0f172a;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.badgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.providerMiniBadge {
+  gap: 0.35rem;
+  background: rgba(15, 23, 42, 0.08);
+  color: #0f172a;
+}
+
+.emptyBadge {
+  background: rgba(226, 232, 240, 0.72);
+  color: #64748b;
+}
+
+.futureList {
+  margin-top: 1rem;
+}
+
+.futureRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem 0.9rem;
+}
+
+.futureIcon {
+  display: inline-flex;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(240, 253, 250, 0.9);
+  border: 1px solid rgba(167, 243, 208, 0.78);
+}
+
+@media (max-width: 1200px) {
+  .header,
+  .heroGrid,
+  .bottomGrid,
+  .providerGrid,
+  .teamFlowGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .summaryGrid,
+  .providerMeta,
+  .setupPickerGrid,
+  .setupCommands,
+  .setupNotesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .cardHead,
+  .panelHead,
+  .providerHead,
+  .copyHead {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .lead,
+  .summaryCard,
+  .heroCard,
+  .providerPanel,
+  .flowPanel,
+  .futurePanel {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+}

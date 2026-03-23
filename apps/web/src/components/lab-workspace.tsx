@@ -1169,6 +1169,8 @@ export function LabWorkspace({ locale, initialDocuments, initialTimetableEntries
     : [];
   const orderedResearchProjects = [...researchProjects].sort(sortResearchProjects);
   const ongoingResearchCount = orderedResearchProjects.filter((project) => project.status === "ongoing").length;
+  const completedResearchCount = orderedResearchProjects.length - ongoingResearchCount;
+  const publicResearchCount = orderedResearchProjects.filter((project) => project.publicVisible).length;
   const activeLocks = activeLab?.editLocks.filter((lock) => lock.active) ?? [];
 
   const entriesByDay = new Map<Day, Entry[]>(days.map((day) => [day, []]));
@@ -2673,12 +2675,18 @@ export function LabWorkspace({ locale, initialDocuments, initialTimetableEntries
         ) : (
           <div className="lab-note-body">
             <strong>{activeLab.homepageTitle ?? activeLab.name}</strong>
-            <p>
-              {isKo
-                ? `진행중 연구 ${ongoingResearchCount}개, 종료 연구 ${orderedResearchProjects.length - ongoingResearchCount}개가 정리되어 있습니다. 공개 상태를 켠 연구만 외부 연구실 페이지의 Research 섹션에 나타납니다.`
-                : `${ongoingResearchCount} ongoing and ${orderedResearchProjects.length - ongoingResearchCount} completed projects are organized here. Only projects marked public appear on the external lab page.`}
-            </p>
-                  {canEditResearchSection ? (
+            <div className="lab-note-summary-row">
+              <span className="lab-note-summary-chip">
+                {isKo ? `진행중 ${ongoingResearchCount}` : `${ongoingResearchCount} ongoing`}
+              </span>
+              <span className="lab-note-summary-chip">
+                {isKo ? `종료 ${completedResearchCount}` : `${completedResearchCount} completed`}
+              </span>
+              <span className="lab-note-summary-chip">
+                {isKo ? `공개 ${publicResearchCount}` : `${publicResearchCount} public`}
+              </span>
+            </div>
+            {canEditResearchSection ? (
               <button type="button" className="primary-cta" onClick={startCreateResearchProject}>
                 <Plus size={15} />
                 {isKo ? "연구 추가" : "Add project"}
@@ -3109,7 +3117,7 @@ export function LabWorkspace({ locale, initialDocuments, initialTimetableEntries
                   <button
                     key={lab.id}
                     type="button"
-                    className={`lab-switcher-chip document-filter-chip${lab.id === activeLab.id ? " lab-switcher-chip-active document-filter-chip-active" : ""}`}
+                    className={`lab-switcher-chip document-filter-chip profile-homepage-nav-link${lab.id === activeLab.id ? " lab-switcher-chip-active document-filter-chip-active" : ""}`}
                     onClick={() => {
                       setActiveLabId(lab.id);
                       route(lab.slug, activeSection);
@@ -3121,12 +3129,12 @@ export function LabWorkspace({ locale, initialDocuments, initialTimetableEntries
               </div>
             </div>
           ) : null}
-          <div className="lab-subnav document-filter-row">
+          <div className="lab-subnav document-filter-row profile-homepage-nav-row">
             {sections.map((section) => (
               <button
                 key={section}
                 type="button"
-                className={`lab-subnav-btn document-filter-chip${activeSection === section ? " lab-subnav-btn-active document-filter-chip-active" : ""}`}
+                className={`lab-subnav-btn document-filter-chip profile-homepage-nav-link${activeSection === section ? " lab-subnav-btn-active document-filter-chip-active" : ""}`}
                 onClick={() => {
                   resetSectionState();
                   route(activeLab.slug, section);

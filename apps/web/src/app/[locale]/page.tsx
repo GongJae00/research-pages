@@ -11,7 +11,10 @@ import {
   Wallet,
 } from "lucide-react";
 
+import { HomepageAgentControlSection } from "@/components/homepage-agent-control-section";
 import { dashboardSnapshot } from "@/lib/dashboard-snapshot";
+import { isDemoPreviewRuntimeEnabled } from "@/lib/demo-preview";
+import { getLiveAgentOperationsSnapshot } from "@/lib/agent-ops-runtime";
 import { getDictionary, t } from "@/lib/i18n";
 
 interface Props {
@@ -248,6 +251,8 @@ export default async function LocaleRoot({ params }: Props) {
   const resolvedLocale = locale === "en" ? "en" : "ko";
   const dict = await getDictionary(resolvedLocale);
   const copy = resolvedLocale === "ko" ? landingCopy.ko : landingCopy.en;
+  const opsSnapshot = await getLiveAgentOperationsSnapshot(resolvedLocale);
+  const opsEnabled = process.env.NODE_ENV !== "production" || isDemoPreviewRuntimeEnabled();
 
   const activeAffiliations = dashboardSnapshot.affiliations.filter((entry) => entry.active);
   const activeFunding = dashboardSnapshot.funding.filter((entry) => entry.active);
@@ -362,6 +367,12 @@ export default async function LocaleRoot({ params }: Props) {
     { label: copy.labDocuments, value: dashboardSnapshot.documents.length.toString().padStart(2, "0") },
   ];
 
+  const heroRoutes = [
+    { href: `/${resolvedLocale}/profile`, label: copy.researcherPage },
+    { href: `/${resolvedLocale}/documents`, label: copy.careerKit },
+    { href: `/${resolvedLocale}/lab`, label: copy.labPage },
+  ];
+
   return (
     <div className="marketing-shell rp-landing">
       <section className="rp-hero-section" id="overview">
@@ -377,9 +388,9 @@ export default async function LocaleRoot({ params }: Props) {
                   {copy.heroPrimaryCta}
                   <ArrowRight size={18} />
                 </Link>
-                <a href="#modules" className="secondary-cta">
-                  {copy.heroSecondaryCta}
-                </a>
+                <Link href={`/${resolvedLocale}/documents`} className="secondary-cta">
+                  {copy.careerKit}
+                </Link>
               </div>
 
               <div className="rp-hero-stats">
@@ -391,11 +402,12 @@ export default async function LocaleRoot({ params }: Props) {
                 ))}
               </div>
 
-              <div className="rp-proof-list">
-                {copy.heroProof.map((item) => (
-                  <div className="rp-proof-item" key={item}>
-                    {item}
-                  </div>
+              <div className="rp-hero-route-row">
+                {heroRoutes.map((item) => (
+                  <Link href={item.href} key={item.href} className="rp-hero-route-chip">
+                    {item.label}
+                    <ArrowRight size={14} />
+                  </Link>
                 ))}
               </div>
             </div>
@@ -411,7 +423,6 @@ export default async function LocaleRoot({ params }: Props) {
                     {copy.openPage} &rarr;
                   </Link>
                 </div>
-                <p className="rp-preview-body">{copy.readyBody}</p>
 
                 <div className="rp-profile-panel">
                   <div className="rp-avatar-mark">
@@ -445,7 +456,6 @@ export default async function LocaleRoot({ params }: Props) {
                       {copy.openPage} &rarr;
                     </Link>
                   </div>
-                  <p className="rp-preview-body">{copy.careerBody}</p>
                   <div className="rp-dense-list">
                     {careerDocuments.map((document) => (
                       <div className="rp-dense-row" key={document.id}>
@@ -471,7 +481,6 @@ export default async function LocaleRoot({ params }: Props) {
                       {copy.openPage} &rarr;
                     </Link>
                   </div>
-                  <p className="rp-preview-body">{copy.labBody}</p>
                   <div className="rp-lab-metrics">
                     {labPreviewMetrics.map((item) => (
                       <div className="rp-lab-metric" key={item.label}>
@@ -497,7 +506,6 @@ export default async function LocaleRoot({ params }: Props) {
         <div className="section-heading-stack rp-section-head">
           <span className="section-kicker">{copy.flowKicker}</span>
           <h2 className="section-title rp-section-title">{copy.flowTitle}</h2>
-          <p className="section-lead">{copy.flowLead}</p>
         </div>
 
         <div className="rp-flow-grid">
@@ -513,11 +521,18 @@ export default async function LocaleRoot({ params }: Props) {
         </div>
       </section>
 
+      <section className="rp-section" id="agent-control">
+        <HomepageAgentControlSection
+          initialSnapshot={opsSnapshot}
+          locale={resolvedLocale}
+          opsEnabled={opsEnabled}
+        />
+      </section>
+
       <section className="rp-section" id="modules">
         <div className="section-heading-stack rp-section-head">
           <span className="section-kicker">{copy.surfacesKicker}</span>
           <h2 className="section-title rp-section-title">{copy.surfacesTitle}</h2>
-          <p className="section-lead">{copy.surfacesLead}</p>
         </div>
 
         <div className="rp-surface-grid">
@@ -528,12 +543,11 @@ export default async function LocaleRoot({ params }: Props) {
               <article className="card rp-surface-card" key={item.key}>
                 <div className="rp-surface-head">
                   <div className="ops-card-title-row">
-                    <div className="module-card-icon">
+                  <div className="module-card-icon">
                       <Icon size={18} />
                     </div>
                     <div className="ops-card-copy">
                       <h3>{item.title}</h3>
-                      <p>{item.body}</p>
                     </div>
                   </div>
                   <Link href={item.href} className="card-link">
@@ -554,7 +568,6 @@ export default async function LocaleRoot({ params }: Props) {
                 </div>
                 <div className="ops-card-copy">
                   <h3>{copy.labHubTitle}</h3>
-                  <p>{copy.labHubBody}</p>
                 </div>
               </div>
               <Link href={`/${resolvedLocale}/lab`} className="card-link">
@@ -606,7 +619,6 @@ export default async function LocaleRoot({ params }: Props) {
           <div className="section-heading-stack rp-section-head rp-detail-head">
             <span className="section-kicker">{copy.outputsKicker}</span>
             <h2 className="section-title rp-section-title">{copy.outputsTitle}</h2>
-            <p className="section-lead">{copy.outputsLead}</p>
           </div>
 
           <div className="rp-detail-list">
@@ -632,7 +644,6 @@ export default async function LocaleRoot({ params }: Props) {
           <div className="section-heading-stack rp-section-head rp-detail-head">
             <span className="section-kicker">{copy.securityKicker}</span>
             <h2 className="section-title rp-section-title">{copy.securityTitle}</h2>
-            <p className="section-lead">{copy.securityLead}</p>
           </div>
 
           <div className="rp-detail-list">

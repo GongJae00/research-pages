@@ -7,6 +7,7 @@ import { t } from "@/lib/i18n";
 import { AuthProvider, WorkspaceAuthGate } from "./auth-provider";
 import { Header } from "./header";
 import { LanguageSwitcher } from "./language-switcher";
+import { PreviewModeBanner } from "./preview-mode-banner";
 import { Sidebar } from "./sidebar";
 
 interface LocaleFrameProps {
@@ -18,10 +19,11 @@ interface LocaleFrameProps {
 export function LocaleFrame({ children, locale, dict }: LocaleFrameProps) {
   const pathname = usePathname();
   const isHome = pathname === `/${locale}` || pathname === `/${locale}/`;
+  const isAccessPage = pathname === `/${locale}/access`;
   const isPublicResearcherPage = pathname.startsWith(`/${locale}/researcher/`);
   const isPublicLabPage = pathname.startsWith(`/${locale}/labs/`);
 
-  if (isHome || isPublicResearcherPage || isPublicLabPage) {
+  if (isHome || isPublicResearcherPage || isPublicLabPage || isAccessPage) {
     const headerLinks = [
       { href: "#overview", label: t(dict, "header.overview") },
       { href: "#workflow", label: t(dict, "header.workflow") },
@@ -49,12 +51,15 @@ export function LocaleFrame({ children, locale, dict }: LocaleFrameProps) {
             <div className="marketing-nav marketing-nav-public-spacer" aria-hidden="true" />
           )}
           <div className="marketing-header-right">
-            <Link href={`/${locale}/profile`} className="marketing-header-cta">
-              {t(dict, "common.openWorkspace")}
-            </Link>
+            {!isAccessPage ? (
+              <Link href={`/${locale}/profile`} className="marketing-header-cta">
+                {t(dict, "common.openWorkspace")}
+              </Link>
+            ) : null}
             <LanguageSwitcher locale={locale} />
           </div>
         </header>
+        {!isAccessPage ? <PreviewModeBanner locale={locale} /> : null}
         <main>{children}</main>
       </>
     );
@@ -67,6 +72,7 @@ export function LocaleFrame({ children, locale, dict }: LocaleFrameProps) {
           <Sidebar locale={locale} dict={dict} />
           <div className="app-main">
             <Header locale={locale} dict={dict} />
+            <PreviewModeBanner locale={locale} />
             <main className="app-content">{children}</main>
           </div>
         </div>

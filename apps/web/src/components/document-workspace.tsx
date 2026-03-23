@@ -795,10 +795,10 @@ export function DocumentWorkspace({ locale, initialDocuments }: DocumentWorkspac
 
       <DocumentIntakePanel
         title={text.uploadTitle}
-        description={text.uploadDescription}
+        description=""
         selectLabel={text.selectFiles}
         dropTitle={text.dropTitle}
-        dropDescription={text.dropDescription}
+        dropDescription=""
         inputRef={fileInputRef}
         accept={acceptedFileTypes}
         isDragActive={isDragActive}
@@ -821,7 +821,6 @@ export function DocumentWorkspace({ locale, initialDocuments }: DocumentWorkspac
           <div className="document-section-header">
             <div>
               <h3>{text.queueTitle}</h3>
-              <p className="page-subtitle">{text.queueDescription}</p>
             </div>
 
             {drafts.length > 0 ? (
@@ -948,7 +947,6 @@ export function DocumentWorkspace({ locale, initialDocuments }: DocumentWorkspac
         <div className="document-section-header">
           <div>
             <h3>{text.libraryTitle}</h3>
-            <p className="page-subtitle">{text.libraryDescription}</p>
           </div>
 
           <label className="document-search-field">

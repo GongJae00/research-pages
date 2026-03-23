@@ -1,6 +1,7 @@
 import { profileLinkSchema, type ProfileLink } from "@research-os/types";
 
 import { getCollaborationBackendStatus } from "@/lib/collaboration/runtime";
+import { getDemoPublicResearcherPageData } from "@/lib/demo-preview";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 import { normalizePublicProfileSlug } from "@/lib/public-profile";
 
@@ -121,13 +122,18 @@ function sortPublications(rows: PublicPublicationRow[]) {
 export async function getPublicResearcherPageData(
   slug: string,
 ): Promise<PublicResearcherPageData | null> {
-  if (!hasPublicProfileServerStore()) {
-    return null;
-  }
-
   const normalizedSlug = normalizePublicProfileSlug(slug);
 
   if (!normalizedSlug) {
+    return null;
+  }
+
+  const demoData = getDemoPublicResearcherPageData(normalizedSlug);
+  if (demoData) {
+    return demoData;
+  }
+
+  if (!hasPublicProfileServerStore()) {
     return null;
   }
 

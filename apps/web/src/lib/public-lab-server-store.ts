@@ -1,4 +1,5 @@
 import { getCollaborationBackendStatus } from "@/lib/collaboration/runtime";
+import { getDemoPublicLabPageData } from "@/lib/demo-preview";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 import { normalizePublicLabSlug } from "@/lib/public-lab";
 
@@ -139,13 +140,18 @@ function sortProjects(rows: PublicLabProjectRow[]) {
 export async function getPublicLabPageData(
   slug: string,
 ): Promise<PublicLabPageData | null> {
-  if (!hasPublicLabServerStore()) {
-    return null;
-  }
-
   const normalizedSlug = normalizePublicLabSlug(slug);
 
   if (!normalizedSlug) {
+    return null;
+  }
+
+  const demoData = getDemoPublicLabPageData(normalizedSlug);
+  if (demoData) {
+    return demoData;
+  }
+
+  if (!hasPublicLabServerStore()) {
     return null;
   }
 

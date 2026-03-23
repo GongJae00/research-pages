@@ -16,6 +16,7 @@ import {
   getAuthCollaborationRepository,
   type CollaborationBackendStatus,
 } from "@/lib/collaboration";
+import { ensureDemoBrowserSeed, ensureDemoSeedAssets } from "@/lib/demo-seed";
 import type { Locale } from "@/lib/i18n";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser-client";
 
@@ -105,6 +106,8 @@ function useAuthValue(): AuthContextValue {
 
   useEffect(() => {
     const hydrationTimer = window.setTimeout(() => {
+      ensureDemoBrowserSeed();
+      void ensureDemoSeedAssets();
       void refresh();
     }, 0);
 
