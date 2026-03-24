@@ -231,7 +231,7 @@
 
 .setupBuilderCard {
   display: grid;
-  gap: 0.4rem;
+  gap: 0.35rem;
   margin-top: 0.2rem;
 }
 
@@ -242,7 +242,7 @@
 
 .quickStartRail {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 0.5rem;
   padding: 0.2rem 0 0.05rem;
@@ -257,9 +257,9 @@
 
 .quickStartCard {
   display: grid;
-  gap: 0.3rem;
+  gap: 0.25rem;
   min-width: 0;
-  padding: 0.44rem 0.56rem;
+  padding: 0.4rem 0.52rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 14px;
   background: rgba(248, 250, 252, 0.9);
@@ -280,8 +280,27 @@
 
 .quickStartCard strong {
   color: #0f172a;
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   line-height: 1.2;
+}
+
+.quickStartActions {
+  display: grid;
+  justify-items: end;
+  gap: 0.35rem;
+  flex: 0 0 auto;
+}
+
+.commandSequence {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.28rem 0.58rem;
+  background: rgba(15, 23, 42, 0.06);
+  color: #334155;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 .compactBody {
@@ -335,22 +354,43 @@
 }
 
 .copyCard {
-  display: grid;
-  gap: 0.35rem;
+  padding: 0.52rem 0.6rem;
 }
 
 .copyHead {
   display: flex;
-  justify-content: space-between;
-  gap: 1rem;
   align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
 }
 
 .copyCard code {
+  flex: 1 1 auto;
+  min-width: 0;
   overflow-wrap: anywhere;
   color: #0f172a;
   font-size: 0.8rem;
   line-height: 1.45;
+}
+
+.copyTitleGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex: 0 0 auto;
+}
+
+.commandStep {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  border-radius: 999px;
+  background: #0f172a;
+  color: #f8fafc;
+  font-size: 0.7rem;
+  font-weight: 800;
 }
 
 .stepList {
@@ -498,12 +538,20 @@
     align-items: stretch;
   }
 
+  .quickStartActions {
+    justify-items: stretch;
+  }
+
   .cardHead,
   .panelHead,
   .providerHead,
   .copyHead {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .copyCard code {
+    width: 100%;
   }
 
   .lead,

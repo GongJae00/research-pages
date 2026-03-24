@@ -362,12 +362,15 @@ export function HomepageAgentControlSection({
                   <strong>{copy.commandOrder}</strong>
                 </div>
               </div>
-              {setupBriefHref ? (
-                <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
-                  {copy.openBrief}
-                  <ArrowRight size={16} />
-                </Link>
-              ) : null}
+              <div className={styles.quickStartActions}>
+                <span className={styles.commandSequence}>{copy.commandOrder}</span>
+                {setupBriefHref ? (
+                  <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
+                    {copy.openBrief}
+                    <ArrowRight size={16} />
+                  </Link>
+                ) : null}
+              </div>
             </div>
 
             <div className={styles.setupPickerGrid}>
@@ -418,24 +421,30 @@ export function HomepageAgentControlSection({
             <div className={styles.setupCommands}>
               <div className={styles.copyCard}>
                 <div className={styles.copyHead}>
-                  <span className={styles.metaLabel}>{copy.connectCommand}</span>
+                  <div className={styles.copyTitleGroup}>
+                    <span className={styles.commandStep}>01</span>
+                    <span className={styles.metaLabel}>{copy.connectCommand}</span>
+                  </div>
+                  <code>{setupManifest?.commands.connect}</code>
                   <button type="button" className={styles.copyButton} onClick={() => void copyCommand("connect")}>
                     {copiedCommand === "connect" ? <Check size={14} /> : <Copy size={14} />}
                     {copiedCommand === "connect" ? copy.copied : copy.connectCommand}
                   </button>
                 </div>
-                <code>{setupManifest?.commands.connect}</code>
               </div>
 
               <div className={styles.copyCard}>
                 <div className={styles.copyHead}>
-                  <span className={styles.metaLabel}>{copy.assignCommand}</span>
+                  <div className={styles.copyTitleGroup}>
+                    <span className={styles.commandStep}>02</span>
+                    <span className={styles.metaLabel}>{copy.assignCommand}</span>
+                  </div>
+                  <code>{setupManifest?.commands.assign}</code>
                   <button type="button" className={styles.copyButton} onClick={() => void copyCommand("assign")}>
                     {copiedCommand === "assign" ? <Check size={14} /> : <Copy size={14} />}
                     {copiedCommand === "assign" ? copy.copied : copy.assignCommand}
                   </button>
                 </div>
-                <code>{setupManifest?.commands.assign}</code>
               </div>
             </div>
 

@@ -143,6 +143,11 @@ const validAgentStates = new Set<TeamUnit["members"][number]["state"]>([
   "queued",
   "standby",
 ]);
+const validProviderStatuses = new Set<ProviderConnectionCard["status"]>([
+  "ready",
+  "connected",
+  "attention",
+]);
 
 function isRuntimeMergeEntry(candidate: unknown): candidate is Record<string, unknown> {
   return typeof candidate === "object" && candidate !== null;
@@ -253,8 +258,10 @@ function mergeProviderConnections(
     runtimeState.providerConnections
       .filter(
         (entry) =>
-          entry &&
-          (entry.providerId === "codex" || entry.providerId === "claude" || entry.providerId === "gemini"),
+          isRuntimeMergeEntry(entry) &&
+          (entry.providerId === "codex" ||
+            entry.providerId === "claude" ||
+            entry.providerId === "gemini"),
       )
       .map((entry) => [entry.providerId, entry]),
   );
@@ -270,11 +277,17 @@ function mergeProviderConnections(
 
     return {
       ...connection,
-      status: update.status ?? connection.status,
+      status:
+        typeof update.status === "string" && validProviderStatuses.has(update.status)
+          ? update.status
+          : connection.status,
       assignedTeamId: assignedTeam?.id ?? connection.assignedTeamId,
       assignedTeamLabel: assignedTeam?.name ?? connection.assignedTeamLabel,
       summary: typeof update.note === "string" && update.note.trim() ? update.note : connection.summary,
-      lastHeartbeat: update.updatedAt,
+      lastHeartbeat:
+        typeof update.updatedAt === "string" && update.updatedAt.trim()
+          ? update.updatedAt
+          : connection.lastHeartbeat,
     };
   });
 }
