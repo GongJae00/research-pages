@@ -1116,9 +1116,6 @@ export function ProfileWorkspace({
     savedProfile.primaryInstitution,
     text.emptyValue,
   ]);
-  void coreContactSummary;
-  void coreIdentifierSummary;
-  void coreFocusSummary;
   const coreContactHighlights = useMemo(
     () =>
       [
@@ -2192,7 +2189,12 @@ export function ProfileWorkspace({
             <div className="profile-section-content">
               <dl className="profile-core-table">
                 <div className="profile-core-row">
-                  <dt>{text.contactPanel}</dt>
+                  <dt>
+                    <div className="profile-career-status-main">
+                      <strong>{text.contactPanel}</strong>
+                      <span>{coreContactSummary}</span>
+                    </div>
+                  </dt>
                   <dd>
                     {savedEmails.length > 0 || savedLinks.length > 0 ? (
                       <div className="profile-career-status-list">
@@ -2252,7 +2254,12 @@ export function ProfileWorkspace({
                   </dd>
                 </div>
                 <div className="profile-core-row">
-                  <dt>{text.idPanel}</dt>
+                  <dt>
+                    <div className="profile-career-status-main">
+                      <strong>{text.idPanel}</strong>
+                      <span>{coreIdentifierSummary}</span>
+                    </div>
+                  </dt>
                   <dd>
                     {savedProfile.nationalResearcherNumber || savedProfile.orcid ? (
                       <div className="profile-career-status-list">
@@ -2284,7 +2291,12 @@ export function ProfileWorkspace({
                   </dd>
                 </div>
                 <div className="profile-core-row">
-                  <dt>{text.focusPanel}</dt>
+                  <dt>
+                    <div className="profile-career-status-main">
+                      <strong>{text.focusPanel}</strong>
+                      <span>{coreFocusSummary}</span>
+                    </div>
+                  </dt>
                   <dd>
                     {savedProfile.primaryInstitution || savedProfile.primaryDiscipline || savedKeywordList.length > 0 ? (
                       <div className="profile-career-status-list">
