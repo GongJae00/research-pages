@@ -30,6 +30,89 @@
   grid-template-columns: minmax(0, 1fr) minmax(17rem, 0.92fr);
 }
 
+.assistantControlGrid {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
+}
+
+.assistantCommandPanel {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.95rem;
+  border-radius: 20px;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.95));
+}
+
+.assistantIntentRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.assistantIntentButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.2rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(203, 213, 225, 0.78);
+  background: rgba(248, 250, 252, 0.94);
+  color: #0f172a;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.assistantIntentButton:hover {
+  transform: translateY(-1px);
+  border-color: rgba(45, 212, 191, 0.52);
+}
+
+.assistantIntentButtonActive {
+  border-color: rgba(20, 184, 166, 0.55);
+  background: linear-gradient(180deg, rgba(240, 253, 250, 0.96), rgba(204, 251, 241, 0.92));
+  box-shadow: 0 10px 22px rgba(20, 184, 166, 0.08);
+}
+
+.assistantTextarea {
+  min-height: 6rem;
+}
+
+.assistantComposerFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.assistantCommandResult {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.8rem 0.88rem;
+  border-radius: 16px;
+  border: 1px solid rgba(226, 232, 240, 0.88);
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.assistantCommandResult pre {
+  margin: 0;
+  max-height: 10rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: #0f172a;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
 .assistantMiniStack,
 .assistantMiniList {
   display: grid;
@@ -1990,6 +2073,7 @@
   .modeGrid,
   .teamLeadGrid,
   .runtimeGrid,
+  .assistantControlGrid,
   .assistantConsoleGrid,
   .teamSwitchboard,
   .teamTopologyGrid,
@@ -2022,6 +2106,7 @@
   .primeProviderRow,
   .primeValidationRow,
   .assistantConsoleHead,
+  .assistantComposerFooter,
   .assistantHead,
   .modeCardHead,
   .terminalSessionHead,

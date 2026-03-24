@@ -69,6 +69,12 @@ interface OpsTerminalSessionsResponse {
   sessions: OpsTerminalSessionSnapshot[];
 }
 
+type AssistantCommandIntent = "directive" | "focus" | "pause" | "resume" | "note";
+
+interface OpsControlErrorResponse {
+  error: string;
+}
+
 const teamClassMap: Record<TeamState, string> = {
   delivering: styles.teamDelivering,
   syncing: styles.teamSyncing,
@@ -186,6 +192,35 @@ function getOpsCopy(locale: string) {
       "운영자 지시를 큐로 번역하고 팀으로 내리는 단일 진입점입니다.",
       "A single entry point that translates operator instructions into queued team work.",
     ),
+    assistantCommandLabel: t(locale, "비서 명령", "Assistant commands"),
+    assistantCommandTitle: t(locale, "터미널 없이 비서에게 바로 지시", "Send the assistant direct instructions"),
+    assistantCommandBody: t(
+      locale,
+      "directive, focus, pause, resume, note를 직접 보내고 즉시 swarm을 재정렬합니다.",
+      "Send directives, focus changes, pauses, resumes, and notes directly without typing terminal commands.",
+    ),
+    assistantSend: t(locale, "비서에게 보내기", "Send to assistant"),
+    assistantResult: t(locale, "최근 비서 응답", "Latest assistant response"),
+    stackLabel: t(locale, "로컬 스택", "Local stack"),
+    stackTitle: t(locale, "web + swarm 런처", "web + swarm launcher"),
+    stackBody: t(
+      locale,
+      "관제실에서 바로 로컬 web 서버와 autonomy daemon을 시작, 중지, 점검합니다.",
+      "Start, stop, and inspect the local web server and autonomy daemon directly from the control room.",
+    ),
+    stackStart: t(locale, "스택 시작", "Start stack"),
+    stackStop: t(locale, "스택 중지", "Stop stack"),
+    stackStatus: t(locale, "상태 확인", "Stack status"),
+    intentDirective: t(locale, "전역 지시", "Directive"),
+    intentFocus: t(locale, "팀 포커스", "Focus"),
+    intentPause: t(locale, "정지", "Pause"),
+    intentResume: t(locale, "재개", "Resume"),
+    intentNote: t(locale, "메모", "Note"),
+    assistantPlaceholder: t(
+      locale,
+      "예: 홈페이지 품질 개선 계속. 히어로와 onboarding scan부터 정리.",
+      "Example: Continue improving homepage quality. Start with the hero and onboarding scan.",
+    ),
     providersLabel: t(locale, "연결된 CLI", "Connected CLI"),
     handoffLabel: t(locale, "최근 handoff", "Recent handoffs"),
     topologyLabel: t(locale, "지휘 토폴로지", "Command topology"),
@@ -297,6 +332,21 @@ async function fetchTerminalSessions() {
   return (await response.json()) as OpsTerminalSessionsResponse;
 }
 
+async function sendOpsControlRequest(body: Record<string, unknown>) {
+  const response = await fetch("/api/ops-control", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  const payload = (await response.json()) as OpsTerminalResponse | OpsControlErrorResponse;
+  if (!response.ok) {
+    throw new Error("error" in payload ? payload.error : "Ops control request failed.");
+  }
+
+  return payload as OpsTerminalResponse;
+}
+
 export function AgentOperationsControlRoom({
   initialSnapshot,
   locale,
@@ -317,6 +367,14 @@ export function AgentOperationsControlRoom({
   const [isSendingSessionInput, setIsSendingSessionInput] = useState(false);
   const [isDispatchingCommandToSession, setIsDispatchingCommandToSession] = useState(false);
   const [isStoppingSession, setIsStoppingSession] = useState(false);
+  const [assistantIntent, setAssistantIntent] = useState<AssistantCommandIntent>("directive");
+  const [assistantMessage, setAssistantMessage] = useState("");
+  const [assistantRequestError, setAssistantRequestError] = useState<string | null>(null);
+  const [assistantRequestResult, setAssistantRequestResult] = useState<string | null>(null);
+  const [isSendingAssistantCommand, setIsSendingAssistantCommand] = useState(false);
+  const [stackRequestError, setStackRequestError] = useState<string | null>(null);
+  const [stackRequestResult, setStackRequestResult] = useState<string | null>(null);
+  const [isRunningStackCommand, setIsRunningStackCommand] = useState<"start" | "stop" | "status" | null>(null);
   const copy = getOpsCopy(locale);
 
   const selectedMode = selectedModeOverride ?? snapshot.activeMode;
@@ -472,6 +530,13 @@ export function AgentOperationsControlRoom({
     `corepack pnpm ops -- assign codex ${selectedTeam.id} "Codex moved to ${selectedTeam.name}."`,
     "git status --short",
   ];
+  const assistantIntentOptions: Array<{ id: AssistantCommandIntent; label: string }> = [
+    { id: "directive", label: copy.intentDirective },
+    { id: "focus", label: copy.intentFocus },
+    { id: "pause", label: copy.intentPause },
+    { id: "resume", label: copy.intentResume },
+    { id: "note", label: copy.intentNote },
+  ];
 
   const runTerminalCommand = async (commandValue?: string) => {
     const command = (commandValue ?? terminalCommand).trim();
@@ -538,6 +603,71 @@ export function AgentOperationsControlRoom({
       );
     } finally {
       setIsRunningTerminalCommand(false);
+    }
+  };
+
+  const sendAssistantCommand = async () => {
+    const message = assistantMessage.trim();
+    if (!message || isSendingAssistantCommand) {
+      return;
+    }
+
+    const action =
+      assistantIntent === "directive"
+        ? "assistant.directive"
+        : assistantIntent === "focus"
+          ? "assistant.focus"
+          : assistantIntent === "pause"
+            ? "assistant.pause"
+            : assistantIntent === "resume"
+              ? "assistant.resume"
+              : "assistant.note";
+
+    setAssistantRequestError(null);
+    setAssistantRequestResult(null);
+    setIsSendingAssistantCommand(true);
+
+    try {
+      const payload = await sendOpsControlRequest({
+        action,
+        message,
+        teamId: selectedTeam.id,
+      });
+      setAssistantRequestResult(payload.stdout.trim() || payload.stderr.trim() || payload.command);
+      if (assistantIntent !== "note") {
+        setAssistantMessage("");
+      }
+      const nextSnapshot = await fetchLatestAgentOpsSnapshot(locale);
+      if (nextSnapshot) {
+        setSnapshot(nextSnapshot);
+      }
+    } catch (error) {
+      setAssistantRequestError(
+        error instanceof Error ? error.message : t(locale, "비서 명령 전송 실패", "Failed to send assistant command."),
+      );
+    } finally {
+      setIsSendingAssistantCommand(false);
+    }
+  };
+
+  const runStackCommand = async (action: "start" | "stop" | "status") => {
+    if (isRunningStackCommand) {
+      return;
+    }
+
+    setStackRequestError(null);
+    setStackRequestResult(null);
+    setIsRunningStackCommand(action);
+
+    try {
+      const payload = await sendOpsControlRequest({ action: `stack.${action}` });
+      setStackRequestResult(payload.stdout.trim() || payload.stderr.trim() || payload.command);
+    } catch (error) {
+      setStackRequestError(
+        error instanceof Error ? error.message : t(locale, "스택 제어 실패", "Failed to control the stack."),
+      );
+    } finally {
+      setIsRunningStackCommand(null);
     }
   };
 
@@ -1043,6 +1173,109 @@ export function AgentOperationsControlRoom({
               </div>
               <p>{assistantMode.teamInstruction}</p>
               <span className={styles.runtimeMeta}>{assistantMode.resumeRule}</span>
+            </div>
+          </div>
+
+          <div className={styles.assistantControlGrid}>
+            <div className={styles.assistantCommandPanel}>
+              <div className={styles.traceHead}>
+                <div>
+                  <span className={styles.agentLabel}>{copy.assistantCommandLabel}</span>
+                  <strong className={styles.terminalSessionTitle}>{copy.assistantCommandTitle}</strong>
+                  <p className={styles.sectionBody}>{copy.assistantCommandBody}</p>
+                </div>
+                <span className={styles.commandTowerChip}>{selectedTeam.name}</span>
+              </div>
+
+              <div className={styles.assistantIntentRow}>
+                {assistantIntentOptions.map((option) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    className={`${styles.assistantIntentButton}${assistantIntent === option.id ? ` ${styles.assistantIntentButtonActive}` : ""}`}
+                    onClick={() => setAssistantIntent(option.id)}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+
+              <textarea
+                className={`${styles.terminalInput} ${styles.assistantTextarea}`}
+                value={assistantMessage}
+                onChange={(event) => setAssistantMessage(event.target.value)}
+                placeholder={copy.assistantPlaceholder}
+              />
+
+              <div className={styles.assistantComposerFooter}>
+                <span className={styles.runtimeMeta}>
+                  {assistantIntent === "focus" || assistantIntent === "note"
+                    ? `${copy.currentFocus}: ${selectedTeam.name}`
+                    : snapshot.assistant.name}
+                </span>
+                <button
+                  type="button"
+                  className={styles.terminalRunButton}
+                  onClick={() => void sendAssistantCommand()}
+                  disabled={isSendingAssistantCommand}
+                >
+                  {isSendingAssistantCommand ? copy.terminalRunning : copy.assistantSend}
+                </button>
+              </div>
+
+              {assistantRequestError ? <div className={styles.terminalInlineError}>{assistantRequestError}</div> : null}
+              {assistantRequestResult ? (
+                <div className={styles.assistantCommandResult}>
+                  <span className={styles.agentLabel}>{copy.assistantResult}</span>
+                  <pre>{assistantRequestResult}</pre>
+                </div>
+              ) : null}
+            </div>
+
+            <div className={styles.assistantCommandPanel}>
+              <div className={styles.traceHead}>
+                <div>
+                  <span className={styles.agentLabel}>{copy.stackLabel}</span>
+                  <strong className={styles.terminalSessionTitle}>{copy.stackTitle}</strong>
+                  <p className={styles.sectionBody}>{copy.stackBody}</p>
+                </div>
+                <TerminalSquare size={18} />
+              </div>
+
+              <div className={styles.assistantIntentRow}>
+                <button
+                  type="button"
+                  className={styles.assistantIntentButton}
+                  onClick={() => void runStackCommand("start")}
+                  disabled={isRunningStackCommand !== null}
+                >
+                  {copy.stackStart}
+                </button>
+                <button
+                  type="button"
+                  className={styles.assistantIntentButton}
+                  onClick={() => void runStackCommand("status")}
+                  disabled={isRunningStackCommand !== null}
+                >
+                  {copy.stackStatus}
+                </button>
+                <button
+                  type="button"
+                  className={styles.assistantIntentButton}
+                  onClick={() => void runStackCommand("stop")}
+                  disabled={isRunningStackCommand !== null}
+                >
+                  {copy.stackStop}
+                </button>
+              </div>
+
+              {stackRequestError ? <div className={styles.terminalInlineError}>{stackRequestError}</div> : null}
+              {stackRequestResult ? (
+                <div className={styles.assistantCommandResult}>
+                  <span className={styles.agentLabel}>{copy.stackLabel}</span>
+                  <pre>{stackRequestResult}</pre>
+                </div>
+              ) : null}
             </div>
           </div>
 
