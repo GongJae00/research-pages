@@ -25,6 +25,43 @@ function getShellId(value: unknown): OpsShellId {
   return "powershell";
 }
 
+function getSessionErrorResponse(error: unknown) {
+  const message = error instanceof Error ? error.message : "Ops terminal request failed.";
+
+  if (message.startsWith('Unknown session "')) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: message,
+        recovery: "Refresh terminal sessions and retry with an active session.",
+        sessions: listOpsTerminalSessions(),
+      },
+      { status: 404 },
+    );
+  }
+
+  if (message.includes('" is not running.')) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: message,
+        recovery: "Start a new session or stop the stale session before retrying.",
+        sessions: listOpsTerminalSessions(),
+      },
+      { status: 409 },
+    );
+  }
+
+  return NextResponse.json(
+    {
+      ok: false,
+      error: message,
+      sessions: listOpsTerminalSessions(),
+    },
+    { status: 500 },
+  );
+}
+
 export async function GET() {
   if (!isLocalOpsTerminalEnabled()) {
     return NextResponse.json({ error: "Ops terminal is unavailable." }, { status: 404 });
@@ -113,7 +150,6 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: `Unsupported action "${action}".` }, { status: 400 });
     }
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Ops terminal request failed.";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return getSessionErrorResponse(error);
   }
 }

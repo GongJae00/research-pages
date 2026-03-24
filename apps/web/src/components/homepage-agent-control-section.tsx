@@ -280,7 +280,6 @@ export function HomepageAgentControlSection({
         <div className={styles.lead}>
           <span className={styles.eyebrow}>{copy.eyebrow}</span>
           <h2 className={styles.title}>{copy.title}</h2>
-          <p className={styles.body}>{copy.body}</p>
         </div>
 
         <div className={styles.summaryGrid}>
@@ -337,7 +336,6 @@ export function HomepageAgentControlSection({
             </div>
             <TerminalSquare size={20} />
           </div>
-          <p className={styles.panelBody}>{copy.providersBody}</p>
 
           <div className={styles.providerGrid}>
             {snapshot.providerConnections.map((provider) => (

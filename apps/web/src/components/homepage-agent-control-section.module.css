@@ -1,6 +1,6 @@
 .shell {
   display: grid;
-  gap: 0.55rem;
+  gap: 0.45rem;
 }
 
 .header,
@@ -15,7 +15,7 @@
 .stepList,
 .setupNotesGrid {
   display: grid;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .header,
@@ -40,7 +40,7 @@
 }
 
 .lead {
-  padding: 0.8rem;
+  padding: 0.72rem;
   background:
     radial-gradient(circle at top right, rgba(249, 115, 22, 0.14), transparent 32%),
     radial-gradient(circle at left bottom, rgba(14, 165, 233, 0.14), transparent 28%),
@@ -66,7 +66,7 @@
 }
 
 .title {
-  margin: 0.65rem 0 0;
+  margin: 0.55rem 0 0;
   white-space: pre-line;
   font-size: clamp(1.8rem, 3.2vw, 2.45rem);
   line-height: 1;
@@ -74,7 +74,7 @@
 }
 
 .body {
-  margin: 0.65rem 0 0;
+  margin: 0.55rem 0 0;
   color: rgba(226, 232, 240, 0.9);
   line-height: 1.45;
   max-width: 42rem;
@@ -87,7 +87,7 @@
 .summaryCard {
   display: grid;
   gap: 0.35rem;
-  padding: 0.8rem;
+  padding: 0.72rem;
 }
 
 .summaryCard strong {
@@ -109,7 +109,7 @@
 .teamFlowCard,
 .setupBuilderCard,
 .copyCard {
-  padding: 0.8rem;
+  padding: 0.72rem;
 }
 
 .cardHead,
@@ -146,7 +146,7 @@
 .flowPanel h3,
 .futurePanel h3 {
   margin: 0.15rem 0 0;
-  font-size: 1.08rem;
+  font-size: 1.02rem;
 }
 
 .infoBlock,
@@ -163,7 +163,7 @@
 .futureRow p {
   margin: 0;
   color: #475569;
-  line-height: 1.5;
+  line-height: 1.42;
 }
 
 .inlineMeta {
@@ -210,13 +210,13 @@
 
 .providerGrid,
 .teamFlowGrid {
-  margin-top: 0.65rem;
+  margin-top: 0.5rem;
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .providerCard {
   display: grid;
-  gap: 0.45rem;
+  gap: 0.35rem;
 }
 
 .setupBuilderCard,
@@ -231,8 +231,8 @@
 
 .setupBuilderCard {
   display: grid;
-  gap: 0.55rem;
-  margin-top: 0.4rem;
+  gap: 0.45rem;
+  margin-top: 0.3rem;
 }
 
 .setupPickerGrid,
@@ -275,7 +275,7 @@
   display: grid;
   gap: 0.15rem;
   min-width: 0;
-  padding: 0.48rem 0.65rem;
+  padding: 0.42rem 0.58rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 14px;
   background: rgba(248, 250, 252, 0.92);
@@ -290,7 +290,7 @@
 .setupPicker {
   display: grid;
   gap: 0.4rem;
-  padding: 0.58rem 0.65rem;
+  padding: 0.5rem 0.58rem;
 }
 
 .optionRow {
@@ -333,7 +333,7 @@
 
 .copyCard {
   display: grid;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
 
 .copyHead {

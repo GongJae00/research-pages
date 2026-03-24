@@ -1359,6 +1359,152 @@ async function listDirtyOwnedPaths(ownedPaths) {
   }
 }
 
+async function listStagedPaths() {
+  try {
+    const { stdout } = await execFile(
+      "git",
+      ["diff", "--cached", "--name-only"],
+      {
+        cwd: process.cwd(),
+        windowsHide: true,
+        timeout: 20000,
+      },
+    );
+
+    return stdout
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .map((filePath) => filePath.replace(/\\/g, "/"));
+  } catch {
+    return [];
+  }
+}
+
+function getUniquePaths(paths) {
+  return [...new Set(paths.map((entry) => entry.replace(/\\/g, "/")))];
+}
+
+async function restoreStagedPaths(paths) {
+  if (!paths.length) {
+    return;
+  }
+
+  try {
+    await execFile(
+      "git",
+      ["restore", "--staged", "--", ...paths],
+      {
+        cwd: process.cwd(),
+        windowsHide: true,
+        timeout: 20000,
+      },
+    );
+  } catch {
+    // Keep the working tree intact even if unstage fails.
+  }
+}
+
+async function autoLandExecutionChanges(executionRecords, loopCount) {
+  const changedRecords = executionRecords.filter(
+    (entry) => entry.outcome === "changed" && entry.changedFiles.length > 0,
+  );
+  const changedPaths = getUniquePaths(changedRecords.flatMap((entry) => entry.changedFiles));
+
+  if (!changedPaths.length) {
+    return {
+      committed: false,
+      commitSha: null,
+      files: [],
+      reason: "No changed files to land.",
+    };
+  }
+
+  const preexistingStagedPaths = await listStagedPaths();
+  if (preexistingStagedPaths.length) {
+    return {
+      committed: false,
+      commitSha: null,
+      files: changedPaths,
+      reason: `Skipped auto-land because staged changes already exist: ${preexistingStagedPaths.join(", ")}`,
+    };
+  }
+
+  const dirtyPaths = await listDirtyOwnedPaths(changedPaths);
+  if (!dirtyPaths.length) {
+    return {
+      committed: false,
+      commitSha: null,
+      files: changedPaths,
+      reason: "Changed files were already clean before auto-land.",
+    };
+  }
+
+  const touchedTeams = [...new Set(changedRecords.map((entry) => entry.teamId))];
+  const message = `Autonomy batch ${String(loopCount)}: ${touchedTeams.join(", ")}`;
+
+  try {
+    await execFile(
+      "git",
+      ["add", "--", ...changedPaths],
+      {
+        cwd: process.cwd(),
+        windowsHide: true,
+        timeout: 20000,
+      },
+    );
+
+    const stagedPaths = await listStagedPaths();
+    const unexpectedPaths = stagedPaths.filter((entry) => !changedPaths.includes(entry));
+    if (unexpectedPaths.length) {
+      await restoreStagedPaths(changedPaths);
+      return {
+        committed: false,
+        commitSha: null,
+        files: changedPaths,
+        reason: `Skipped auto-land because unrelated staged paths were detected: ${unexpectedPaths.join(", ")}`,
+      };
+    }
+
+    await execFile(
+      "git",
+      ["commit", "-m", message],
+      {
+        cwd: process.cwd(),
+        windowsHide: true,
+        timeout: 120000,
+        maxBuffer: 4 * 1024 * 1024,
+      },
+    );
+
+    const { stdout: shaStdout } = await execFile(
+      "git",
+      ["rev-parse", "--short", "HEAD"],
+      {
+        cwd: process.cwd(),
+        windowsHide: true,
+        timeout: 20000,
+      },
+    );
+
+    return {
+      committed: true,
+      commitSha: shaStdout.trim() || null,
+      files: changedPaths,
+      reason: message,
+    };
+  } catch (error) {
+    await restoreStagedPaths(changedPaths);
+    const messageText = error instanceof Error ? error.message : String(error);
+    return {
+      committed: false,
+      commitSha: null,
+      files: changedPaths,
+      reason: `Auto-land failed: ${trimTerminalBlock(messageText, 240)}`,
+    };
+  }
+}
+
 function trimTerminalBlock(value, maxLength = 700) {
   const trimmed = value.trim();
 
@@ -2234,6 +2380,13 @@ async function runAutonomyCycle() {
     const activeProviderId = firstLiveExecution?.providerId ?? firstLiveTask?.providerId ?? provider.activeProviderId;
     const activeProviderLabel =
       firstLiveExecution?.providerLabel ?? firstLiveTask?.providerLabel ?? provider.activeProviderLabel;
+    const landingResult = await autoLandExecutionChanges(executionRecords, loopCount);
+    const batchSummary = landingResult.committed
+      ? `${buildBatchSummary(executionRecords)} Commit ${landingResult.commitSha ?? "landed"} created.`
+      : buildBatchSummary(executionRecords);
+    const batchOperatorBrief = landingResult.committed
+      ? `${buildBatchOperatorBrief(executionRecords)} Commit ${landingResult.commitSha ?? "landed"} is ready for review.`
+      : buildBatchOperatorBrief(executionRecords);
 
     state.autonomy = {
       ...(state.autonomy ?? makeDefaultState().autonomy),
@@ -2248,8 +2401,8 @@ async function runAutonomyCycle() {
       currentLane: primaryResult.team.lane,
       lastRunAt: nowIso(),
       nextRunAt: futureIso(tickMs),
-      latestSummary: buildBatchSummary(executionRecords),
-      operatorBrief: buildBatchOperatorBrief(executionRecords),
+      latestSummary: batchSummary,
+      operatorBrief: batchOperatorBrief,
       queue: buildQueue(loopCount, activeTeamIds, activeTeamIds),
       reports: [...reports, ...(state.autonomy?.reports ?? [])].slice(0, 12),
       providerHealth: provider.providerHealth,
@@ -2337,8 +2490,19 @@ async function runAutonomyCycle() {
       from: "Operator Liaison",
       to: "You",
       subject: "Autonomy swarm update",
-      body: buildBatchOperatorBrief(executionRecords),
+      body: batchOperatorBrief,
     });
+
+    if (landingResult.committed) {
+      pushEvent(state, {
+        channel: "review",
+        teamId: primaryResult.team.id,
+        from: "Release Guard",
+        to: "You",
+        subject: "Autonomy landed commit",
+        body: `Commit ${landingResult.commitSha ?? "created"} landed for ${landingResult.files.join(", ")}.`,
+      });
+    }
 
     const reroutedPreferred = teamSelection.blockedTeams.find((entry) => entry.preferred);
     if (reroutedPreferred && !activeTeamIds.includes(teamSelection.preferredTeamId)) {
