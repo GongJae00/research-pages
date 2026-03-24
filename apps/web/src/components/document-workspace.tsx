@@ -321,6 +321,16 @@ function shouldUseIframePreview(document: DocumentRecord) {
 
 export function DocumentWorkspace({ locale, initialDocuments }: DocumentWorkspaceProps) {
   const text = copy[locale];
+  const queueReadyLabel = locale === "ko" ? "저장 준비" : "Ready to save";
+  const queueNextStepLabel =
+    locale === "ko"
+      ? "분류를 확인한 뒤 저장소에 저장하세요."
+      : "Review the category, then save to the repository.";
+  const libraryCountLabel = locale === "ko" ? "결과" : "results";
+  const repositoryActionHint =
+    locale === "ko"
+      ? "문서명을 누르면 미리보기가 열리고, 오른쪽 작업으로 교체·다운로드·삭제를 바로 처리할 수 있습니다."
+      : "Click a title to preview. Use the row actions for replace, download, or delete.";
   const { currentAccount, backendStatus } = useAuth();
   const ownerAccountId = currentAccount?.id ?? initialDocuments[0]?.owner.id ?? "user-local";
   const owner: OwnerScope = { type: "user", id: ownerAccountId };
@@ -821,6 +831,11 @@ export function DocumentWorkspace({ locale, initialDocuments }: DocumentWorkspac
           <div className="document-section-header">
             <div>
               <h3>{text.queueTitle}</h3>
+              <p className="page-subtitle">
+                {drafts.length > 0
+                  ? `${queueReadyLabel} ${drafts.length}. ${queueNextStepLabel}`
+                  : text.queueDescription}
+              </p>
             </div>
 
             {drafts.length > 0 ? (
@@ -945,9 +960,12 @@ export function DocumentWorkspace({ locale, initialDocuments }: DocumentWorkspac
 
       <section className="document-library-section">
         <div className="document-section-header">
-          <div>
-            <h3>{text.libraryTitle}</h3>
-          </div>
+            <div>
+              <h3>{text.libraryTitle}</h3>
+              <p className="page-subtitle">
+                {filteredDocuments.length} {libraryCountLabel}. {repositoryActionHint}
+              </p>
+            </div>
 
           <label className="document-search-field">
             <span>{text.searchLabel}</span>
@@ -987,6 +1005,21 @@ export function DocumentWorkspace({ locale, initialDocuments }: DocumentWorkspac
                 <CompactDocumentRow
                   key={document.id}
                   document={document}
+                  detail={
+                    <div>
+                      <p className="card-support-text">
+                        {getCategoryLabel(locale, document.documentCategory)} ·{" "}
+                        {getTypeLabel(locale, document.documentType)} · {text.formatLabel}:{" "}
+                        {getFormatLabel(
+                          document.originalFileName,
+                          document.fileExtension,
+                        )}
+                      </p>
+                      <p className="card-support-text">
+                        {document.summary || text.noSummary}
+                      </p>
+                    </div>
+                  }
                   meta={
                     <>
                       <span>{text.updatedLabel}</span>

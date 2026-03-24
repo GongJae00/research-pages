@@ -72,6 +72,8 @@ function getQuickSetupSteps(locale: string) {
   return ["1. Choose CLI", "2. Copy command", "3. Run locally"];
 }
 
+void getQuickSetupSteps;
+
 function getCopy(locale: string, opsEnabled: boolean) {
   if (isKoreanLocale(locale)) {
     return {
@@ -194,7 +196,6 @@ export function HomepageAgentControlSection({
   const [selectedTeamId, setSelectedTeamId] = useState(initialSnapshot.selectedTeamId);
   const [copiedCommand, setCopiedCommand] = useState<"connect" | "assign" | null>(null);
   const copy = getCopy(locale, opsEnabled);
-  const quickSetupSteps = getQuickSetupSteps(locale);
 
   useEffect(() => {
     let mounted = true;
@@ -349,21 +350,20 @@ export function HomepageAgentControlSection({
             </div>
             <div className={styles.quickStartRail}>
               <div className={styles.quickStartSummary}>
-                <div className={styles.quickStartCard}>
-                  <span className={styles.quickStartBadge}>{quickSetupSteps[0]}</span>
+                <div className={styles.selectionCard}>
+                  <span className={styles.metaLabel}>{copy.chooseProvider}</span>
                   <strong>{selectedProvider?.label ?? copy.chooseProvider}</strong>
                 </div>
-                <div className={styles.quickStartCard}>
-                  <span className={styles.quickStartBadge}>{quickSetupSteps[1]}</span>
+                <div className={styles.selectionCard}>
+                  <span className={styles.metaLabel}>{copy.chooseTeam}</span>
                   <strong>{selectedTeam?.name ?? copy.chooseTeam}</strong>
                 </div>
-                <div className={styles.quickStartCard}>
-                  <span className={styles.quickStartBadge}>{quickSetupSteps[2]}</span>
+                <div className={styles.selectionCard}>
+                  <span className={styles.metaLabel}>{copy.setupCommand}</span>
                   <strong>{copy.commandOrder}</strong>
                 </div>
               </div>
               <div className={styles.quickStartActions}>
-                <span className={styles.commandSequence}>{copy.commandOrder}</span>
                 {setupBriefHref ? (
                   <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
                     {copy.openBrief}

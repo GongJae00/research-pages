@@ -5,6 +5,7 @@ import type { DocumentRecord } from "@research-os/types";
 interface CompactDocumentRowProps {
   document: DocumentRecord;
   meta?: React.ReactNode;
+  detail?: React.ReactNode;
   actions: React.ReactNode;
   onOpen: () => void;
   className?: string;
@@ -13,6 +14,7 @@ interface CompactDocumentRowProps {
 export function CompactDocumentRow({
   document,
   meta,
+  detail,
   actions,
   onOpen,
   className,
@@ -37,6 +39,7 @@ export function CompactDocumentRow({
         >
           {displayName}
         </button>
+        {detail ? <div>{detail}</div> : null}
       </div>
 
       <div className="compact-document-side">

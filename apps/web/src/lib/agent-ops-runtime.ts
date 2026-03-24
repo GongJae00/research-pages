@@ -249,6 +249,16 @@ function mergeTeamUpdates(teams: TeamUnit[], runtimeState: AgentOpsRuntimeState)
   });
 }
 
+function resolveSelectedTeamId(teams: TeamUnit[], selectedTeamId: string, fallbackTeamId: string) {
+  const teamIds = new Set(teams.map((team) => team.id));
+
+  if (teamIds.has(selectedTeamId)) {
+    return selectedTeamId;
+  }
+
+  return teamIds.has(fallbackTeamId) ? fallbackTeamId : teams[0]?.id ?? fallbackTeamId;
+}
+
 function mergeProviderConnections(
   baseConnections: ProviderConnectionCard[],
   teams: TeamUnit[],
@@ -301,11 +311,12 @@ export async function getLiveAgentOperationsSnapshot(
     ? createDefaultOperatorDirective(locale, runtimeState.currentDirective.issuedAt)
     : runtimeState.currentDirective;
   const teams = mergeTeamUpdates(base.teams, runtimeState);
+  const selectedTeamId = resolveSelectedTeamId(teams, runtimeState.selectedTeamId, base.selectedTeamId);
 
   return {
     ...base,
     activeMode: runtimeState.assistantMode,
-    selectedTeamId: runtimeState.selectedTeamId,
+    selectedTeamId,
     runtime: {
       terminalConnected: runtimeState.terminalConnected,
       lastSync: runtimeState.updatedAt,
