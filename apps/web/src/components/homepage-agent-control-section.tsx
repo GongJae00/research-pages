@@ -94,6 +94,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
       assignCommand: "재배정 명령 복사",
       copied: "복사됨",
       openBrief: "브리프 열기",
+      commandOrder: "연결 후 배정",
       chooseProvider: "CLI 선택",
       chooseTeam: "팀 선택",
       setupCommand: "셋업 명령",
@@ -148,6 +149,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
     assignCommand: "Copy assign command",
     copied: "Copied",
     openBrief: "Open brief",
+    commandOrder: "Connect first, assign second",
     chooseProvider: "Choose CLI",
     chooseTeam: "Choose team",
     setupCommand: "Setup command",
@@ -345,27 +347,27 @@ export function HomepageAgentControlSection({
               </div>
               <Command size={20} />
             </div>
-            <div className={styles.quickStartStrip}>
-              <div className={styles.quickStartCard}>
-                <span className={styles.quickStartBadge}>{quickSetupSteps[0]}</span>
-                <strong>{selectedProvider?.label ?? copy.chooseProvider}</strong>
-              </div>
-              <div className={styles.quickStartCard}>
-                <span className={styles.quickStartBadge}>{quickSetupSteps[1]}</span>
-                <strong>{selectedTeam?.name ?? copy.chooseTeam}</strong>
-              </div>
-              <div className={styles.quickStartCard}>
-                <span className={styles.quickStartBadge}>{quickSetupSteps[2]}</span>
-                <div className={styles.quickStartAction}>
-                  <strong>{copy.setupCommand}</strong>
-                  {setupBriefHref ? (
-                    <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
-                      {copy.openBrief}
-                      <ArrowRight size={16} />
-                    </Link>
-                  ) : null}
+            <div className={styles.quickStartRail}>
+              <div className={styles.quickStartSummary}>
+                <div className={styles.quickStartCard}>
+                  <span className={styles.quickStartBadge}>{quickSetupSteps[0]}</span>
+                  <strong>{selectedProvider?.label ?? copy.chooseProvider}</strong>
+                </div>
+                <div className={styles.quickStartCard}>
+                  <span className={styles.quickStartBadge}>{quickSetupSteps[1]}</span>
+                  <strong>{selectedTeam?.name ?? copy.chooseTeam}</strong>
+                </div>
+                <div className={styles.quickStartCard}>
+                  <span className={styles.quickStartBadge}>{quickSetupSteps[2]}</span>
+                  <strong>{copy.commandOrder}</strong>
                 </div>
               </div>
+              {setupBriefHref ? (
+                <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
+                  {copy.openBrief}
+                  <ArrowRight size={16} />
+                </Link>
+              ) : null}
             </div>
 
             <div className={styles.setupPickerGrid}>

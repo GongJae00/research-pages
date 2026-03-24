@@ -144,10 +144,18 @@ const validAgentStates = new Set<TeamUnit["members"][number]["state"]>([
   "standby",
 ]);
 
+function isRuntimeMergeEntry(candidate: unknown): candidate is Record<string, unknown> {
+  return typeof candidate === "object" && candidate !== null;
+}
+
 function sanitizeRuntimeTeamUpdates(teams: TeamUnit[], runtimeState: AgentOpsRuntimeState) {
   const knownTeamIds = new Set(teams.map((team) => team.id));
 
   const teamUpdates = runtimeState.teamUpdates.flatMap((entry) => {
+    if (!isRuntimeMergeEntry(entry) || typeof entry.teamId !== "string") {
+      return [];
+    }
+
     if (!knownTeamIds.has(entry.teamId)) {
       return [];
     }
@@ -165,6 +173,14 @@ function sanitizeRuntimeTeamUpdates(teams: TeamUnit[], runtimeState: AgentOpsRun
   );
 
   const memberUpdates = runtimeState.memberUpdates.flatMap((entry) => {
+    if (
+      !isRuntimeMergeEntry(entry) ||
+      typeof entry.teamId !== "string" ||
+      typeof entry.memberName !== "string"
+    ) {
+      return [];
+    }
+
     const teamMembers = memberDirectory.get(entry.teamId);
 
     if (!teamMembers?.has(entry.memberName)) {
