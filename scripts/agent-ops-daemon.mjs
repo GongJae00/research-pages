@@ -348,6 +348,15 @@ async function acquireAutonomyLock() {
       const currentLock = JSON.parse(raw);
       const acquiredAt = Date.parse(currentLock.acquiredAt ?? "");
       const staleAfterMs = Math.max(tickMs * 2, 15 * 60 * 1000);
+      const lockPid =
+        typeof currentLock.pid === "number" && Number.isFinite(currentLock.pid)
+          ? currentLock.pid
+          : null;
+
+      if (lockPid && !(await isProcessAlive(lockPid))) {
+        await rm(autonomyLockPath, { force: true });
+        return acquireAutonomyLock();
+      }
 
       if (Number.isFinite(acquiredAt) && Date.now() - acquiredAt > staleAfterMs) {
         await rm(autonomyLockPath, { force: true });
