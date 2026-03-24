@@ -21,6 +21,8 @@ function makeDefaultAutonomy(updatedAt) {
     status: "stopped",
     activeProviderId: "mock",
     activeProviderLabel: "Standby",
+    parallelLimit: 3,
+    currentBatchId: null,
     loopCount: 0,
     currentTeamId: "executive-desk",
     currentLane: "Standby",
@@ -35,6 +37,11 @@ function makeDefaultAutonomy(updatedAt) {
     taskHistory: [],
     currentExecution: null,
     executionHistory: [],
+    activeTasks: [],
+    activeExecutions: [],
+    workers: [],
+    workerHistory: [],
+    interactionBus: [],
     providerHealth: [
       {
         providerId: "mock",
@@ -84,12 +91,36 @@ async function loadState() {
     }
     if (!state.autonomy || typeof state.autonomy !== "object") {
       state.autonomy = makeDefaultAutonomy(state.updatedAt ?? nowIso());
+    } else {
+      state.autonomy = {
+        ...makeDefaultAutonomy(state.updatedAt ?? nowIso()),
+        ...state.autonomy,
+      };
     }
+    state.autonomy.parallelLimit = Math.max(
+      2,
+      Math.min(Number(state.autonomy.parallelLimit ?? 3) || 3, knownTeams.size),
+    );
     if (!Array.isArray(state.autonomy.taskHistory)) {
       state.autonomy.taskHistory = [];
     }
     if (!Array.isArray(state.autonomy.executionHistory)) {
       state.autonomy.executionHistory = [];
+    }
+    if (!Array.isArray(state.autonomy.activeTasks)) {
+      state.autonomy.activeTasks = [];
+    }
+    if (!Array.isArray(state.autonomy.activeExecutions)) {
+      state.autonomy.activeExecutions = [];
+    }
+    if (!Array.isArray(state.autonomy.workers)) {
+      state.autonomy.workers = [];
+    }
+    if (!Array.isArray(state.autonomy.workerHistory)) {
+      state.autonomy.workerHistory = [];
+    }
+    if (!Array.isArray(state.autonomy.interactionBus)) {
+      state.autonomy.interactionBus = [];
     }
     if (state.autonomy.currentExecution === undefined) {
       state.autonomy.currentExecution = null;
@@ -166,9 +197,12 @@ function printStatus(state) {
   console.log(`Directive body: ${state.currentDirective.body}`);
   if (state.autonomy) {
     console.log(
-      `Autonomy: [${state.autonomy.status}] enabled=${state.autonomy.enabled} provider=${state.autonomy.activeProviderLabel} loops=${state.autonomy.loopCount}`,
+      `Autonomy: [${state.autonomy.status}] enabled=${state.autonomy.enabled} provider=${state.autonomy.activeProviderLabel} loops=${state.autonomy.loopCount} parallel=${state.autonomy.parallelLimit ?? 1}`,
     );
     console.log(`Autonomy summary: ${state.autonomy.latestSummary}`);
+    if (state.autonomy.currentBatchId) {
+      console.log(`Current batch: ${state.autonomy.currentBatchId}`);
+    }
     if (state.autonomy.currentTask) {
       console.log(
         `Current task: [${state.autonomy.currentTask.status}] ${state.autonomy.currentTask.teamLabel} via ${state.autonomy.currentTask.providerLabel}`,
@@ -191,6 +225,21 @@ function printStatus(state) {
         console.log(
           `Current execution artifact: ${state.autonomy.currentExecution.artifactPath}`,
         );
+      }
+    }
+    if (Array.isArray(state.autonomy.workers) && state.autonomy.workers.length) {
+      console.log("Worker swarm:");
+      for (const worker of state.autonomy.workers.slice(0, 6)) {
+        console.log(
+          `  - ${worker.memberName}: [${worker.status}] ${worker.teamLabel} via ${worker.providerLabel}`,
+        );
+        console.log(`    work: ${worker.workItemTitle}`);
+        if (Array.isArray(worker.changedFiles) && worker.changedFiles.length) {
+          console.log(`    files: ${worker.changedFiles.join(", ")}`);
+        }
+        if (worker.sessionId) {
+          console.log(`    session: ${worker.sessionId}`);
+        }
       }
     }
   }

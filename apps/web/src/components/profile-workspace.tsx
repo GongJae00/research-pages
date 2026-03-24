@@ -2103,15 +2103,50 @@ export function ProfileWorkspace({
             <div className="profile-section-content">
               <dl className="profile-core-table">
                 <div className="profile-core-row">
-                  <dt>{text.email}</dt>
+                  <dt>{text.contactPanel}</dt>
                   <dd>
-                    {savedEmails.length > 0 ? (
-                      <div className="profile-inline-list">
-                        {savedEmails.map((email) => (
-                          <a key={email} href={`mailto:${email}`} className="profile-inline-link">
-                            {email}
-                          </a>
-                        ))}
+                    {savedEmails.length > 0 || savedLinks.length > 0 ? (
+                      <div className="profile-career-status-list">
+                        <div className="profile-career-status-row">
+                          <div className="profile-career-status-main">
+                            <strong>{text.contacts}</strong>
+                            {savedEmails.length > 0 ? (
+                              <div className="profile-inline-list">
+                                {savedEmails.map((email) => (
+                                  <a key={email} href={`mailto:${email}`} className="profile-inline-link">
+                                    {email}
+                                  </a>
+                                ))}
+                              </div>
+                            ) : (
+                              <span>{text.emptyValue}</span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="profile-career-status-row">
+                          <div className="profile-career-status-main">
+                            <strong>{onlineLinksLabel}</strong>
+                            {savedLinks.length > 0 ? (
+                              <div className="profile-link-stack">
+                                {savedLinks.map((link) => (
+                                  <a
+                                    key={`${link.kind}-${link.url}`}
+                                    href={link.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="profile-link-row"
+                                  >
+                                    <strong>{getProfileLinkLabel(locale, { kind: link.kind, label: link.label ?? "" })}</strong>
+                                    <span>{getProfileLinkDisplayUrl(link.url)}</span>
+                                    <ExternalLink size={13} />
+                                  </a>
+                                ))}
+                              </div>
+                            ) : (
+                              <span>{text.emptyValue}</span>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     ) : (
                       text.emptyValue
@@ -2119,23 +2154,22 @@ export function ProfileWorkspace({
                   </dd>
                 </div>
                 <div className="profile-core-row">
-                  <dt>{onlineLinksLabel}</dt>
+                  <dt>{text.idPanel}</dt>
                   <dd>
-                    {savedLinks.length > 0 ? (
-                      <div className="profile-link-stack">
-                        {savedLinks.map((link) => (
-                          <a
-                            key={`${link.kind}-${link.url}`}
-                            href={link.url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="profile-link-row"
-                          >
-                            <strong>{getProfileLinkLabel(locale, { kind: link.kind, label: link.label ?? "" })}</strong>
-                            <span>{getProfileLinkDisplayUrl(link.url)}</span>
-                            <ExternalLink size={13} />
-                          </a>
-                        ))}
+                    {savedProfile.nationalResearcherNumber || savedProfile.orcid ? (
+                      <div className="profile-career-status-list">
+                        <div className="profile-career-status-row">
+                          <div className="profile-career-status-main">
+                            <strong>{text.nationalId}</strong>
+                            <span>{savedProfile.nationalResearcherNumber || text.emptyValue}</span>
+                          </div>
+                        </div>
+                        <div className="profile-career-status-row">
+                          <div className="profile-career-status-main">
+                            <strong>{text.orcid}</strong>
+                            <span>{savedProfile.orcid || text.emptyValue}</span>
+                          </div>
+                        </div>
                       </div>
                     ) : (
                       text.emptyValue
@@ -2143,23 +2177,38 @@ export function ProfileWorkspace({
                   </dd>
                 </div>
                 <div className="profile-core-row">
-                  <dt>{text.nationalId}</dt>
-                  <dd>{savedProfile.nationalResearcherNumber || text.emptyValue}</dd>
-                </div>
-                <div className="profile-core-row">
-                  <dt>{text.orcid}</dt>
-                  <dd>{savedProfile.orcid || text.emptyValue}</dd>
-                </div>
-                <div className="profile-core-row">
-                  <dt>{text.keywords}</dt>
+                  <dt>{text.focusPanel}</dt>
                   <dd>
-                    {savedKeywordList.length > 0 ? (
-                      <div className="profile-inline-list profile-inline-list-muted">
-                        {savedKeywordList.map((keyword) => (
-                          <span className="profile-inline-text" key={keyword}>
-                            {keyword}
-                          </span>
-                        ))}
+                    {savedProfile.primaryInstitution || savedProfile.primaryDiscipline || savedKeywordList.length > 0 ? (
+                      <div className="profile-career-status-list">
+                        <div className="profile-career-status-row">
+                          <div className="profile-career-status-main">
+                            <strong>{text.institution}</strong>
+                            <span>{savedProfile.primaryInstitution || text.emptyValue}</span>
+                          </div>
+                        </div>
+                        <div className="profile-career-status-row">
+                          <div className="profile-career-status-main">
+                            <strong>{text.discipline}</strong>
+                            <span>{savedProfile.primaryDiscipline || text.emptyValue}</span>
+                          </div>
+                        </div>
+                        <div className="profile-career-status-row">
+                          <div className="profile-career-status-main">
+                            <strong>{text.keywords}</strong>
+                            {savedKeywordList.length > 0 ? (
+                              <div className="profile-inline-list profile-inline-list-muted">
+                                {savedKeywordList.map((keyword) => (
+                                  <span className="profile-inline-text" key={keyword}>
+                                    {keyword}
+                                  </span>
+                                ))}
+                              </div>
+                            ) : (
+                              <span>{text.emptyValue}</span>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     ) : (
                       text.emptyValue

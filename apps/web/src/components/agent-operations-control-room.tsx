@@ -15,7 +15,6 @@ import { useEffect, useMemo, useState } from "react";
 import { formatAgentOpsTimestamp } from "@/lib/agent-ops-time";
 import type {
   AgentOperationsSnapshot,
-  AgentState,
   AssistantMode,
   ProviderStatus,
   TeamState,
@@ -70,13 +69,6 @@ interface OpsTerminalSessionsResponse {
   sessions: OpsTerminalSessionSnapshot[];
 }
 
-const stateClassMap: Record<AgentState, string> = {
-  running: styles.stateRunning,
-  reviewing: styles.stateReviewing,
-  queued: styles.stateQueued,
-  standby: styles.stateStandby,
-};
-
 const teamClassMap: Record<TeamState, string> = {
   delivering: styles.teamDelivering,
   syncing: styles.teamSyncing,
@@ -92,6 +84,34 @@ function providerStatusClass(status: ProviderStatus) {
       return styles.statusDone;
     case "attention":
       return styles.statusReview;
+  }
+}
+
+function interactionStatusClass(status: "queued" | "running" | "completed" | "blocked") {
+  switch (status) {
+    case "running":
+      return styles.statusActive;
+    case "completed":
+      return styles.statusDone;
+    case "blocked":
+      return styles.statusReview;
+    default:
+      return styles.directiveBadge;
+  }
+}
+
+function workerStatusClass(status: "planned" | "running" | "changed" | "noop" | "blocked" | "failed") {
+  switch (status) {
+    case "running":
+    case "changed":
+      return styles.statusActive;
+    case "noop":
+      return styles.statusDone;
+    case "blocked":
+    case "failed":
+      return styles.statusReview;
+    default:
+      return styles.directiveBadge;
   }
 }
 
@@ -182,9 +202,32 @@ function getOpsCopy(locale: string) {
     activeExecution: t(locale, "현재 실행", "Current execution"),
     activeProvider: t(locale, "활성 provider", "Active provider"),
     loopCount: t(locale, "루프", "Loop count"),
+    parallelLimit: t(locale, "병렬 슬롯", "Parallel slots"),
+    currentBatch: t(locale, "현재 배치", "Current batch"),
+    swarmLabel: t(locale, "실행 swarm", "Execution swarm"),
+    swarmTitle: t(locale, "Codex 워커 swarm", "Codex worker swarm"),
+    swarmBody: t(
+      locale,
+      "비서가 팀장에게 내린 지시가 각 Codex 워커로 어떻게 내려가고, 어떤 파일이 수정됐는지 한 번에 봅니다.",
+      "See how assistant dispatches fan out into Codex workers, which files they touched, and what each worker is returning.",
+    ),
+    messageBusLabel: t(locale, "메시지 버스", "Message bus"),
+    messageBusTitle: t(locale, "누가 누구에게 지시하고 보고하는지", "Who is dispatching and reporting to whom"),
+    messageBusBody: t(
+      locale,
+      "탑다운 지시, 팀 내 실행, 바텀업 보고를 방향별로 바로 읽을 수 있게 정리했습니다.",
+      "Read top-down dispatches, in-team execution, and bottom-up reporting by direction.",
+    ),
+    workerFilesLabel: t(locale, "수정 파일", "Touched files"),
+    workerNextActionLabel: t(locale, "다음 액션", "Next action"),
+    workerSessionLabel: t(locale, "세션", "Session"),
+    busTopDown: t(locale, "탑다운", "Top-down"),
+    busPeer: t(locale, "팀 내", "Peer"),
+    busBottomUp: t(locale, "바텀업", "Bottom-up"),
     generatedAt: t(locale, "스냅샷", "Snapshot"),
     noCli: t(locale, "CLI 없음", "No CLI"),
     noTrace: t(locale, "표시할 상호작용이 없습니다.", "No interaction is visible yet."),
+    noWorkers: t(locale, "아직 활성 worker가 없습니다.", "No workers are active yet."),
     directiveAt: t(locale, "기록 시각", "at"),
   };
 }
@@ -232,6 +275,9 @@ function formatConversationSubject(locale: string, subject: string) {
   if (subject === "Resume planning") return "재개 계획";
   if (subject === "Terminal focus change") return "포커스 변경";
   if (subject === "Operator note") return "운영자 메모";
+  if (subject === "Bounded lane dispatch") return "bounded 레인 지시";
+  if (subject === "Diff ready") return "diff 준비 완료";
+  if (subject === "Checkpoint ready") return "체크포인트 준비";
   return subject;
 }
 
@@ -370,6 +416,55 @@ export function AgentOperationsControlRoom({
       return true;
     }).slice(0, 3);
   }, [snapshot.autonomy.currentExecution, snapshot.autonomy.executionHistory]);
+  const swarmWorkers = useMemo(
+    () =>
+      snapshot.autonomy.workers.length
+        ? snapshot.autonomy.workers
+        : recentExecutions.map((execution) => ({
+            id: execution.id,
+            teamId: execution.teamId,
+            teamLabel: execution.teamLabel,
+            memberName: execution.teamLabel,
+            role: execution.providerLabel,
+            providerId: execution.providerId,
+            providerLabel: execution.providerLabel,
+            sessionId: execution.sessionId ?? null,
+            workItemTitle: execution.workItemTitle ?? execution.summary,
+            ownedPaths: execution.workItemFiles ?? [],
+            status: execution.outcome,
+            summary: execution.summary,
+            nextAction: execution.nextAction,
+            changedFiles: execution.changedFiles,
+            artifactPath: execution.artifactPath,
+            startedAt: execution.time,
+            updatedAt: execution.time,
+          })),
+    [recentExecutions, snapshot.autonomy.workers],
+  );
+  const visibleWorkers = useMemo(
+    () => {
+      const matches = swarmWorkers.filter((worker) => worker.teamId === selectedTeam.id);
+      return matches.length ? matches : swarmWorkers.slice(0, 4);
+    },
+    [selectedTeam.id, swarmWorkers],
+  );
+  const interactionBus = useMemo(() => {
+    if (snapshot.autonomy.interactionBus.length) {
+      return snapshot.autonomy.interactionBus.filter((message) => message.teamId === selectedTeam.id).slice(0, 8);
+    }
+
+    return interactionTrace.map((event) => ({
+      id: event.id,
+      time: event.time,
+      teamId: event.teamId ?? selectedTeam.id,
+      from: event.from,
+      to: event.to,
+      direction: event.channel === "review" ? "bottom-up" : "top-down",
+      subject: event.subject,
+      body: event.body,
+      status: "completed" as const,
+    }));
+  }, [interactionTrace, selectedTeam.id, snapshot.autonomy.interactionBus]);
   const terminalPresetCommands = [
     "corepack pnpm ops -- status",
     `corepack pnpm ops -- directive "${t(locale, "홈페이지 품질 개선 계속", "Continue improving homepage quality")}"`,
@@ -957,11 +1052,14 @@ export function AgentOperationsControlRoom({
               <div className={styles.runtimeHead}>
                 <strong>{snapshot.autonomy.activeProviderLabel}</strong>
                 <span className={`${styles.statusBadge} ${styles.statusActive}`}>
-                  {snapshot.autonomy.loopCount}
+                  {swarmWorkers.length}
                 </span>
               </div>
               <p>{snapshot.autonomy.latestSummary}</p>
-              <span className={styles.runtimeMeta}>{snapshot.autonomy.operatorBrief}</span>
+              <span className={styles.runtimeMeta}>
+                {copy.loopCount} {snapshot.autonomy.loopCount}
+                {snapshot.autonomy.currentBatchId ? ` · ${copy.currentBatch} ${snapshot.autonomy.currentBatchId}` : ""}
+              </span>
             </div>
 
             <div className={styles.assistantMiniStack}>
@@ -1012,6 +1110,14 @@ export function AgentOperationsControlRoom({
             <span className={styles.commandTowerChip}>
               {copy.loopCount}: {snapshot.autonomy.loopCount}
             </span>
+            <span className={styles.commandTowerChip}>
+              {copy.parallelLimit}: {snapshot.autonomy.parallelLimit}
+            </span>
+            {snapshot.autonomy.currentBatchId ? (
+              <span className={styles.commandTowerChip}>
+                {copy.currentBatch}: {snapshot.autonomy.currentBatchId}
+              </span>
+            ) : null}
           </div>
         </div>
 
@@ -1055,13 +1161,9 @@ export function AgentOperationsControlRoom({
             <section className={styles.teamTopologyStage}>
               <div className={styles.memberSwarmHead}>
                 <div>
-                  <span className={styles.flowNodeLabel}>{copy.teamLayerLabel}</span>
-                  <h3 className={styles.swarmTitle}>
-                    {t(locale, "팀별 실행 계층", "Per-team execution layer")}
-                  </h3>
-                  <p className={styles.swarmBody}>
-                    {t(locale, "팀장, 연결 CLI, 팀원 상태를 한 카드에 묶었습니다.", "Each card groups the lead, attached CLI, and member state.")}
-                  </p>
+                  <span className={styles.flowNodeLabel}>{copy.swarmLabel}</span>
+                  <h3 className={styles.swarmTitle}>{copy.swarmTitle}</h3>
+                  <p className={styles.swarmBody}>{copy.swarmBody}</p>
                 </div>
                 <Users2 size={18} />
               </div>
@@ -1069,6 +1171,8 @@ export function AgentOperationsControlRoom({
               <div className={styles.teamTopologyGrid}>
                 {snapshot.teams.map((team) => {
                   const attachedProviders = providersByTeam.get(team.id) ?? [];
+                  const workerCount = swarmWorkers.filter((worker) => worker.teamId === team.id).length;
+
                   return (
                     <button
                       key={team.id}
@@ -1088,6 +1192,7 @@ export function AgentOperationsControlRoom({
 
                       <div className={styles.teamTopologyMeta}>
                         <span className={styles.commandTowerChip}>{team.lane}</span>
+                        <span className={styles.commandTowerChip}>{workerCount}</span>
                         {attachedProviders.length ? (
                           attachedProviders.map((provider) => (
                             <span className={styles.commandTowerChip} key={`${team.id}-${provider.providerId}`}>
@@ -1098,132 +1203,168 @@ export function AgentOperationsControlRoom({
                           <span className={styles.commandTowerChipMuted}>{copy.noCli}</span>
                         )}
                       </div>
-
-                      <div className={styles.teamTopologyMembers}>
-                        {team.members.slice(0, 3).map((member) => (
-                          <div className={styles.teamTopologyMemberRow} key={`${team.id}-${member.name}`}>
-                            <div>
-                              <strong>{member.name}</strong>
-                              <span>{member.title}</span>
-                            </div>
-                            <span className={`${styles.stateBadge} ${stateClassMap[member.state]}`}>
-                              {member.state}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className={styles.teamTopologyFooter}>
-                        <span>{t(locale, "다음 handoff", "Next handoff")}</span>
-                        <strong>{team.nextHandoff}</strong>
-                      </div>
                     </button>
                   );
                 })}
               </div>
-            </section>
 
-            <div className={styles.interactionBoard}>
-              <article className={styles.tracePanel}>
-                <div className={styles.traceHead}>
-                  <div>
-                    <span className={styles.flowNodeLabel}>{copy.bottomUpLabel}</span>
-                    <h3 className={styles.swarmTitle}>{t(locale, "보고 패킷과 handoff", "Report packets and handoffs")}</h3>
-                    <p className={styles.swarmBody}>
-                      {t(locale, "실행 결과와 팀 간 전달을 같이 보여줍니다.", "Execution results and handoffs stay in the same surface.")}
-                    </p>
+              <div className={styles.swarmStageGrid}>
+                <article className={styles.memberSwarmStage}>
+                  <div className={styles.traceHead}>
+                    <div>
+                      <span className={styles.flowNodeLabel}>{selectedTeam.name}</span>
+                      <h3 className={styles.swarmTitle}>{t(locale, "선택 팀의 활성 워커", "Active workers for the selected team")}</h3>
+                      <p className={styles.swarmBody}>
+                        {t(locale, "팀장 아래 실제 Codex worker가 어떤 slice를 만지고 있는지 바로 봅니다.", "Inspect which concrete slices the live Codex workers are touching under this lead.")}
+                      </p>
+                    </div>
+                    <Play size={18} />
                   </div>
-                  <MessageSquareShare size={18} />
-                </div>
 
-                <div className={styles.reportCardGrid}>
-                  <article className={`${styles.reportCard} ${styles.reportCardPrimary}`}>
-                    <span className={styles.flowNodeLabel}>{copy.latestPacket}</span>
-                    <strong>{selectedTeam.currentDeliverable}</strong>
-                    <p>{selectedTeam.objective}</p>
-                  </article>
+                  {visibleWorkers.length ? (
+                    <div className={styles.workerSwarmGrid}>
+                      {visibleWorkers.map((worker) => (
+                        <article className={styles.workerCard} key={worker.id}>
+                          <div className={styles.workerHead}>
+                            <div>
+                              <strong>{worker.memberName}</strong>
+                              <span>{worker.role}</span>
+                            </div>
+                            <span className={`${styles.statusBadge} ${workerStatusClass(worker.status)}`}>
+                              {worker.status}
+                            </span>
+                          </div>
 
-                  <article className={styles.reportCard}>
-                    <span className={styles.flowNodeLabel}>{copy.assistantLabel}</span>
-                    <strong>{snapshot.assistant.name}</strong>
-                    <p>{snapshot.assistant.responsePacket}</p>
-                  </article>
+                          <div className={styles.workerMetaRow}>
+                            <span className={styles.commandTowerChip}>{worker.providerLabel}</span>
+                            <span className={styles.commandTowerChip}>{worker.workItemTitle}</span>
+                            {worker.sessionId ? (
+                              <span className={styles.commandTowerChip}>
+                                {copy.workerSessionLabel}: {worker.sessionId}
+                              </span>
+                            ) : null}
+                          </div>
 
-                  <article className={`${styles.reportCard} ${styles.reportCardAccent}`}>
-                    <span className={styles.flowNodeLabel}>{copy.activeExecution}</span>
-                    <strong>{snapshot.autonomy.activeProviderLabel}</strong>
-                    <p>{snapshot.autonomy.latestSummary}</p>
-                  </article>
-                </div>
+                          <p className={styles.commandTowerBody}>{worker.summary}</p>
 
-                <div className={styles.handoffRail}>
-                  {recentHandoffs.map((event) => (
-                    <article className={styles.handoffRow} key={`${event.time}-${event.summary}`}>
-                      <div className={styles.handoffRoute}>
-                        <strong>{event.from}</strong>
-                        <ArrowRightLeft size={14} />
-                        <strong>{event.to}</strong>
+                          <div className={styles.workerInfoGrid}>
+                            <div className={styles.workerInfoCard}>
+                              <span className={styles.flowNodeLabel}>{copy.workerFilesLabel}</span>
+                              <div className={styles.workerChipRow}>
+                                {(worker.changedFiles.length ? worker.changedFiles : worker.ownedPaths).map((filePath) => (
+                                  <span className={styles.commandTowerChip} key={`${worker.id}-${filePath}`}>
+                                    {filePath}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                            <div className={styles.workerInfoCard}>
+                              <span className={styles.flowNodeLabel}>{copy.workerNextActionLabel}</span>
+                              <p className={styles.commandTowerBody}>{worker.nextAction}</p>
+                            </div>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className={styles.terminalEmpty}>{copy.noWorkers}</div>
+                  )}
+                </article>
+
+                <div className={styles.interactionBoard}>
+                  <article className={styles.tracePanel}>
+                    <div className={styles.traceHead}>
+                      <div>
+                        <span className={styles.flowNodeLabel}>{copy.messageBusLabel}</span>
+                        <h3 className={styles.swarmTitle}>{copy.messageBusTitle}</h3>
+                        <p className={styles.swarmBody}>{copy.messageBusBody}</p>
                       </div>
-                      <p>{event.summary}</p>
-                      <span className={styles.traceMeta}>
-                        {formatBoardTimestamp(locale, event.time)} 쨌 {event.status}
-                      </span>
-                    </article>
-                  ))}
-                </div>
-              </article>
+                      <CalendarClock size={18} />
+                    </div>
 
-              <article className={styles.tracePanel}>
-                <div className={styles.traceHead}>
-                  <div>
-                    <span className={styles.flowNodeLabel}>{copy.traceLabel}</span>
-                    <h3 className={styles.swarmTitle}>{t(locale, "누가 누구와 말하는지", "Who is talking to whom")}</h3>
-                    <p className={styles.swarmBody}>
-                      {t(locale, "선택한 팀 기준으로 비서, 팀장, 리뷰 흐름을 바로 따라갑니다.", "Follow the assistant, lead, and review flow for the selected team.")}
-                    </p>
-                  </div>
-                  <CalendarClock size={18} />
-                </div>
+                    {interactionBus.length ? (
+                      <div className={styles.messageBusList}>
+                        {interactionBus.map((message) => (
+                          <article className={styles.messageBusRow} key={message.id}>
+                            <div className={styles.messageBusRoute}>
+                              <strong>{formatActorLabel(locale, message.from)}</strong>
+                              <ArrowRightLeft size={14} />
+                              <strong>{formatActorLabel(locale, message.to)}</strong>
+                            </div>
+                            <div className={styles.workerMetaRow}>
+                              <span className={styles.commandTowerChip}>
+                                {message.direction === "top-down"
+                                  ? copy.busTopDown
+                                  : message.direction === "peer"
+                                    ? copy.busPeer
+                                    : copy.busBottomUp}
+                              </span>
+                              <span className={`${styles.statusBadge} ${interactionStatusClass(message.status)}`}>
+                                {message.status}
+                              </span>
+                            </div>
+                            <strong>{formatConversationSubject(locale, message.subject)}</strong>
+                            <p className={styles.commandTowerBody}>{message.body}</p>
+                            <span className={styles.traceMeta}>{formatBoardTimestamp(locale, message.time)}</span>
+                          </article>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className={styles.terminalEmpty}>{copy.noTrace}</div>
+                    )}
+                  </article>
 
-                {interactionTrace.length ? (
-                  <div className={styles.traceList}>
-                    {interactionTrace.map((event) => (
-                      <article className={styles.traceRow} key={event.id}>
-                        <div className={`${styles.traceBubble} ${styles.traceBubbleFrom}`}>
-                          <span className={styles.traceActor}>{formatActorLabel(locale, event.from)}</span>
-                          <strong>{formatConversationSubject(locale, event.subject)}</strong>
-                        </div>
-                        <div className={styles.traceArrow}>
-                          <ArrowRightLeft size={16} />
-                        </div>
-                        <div className={`${styles.traceBubble} ${styles.traceBubbleTo}`}>
-                          <span className={styles.traceActor}>{formatActorLabel(locale, event.to)}</span>
-                          <p>{event.body}</p>
-                          <span className={styles.traceMeta}>
-                            {formatBoardTimestamp(locale, event.time)} 쨌 {event.channel}
-                          </span>
-                        </div>
+                  <article className={styles.tracePanel}>
+                    <div className={styles.traceHead}>
+                      <div>
+                        <span className={styles.flowNodeLabel}>{copy.bottomUpLabel}</span>
+                        <h3 className={styles.swarmTitle}>{t(locale, "보고 패킷과 handoff", "Report packets and handoffs")}</h3>
+                        <p className={styles.swarmBody}>
+                          {t(locale, "실행 결과, handoff, 검증 흐름을 한 묶음으로 봅니다.", "Read execution results, handoffs, and validation flow together.")}
+                        </p>
+                      </div>
+                      <MessageSquareShare size={18} />
+                    </div>
+
+                    <div className={styles.reportCardGrid}>
+                      <article className={`${styles.reportCard} ${styles.reportCardPrimary}`}>
+                        <span className={styles.flowNodeLabel}>{copy.latestPacket}</span>
+                        <strong>{selectedTeam.currentDeliverable}</strong>
+                        <p>{selectedTeam.objective}</p>
                       </article>
-                    ))}
-                  </div>
-                ) : (
-                  <div className={styles.terminalEmpty}>{copy.noTrace}</div>
-                )}
 
-                {recentExecutions.length ? (
-                  <div className={styles.executionMicroList}>
-                    {recentExecutions.map((execution) => (
-                      <div className={styles.executionMicroRow} key={execution.id}>
-                        <strong>{execution.teamLabel}</strong>
-                        <span className={`${styles.statusBadge} ${styles.statusDone}`}>
-                          {execution.outcome}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                ) : null}
-              </article>
-            </div>
+                      <article className={styles.reportCard}>
+                        <span className={styles.flowNodeLabel}>{copy.assistantLabel}</span>
+                        <strong>{snapshot.assistant.name}</strong>
+                        <p>{snapshot.autonomy.operatorBrief}</p>
+                      </article>
+
+                      <article className={`${styles.reportCard} ${styles.reportCardAccent}`}>
+                        <span className={styles.flowNodeLabel}>{copy.activeExecution}</span>
+                        <strong>{snapshot.autonomy.activeProviderLabel}</strong>
+                        <p>{snapshot.autonomy.latestSummary}</p>
+                      </article>
+                    </div>
+
+                    <div className={styles.handoffRail}>
+                      {recentHandoffs.map((event) => (
+                        <article className={styles.handoffRow} key={`${event.time}-${event.summary}`}>
+                          <div className={styles.handoffRoute}>
+                            <strong>{event.from}</strong>
+                            <ArrowRightLeft size={14} />
+                            <strong>{event.to}</strong>
+                          </div>
+                          <p>{event.summary}</p>
+                          <span className={styles.traceMeta}>
+                            {formatBoardTimestamp(locale, event.time)} · {event.status}
+                          </span>
+                        </article>
+                      ))}
+                    </div>
+                  </article>
+                </div>
+              </div>
+            </section>
           </div>
         </article>
       </section>

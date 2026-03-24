@@ -64,6 +64,14 @@ function getProviderStatusClass(status: ProviderStatus) {
   }
 }
 
+function getQuickSetupSteps(locale: string) {
+  if (isKoreanLocale(locale)) {
+    return ["1. CLI 선택", "2. 명령 복사", "3. 로컬 실행"];
+  }
+
+  return ["1. Choose CLI", "2. Copy command", "3. Run locally"];
+}
+
 function getCopy(locale: string, opsEnabled: boolean) {
   if (isKoreanLocale(locale)) {
     return {
@@ -184,6 +192,7 @@ export function HomepageAgentControlSection({
   const [selectedTeamId, setSelectedTeamId] = useState(initialSnapshot.selectedTeamId);
   const [copiedCommand, setCopiedCommand] = useState<"connect" | "assign" | null>(null);
   const copy = getCopy(locale, opsEnabled);
+  const quickSetupSteps = getQuickSetupSteps(locale);
 
   useEffect(() => {
     let mounted = true;
@@ -368,7 +377,14 @@ export function HomepageAgentControlSection({
               </div>
               <Command size={20} />
             </div>
-            <p className={styles.panelBody}>{copy.setupBuilderBody}</p>
+            <div className={styles.quickStartStrip}>
+              {quickSetupSteps.map((item) => (
+                <span className={styles.quickStartBadge} key={item}>
+                  {item}
+                </span>
+              ))}
+            </div>
+            <p className={styles.compactBody}>{copy.setupBuilderBody}</p>
 
             <div className={styles.setupPickerGrid}>
               <div className={styles.setupPicker}>

@@ -166,6 +166,8 @@ export interface AutonomyTaskPacket {
   nextAction: string;
   teamDispatch: string;
   checkpoint: string;
+  workItemTitle: string;
+  workItemFiles: string[];
   artifactPath: string | null;
   status: "planned" | "fallback" | "failed";
 }
@@ -187,9 +189,45 @@ export interface AutonomyExecutionRecord {
   operatorBrief: string;
   changedFiles: string[];
   nextAction: string;
+  workItemTitle: string;
+  workItemFiles: string[];
   artifactPath: string | null;
+  sessionId?: string | null;
   outcome: "changed" | "noop" | "blocked" | "failed";
   validation: AutonomyExecutionValidation[];
+}
+
+export interface AutonomyWorkerState {
+  id: string;
+  teamId: string;
+  teamLabel: string;
+  memberName: string;
+  role: string;
+  providerId: AgentProviderId | "mock";
+  providerLabel: string;
+  sessionId: string | null;
+  workItemTitle: string;
+  ownedPaths: string[];
+  status: "planned" | "running" | "changed" | "noop" | "blocked" | "failed";
+  summary: string;
+  nextAction: string;
+  changedFiles: string[];
+  artifactPath: string | null;
+  startedAt: string;
+  updatedAt: string;
+}
+
+export interface AutonomyInteractionMessage {
+  id: string;
+  time: string;
+  teamId: string;
+  workerId?: string;
+  from: string;
+  to: string;
+  direction: "top-down" | "peer" | "bottom-up";
+  subject: string;
+  body: string;
+  status: "queued" | "running" | "completed" | "blocked";
 }
 
 export interface AutonomyRuntimeStatus {
@@ -197,6 +235,8 @@ export interface AutonomyRuntimeStatus {
   status: "stopped" | "running" | "paused";
   activeProviderId: AgentProviderId | "mock";
   activeProviderLabel: string;
+  parallelLimit: number;
+  currentBatchId: string | null;
   loopCount: number;
   currentTeamId: string;
   currentLane: string;
@@ -211,6 +251,11 @@ export interface AutonomyRuntimeStatus {
   taskHistory: AutonomyTaskPacket[];
   currentExecution: AutonomyExecutionRecord | null;
   executionHistory: AutonomyExecutionRecord[];
+  activeTasks: AutonomyTaskPacket[];
+  activeExecutions: AutonomyExecutionRecord[];
+  workers: AutonomyWorkerState[];
+  workerHistory: AutonomyWorkerState[];
+  interactionBus: AutonomyInteractionMessage[];
 }
 
 export interface RuntimeBridgeStatus {
@@ -335,6 +380,8 @@ export function createDefaultAutonomyRuntime(locale = "en", updatedAt = new Date
       status: "stopped",
       activeProviderId: "mock",
       activeProviderLabel: "대기 중",
+      parallelLimit: 3,
+      currentBatchId: null,
       loopCount: 0,
       currentTeamId: "executive-desk",
       currentLane: "대기",
@@ -356,6 +403,11 @@ export function createDefaultAutonomyRuntime(locale = "en", updatedAt = new Date
     taskHistory: [],
     currentExecution: null,
     executionHistory: [],
+    activeTasks: [],
+    activeExecutions: [],
+    workers: [],
+    workerHistory: [],
+    interactionBus: [],
     };
   }
 
@@ -364,6 +416,8 @@ export function createDefaultAutonomyRuntime(locale = "en", updatedAt = new Date
     status: "stopped",
     activeProviderId: "mock",
     activeProviderLabel: "Standby",
+    parallelLimit: 3,
+    currentBatchId: null,
     loopCount: 0,
     currentTeamId: "executive-desk",
     currentLane: "Standby",
@@ -385,6 +439,11 @@ export function createDefaultAutonomyRuntime(locale = "en", updatedAt = new Date
     taskHistory: [],
     currentExecution: null,
     executionHistory: [],
+    activeTasks: [],
+    activeExecutions: [],
+    workers: [],
+    workerHistory: [],
+    interactionBus: [],
   };
 }
 

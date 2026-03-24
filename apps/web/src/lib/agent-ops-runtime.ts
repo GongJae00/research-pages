@@ -42,6 +42,7 @@ function isLocalizedDefaultDirective(directive: AgentOpsRuntimeState["currentDir
 
 function normalizeRuntimeState(candidate: unknown, locale: string): AgentOpsRuntimeState {
   const fallback = createDefaultAgentOpsRuntimeState(locale);
+  const defaultAutonomy = createDefaultAutonomyRuntime(locale, fallback.updatedAt);
 
   if (!candidate || typeof candidate !== "object") {
     return fallback;
@@ -84,29 +85,44 @@ function normalizeRuntimeState(candidate: unknown, locale: string): AgentOpsRunt
     autonomy:
       value.autonomy && typeof value.autonomy === "object"
         ? {
-            ...createDefaultAutonomyRuntime(locale, fallback.updatedAt),
+            ...defaultAutonomy,
             ...value.autonomy,
             queue: Array.isArray(value.autonomy.queue) ? value.autonomy.queue : [],
             reports: Array.isArray(value.autonomy.reports) ? value.autonomy.reports : [],
             providerHealth: Array.isArray(value.autonomy.providerHealth)
               ? value.autonomy.providerHealth
-              : createDefaultAutonomyRuntime(locale, fallback.updatedAt).providerHealth,
+              : defaultAutonomy.providerHealth,
             currentTask:
               value.autonomy.currentTask && typeof value.autonomy.currentTask === "object"
                 ? value.autonomy.currentTask
-                : createDefaultAutonomyRuntime(locale, fallback.updatedAt).currentTask,
+                : defaultAutonomy.currentTask,
             taskHistory: Array.isArray(value.autonomy.taskHistory)
               ? value.autonomy.taskHistory
-              : createDefaultAutonomyRuntime(locale, fallback.updatedAt).taskHistory,
+              : defaultAutonomy.taskHistory,
             currentExecution:
               value.autonomy.currentExecution && typeof value.autonomy.currentExecution === "object"
                 ? value.autonomy.currentExecution
-                : createDefaultAutonomyRuntime(locale, fallback.updatedAt).currentExecution,
+                : defaultAutonomy.currentExecution,
             executionHistory: Array.isArray(value.autonomy.executionHistory)
               ? value.autonomy.executionHistory
-              : createDefaultAutonomyRuntime(locale, fallback.updatedAt).executionHistory,
+              : defaultAutonomy.executionHistory,
+            activeTasks: Array.isArray(value.autonomy.activeTasks)
+              ? value.autonomy.activeTasks
+              : defaultAutonomy.activeTasks,
+            activeExecutions: Array.isArray(value.autonomy.activeExecutions)
+              ? value.autonomy.activeExecutions
+              : defaultAutonomy.activeExecutions,
+            workers: Array.isArray(value.autonomy.workers)
+              ? value.autonomy.workers
+              : defaultAutonomy.workers,
+            workerHistory: Array.isArray(value.autonomy.workerHistory)
+              ? value.autonomy.workerHistory
+              : defaultAutonomy.workerHistory,
+            interactionBus: Array.isArray(value.autonomy.interactionBus)
+              ? value.autonomy.interactionBus
+              : defaultAutonomy.interactionBus,
           }
-        : createDefaultAutonomyRuntime(locale, fallback.updatedAt),
+        : defaultAutonomy,
   };
 }
 

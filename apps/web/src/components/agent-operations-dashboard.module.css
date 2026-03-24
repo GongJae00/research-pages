@@ -1128,10 +1128,92 @@
   gap: 0.55rem;
 }
 
+.swarmStageGrid {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: minmax(0, 1.05fr) minmax(23rem, 0.95fr);
+  align-items: start;
+}
+
+.workerSwarmGrid,
+.messageBusList {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.workerCard,
+.messageBusRow {
+  display: grid;
+  gap: 0.7rem;
+  padding: 0.9rem;
+  border-radius: 18px;
+  border: 1px solid rgba(226, 232, 240, 0.88);
+  background: rgba(248, 250, 252, 0.94);
+}
+
+.workerCard {
+  background:
+    radial-gradient(circle at top right, rgba(45, 212, 191, 0.08), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(248, 250, 252, 0.96));
+}
+
+.workerHead,
+.workerMetaRow,
+.messageBusRoute {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.workerHead strong,
+.messageBusRoute strong,
+.workerInfoCard strong,
+.messageBusRow strong {
+  color: #0f172a;
+}
+
+.workerHead span {
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.workerMetaRow {
+  flex-wrap: wrap;
+}
+
+.workerInfoGrid {
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.workerInfoCard {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.75rem 0.8rem;
+  border-radius: 16px;
+  border: 1px solid rgba(226, 232, 240, 0.88);
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.workerChipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.messageBusRow {
+  background:
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.06), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(248, 250, 252, 0.96));
+}
+
 .interactionBoard {
   display: grid;
   gap: 0.9rem;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
 }
 
 .handoffRow {
@@ -1910,7 +1992,9 @@
   .runtimeGrid,
   .assistantConsoleGrid,
   .teamSwitchboard,
-  .teamTopologyGrid {
+  .teamTopologyGrid,
+  .swarmStageGrid,
+  .workerInfoGrid {
     grid-template-columns: 1fr;
   }
 
@@ -1989,6 +2073,8 @@
   .assistantConsoleGrid,
   .teamSwitchboard,
   .teamTopologyGrid,
+  .swarmStageGrid,
+  .workerInfoGrid,
   .traceRow {
     grid-template-columns: 1fr;
   }

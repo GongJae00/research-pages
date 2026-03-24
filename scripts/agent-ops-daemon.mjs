@@ -603,6 +603,8 @@ function makeDefaultState() {
       status: "stopped",
       activeProviderId: "mock",
       activeProviderLabel: "Standby",
+      parallelLimit: 3,
+      currentBatchId: null,
       loopCount: 0,
       currentTeamId: "executive-desk",
       currentLane: "Standby",
@@ -625,6 +627,11 @@ function makeDefaultState() {
       taskHistory: [],
       currentExecution: null,
       executionHistory: [],
+      activeTasks: [],
+      activeExecutions: [],
+      workers: [],
+      workerHistory: [],
+      interactionBus: [],
     },
   };
 }
@@ -640,12 +647,36 @@ async function loadState() {
     }
     if (!state.autonomy || typeof state.autonomy !== "object") {
       state.autonomy = makeDefaultState().autonomy;
+    } else {
+      state.autonomy = {
+        ...makeDefaultState().autonomy,
+        ...state.autonomy,
+      };
     }
+    state.autonomy.parallelLimit = Math.max(
+      2,
+      Math.min(Number(state.autonomy.parallelLimit ?? 3) || 3, teamCycle.length),
+    );
     if (!Array.isArray(state.autonomy.taskHistory)) {
       state.autonomy.taskHistory = [];
     }
     if (!Array.isArray(state.autonomy.executionHistory)) {
       state.autonomy.executionHistory = [];
+    }
+    if (!Array.isArray(state.autonomy.activeTasks)) {
+      state.autonomy.activeTasks = [];
+    }
+    if (!Array.isArray(state.autonomy.activeExecutions)) {
+      state.autonomy.activeExecutions = [];
+    }
+    if (!Array.isArray(state.autonomy.workers)) {
+      state.autonomy.workers = [];
+    }
+    if (!Array.isArray(state.autonomy.workerHistory)) {
+      state.autonomy.workerHistory = [];
+    }
+    if (!Array.isArray(state.autonomy.interactionBus)) {
+      state.autonomy.interactionBus = [];
     }
     if (state.autonomy.currentExecution === undefined) {
       state.autonomy.currentExecution = null;
@@ -987,6 +1018,174 @@ async function runCodexExecWithPrompt(prompt, outputPath, args, { timeout, maxBu
   };
 }
 
+function extractCodexSessionId(stderr = "") {
+  const match = stderr.match(/session(?:\s+|_)?id\s*[:=]\s*([a-z0-9-]+)/i);
+  return match?.[1] ?? null;
+}
+
+function buildBatchId(loopCount) {
+  return `batch-${String(loopCount).padStart(3, "0")}-${Date.now()}`;
+}
+
+function buildWorkerId(batchId, teamId) {
+  return `${batchId}-${sanitizePathSegment(teamId)}`;
+}
+
+function getWorkerMemberName(teamId, loopCount) {
+  const roster = teamMemberRoster[teamId] ?? [];
+  if (!roster.length) {
+    return "Autonomy Worker";
+  }
+  return roster[(Math.max(loopCount, 1) - 1) % roster.length];
+}
+
+function getWorkerRole(memberName) {
+  if (memberName === "Mission Control") {
+    return "Queue director";
+  }
+  if (memberName === "Shell Builder") {
+    return "Surface lead";
+  }
+  if (memberName === "Ops Board Builder") {
+    return "Control-room builder";
+  }
+  if (memberName === "Profile Steward") {
+    return "Profile steward";
+  }
+  if (memberName === "Document Systems") {
+    return "Document systems";
+  }
+  if (memberName === "Lab Publishing Lead") {
+    return "Lab publishing lead";
+  }
+  if (memberName === "Release Guard") {
+    return "Release guard";
+  }
+  if (memberName === "Docs Drift Agent") {
+    return "Docs drift agent";
+  }
+  return "Autonomy worker";
+}
+
+function workerStatusFromExecution(executionRecord, taskPacket) {
+  if (!executionRecord) {
+    return taskPacket.status === "failed" ? "failed" : "planned";
+  }
+  if (executionRecord.outcome === "changed") {
+    return "changed";
+  }
+  if (executionRecord.outcome === "noop") {
+    return "noop";
+  }
+  if (executionRecord.outcome === "blocked") {
+    return "blocked";
+  }
+  if (executionRecord.outcome === "failed") {
+    return "failed";
+  }
+  return "running";
+}
+
+function buildWorkerState({
+  batchId,
+  loopCount,
+  team,
+  taskPacket,
+  executionRecord,
+  sessionId,
+  startedAt,
+}) {
+  const memberName = getWorkerMemberName(team.id, loopCount);
+  const updatedAt = nowIso();
+  return {
+    id: buildWorkerId(batchId, team.id),
+    teamId: team.id,
+    teamLabel: team.name,
+    memberName,
+    role: getWorkerRole(memberName),
+    providerId: executionRecord?.providerId ?? taskPacket.providerId,
+    providerLabel: executionRecord?.providerLabel ?? taskPacket.providerLabel,
+    sessionId,
+    workItemTitle: taskPacket.workItemTitle,
+    ownedPaths: taskPacket.workItemFiles,
+    status: workerStatusFromExecution(executionRecord, taskPacket),
+    summary: executionRecord?.summary ?? taskPacket.summary,
+    nextAction: executionRecord?.nextAction ?? taskPacket.nextAction,
+    changedFiles: executionRecord?.changedFiles ?? [],
+    artifactPath: executionRecord?.artifactPath ?? taskPacket.artifactPath,
+    startedAt,
+    updatedAt,
+  };
+}
+
+function buildInteractionStatus(executionRecord) {
+  if (!executionRecord) {
+    return "queued";
+  }
+  if (executionRecord.outcome === "blocked" || executionRecord.outcome === "failed") {
+    return "blocked";
+  }
+  if (executionRecord.outcome === "changed" || executionRecord.outcome === "noop") {
+    return "completed";
+  }
+  return "running";
+}
+
+function buildWorkerInteractionMessages({
+  batchId,
+  team,
+  taskPacket,
+  executionRecord,
+  worker,
+}) {
+  const status = buildInteractionStatus(executionRecord);
+  const reviewTarget = executionRecord?.validation.some((entry) => entry.status === "failed")
+    ? "Release Guard"
+    : "Operator Liaison";
+
+  return [
+    {
+      id: `${batchId}-${team.id}-assistant-dispatch`,
+      time: nowIso(),
+      teamId: team.id,
+      workerId: worker.id,
+      from: "Operator Liaison",
+      to: team.lead,
+      direction: "top-down",
+      subject: "Bounded lane dispatch",
+      body: taskPacket.teamDispatch,
+      status,
+    },
+    {
+      id: `${batchId}-${team.id}-lead-worker`,
+      time: nowIso(),
+      teamId: team.id,
+      workerId: worker.id,
+      from: team.lead,
+      to: worker.memberName,
+      direction: "top-down",
+      subject: taskPacket.workItemTitle,
+      body: executionRecord?.summary ?? taskPacket.summary,
+      status,
+    },
+    {
+      id: `${batchId}-${team.id}-worker-review`,
+      time: nowIso(),
+      teamId: team.id,
+      workerId: worker.id,
+      from: worker.memberName,
+      to: reviewTarget,
+      direction: executionRecord?.validation.some((entry) => entry.status === "failed") ? "peer" : "bottom-up",
+      subject: executionRecord?.changedFiles.length ? "Diff ready" : "Checkpoint ready",
+      body:
+        executionRecord?.changedFiles.length
+          ? `${executionRecord.changedFiles.join(", ")} updated. ${executionRecord.nextAction}`
+          : (executionRecord?.nextAction ?? taskPacket.checkpoint),
+      status,
+    },
+  ];
+}
+
 function isLowQualityPlan(plan) {
   const text = [
     plan.summary,
@@ -1260,6 +1459,7 @@ function buildExecutionRecord({
   artifactPath,
   outcome,
   workItem,
+  sessionId = null,
 }) {
   return {
     id: `exec-${loopCount}-${team.id}`,
@@ -1275,6 +1475,7 @@ function buildExecutionRecord({
     workItemTitle: workItem.title,
     workItemFiles: workItem.targetFiles,
     artifactPath,
+    sessionId,
     outcome,
     validation,
   };
@@ -1346,11 +1547,15 @@ async function runCodexExecutor(team, taskPacket, loopCount, operatorDirective, 
     });
   }
 
-  const outputPath = path.join(researchOsStateDir, "codex-autonomy-execution-last.json");
+  const outputPath = path.join(
+    researchOsStateDir,
+    `codex-autonomy-execution-${sanitizePathSegment(team.id)}-${String(loopCount).padStart(3, "0")}.json`,
+  );
   const prompt = buildExecutionPrompt(team, taskPacket, operatorDirective, workItem);
   let rawStdout = "";
   let rawStderr = "";
   let rawOutputFile = "";
+  let sessionId = null;
 
   try {
     const { stdout, stderr, outputFile, value } = await runCodexExecWithPrompt(
@@ -1365,6 +1570,7 @@ async function runCodexExecutor(team, taskPacket, loopCount, operatorDirective, 
     rawStdout = stdout;
     rawStderr = stderr;
     rawOutputFile = outputFile;
+    sessionId = extractCodexSessionId(stderr);
 
     const result = value;
     if (isLowQualityExecutionResult(result, workItem)) {
@@ -1414,6 +1620,7 @@ async function runCodexExecutor(team, taskPacket, loopCount, operatorDirective, 
       artifactPath,
       outcome,
       workItem,
+      sessionId,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
@@ -1476,13 +1683,17 @@ async function runCodexExecutor(team, taskPacket, loopCount, operatorDirective, 
       artifactPath,
       outcome,
       workItem,
+      sessionId: sessionId ?? extractCodexSessionId(error?.stderr ?? rawStderr ?? ""),
     });
   }
 }
 
 async function runCodexPlanner(team, loopCount, context, workItem) {
   await ensureAutonomyAssets();
-  const outputPath = path.join(researchOsStateDir, "codex-autonomy-last.json");
+  const outputPath = path.join(
+    researchOsStateDir,
+    `codex-autonomy-plan-${sanitizePathSegment(team.id)}-${String(loopCount).padStart(3, "0")}.json`,
+  );
   const prompt = buildPlannerPrompt(team, context, workItem);
 
   const { stdout, stderr, outputFile, value } = await runCodexExecWithPrompt(
@@ -1583,8 +1794,8 @@ async function runPlannerWithFallback(team, loopCount, provider, context) {
     provider.providerHealth.filter((entry) => entry.available).map((entry) => entry.providerId),
   );
   const failures = [];
-  const preferredPlannerId = availableProviders.has("gemini")
-    ? "gemini"
+  const preferredPlannerId = availableProviders.has("codex")
+    ? "codex"
     : provider.activeProviderId;
   const plannerOrder = [
     preferredPlannerId,
@@ -1673,13 +1884,17 @@ async function runPlannerWithFallback(team, loopCount, provider, context) {
   });
 }
 
-function buildQueue(loopCount, currentTeamId) {
+function buildQueue(loopCount, activeTeamIds, reportedTeamIds = []) {
   return teamCycle.map((team, index) => ({
     id: `queue-${loopCount}-${team.id}`,
     teamId: team.id,
     owner: team.lead,
     title: `${team.lane} - ${team.name}`,
-    status: team.id === currentTeamId ? "running" : index < (loopCount % teamCycle.length) ? "reported" : "queued",
+    status: activeTeamIds.includes(team.id)
+      ? "running"
+      : reportedTeamIds.includes(team.id) || index < (loopCount % teamCycle.length)
+        ? "reported"
+        : "queued",
   }));
 }
 
@@ -1732,31 +1947,54 @@ function selectPreferredTeamForCycle(state, loopCount) {
   return teamCycle[(loopCount - 1) % teamCycle.length];
 }
 
-async function selectTeamForCycle(state, loopCount) {
+function orderTeamsForCycle(state, loopCount) {
   const preferredTeam = selectPreferredTeamForCycle(state, loopCount);
-  const orderedTeams = [preferredTeam, ...teamCycle.filter((team) => team.id !== preferredTeam.id)];
-  let blockedPreferredPaths = [];
+  const rotatedTeams = [
+    ...teamCycle.slice((Math.max(loopCount, 1) - 1) % teamCycle.length),
+    ...teamCycle.slice(0, (Math.max(loopCount, 1) - 1) % teamCycle.length),
+  ];
+
+  return {
+    preferredTeam,
+    orderedTeams: [preferredTeam, ...rotatedTeams.filter((team) => team.id !== preferredTeam.id)],
+  };
+}
+
+async function selectTeamsForCycle(state, loopCount, limit) {
+  const { preferredTeam, orderedTeams } = orderTeamsForCycle(state, loopCount);
+  const selectedTeams = [];
+  const blockedTeams = [];
 
   for (const team of orderedTeams) {
     const dirtyPaths = await listDirtyOwnedPaths(getLaneGuidance(team.id).ownedPaths);
 
     if (!dirtyPaths.length) {
-      return {
-        team,
-        reroutedFromTeamId: team.id === preferredTeam.id ? null : preferredTeam.id,
-        blockedPreferredPaths,
-      };
+      selectedTeams.push(team);
+      if (selectedTeams.length >= limit) {
+        break;
+      }
+      continue;
     }
 
-    if (team.id === preferredTeam.id) {
-      blockedPreferredPaths = dirtyPaths;
-    }
+    blockedTeams.push({
+      teamId: team.id,
+      dirtyPaths,
+      preferred: team.id === preferredTeam.id,
+    });
+  }
+
+  if (selectedTeams.length) {
+    return {
+      preferredTeamId: preferredTeam.id,
+      teams: selectedTeams,
+      blockedTeams,
+    };
   }
 
   return {
-    team: preferredTeam,
-    reroutedFromTeamId: null,
-    blockedPreferredPaths,
+    preferredTeamId: preferredTeam.id,
+    teams: [preferredTeam],
+    blockedTeams,
   };
 }
 
@@ -1769,6 +2007,37 @@ function buildReport(team, loopCount, taskPacket, executionRecord = null) {
     summary: executionRecord?.operatorBrief ?? taskPacket.summary,
     nextAction: executionRecord?.nextAction ?? taskPacket.nextAction,
   };
+}
+
+function buildBatchSummary(executionRecords) {
+  if (!executionRecords.length) {
+    return "No worker executed during this autonomy cycle.";
+  }
+
+  const changed = executionRecords.filter((entry) => entry.outcome === "changed");
+  const blocked = executionRecords.filter((entry) => entry.outcome === "blocked" || entry.outcome === "failed");
+
+  if (changed.length) {
+    return changed
+      .map((entry) =>
+        entry.changedFiles.length
+          ? `${entry.teamLabel} updated ${entry.changedFiles.join(", ")}`
+          : `${entry.teamLabel} completed ${entry.workItemTitle}`,
+      )
+      .join(" | ");
+  }
+
+  if (blocked.length) {
+    return blocked
+      .map((entry) => `${entry.teamLabel} is blocked: ${entry.nextAction}`)
+      .join(" | ");
+  }
+
+  return executionRecords.map((entry) => `${entry.teamLabel}: ${entry.summary}`).join(" | ");
+}
+
+function buildBatchOperatorBrief(executionRecords) {
+  return executionRecords.map((entry) => entry.operatorBrief).join(" ");
 }
 
 function buildPlannerContext(state, teamId) {
@@ -1914,71 +2183,150 @@ async function runAutonomyCycle() {
 
   try {
     const loopCount = Number(state.autonomy.loopCount ?? 0) + 1;
-    const teamSelection = await selectTeamForCycle(state, loopCount);
-    const team = teamSelection.team;
     const provider = await detectProviderHealth();
-    const plannerContext = buildPlannerContext(state, team.id);
-    const taskPacket = await runPlannerWithFallback(team, loopCount, provider, plannerContext);
-    const executionRecord = await runExecutionStep(team, loopCount, taskPacket, state, provider);
-    const report = buildReport(team, loopCount, taskPacket, executionRecord);
+    const parallelLimit = Math.max(1, Math.min(Number(state.autonomy?.parallelLimit ?? 3), teamCycle.length));
+    const batchId = buildBatchId(loopCount);
+    const teamSelection = await selectTeamsForCycle(state, loopCount, parallelLimit);
+    const batchStartedAt = nowIso();
+
+    const batchResults = await Promise.all(
+      teamSelection.teams.map(async (team) => {
+        const plannerContext = buildPlannerContext(state, team.id);
+        const taskPacket = await runPlannerWithFallback(team, loopCount, provider, plannerContext);
+        const executionRecord = await runExecutionStep(team, loopCount, taskPacket, state, provider);
+        const report = buildReport(team, loopCount, taskPacket, executionRecord);
+        const worker = buildWorkerState({
+          batchId,
+          loopCount,
+          team,
+          taskPacket,
+          executionRecord,
+          sessionId: executionRecord.sessionId ?? null,
+          startedAt: batchStartedAt,
+        });
+
+        return {
+          team,
+          taskPacket,
+          executionRecord,
+          report,
+          worker,
+          interactions: buildWorkerInteractionMessages({
+            batchId,
+            team,
+            taskPacket,
+            executionRecord,
+            worker,
+          }),
+        };
+      }),
+    );
+
+    const primaryResult = batchResults[0];
+    const activeTeamIds = batchResults.map((entry) => entry.team.id);
+    const taskPackets = batchResults.map((entry) => entry.taskPacket);
+    const executionRecords = batchResults.map((entry) => entry.executionRecord);
+    const reports = batchResults.map((entry) => entry.report);
+    const workers = batchResults.map((entry) => entry.worker);
+    const interactionBus = batchResults.flatMap((entry) => entry.interactions);
+    const firstLiveExecution = executionRecords.find((entry) => entry.providerId !== "mock");
+    const firstLiveTask = taskPackets.find((entry) => entry.providerId !== "mock");
+    const activeProviderId = firstLiveExecution?.providerId ?? firstLiveTask?.providerId ?? provider.activeProviderId;
+    const activeProviderLabel =
+      firstLiveExecution?.providerLabel ?? firstLiveTask?.providerLabel ?? provider.activeProviderLabel;
 
     state.autonomy = {
       ...(state.autonomy ?? makeDefaultState().autonomy),
       enabled: true,
       status: "running",
-      activeProviderId:
-        executionRecord.providerId !== "mock" ? executionRecord.providerId : taskPacket.providerId,
-      activeProviderLabel:
-        executionRecord.providerId !== "mock" ? executionRecord.providerLabel : taskPacket.providerLabel,
+      activeProviderId,
+      activeProviderLabel,
+      parallelLimit,
+      currentBatchId: batchId,
       loopCount,
-      currentTeamId: team.id,
-      currentLane: team.lane,
+      currentTeamId: primaryResult.team.id,
+      currentLane: primaryResult.team.lane,
       lastRunAt: nowIso(),
       nextRunAt: futureIso(tickMs),
-      latestSummary: executionRecord.summary,
-      operatorBrief: executionRecord.operatorBrief,
-      queue: buildQueue(loopCount, team.id),
-      reports: [report, ...(state.autonomy?.reports ?? [])].slice(0, 8),
+      latestSummary: buildBatchSummary(executionRecords),
+      operatorBrief: buildBatchOperatorBrief(executionRecords),
+      queue: buildQueue(loopCount, activeTeamIds, activeTeamIds),
+      reports: [...reports, ...(state.autonomy?.reports ?? [])].slice(0, 12),
       providerHealth: provider.providerHealth,
-      currentTask: taskPacket,
-      taskHistory: [taskPacket, ...(state.autonomy?.taskHistory ?? [])].slice(0, 12),
-      currentExecution: executionRecord,
-      executionHistory: [executionRecord, ...(state.autonomy?.executionHistory ?? [])].slice(0, 12),
+      currentTask: primaryResult.taskPacket,
+      taskHistory: [...taskPackets, ...(state.autonomy?.taskHistory ?? [])].slice(0, 18),
+      currentExecution: primaryResult.executionRecord,
+      executionHistory: [...executionRecords, ...(state.autonomy?.executionHistory ?? [])].slice(0, 18),
+      activeTasks: taskPackets,
+      activeExecutions: executionRecords,
+      workers,
+      workerHistory: [...workers, ...(state.autonomy?.workerHistory ?? [])].slice(0, 24),
+      interactionBus: [...interactionBus, ...(state.autonomy?.interactionBus ?? [])].slice(0, 24),
     };
 
-    state.selectedTeamId = team.id;
+    state.selectedTeamId = primaryResult.team.id;
     state.assistantMode = "briefing";
     if (state.currentDirective?.source !== "terminal bridge") {
       state.currentDirective = {
         source: "autonomy daemon",
         issuedAt: nowIso(),
         status: "active",
-        title: `Autonomy cycle #${loopCount}`,
-        body: taskPacket.teamDispatch,
+        title: `Autonomy batch #${loopCount}`,
+        body: taskPackets.map((entry) => `${entry.teamLabel}: ${entry.teamDispatch}`).join(" "),
       };
     }
-    upsertTeamUpdate(state, team.id, {
-      state: executionRecord.outcome === "failed" ? "syncing" : "delivering",
-      objective: team.objective,
-      currentDeliverable:
-        executionRecord.changedFiles.length > 0
-          ? `${team.deliverable} Updated files: ${executionRecord.changedFiles.join(", ")}`
-          : team.deliverable,
-      nextHandoff:
-        executionRecord.outcome === "failed"
-          ? `Review failed execution before the next lane. ${executionRecord.nextAction}`
-          : team.nextHandoff,
-    });
-    replaceMemberUpdates(state, team.id, buildExecutionMemberUpdates(team, executionRecord, taskPacket));
-
-    if (executionRecord.providerId !== "mock" && executionRecord.providerId !== "failed") {
-      upsertProviderConnection(state, executionRecord.providerId, {
-        status: "connected",
-        teamId: team.id,
-        note:
+    for (const { team, taskPacket, executionRecord } of batchResults) {
+      upsertTeamUpdate(state, team.id, {
+        state:
+          executionRecord.outcome === "failed"
+            ? "syncing"
+            : executionRecord.outcome === "blocked"
+              ? "queued"
+              : "delivering",
+        objective: team.objective,
+        currentDeliverable:
           executionRecord.changedFiles.length > 0
-            ? `${executionRecord.providerLabel} updated ${executionRecord.changedFiles.join(", ")} for ${team.name}.`
-            : `${executionRecord.providerLabel} is attached to ${team.name}.`,
+            ? `${team.deliverable} Updated files: ${executionRecord.changedFiles.join(", ")}`
+            : taskPacket.workItemTitle,
+        nextHandoff:
+          executionRecord.outcome === "failed"
+            ? `Review failed execution before the next lane. ${executionRecord.nextAction}`
+            : executionRecord.nextAction,
+      });
+      replaceMemberUpdates(state, team.id, buildExecutionMemberUpdates(team, executionRecord, taskPacket));
+
+      pushEvent(state, {
+        channel: "team",
+        teamId: team.id,
+        from: "Mission Control",
+        to: team.lead,
+        subject: "Autonomy lane dispatch",
+        body: taskPacket.teamDispatch,
+      });
+      pushEvent(state, {
+        channel: "team",
+        teamId: team.id,
+        from: team.lead,
+        to: executionRecord.providerLabel,
+        subject: "Execution slice",
+        body: executionRecord.summary,
+      });
+      pushEvent(state, {
+        channel: "review",
+        teamId: team.id,
+        from: executionRecord.providerLabel,
+        to: "Operator Liaison",
+        subject: "Autonomy checkpoint",
+        body: `${taskPacket.checkpoint} ${executionRecord.changedFiles.length ? `Changed: ${executionRecord.changedFiles.join(", ")}.` : executionRecord.nextAction}`,
+      });
+    }
+
+    const codexWorkers = workers.filter((worker) => worker.providerId === "codex");
+    if (codexWorkers.length) {
+      upsertProviderConnection(state, "codex", {
+        status: "connected",
+        teamId: primaryResult.team.id,
+        note: `${codexWorkers.length} Codex workers are active across ${[...new Set(codexWorkers.map((worker) => worker.teamLabel))].join(", ")}.`,
       });
       state.terminalConnected = true;
     }
@@ -1988,49 +2336,27 @@ async function runAutonomyCycle() {
       teamId: "executive-desk",
       from: "Operator Liaison",
       to: "You",
-      subject: "Autonomy update",
-      body: `${executionRecord.operatorBrief}${executionRecord.artifactPath ? ` Artifact: ${executionRecord.artifactPath}` : ""}`,
-    });
-    pushEvent(state, {
-      channel: "team",
-      teamId: team.id,
-      from: "Mission Control",
-      to: team.lead,
-      subject: "Autonomy lane dispatch",
-      body: taskPacket.teamDispatch,
-    });
-    pushEvent(state, {
-      channel: "team",
-      teamId: team.id,
-      from: team.lead,
-      to: executionRecord.providerLabel,
-      subject: "Execution slice",
-      body: executionRecord.summary,
-    });
-    pushEvent(state, {
-      channel: "review",
-      teamId: team.id,
-      from: executionRecord.providerLabel,
-      to: "Operator Liaison",
-      subject: "Autonomy checkpoint",
-      body: `${taskPacket.checkpoint} ${executionRecord.changedFiles.length ? `Changed: ${executionRecord.changedFiles.join(", ")}.` : executionRecord.nextAction}`,
+      subject: "Autonomy swarm update",
+      body: buildBatchOperatorBrief(executionRecords),
     });
 
-    if (teamSelection.reroutedFromTeamId) {
-      const reroutedFrom = teamCycle.find((entry) => entry.id === teamSelection.reroutedFromTeamId);
+    const reroutedPreferred = teamSelection.blockedTeams.find((entry) => entry.preferred);
+    if (reroutedPreferred && !activeTeamIds.includes(teamSelection.preferredTeamId)) {
+      const reroutedFrom = teamCycle.find((entry) => entry.id === teamSelection.preferredTeamId);
+      const activeTeamNames = batchResults.map((entry) => entry.team.name).join(", ");
       pushEvent(state, {
         channel: "assistant",
-        teamId: team.id,
+        teamId: primaryResult.team.id,
         from: "Mission Control",
         to: "Operator Liaison",
         subject: "Autonomy reroute",
-        body: `${reroutedFrom?.name ?? "Preferred lane"} was skipped because its owned paths were already dirty. ${team.name} took the next clean lane instead.`,
+        body: `${reroutedFrom?.name ?? "Preferred lane"} was skipped because its owned paths were already dirty. ${activeTeamNames} took the current clean worker slots instead.`,
       });
     }
 
     await saveState(state);
     console.log(
-      `[autonomy] cycle ${loopCount} -> ${team.name} (${taskPacket.providerLabel}) execution=${executionRecord.outcome}`,
+      `[autonomy] cycle ${loopCount} -> ${workers.map((worker) => `${worker.teamLabel} (${worker.providerLabel})=${worker.status}`).join(" | ")}`,
     );
     return true;
   } finally {
