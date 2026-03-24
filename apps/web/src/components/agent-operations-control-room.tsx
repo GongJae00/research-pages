@@ -75,6 +75,33 @@ interface OpsControlErrorResponse {
   error: string;
 }
 
+interface OpsStackProcessMeta {
+  pid: number | null;
+  command: string;
+  startedAt: string;
+  stdout: string;
+  stderr: string;
+  running: boolean;
+}
+
+interface OpsStackStatusSnapshot {
+  checkedAt: string;
+  web: OpsStackProcessMeta | null;
+  autonomy: OpsStackProcessMeta | null;
+  controlRoomUrl: string;
+}
+
+interface MissionRelayEntry {
+  id: string;
+  time: string;
+  from: string;
+  to: string;
+  title: string;
+  body: string;
+  status: "queued" | "running" | "completed" | "blocked";
+  direction: "top-down" | "peer" | "bottom-up";
+}
+
 const teamClassMap: Record<TeamState, string> = {
   delivering: styles.teamDelivering,
   syncing: styles.teamSyncing,
@@ -211,6 +238,23 @@ function getOpsCopy(locale: string) {
     stackStart: t(locale, "스택 시작", "Start stack"),
     stackStop: t(locale, "스택 중지", "Stop stack"),
     stackStatus: t(locale, "상태 확인", "Stack status"),
+    missionStripLabel: t(locale, "미션 컨트롤", "Mission control"),
+    missionStripTitle: t(locale, "지금 이 보드에서 바로 읽어야 하는 것", "What matters right now"),
+    missionDirectiveLabel: t(locale, "운영자 지시", "Operator directive"),
+    missionStackLabel: t(locale, "로컬 런타임", "Local runtime"),
+    missionSwarmLabel: t(locale, "활성 swarm", "Active swarm"),
+    missionReportLabel: t(locale, "최신 보고", "Latest report"),
+    webProcessLabel: t(locale, "웹", "Web"),
+    autonomyProcessLabel: t(locale, "오토노미", "Autonomy"),
+    processRunning: t(locale, "실행 중", "Running"),
+    processStopped: t(locale, "중지", "Stopped"),
+    relayLabel: t(locale, "실시간 릴레이", "Live relay"),
+    relayTitle: t(locale, "누가 누구에게 무엇을 넘겼는지", "Who handed what to whom"),
+    relayBody: t(
+      locale,
+      "비서 명령, 작업 dispatch, handoff, 보고를 시간순으로 묶어 보여줍니다.",
+      "Shows assistant commands, dispatches, handoffs, and reports in one compact timeline.",
+    ),
     intentDirective: t(locale, "전역 지시", "Directive"),
     intentFocus: t(locale, "팀 포커스", "Focus"),
     intentPause: t(locale, "정지", "Pause"),
@@ -347,6 +391,16 @@ async function sendOpsControlRequest(body: Record<string, unknown>) {
   return payload as OpsTerminalResponse;
 }
 
+async function fetchOpsStackStatus() {
+  const payload = await sendOpsControlRequest({ action: "stack.status" });
+
+  try {
+    return JSON.parse(payload.stdout) as OpsStackStatusSnapshot;
+  } catch {
+    return null;
+  }
+}
+
 export function AgentOperationsControlRoom({
   initialSnapshot,
   locale,
@@ -375,6 +429,7 @@ export function AgentOperationsControlRoom({
   const [stackRequestError, setStackRequestError] = useState<string | null>(null);
   const [stackRequestResult, setStackRequestResult] = useState<string | null>(null);
   const [isRunningStackCommand, setIsRunningStackCommand] = useState<"start" | "stop" | "status" | null>(null);
+  const [stackStatus, setStackStatus] = useState<OpsStackStatusSnapshot | null>(null);
   const copy = getOpsCopy(locale);
 
   const selectedMode = selectedModeOverride ?? snapshot.activeMode;
@@ -415,6 +470,27 @@ export function AgentOperationsControlRoom({
     };
     void refresh();
     const timer = window.setInterval(() => void refresh(), 2500);
+    return () => {
+      mounted = false;
+      window.clearInterval(timer);
+    };
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    const refresh = async () => {
+      try {
+        const nextStatus = await fetchOpsStackStatus();
+        if (mounted && nextStatus) {
+          setStackStatus(nextStatus);
+        }
+      } catch {
+        // Keep the last known launcher state when local control is unavailable.
+      }
+    };
+
+    void refresh();
+    const timer = window.setInterval(() => void refresh(), 10000);
     return () => {
       mounted = false;
       window.clearInterval(timer);
@@ -523,6 +599,62 @@ export function AgentOperationsControlRoom({
       status: "completed" as const,
     }));
   }, [interactionTrace, selectedTeam.id, snapshot.autonomy.interactionBus]);
+  const liveRelay = useMemo<MissionRelayEntry[]>(() => {
+    const entries: MissionRelayEntry[] = [
+      {
+        id: `directive-${snapshot.currentDirective.issuedAt}`,
+        time: snapshot.currentDirective.issuedAt,
+        from: "You",
+        to: snapshot.assistant.name,
+        title: formatDirectiveTitle(locale, snapshot.currentDirective.title),
+        body: snapshot.currentDirective.body,
+        status: snapshot.currentDirective.status === "paused" ? "blocked" : "completed",
+        direction: "top-down",
+      },
+      ...interactionBus.map((message) => ({
+        id: `bus-${message.id}`,
+        time: message.time,
+        from: message.from,
+        to: message.to,
+        title: formatConversationSubject(locale, message.subject),
+        body: message.body,
+        status: message.status as MissionRelayEntry["status"],
+        direction: message.direction as MissionRelayEntry["direction"],
+      })),
+      ...recentHandoffs.map((event) => ({
+        id: `handoff-${event.time}-${event.from}-${event.to}`,
+        time: event.time,
+        from: event.from,
+        to: event.to,
+        title: t(locale, "핸드오프", "Handoff"),
+        body: event.summary,
+        status: (event.status === "active" ? "running" : "completed") as MissionRelayEntry["status"],
+        direction: "bottom-up" as const,
+      })),
+    ];
+
+    const seen = new Set<string>();
+    return entries
+      .filter((entry) => {
+        if (seen.has(entry.id)) {
+          return false;
+        }
+        seen.add(entry.id);
+        return true;
+      })
+      .sort((left, right) => Date.parse(right.time) - Date.parse(left.time))
+      .slice(0, 5);
+  }, [
+    interactionBus,
+    locale,
+    recentHandoffs,
+    snapshot.assistant.name,
+    snapshot.currentDirective.body,
+    snapshot.currentDirective.issuedAt,
+    snapshot.currentDirective.status,
+    snapshot.currentDirective.title,
+  ]);
+  const latestExecution = snapshot.autonomy.currentExecution ?? recentExecutions[0] ?? null;
   const terminalPresetCommands = [
     "corepack pnpm ops -- status",
     `corepack pnpm ops -- directive "${t(locale, "홈페이지 품질 개선 계속", "Continue improving homepage quality")}"`,
@@ -662,6 +794,14 @@ export function AgentOperationsControlRoom({
     try {
       const payload = await sendOpsControlRequest({ action: `stack.${action}` });
       setStackRequestResult(payload.stdout.trim() || payload.stderr.trim() || payload.command);
+      try {
+        const parsed = JSON.parse(payload.stdout) as OpsStackStatusSnapshot;
+        if (parsed && typeof parsed === "object" && "checkedAt" in parsed) {
+          setStackStatus(parsed);
+        }
+      } catch {
+        // Ignore non-JSON launcher output and keep the latest known state.
+      }
     } catch (error) {
       setStackRequestError(
         error instanceof Error ? error.message : t(locale, "스택 제어 실패", "Failed to control the stack."),
@@ -826,6 +966,101 @@ export function AgentOperationsControlRoom({
 
   return (
     <div className={styles.shell}>
+      <section className={styles.missionBar}>
+        <div className={styles.missionBarHead}>
+          <div>
+            <span className={styles.sectionLabel}>{copy.missionStripLabel}</span>
+            <h2 className={styles.sectionTitle}>{copy.missionStripTitle}</h2>
+          </div>
+          <div className={styles.primeHeaderMeta}>
+            <span className={styles.commandTowerChip}>
+              {copy.generatedAt} {snapshot.generatedAt}
+            </span>
+            <span className={styles.commandTowerChip}>
+              {copy.activeProvider}: {snapshot.autonomy.activeProviderLabel}
+            </span>
+          </div>
+        </div>
+
+        <div className={styles.missionBarGrid}>
+          <article className={styles.missionBarCard}>
+            <span className={styles.agentLabel}>{copy.missionDirectiveLabel}</span>
+            <strong className={styles.missionBarValue}>
+              {formatDirectiveTitle(locale, snapshot.currentDirective.title)}
+            </strong>
+            <p className={styles.missionBarBody}>{snapshot.currentDirective.body}</p>
+            <div className={styles.missionBarMeta}>
+              <span className={`${styles.statusBadge} ${styles.directiveBadge}`}>
+                {snapshot.currentDirective.status}
+              </span>
+              <span>{formatBoardTimestamp(locale, snapshot.currentDirective.issuedAt)}</span>
+            </div>
+          </article>
+
+          <article className={styles.missionBarCard}>
+            <span className={styles.agentLabel}>{copy.missionStackLabel}</span>
+            <strong className={styles.missionBarValue}>
+              {stackStatus?.autonomy?.running || stackStatus?.web?.running
+                ? copy.processRunning
+                : copy.processStopped}
+            </strong>
+            <p className={styles.missionBarBody}>
+              {copy.webProcessLabel}: {stackStatus?.web?.running ? copy.processRunning : copy.processStopped}
+              {" · "}
+              {copy.autonomyProcessLabel}: {stackStatus?.autonomy?.running ? copy.processRunning : copy.processStopped}
+            </p>
+            <div className={styles.missionBarMeta}>
+              <span
+                className={`${styles.statusBadge} ${
+                  stackStatus?.autonomy?.running ? styles.statusActive : styles.statusReview
+                }`}
+              >
+                {copy.autonomyProcessLabel}
+              </span>
+              <span>{stackStatus ? formatBoardTimestamp(locale, stackStatus.checkedAt) : copy.stackStatus}</span>
+            </div>
+          </article>
+
+          <article className={styles.missionBarCard}>
+            <span className={styles.agentLabel}>{copy.missionSwarmLabel}</span>
+            <strong className={styles.missionBarValue}>{selectedTeam.name}</strong>
+            <p className={styles.missionBarBody}>
+              {swarmWorkers.length} workers · {copy.parallelLimit} {snapshot.autonomy.parallelLimit}
+            </p>
+            <div className={styles.missionBarMeta}>
+              <span className={`${styles.statusBadge} ${styles.statusActive}`}>
+                {snapshot.autonomy.activeProviderLabel}
+              </span>
+              <span>
+                {copy.loopCount} {snapshot.autonomy.loopCount}
+              </span>
+            </div>
+          </article>
+
+          <article className={styles.missionBarCard}>
+            <span className={styles.agentLabel}>{copy.missionReportLabel}</span>
+            <strong className={styles.missionBarValue}>
+              {latestExecution?.workItemTitle ?? selectedTeam.currentDeliverable}
+            </strong>
+            <p className={styles.missionBarBody}>
+              {latestExecution?.nextAction ?? snapshot.autonomy.latestSummary}
+            </p>
+            <div className={styles.missionBarMeta}>
+              <span
+                className={`${styles.statusBadge} ${
+                  latestExecution ? workerStatusClass(latestExecution.outcome) : styles.statusDone
+                }`}
+              >
+                {latestExecution?.outcome ?? "ready"}
+              </span>
+              <span>
+                {formatBoardTimestamp(locale, latestExecution?.time ?? snapshot.autonomy.lastRunAt)}
+              </span>
+            </div>
+          </article>
+        </div>
+      </section>
+
       <section className={styles.operationsWorkbench}>
         <article className={`${styles.panel} ${styles.sectionPanel}`}>
           <span className={styles.sectionLabel}>{copy.terminalLabel}</span>
@@ -1297,8 +1532,28 @@ export function AgentOperationsControlRoom({
 
             <div className={styles.assistantMiniStack}>
               <div className={styles.assistantMiniPanel}>
-                <span className={styles.agentLabel}>{copy.providersLabel}</span>
+                <span className={styles.agentLabel}>{copy.missionStackLabel}</span>
                 <div className={styles.assistantMiniList}>
+                  <div className={styles.assistantMiniRow}>
+                    <strong>{copy.webProcessLabel}</strong>
+                    <span
+                      className={`${styles.statusBadge} ${
+                        stackStatus?.web?.running ? styles.statusActive : styles.statusReview
+                      }`}
+                    >
+                      {stackStatus?.web?.running ? copy.processRunning : copy.processStopped}
+                    </span>
+                  </div>
+                  <div className={styles.assistantMiniRow}>
+                    <strong>{copy.autonomyProcessLabel}</strong>
+                    <span
+                      className={`${styles.statusBadge} ${
+                        stackStatus?.autonomy?.running ? styles.statusActive : styles.statusReview
+                      }`}
+                    >
+                      {stackStatus?.autonomy?.running ? copy.processRunning : copy.processStopped}
+                    </span>
+                  </div>
                   {snapshot.providerConnections.map((provider) => (
                     <div className={styles.assistantMiniRow} key={provider.providerId}>
                       <strong>{provider.label}</strong>
@@ -1311,13 +1566,32 @@ export function AgentOperationsControlRoom({
               </div>
 
               <div className={styles.assistantMiniPanel}>
-                <span className={styles.agentLabel}>{copy.handoffLabel}</span>
-                <div className={styles.assistantMiniList}>
-                  {recentHandoffs.slice(0, 3).map((event) => (
-                    <div className={styles.assistantMiniRow} key={`${event.time}-${event.summary}`}>
-                      <strong>{event.from} → {event.to}</strong>
-                      <span className={`${styles.statusBadge} ${styles.statusDone}`}>{event.status}</span>
-                    </div>
+                <span className={styles.agentLabel}>{copy.relayLabel}</span>
+                <strong className={styles.terminalSessionTitle}>{copy.relayTitle}</strong>
+                <p className={styles.sectionBody}>{copy.relayBody}</p>
+                <div className={styles.relayList}>
+                  {liveRelay.map((entry) => (
+                    <article className={styles.relayRow} key={entry.id}>
+                      <div className={styles.relayRoute}>
+                        <strong>{formatActorLabel(locale, entry.from)}</strong>
+                        <ArrowRightLeft size={12} />
+                        <strong>{formatActorLabel(locale, entry.to)}</strong>
+                      </div>
+                      <div className={styles.missionBarMeta}>
+                        <span className={styles.commandTowerChip}>
+                          {entry.direction === "top-down"
+                            ? copy.busTopDown
+                            : entry.direction === "peer"
+                              ? copy.busPeer
+                              : copy.busBottomUp}
+                        </span>
+                        <span className={`${styles.statusBadge} ${interactionStatusClass(entry.status)}`}>
+                          {entry.status}
+                        </span>
+                      </div>
+                      <strong>{entry.title}</strong>
+                      <p className={styles.commandTowerBody}>{entry.body}</p>
+                    </article>
                   ))}
                 </div>
               </div>
