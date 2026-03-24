@@ -1,4 +1,4 @@
-import { spawn } from "node:child_process";
+import { execFile as execFileCallback, spawn } from "node:child_process";
 import {
   mkdir,
   open,
@@ -8,6 +8,9 @@ import {
 } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
+import { promisify } from "node:util";
+
+const execFile = promisify(execFileCallback);
 
 const stateDir = path.join(process.cwd(), ".researchos");
 const runDir = path.join(stateDir, "run");
@@ -35,7 +38,7 @@ async function fileExists(filePath) {
   }
 }
 
-function isProcessAlive(pid) {
+async function isProcessAlive(pid) {
   if (!pid || typeof pid !== "number") {
     return false;
   }
@@ -43,8 +46,35 @@ function isProcessAlive(pid) {
   try {
     process.kill(pid, 0);
     return true;
-  } catch {
-    return false;
+  } catch (error) {
+    const err = error;
+    if (err && typeof err === "object" && "code" in err && err.code === "EPERM") {
+      return true;
+    }
+
+    if (process.platform !== "win32") {
+      return false;
+    }
+
+    try {
+      const { stdout } = await execFile(
+        "tasklist.exe",
+        ["/FI", `PID eq ${String(pid)}`, "/FO", "CSV", "/NH"],
+        {
+          windowsHide: true,
+        },
+      );
+      const normalized = stdout.trim();
+      if (!normalized) {
+        return false;
+      }
+      if (/No tasks are running/i.test(normalized)) {
+        return false;
+      }
+      return normalized.includes(`"${String(pid)}"`) || normalized.includes(`,${String(pid)},`);
+    } catch {
+      return false;
+    }
   }
 }
 
@@ -113,8 +143,8 @@ async function startStack() {
 
   const webMeta = await readPidFile(webPidFile);
   const autonomyMeta = await readPidFile(autonomyPidFile);
-  const webRunning = webMeta && isProcessAlive(webMeta.pid);
-  const autonomyRunning = autonomyMeta && isProcessAlive(autonomyMeta.pid);
+  const webRunning = webMeta ? await isProcessAlive(webMeta.pid) : false;
+  const autonomyRunning = autonomyMeta ? await isProcessAlive(autonomyMeta.pid) : false;
 
   const status = {
     startedAt: nowIso(),
@@ -164,7 +194,7 @@ async function startStack() {
 }
 
 async function stopPid(meta, pidFile) {
-  if (!meta?.pid || !isProcessAlive(meta.pid)) {
+  if (!meta?.pid || !(await isProcessAlive(meta.pid))) {
     await removePidFile(pidFile);
     return false;
   }
@@ -203,10 +233,10 @@ async function statusStack() {
   return {
     checkedAt: nowIso(),
     web: webMeta
-      ? { ...webMeta, running: isProcessAlive(webMeta.pid) }
+      ? { ...webMeta, running: await isProcessAlive(webMeta.pid) }
       : null,
     autonomy: autonomyMeta
-      ? { ...autonomyMeta, running: isProcessAlive(autonomyMeta.pid) }
+      ? { ...autonomyMeta, running: await isProcessAlive(autonomyMeta.pid) }
       : null,
     controlRoomUrl: "http://localhost:3000/ko/ops",
   };
