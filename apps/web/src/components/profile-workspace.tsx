@@ -1060,6 +1060,58 @@ export function ProfileWorkspace({
     [savedKeywordList],
   );
   const heroLinks = useMemo(() => savedLinks.slice(0, 3), [savedLinks]);
+  const coreContactSummary = useMemo(() => {
+    const parts = [
+      savedEmails.length > 0
+        ? isKo
+          ? `이메일 ${savedEmails.length}개`
+          : `${savedEmails.length} email${savedEmails.length === 1 ? "" : "s"}`
+        : undefined,
+      savedLinks.length > 0
+        ? isKo
+          ? `링크 ${savedLinks.length}개`
+          : `${savedLinks.length} link${savedLinks.length === 1 ? "" : "s"}`
+        : undefined,
+    ];
+
+    return joinUniqueTextParts(parts) || text.emptyValue;
+  }, [isKo, savedEmails.length, savedLinks.length, text.emptyValue]);
+  const coreIdentifierSummary = useMemo(() => {
+    const parts = [
+      savedProfile.nationalResearcherNumber ? text.nationalId : undefined,
+      savedProfile.orcid ? text.orcid : undefined,
+    ];
+
+    return joinUniqueTextParts(parts) || text.emptyValue;
+  }, [
+    savedProfile.nationalResearcherNumber,
+    savedProfile.orcid,
+    text.emptyValue,
+    text.nationalId,
+    text.orcid,
+  ]);
+  const coreFocusSummary = useMemo(() => {
+    const keywordSummary =
+      savedKeywordList.length > 0
+        ? isKo
+          ? `키워드 ${savedKeywordList.length}개`
+          : `${savedKeywordList.length} keyword${savedKeywordList.length === 1 ? "" : "s"}`
+        : undefined;
+
+    return (
+      joinUniqueTextParts([
+        savedProfile.primaryInstitution,
+        savedProfile.primaryDiscipline,
+        keywordSummary,
+      ]) || text.emptyValue
+    );
+  }, [
+    isKo,
+    savedKeywordList,
+    savedProfile.primaryDiscipline,
+    savedProfile.primaryInstitution,
+    text.emptyValue,
+  ]);
   const publicProfileHref = useMemo(() => {
     if (!savedProfile.publicProfileEnabled) {
       return null;
@@ -2109,6 +2161,12 @@ export function ProfileWorkspace({
                       <div className="profile-career-status-list">
                         <div className="profile-career-status-row">
                           <div className="profile-career-status-main">
+                            <strong>{isKo ? "빠른 요약" : "Quick scan"}</strong>
+                            <span>{coreContactSummary}</span>
+                          </div>
+                        </div>
+                        <div className="profile-career-status-row">
+                          <div className="profile-career-status-main">
                             <strong>{text.contacts}</strong>
                             {savedEmails.length > 0 ? (
                               <div className="profile-inline-list">
@@ -2160,6 +2218,12 @@ export function ProfileWorkspace({
                       <div className="profile-career-status-list">
                         <div className="profile-career-status-row">
                           <div className="profile-career-status-main">
+                            <strong>{isKo ? "빠른 요약" : "Quick scan"}</strong>
+                            <span>{coreIdentifierSummary}</span>
+                          </div>
+                        </div>
+                        <div className="profile-career-status-row">
+                          <div className="profile-career-status-main">
                             <strong>{text.nationalId}</strong>
                             <span>{savedProfile.nationalResearcherNumber || text.emptyValue}</span>
                           </div>
@@ -2181,6 +2245,12 @@ export function ProfileWorkspace({
                   <dd>
                     {savedProfile.primaryInstitution || savedProfile.primaryDiscipline || savedKeywordList.length > 0 ? (
                       <div className="profile-career-status-list">
+                        <div className="profile-career-status-row">
+                          <div className="profile-career-status-main">
+                            <strong>{isKo ? "빠른 요약" : "Quick scan"}</strong>
+                            <span>{coreFocusSummary}</span>
+                          </div>
+                        </div>
                         <div className="profile-career-status-row">
                           <div className="profile-career-status-main">
                             <strong>{text.institution}</strong>

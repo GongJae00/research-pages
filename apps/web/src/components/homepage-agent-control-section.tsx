@@ -384,7 +384,23 @@ export function HomepageAgentControlSection({
                 </span>
               ))}
             </div>
-            <p className={styles.compactBody}>{copy.setupBuilderBody}</p>
+
+            <div className={styles.setupSelectionStrip}>
+              <div className={styles.selectionBadge}>
+                <span className={styles.metaLabel}>{copy.chooseProvider}</span>
+                <strong>{selectedProvider?.label}</strong>
+              </div>
+              <div className={styles.selectionBadge}>
+                <span className={styles.metaLabel}>{copy.chooseTeam}</span>
+                <strong>{selectedTeam?.name}</strong>
+              </div>
+              {setupBriefHref ? (
+                <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
+                  {copy.openBrief}
+                  <ArrowRight size={16} />
+                </Link>
+              ) : null}
+            </div>
 
             <div className={styles.setupPickerGrid}>
               <div className={styles.setupPicker}>
@@ -454,15 +470,6 @@ export function HomepageAgentControlSection({
                 <code>{setupManifest?.commands.assign}</code>
               </div>
             </div>
-
-            {setupBriefHref ? (
-              <div className={styles.actionRow}>
-                <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
-                  {copy.openBrief}
-                  <ArrowRight size={16} />
-                </Link>
-              </div>
-            ) : null}
 
             {setupManifest ? (
               <div className={styles.setupNotesGrid}>

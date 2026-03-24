@@ -136,9 +136,59 @@ async function readRuntimeState(locale: string) {
   }
 }
 
+const validTeamStates = new Set<TeamUnit["state"]>(["delivering", "syncing", "queued", "waiting"]);
+const validAgentStates = new Set<TeamUnit["members"][number]["state"]>([
+  "running",
+  "reviewing",
+  "queued",
+  "standby",
+]);
+
+function sanitizeRuntimeTeamUpdates(teams: TeamUnit[], runtimeState: AgentOpsRuntimeState) {
+  const knownTeamIds = new Set(teams.map((team) => team.id));
+
+  const teamUpdates = runtimeState.teamUpdates.flatMap((entry) => {
+    if (!knownTeamIds.has(entry.teamId)) {
+      return [];
+    }
+
+    return [
+      {
+        ...entry,
+        state: entry.state && validTeamStates.has(entry.state) ? entry.state : undefined,
+      },
+    ];
+  });
+
+  const memberDirectory = new Map(
+    teams.map((team) => [team.id, new Set(team.members.map((member) => member.name))]),
+  );
+
+  const memberUpdates = runtimeState.memberUpdates.flatMap((entry) => {
+    const teamMembers = memberDirectory.get(entry.teamId);
+
+    if (!teamMembers?.has(entry.memberName)) {
+      return [];
+    }
+
+    return [
+      {
+        ...entry,
+        state: entry.state && validAgentStates.has(entry.state) ? entry.state : undefined,
+      },
+    ];
+  });
+
+  return {
+    teamUpdates,
+    memberUpdates,
+  };
+}
+
 function mergeTeamUpdates(teams: TeamUnit[], runtimeState: AgentOpsRuntimeState) {
-  const updates = new Map(runtimeState.teamUpdates.map((entry) => [entry.teamId, entry]));
-  const memberUpdates = runtimeState.memberUpdates;
+  const sanitizedUpdates = sanitizeRuntimeTeamUpdates(teams, runtimeState);
+  const updates = new Map(sanitizedUpdates.teamUpdates.map((entry) => [entry.teamId, entry]));
+  const memberUpdates = sanitizedUpdates.memberUpdates;
 
   return teams.map((team) => {
     const update = updates.get(team.id);

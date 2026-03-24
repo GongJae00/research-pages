@@ -264,6 +264,29 @@
   line-height: 1.42;
 }
 
+.setupSelectionStrip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.45rem;
+}
+
+.selectionBadge {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+  padding: 0.48rem 0.65rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 14px;
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.selectionBadge strong {
+  color: #0f172a;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
 .setupPicker {
   display: grid;
   gap: 0.4rem;
