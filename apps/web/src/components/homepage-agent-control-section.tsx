@@ -376,28 +376,26 @@ export function HomepageAgentControlSection({
               <Command size={20} />
             </div>
             <div className={styles.quickStartStrip}>
-              {quickSetupSteps.map((item) => (
-                <span className={styles.quickStartBadge} key={item}>
-                  {item}
-                </span>
-              ))}
-            </div>
-
-            <div className={styles.setupSelectionStrip}>
-              <div className={styles.selectionBadge}>
-                <span className={styles.metaLabel}>{copy.chooseProvider}</span>
-                <strong>{selectedProvider?.label}</strong>
+              <div className={styles.quickStartCard}>
+                <span className={styles.quickStartBadge}>{quickSetupSteps[0]}</span>
+                <strong>{selectedProvider?.label ?? copy.chooseProvider}</strong>
               </div>
-              <div className={styles.selectionBadge}>
-                <span className={styles.metaLabel}>{copy.chooseTeam}</span>
-                <strong>{selectedTeam?.name}</strong>
+              <div className={styles.quickStartCard}>
+                <span className={styles.quickStartBadge}>{quickSetupSteps[1]}</span>
+                <strong>{selectedTeam?.name ?? copy.chooseTeam}</strong>
               </div>
-              {setupBriefHref ? (
-                <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
-                  {copy.openBrief}
-                  <ArrowRight size={16} />
-                </Link>
-              ) : null}
+              <div className={styles.quickStartCard}>
+                <span className={styles.quickStartBadge}>{quickSetupSteps[2]}</span>
+                <div className={styles.quickStartAction}>
+                  <strong>{copy.setupCommand}</strong>
+                  {setupBriefHref ? (
+                    <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
+                      {copy.openBrief}
+                      <ArrowRight size={16} />
+                    </Link>
+                  ) : null}
+                </div>
+              </div>
             </div>
 
             <div className={styles.setupPickerGrid}>

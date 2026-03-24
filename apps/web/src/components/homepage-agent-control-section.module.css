@@ -241,14 +241,25 @@
 }
 
 .quickStartStrip {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.35rem;
+}
+
+.quickStartCard {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+  padding: 0.48rem 0.58rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 14px;
+  background: rgba(248, 250, 252, 0.9);
 }
 
 .quickStartBadge {
   display: inline-flex;
   align-items: center;
+  width: fit-content;
   border-radius: 999px;
   padding: 0.28rem 0.58rem;
   background: rgba(15, 23, 42, 0.06);
@@ -258,33 +269,24 @@
   letter-spacing: 0.02em;
 }
 
+.quickStartCard strong {
+  color: #0f172a;
+  font-size: 0.92rem;
+  line-height: 1.2;
+}
+
+.quickStartAction {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem;
+}
+
 .compactBody {
   margin: 0;
   color: #475569;
   line-height: 1.42;
-}
-
-.setupSelectionStrip {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  gap: 0.45rem;
-}
-
-.selectionBadge {
-  display: grid;
-  gap: 0.15rem;
-  min-width: 0;
-  padding: 0.42rem 0.58rem;
-  border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 14px;
-  background: rgba(248, 250, 252, 0.92);
-}
-
-.selectionBadge strong {
-  color: #0f172a;
-  font-size: 0.9rem;
-  line-height: 1.2;
 }
 
 .setupPicker {
@@ -483,6 +485,7 @@
 @media (max-width: 720px) {
   .summaryGrid,
   .providerMeta,
+  .quickStartStrip,
   .setupPickerGrid,
   .setupCommands,
   .setupNotesGrid {

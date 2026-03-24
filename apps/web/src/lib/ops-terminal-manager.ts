@@ -86,6 +86,44 @@ async function resolveWorkspaceRoot() {
   }
 }
 
+function waitForSessionSpawn(child: ChildProcessWithoutNullStreams) {
+  return new Promise<void>((resolve, reject) => {
+    let settled = false;
+
+    const cleanup = () => {
+      child.off("spawn", handleSpawn);
+      child.off("error", handleError);
+      child.off("close", handleClose);
+    };
+
+    const settle = (callback: () => void) => {
+      if (settled) {
+        return;
+      }
+
+      settled = true;
+      cleanup();
+      callback();
+    };
+
+    const handleSpawn = () => {
+      settle(resolve);
+    };
+
+    const handleError = (error: Error) => {
+      settle(() => reject(error));
+    };
+
+    const handleClose = (code: number | null) => {
+      settle(() => reject(new Error(`Shell exited before session startup completed (exit code ${String(code ?? 0)}).`)));
+    };
+
+    child.once("spawn", handleSpawn);
+    child.once("error", handleError);
+    child.once("close", handleClose);
+  });
+}
+
 function trimTranscript(value: string) {
   if (value.length <= maxTranscriptChars) {
     return value;
@@ -257,8 +295,6 @@ export async function createOpsTerminalSession(shellId: OpsShellId, label?: stri
     },
   };
 
-  appendTranscript(record, `[ops] session opened: ${record.snapshot.label}${os.EOL}`);
-
   child.stdout.on("data", (chunk: Buffer | string) => {
     appendTranscript(record, chunk.toString());
   });
@@ -280,6 +316,17 @@ export async function createOpsTerminalSession(shellId: OpsShellId, label?: stri
     appendTranscript(record, `${os.EOL}[ops] session closed with exit code ${String(code ?? 0)}${os.EOL}`);
   });
 
+  try {
+    await waitForSessionSpawn(child);
+  } catch (error) {
+    child.stdout.removeAllListeners("data");
+    child.stderr.removeAllListeners("data");
+    throw new Error(
+      `Failed to start ${shellSpec.label} session: ${error instanceof Error ? error.message : "Unknown spawn error."}`,
+    );
+  }
+
+  appendTranscript(record, `[ops] session opened: ${record.snapshot.label}${os.EOL}`);
   getManagerStore().sessions.set(sessionId, record);
   return record.snapshot;
 }

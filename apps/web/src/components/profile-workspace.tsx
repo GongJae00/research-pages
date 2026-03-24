@@ -342,6 +342,10 @@ function normalizeRows(values: string[]) {
   return [...new Set(values.map((value) => value.trim()).filter(Boolean))];
 }
 
+function isDefined<T>(value: T | undefined): value is T {
+  return value !== undefined;
+}
+
 function normalizeEditableLinks(value: unknown): EditableProfileLink[] {
   if (!Array.isArray(value)) {
     return [];
@@ -1112,6 +1116,39 @@ export function ProfileWorkspace({
     savedProfile.primaryInstitution,
     text.emptyValue,
   ]);
+  void coreContactSummary;
+  void coreIdentifierSummary;
+  void coreFocusSummary;
+  const coreContactHighlights = useMemo(
+    () =>
+      [
+        savedEmails.length > 0 ? `${text.email} ${savedEmails.length}` : undefined,
+        savedLinks.length > 0 ? `${onlineLinksLabel} ${savedLinks.length}` : undefined,
+      ].filter(isDefined),
+    [onlineLinksLabel, savedEmails.length, savedLinks.length, text.email],
+  );
+  const coreIdentifierHighlights = useMemo(
+    () =>
+      [
+        savedProfile.nationalResearcherNumber ? text.nationalId : undefined,
+        savedProfile.orcid ? text.orcid : undefined,
+      ].filter(isDefined),
+    [savedProfile.nationalResearcherNumber, savedProfile.orcid, text.nationalId, text.orcid],
+  );
+  const coreFocusHighlights = useMemo(
+    () =>
+      [
+        savedProfile.primaryInstitution,
+        savedProfile.primaryDiscipline,
+        savedKeywordList.length > 0 ? `${text.keywords} ${savedKeywordList.length}` : undefined,
+      ].filter(isDefined),
+    [
+      savedKeywordList.length,
+      savedProfile.primaryDiscipline,
+      savedProfile.primaryInstitution,
+      text.keywords,
+    ],
+  );
   const publicProfileHref = useMemo(() => {
     if (!savedProfile.publicProfileEnabled) {
       return null;
@@ -2159,12 +2196,15 @@ export function ProfileWorkspace({
                   <dd>
                     {savedEmails.length > 0 || savedLinks.length > 0 ? (
                       <div className="profile-career-status-list">
-                        <div className="profile-career-status-row">
-                          <div className="profile-career-status-main">
-                            <strong>{isKo ? "빠른 요약" : "Quick scan"}</strong>
-                            <span>{coreContactSummary}</span>
+                        {coreContactHighlights.length > 0 ? (
+                          <div className="profile-inline-list profile-inline-list-muted">
+                            {coreContactHighlights.map((item) => (
+                              <span className="pill pill-gray" key={item}>
+                                {item}
+                              </span>
+                            ))}
                           </div>
-                        </div>
+                        ) : null}
                         <div className="profile-career-status-row">
                           <div className="profile-career-status-main">
                             <strong>{text.contacts}</strong>
@@ -2216,12 +2256,15 @@ export function ProfileWorkspace({
                   <dd>
                     {savedProfile.nationalResearcherNumber || savedProfile.orcid ? (
                       <div className="profile-career-status-list">
-                        <div className="profile-career-status-row">
-                          <div className="profile-career-status-main">
-                            <strong>{isKo ? "빠른 요약" : "Quick scan"}</strong>
-                            <span>{coreIdentifierSummary}</span>
+                        {coreIdentifierHighlights.length > 0 ? (
+                          <div className="profile-inline-list profile-inline-list-muted">
+                            {coreIdentifierHighlights.map((item) => (
+                              <span className="pill pill-gray" key={item}>
+                                {item}
+                              </span>
+                            ))}
                           </div>
-                        </div>
+                        ) : null}
                         <div className="profile-career-status-row">
                           <div className="profile-career-status-main">
                             <strong>{text.nationalId}</strong>
@@ -2245,12 +2288,15 @@ export function ProfileWorkspace({
                   <dd>
                     {savedProfile.primaryInstitution || savedProfile.primaryDiscipline || savedKeywordList.length > 0 ? (
                       <div className="profile-career-status-list">
-                        <div className="profile-career-status-row">
-                          <div className="profile-career-status-main">
-                            <strong>{isKo ? "빠른 요약" : "Quick scan"}</strong>
-                            <span>{coreFocusSummary}</span>
+                        {coreFocusHighlights.length > 0 ? (
+                          <div className="profile-inline-list profile-inline-list-muted">
+                            {coreFocusHighlights.map((item) => (
+                              <span className="pill pill-gray" key={item}>
+                                {item}
+                              </span>
+                            ))}
                           </div>
-                        </div>
+                        ) : null}
                         <div className="profile-career-status-row">
                           <div className="profile-career-status-main">
                             <strong>{text.institution}</strong>
