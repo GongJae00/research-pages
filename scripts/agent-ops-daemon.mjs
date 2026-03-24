@@ -299,6 +299,46 @@ function nowIso() {
   return new Date().toISOString();
 }
 
+async function isProcessAlive(pid) {
+  if (!pid || typeof pid !== "number") {
+    return false;
+  }
+
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (error) {
+    const err = error;
+    if (err && typeof err === "object" && "code" in err && err.code === "EPERM") {
+      return true;
+    }
+
+    if (process.platform !== "win32") {
+      return false;
+    }
+
+    try {
+      const { stdout } = await execFile(
+        "tasklist.exe",
+        ["/FI", `PID eq ${String(pid)}`, "/FO", "CSV", "/NH"],
+        {
+          windowsHide: true,
+        },
+      );
+      const normalized = stdout.trim();
+      if (!normalized) {
+        return false;
+      }
+      if (/No tasks are running/i.test(normalized)) {
+        return false;
+      }
+      return normalized.includes(`"${String(pid)}"`) || normalized.includes(`,${String(pid)},`);
+    } catch {
+      return false;
+    }
+  }
+}
+
 function futureIso(msFromNow) {
   return new Date(Date.now() + msFromNow).toISOString();
 }

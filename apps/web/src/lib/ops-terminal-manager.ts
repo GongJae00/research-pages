@@ -47,6 +47,7 @@ export interface OpsTerminalSessionSnapshot {
 interface OpsTerminalSessionRecord {
   child: ChildProcessWithoutNullStreams;
   snapshot: OpsTerminalSessionSnapshot;
+  stopRequestedAt: string | null;
 }
 
 declare global {
@@ -293,6 +294,7 @@ export async function createOpsTerminalSession(shellId: OpsShellId, label?: stri
       lastInput: null,
       exitCode: null,
     },
+    stopRequestedAt: null,
   };
 
   child.stdout.on("data", (chunk: Buffer | string) => {
@@ -310,10 +312,16 @@ export async function createOpsTerminalSession(shellId: OpsShellId, label?: stri
   });
 
   child.on("close", (code) => {
-    record.snapshot.status = code === 0 ? "closed" : "error";
+    const stopRequestedAt = record.stopRequestedAt;
+    record.snapshot.status = stopRequestedAt || code === 0 ? "closed" : "error";
     record.snapshot.exitCode = code;
     record.snapshot.pid = null;
-    appendTranscript(record, `${os.EOL}[ops] session closed with exit code ${String(code ?? 0)}${os.EOL}`);
+    appendTranscript(
+      record,
+      stopRequestedAt
+        ? `${os.EOL}[ops] session stopped by operator at ${stopRequestedAt}${os.EOL}`
+        : `${os.EOL}[ops] session closed with exit code ${String(code ?? 0)}${os.EOL}`,
+    );
   });
 
   try {
@@ -357,6 +365,13 @@ export async function stopOpsTerminalSession(sessionId: string) {
     throw new Error(`Unknown session "${sessionId}".`);
   }
 
+  if (record.snapshot.status !== "running") {
+    return record.snapshot;
+  }
+
+  record.stopRequestedAt = new Date().toISOString();
+  appendTranscript(record, `${os.EOL}[ops] stop requested by operator${os.EOL}`);
+
   if (record.snapshot.pid) {
     if (process.platform === "win32") {
       await execAsync(`taskkill /PID ${record.snapshot.pid} /T /F`, {
@@ -366,10 +381,6 @@ export async function stopOpsTerminalSession(sessionId: string) {
       record.child.kill("SIGTERM");
     }
   }
-
-  record.snapshot.status = "closed";
-  record.snapshot.updatedAt = new Date().toISOString();
-  record.snapshot.pid = null;
 
   return record.snapshot;
 }

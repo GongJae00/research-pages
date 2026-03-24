@@ -337,36 +337,6 @@ export function HomepageAgentControlSection({
             <TerminalSquare size={20} />
           </div>
 
-          <div className={styles.providerGrid}>
-            {snapshot.providerConnections.map((provider) => (
-              <article className={styles.providerCard} key={provider.providerId}>
-                <div className={styles.providerHead}>
-                  <div>
-                    <strong>{provider.label}</strong>
-                    <span>{provider.cliName}</span>
-                  </div>
-                  <span className={`${styles.statusBadge} ${getProviderStatusClass(provider.status)}`}>
-                    {getProviderStatusLabel(locale, provider.status)}
-                  </span>
-                </div>
-
-                <p>{provider.summary}</p>
-
-                <div className={styles.providerMeta}>
-                  <div>
-                    <span className={styles.metaLabel}>{copy.assignedTeam}</span>
-                    <strong>{provider.assignedTeamLabel}</strong>
-                  </div>
-                  <div>
-                    <span className={styles.metaLabel}>{copy.heartbeat}</span>
-                    <strong>{formatBoardTimestamp(locale, provider.lastHeartbeat)}</strong>
-                  </div>
-                </div>
-
-              </article>
-            ))}
-          </div>
-
           <article className={styles.setupBuilderCard}>
             <div className={styles.panelHead}>
               <div>
@@ -498,6 +468,35 @@ export function HomepageAgentControlSection({
               </div>
             ) : null}
           </article>
+
+          <div className={styles.providerGrid}>
+            {snapshot.providerConnections.map((provider) => (
+              <article className={styles.providerCard} key={provider.providerId}>
+                <div className={styles.providerHead}>
+                  <div>
+                    <strong>{provider.label}</strong>
+                    <span>{provider.cliName}</span>
+                  </div>
+                  <span className={`${styles.statusBadge} ${getProviderStatusClass(provider.status)}`}>
+                    {getProviderStatusLabel(locale, provider.status)}
+                  </span>
+                </div>
+
+                <p>{provider.summary}</p>
+
+                <div className={styles.providerMeta}>
+                  <div>
+                    <span className={styles.metaLabel}>{copy.assignedTeam}</span>
+                    <strong>{provider.assignedTeamLabel}</strong>
+                  </div>
+                  <div>
+                    <span className={styles.metaLabel}>{copy.heartbeat}</span>
+                    <strong>{formatBoardTimestamp(locale, provider.lastHeartbeat)}</strong>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
         </article>
       </div>
 
