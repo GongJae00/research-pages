@@ -11,6 +11,7 @@ const researchOsStateDir = path.join(process.cwd(), ".researchos");
 const autonomyArtifactDir = path.join(researchOsStateDir, "autonomy-artifacts");
 const autonomyExecutionDir = path.join(researchOsStateDir, "autonomy-executions");
 const autonomyLockPath = path.join(researchOsStateDir, "autonomy.lock.json");
+const autonomyRunFilePath = path.join(researchOsStateDir, "run", "autonomy.json");
 const autonomySchemaPath = path.join(researchOsStateDir, "autonomy-plan-schema.json");
 const executionSchemaPath = path.join(researchOsStateDir, "autonomy-execution-schema.json");
 
@@ -360,6 +361,16 @@ async function ensureAutonomyAssets() {
   await writeFile(executionSchemaPath, JSON.stringify(executionSchema, null, 2));
 }
 
+async function readManagedAutonomyPid() {
+  try {
+    const raw = await readFile(autonomyRunFilePath, "utf8");
+    const parsed = JSON.parse(raw);
+    return typeof parsed?.pid === "number" && Number.isFinite(parsed.pid) ? parsed.pid : null;
+  } catch {
+    return null;
+  }
+}
+
 async function acquireAutonomyLock() {
   await mkdir(researchOsStateDir, { recursive: true });
   const token = `${process.pid}-${Date.now()}`;
@@ -392,6 +403,17 @@ async function acquireAutonomyLock() {
         typeof currentLock.pid === "number" && Number.isFinite(currentLock.pid)
           ? currentLock.pid
           : null;
+      const managedAutonomyPid = await readManagedAutonomyPid();
+
+      if (
+        managedAutonomyPid &&
+        managedAutonomyPid === process.pid &&
+        lockPid &&
+        lockPid !== managedAutonomyPid
+      ) {
+        await rm(autonomyLockPath, { force: true });
+        return acquireAutonomyLock();
+      }
 
       if (lockPid && !(await isProcessAlive(lockPid))) {
         await rm(autonomyLockPath, { force: true });
