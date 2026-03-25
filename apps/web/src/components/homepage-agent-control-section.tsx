@@ -384,19 +384,30 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <div className={styles.setupSummaryStrip}>
-                  <span className={styles.summaryInlineChip}>
-                    <span className={styles.metaLabel}>{copy.commandOrder}</span>
-                    <strong>01 -&gt; 02</strong>
-                  </span>
-                  <span className={styles.summaryInlineChip}>
-                    <span className={styles.metaLabel}>{copy.chooseProvider}</span>
-                    <strong>{selectedProvider?.label ?? "-"}</strong>
-                  </span>
-                  <span className={styles.summaryInlineChip}>
-                    <span className={styles.metaLabel}>{copy.chooseTeam}</span>
-                    <strong>{selectedTeam?.name ?? "-"}</strong>
-                  </span>
+                <div className={styles.setupFlowRow}>
+                  <div className={styles.setupFlowStep}>
+                    <span className={styles.commandStep}>1</span>
+                    <div className={styles.setupFlowCopy}>
+                      <span className={styles.metaLabel}>{copy.chooseProvider}</span>
+                      <strong>{selectedProvider?.label ?? "-"}</strong>
+                    </div>
+                  </div>
+                  <ArrowRight size={14} className={styles.setupFlowArrow} />
+                  <div className={styles.setupFlowStep}>
+                    <span className={styles.commandStep}>2</span>
+                    <div className={styles.setupFlowCopy}>
+                      <span className={styles.metaLabel}>{copy.chooseTeam}</span>
+                      <strong>{selectedTeam?.name ?? "-"}</strong>
+                    </div>
+                  </div>
+                  <ArrowRight size={14} className={styles.setupFlowArrow} />
+                  <div className={styles.setupFlowStep}>
+                    <span className={styles.commandStep}>3</span>
+                    <div className={styles.setupFlowCopy}>
+                      <span className={styles.metaLabel}>{copy.setupCommand}</span>
+                      <strong>Connect -&gt; Assign</strong>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className={styles.setupHeaderActions}>
