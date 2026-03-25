@@ -561,7 +561,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.06rem;
-  margin-top: 0.08rem;
+  margin-top: 0.04rem;
 }
 
 .setupHeaderTools {
@@ -598,7 +598,7 @@
   display: inline-flex;
   align-items: baseline;
   gap: 0.2rem;
-  padding: 0.12rem 0.28rem;
+  padding: 0.1rem 0.24rem;
   border: 1px solid rgba(203, 213, 225, 0.68);
   border-radius: 999px;
   background: rgba(248, 250, 252, 0.94);
@@ -624,6 +624,10 @@
   display: grid;
   gap: 0.04rem;
   padding: 0;
+}
+
+.setupCompactBar {
+  display: none;
 }
 
 .setupPickerLabelRow {
@@ -694,7 +698,7 @@
 .copyCard {
   display: grid;
   gap: 0.1rem;
-  padding: 0.14rem 0.18rem;
+  padding: 0.12rem 0.16rem;
 }
 
 .copyMetaRow,

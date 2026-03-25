@@ -381,12 +381,6 @@ export function HomepageAgentControlSection({
                         {getProviderStatusLabel(locale, selectedProvider.status)}
                       </strong>
                     </span>
-                    <span className={styles.summaryChip}>
-                      <span className={styles.setupScanLabel}>{copy.heartbeat}</span>
-                      <strong className={styles.setupScanValue}>
-                        {formatBoardTimestamp(locale, selectedProvider.lastHeartbeat)}
-                      </strong>
-                    </span>
                   </div>
                 ) : null}
               </div>
