@@ -266,7 +266,7 @@
 
 .setupQuickstartGrid {
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.1fr);
   gap: 0.1rem;
 }
 
@@ -310,6 +310,27 @@
   align-items: center;
   gap: 0.34rem;
   min-width: 0;
+}
+
+.selectionDigestRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.24rem;
+  align-items: start;
+}
+
+.selectionDigestItem {
+  display: grid;
+  gap: 0.04rem;
+  min-width: 0;
+}
+
+.selectionDigestKey {
+  color: #64748b;
+  font-size: 0.66rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
 }
 
 .setupMetaRow {
@@ -936,6 +957,11 @@
 
   .setupQuickstartGrid {
     grid-template-columns: 1fr;
+  }
+
+  .selectionDigestRow {
+    grid-template-columns: 1fr;
+    gap: 0.14rem;
   }
 
   .title {
