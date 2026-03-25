@@ -359,6 +359,7 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                <p className={styles.setupTitleHint}>{copy.setupBuilderBody}</p>
               </div>
               <div className={styles.setupHeaderActions}>
                 {setupBriefHref ? (
@@ -371,7 +372,6 @@ export function HomepageAgentControlSection({
             </div>
             {selectedProvider && selectedTeam ? (
               <div className={styles.setupCompactBar} aria-label={copy.activeSetup}>
-                <span className={styles.setupQuickLabel}>{copy.activeSetup}</span>
                 <span className={styles.setupDigestChip}>
                   <span className={styles.setupScanLabel}>{copy.selectedCli}</span>
                   <strong className={styles.setupDigestValue}>{selectedProvider.label}</strong>
