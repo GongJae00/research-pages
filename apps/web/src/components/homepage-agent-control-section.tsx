@@ -295,10 +295,6 @@ export function HomepageAgentControlSection({
             label: copy.chooseTeam,
             value: selectedTeam.name,
           },
-          {
-            label: copy.setupCommand,
-            value: setupCommandCards.map((item) => item.step).join(" + "),
-          },
         ]
       : [];
   const copyCommand = async (kind: "connect" | "assign") => {
@@ -421,6 +417,7 @@ export function HomepageAgentControlSection({
                       {index < setupScanItems.length - 1 ? <span className={styles.selectionArrow}>/</span> : null}
                     </div>
                   ))}
+                  <span className={styles.setupFlowHint}>{copy.commandOrder}</span>
                 </div>
               </div>
             ) : null}
