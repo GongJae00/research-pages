@@ -275,6 +275,26 @@ export function HomepageAgentControlSection({
         },
       ]
     : [];
+  const setupRailItems = [
+    {
+      step: "01",
+      label: copy.chooseProvider,
+      value: selectedProvider?.label ?? "-",
+      detail: selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-",
+    },
+    {
+      step: "02",
+      label: copy.chooseTeam,
+      value: selectedTeam?.name ?? "-",
+      detail: selectedTeam?.lane ?? "-",
+    },
+    {
+      step: "03",
+      label: copy.setupCommand,
+      value: setupCommandCards.map((item) => item.step).join(" / ") || "-",
+      detail: copy.commandOrder,
+    },
+  ];
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
       kind === "connect" ? setupManifest?.commands.connect ?? "" : setupManifest?.commands.assign ?? "";
@@ -375,19 +395,17 @@ export function HomepageAgentControlSection({
               </div>
             </div>
 
-            <div className={styles.selectionSummary}>
-              <div className={styles.selectionCard}>
-                <span className={styles.metaLabel}>{copy.selectedCli}</span>
-                <strong>{selectedProvider?.label ?? "-"}</strong>
-                <p className={styles.compactBody}>
-                  {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
-                </p>
-              </div>
-              <div className={styles.selectionCard}>
-                <span className={styles.metaLabel}>{copy.selectedTeamLabel}</span>
-                <strong>{selectedTeam?.name ?? "-"}</strong>
-                <p className={styles.compactBody}>{selectedTeam?.lane ?? "-"}</p>
-              </div>
+            <div className={styles.setupRail}>
+              {setupRailItems.map((item) => (
+                <div className={styles.selectionCard} key={item.step}>
+                  <div className={styles.selectionHead}>
+                    <span className={styles.commandStep}>{item.step}</span>
+                    <span className={styles.metaLabel}>{item.label}</span>
+                  </div>
+                  <strong>{item.value}</strong>
+                  <p className={styles.compactBody}>{item.detail}</p>
+                </div>
+              ))}
             </div>
 
             <div className={styles.setupPickerGrid}>
@@ -433,11 +451,6 @@ export function HomepageAgentControlSection({
                   ))}
                 </div>
               </div>
-            </div>
-
-            <div className={styles.commandSectionHead}>
-              <span className={styles.metaLabel}>{copy.setupCommand}</span>
-              <span className={styles.inlineMeta}>{copy.commandOrder}</span>
             </div>
 
             <div className={styles.setupCommands}>
