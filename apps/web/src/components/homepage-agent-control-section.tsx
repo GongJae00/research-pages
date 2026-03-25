@@ -370,6 +370,7 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                <p className={styles.compactBody}>{copy.commandOrder}</p>
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.providerSummaryChips}>
@@ -393,6 +394,22 @@ export function HomepageAgentControlSection({
                   </Link>
                 ) : null}
               </div>
+            </div>
+            <div className={styles.setupScanBar} aria-label={copy.setupStepsLabel}>
+              <span className={styles.scanStep}>
+                <span className={styles.commandStep}>01</span>
+                <strong>{copy.chooseProvider}</strong>
+              </span>
+              <ArrowRight size={14} />
+              <span className={styles.scanStep}>
+                <span className={styles.commandStep}>02</span>
+                <strong>{copy.connectCommand}</strong>
+              </span>
+              <ArrowRight size={14} />
+              <span className={styles.scanStep}>
+                <span className={styles.commandStep}>03</span>
+                <strong>{copy.chooseTeam}</strong>
+              </span>
             </div>
             <div className={styles.setupDigestRow}>
               <div className={styles.setupSummaryItem}>

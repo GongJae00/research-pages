@@ -247,7 +247,7 @@
 
 .setupBuilderCard {
   display: grid;
-  gap: 0.02rem;
+  gap: 0.08rem;
   margin-top: 0.08rem;
 }
 
@@ -389,7 +389,7 @@
 
 .setupHeader {
   align-items: center;
-  padding-bottom: 0.12rem;
+  padding-bottom: 0.08rem;
   border-bottom: 1px solid rgba(226, 232, 240, 0.82);
 }
 
@@ -432,6 +432,37 @@
   gap: 0.08rem;
 }
 
+.setupScanBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.12rem 0.02rem 0;
+  color: #64748b;
+}
+
+.setupScanBar svg {
+  color: #94a3b8;
+  flex: 0 0 auto;
+}
+
+.scanStep {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  min-width: 0;
+  padding: 0.18rem 0.26rem;
+  border-radius: 999px;
+  background: rgba(248, 250, 252, 0.96);
+  border: 1px solid rgba(203, 213, 225, 0.72);
+}
+
+.scanStep strong {
+  color: #0f172a;
+  font-size: 0.76rem;
+  line-height: 1.1;
+}
+
 .providerSummaryChips {
   display: flex;
   flex-wrap: wrap;
@@ -471,8 +502,8 @@
 .compactBody {
   margin: 0;
   color: #475569;
-  font-size: 0.84rem;
-  line-height: 1.3;
+  font-size: 0.78rem;
+  line-height: 1.2;
 }
 
 .setupPicker {
@@ -865,6 +896,7 @@
 
   .setupBuilderCard,
   .setupHeader,
+  .setupScanBar,
   .setupDigestRow,
   .setupPickerGrid,
   .setupCommands,
@@ -882,6 +914,7 @@
   .providerSummaryBar,
   .setupHeader,
   .setupHeaderActions,
+  .setupScanBar,
   .setupMetaRow,
   .scanPillValue,
   .setupSummaryItem,
