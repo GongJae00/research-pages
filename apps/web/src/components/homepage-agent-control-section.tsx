@@ -64,6 +64,14 @@ function getProviderStatusClass(status: ProviderStatus) {
   }
 }
 
+function getNextSetupActionLabel(locale: string, status: ProviderStatus) {
+  if (isKoreanLocale(locale)) {
+    return status === "connected" ? "팀 배정" : "CLI 연결";
+  }
+
+  return status === "connected" ? "Assign team" : "Connect CLI";
+}
+
 function getCopy(locale: string, opsEnabled: boolean) {
   if (isKoreanLocale(locale)) {
     return {
@@ -90,6 +98,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
       selectedCli: "선택 CLI",
       selectedTeamLabel: "선택 팀",
       statusLabel: "상태",
+      nextActionLabel: "다음",
       chooseProvider: "CLI 선택",
       chooseTeam: "팀 선택",
       setupCommand: "셋업 명령",
@@ -148,6 +157,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
     selectedCli: "Selected CLI",
     selectedTeamLabel: "Selected team",
     statusLabel: "Status",
+    nextActionLabel: "Next",
     chooseProvider: "Choose CLI",
     chooseTeam: "Choose team",
     setupCommand: "Setup command",
@@ -376,25 +386,25 @@ export function HomepageAgentControlSection({
                   <span className={styles.setupOrderHint} aria-hidden="true">
                     ??                  </span>
                   <span className={styles.setupOrderPill}>{copy.commandOrder}</span>
-                  {selectedProvider && selectedTeam ? (
-                    <span className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
-                      <span className={styles.summaryChip}>
-                        <span className={styles.setupScanLabel}>{copy.selectedCli}</span>
-                        <strong className={styles.setupScanValue}>{selectedProvider.label}</strong>
-                      </span>
-                      <span className={styles.summaryChip}>
-                        <span className={styles.setupScanLabel}>{copy.selectedTeamLabel}</span>
-                        <strong className={styles.setupScanValue}>{selectedTeam.name}</strong>
-                      </span>
-                      <span className={styles.summaryChip}>
-                        <span className={styles.setupScanLabel}>{copy.statusLabel}</span>
-                        <strong className={styles.setupScanValue}>
-                          {getProviderStatusLabel(locale, selectedProvider.status)}
-                        </strong>
-                      </span>
-                    </span>
-                  ) : null}
                 </div>
+                {selectedProvider && selectedTeam ? (
+                  <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
+                    <span className={styles.summaryChip}>
+                      <span className={styles.setupScanLabel}>{copy.selectedCli}</span>
+                      <strong className={styles.setupScanValue}>{selectedProvider.label}</strong>
+                    </span>
+                    <span className={styles.summaryChip}>
+                      <span className={styles.setupScanLabel}>{copy.selectedTeamLabel}</span>
+                      <strong className={styles.setupScanValue}>{selectedTeam.name}</strong>
+                    </span>
+                    <span className={styles.summaryChip}>
+                      <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
+                      <strong className={styles.setupScanValue}>
+                        {getNextSetupActionLabel(locale, selectedProvider.status)}
+                      </strong>
+                    </span>
+                  </div>
+                ) : null}
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
