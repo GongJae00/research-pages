@@ -368,10 +368,10 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <p className={styles.setupBody}>{copy.setupBuilderBody}</p>
                 <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
                   <div className={styles.setupScanRow} aria-label={copy.commandOrder}>
                     <span className={styles.setupScanChip}>
+                      <span className={styles.setupChipStep}>01</span>
                       <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
                       <span className={styles.setupScanValue}>{selectedProvider?.label ?? "-"}</span>
                       {selectedProvider ? (
@@ -383,10 +383,12 @@ export function HomepageAgentControlSection({
                       ) : null}
                     </span>
                     <span className={styles.setupScanChip}>
+                      <span className={styles.setupChipStep}>02</span>
                       <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
                       <span className={styles.setupScanValue}>{selectedTeam?.name ?? "-"}</span>
                     </span>
                     <span className={`${styles.setupScanChip} ${styles.setupScanChipAccent}`}>
+                      <span className={styles.setupChipStep}>Now</span>
                       <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
                       <span className={styles.setupScanValue}>
                         {setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}
