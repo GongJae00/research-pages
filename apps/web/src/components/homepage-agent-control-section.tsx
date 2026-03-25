@@ -448,6 +448,27 @@ export function HomepageAgentControlSection({
               </div>
             </div>
 
+            {selectedProvider && selectedTeam ? (
+              <div className={styles.setupSelectionRow} aria-label={copy.activeSetup}>
+                <div className={styles.setupDigestChip}>
+                  <span className={styles.setupDigestLead}>{copy.selectedCli}</span>
+                  <strong className={styles.setupDigestValue}>{selectedProvider.label}</strong>
+                  <span
+                    className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
+                  >
+                    {getProviderStatusLabel(locale, selectedProvider.status)}
+                  </span>
+                </div>
+                <div className={styles.setupDigestChip}>
+                  <span className={styles.setupDigestLead}>{copy.selectedTeamLabel}</span>
+                  <strong className={styles.setupDigestValue}>{selectedTeam.name}</strong>
+                  <span className={styles.setupScanValue}>
+                    {copy.heartbeat}: {formatBoardTimestamp(locale, selectedProvider.lastHeartbeat)}
+                  </span>
+                </div>
+              </div>
+            ) : null}
+
             <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>
               {setupCommandCards.map((item) => (
                 <div className={styles.copyCard} key={item.kind}>
