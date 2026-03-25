@@ -387,18 +387,24 @@ export function HomepageAgentControlSection({
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
                 <div className={styles.setupScanBar} aria-label={copy.setupStepsLabel}>
-                  <div className={styles.setupDigestItem}>
+                  <span className={styles.setupScanItem}>
                     <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
                     <strong>{selectedProvider?.label ?? "-"}</strong>
-                  </div>
-                  <div className={styles.setupDigestItem}>
+                  </span>
+                  <span className={styles.setupScanDivider} aria-hidden="true">
+                    /
+                  </span>
+                  <span className={styles.setupScanItem}>
                     <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
                     <strong>{selectedTeam?.name ?? "-"}</strong>
-                  </div>
-                  <div className={`${styles.setupDigestItem} ${styles.setupDigestItemAccent}`}>
+                  </span>
+                  <span className={styles.setupScanDivider} aria-hidden="true">
+                    /
+                  </span>
+                  <span className={`${styles.setupScanItem} ${styles.setupScanItemAccent}`}>
                     <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
                     <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
-                  </div>
+                  </span>
                 </div>
               </div>
               <div className={styles.setupHeaderActions}>
