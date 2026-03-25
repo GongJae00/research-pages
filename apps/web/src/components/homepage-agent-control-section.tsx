@@ -142,6 +142,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
     copied: "Copied",
     openBrief: "Open brief",
     commandOrder: "Connect first, assign second",
+    activeSetup: "Active setup",
     selectedCli: "Selected CLI",
     selectedTeamLabel: "Selected team",
     chooseProvider: "Choose CLI",
@@ -395,21 +396,22 @@ export function HomepageAgentControlSection({
                 ) : null}
               </div>
             </div>
-            <div className={styles.setupQuickStartRow} aria-label={copy.commandOrder}>
+            <div className={styles.setupSelectionDigest} aria-label={copy.commandOrder}>
               <span className={styles.setupQuickStartLabel}>{copy.commandOrder}</span>
-              <div className={styles.setupQuickStartSequence}>
+              <div className={styles.setupDigestRow}>
                 <span className={styles.sequencePill}>
                   <span className={styles.commandStep}>01</span>
-                  <strong>{copy.chooseProvider}</strong>
-                  <span className={styles.digestMeta}>{selectedProvider?.label ?? "-"}</span>
-                </span>
-                <span className={styles.sequenceArrow} aria-hidden="true">
-                  <ArrowRight size={14} />
+                  <span className={styles.digestLabelGroup}>
+                    <strong>{copy.chooseProvider}</strong>
+                    <span className={styles.digestMeta}>{selectedProvider?.label ?? "-"}</span>
+                  </span>
                 </span>
                 <span className={styles.sequencePill}>
                   <span className={styles.commandStep}>02</span>
-                  <strong>{copy.chooseTeam}</strong>
-                  <span className={styles.digestMeta}>{selectedTeam?.name ?? "-"}</span>
+                  <span className={styles.digestLabelGroup}>
+                    <strong>{copy.chooseTeam}</strong>
+                    <span className={styles.digestMeta}>{selectedTeam?.name ?? "-"}</span>
+                  </span>
                 </span>
               </div>
             </div>

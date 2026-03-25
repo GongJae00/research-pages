@@ -247,7 +247,7 @@
 
 .setupBuilderCard {
   display: grid;
-  gap: 0.04rem;
+  gap: 0.02rem;
   margin-top: 0.08rem;
 }
 
@@ -279,12 +279,9 @@
   line-height: 1.2;
 }
 
-.setupQuickStartRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.18rem;
+.setupSelectionDigest {
+  display: grid;
+  gap: 0.12rem;
   padding: 0.04rem 0 0;
 }
 
@@ -297,10 +294,9 @@
   text-transform: uppercase;
 }
 
-.setupQuickStartSequence {
+.setupDigestRow {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
   gap: 0.12rem;
 }
 
@@ -332,15 +328,20 @@
 }
 
 .sequencePill {
-  display: flex;
-  flex-wrap: wrap;
+  display: inline-flex;
   align-items: center;
-  gap: 0.24rem;
+  gap: 0.18rem;
   min-width: 0;
-  padding: 0.18rem 0.28rem;
+  padding: 0.14rem 0.22rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 14px;
   background: rgba(248, 250, 252, 0.92);
+}
+
+.digestLabelGroup {
+  display: grid;
+  gap: 0.01rem;
+  min-width: 0;
 }
 
 .sequencePill strong {
@@ -468,7 +469,7 @@
 .setupPicker {
   display: grid;
   gap: 0.06rem;
-  padding: 0.14rem 0.18rem 0.18rem;
+  padding: 0.12rem 0.16rem 0.16rem;
 }
 
 .setupPickerLabelRow {
@@ -518,7 +519,7 @@
 .copyCard {
   display: grid;
   gap: 0.06rem;
-  padding: 0.08rem 0.12rem;
+  padding: 0.08rem 0.1rem;
 }
 
 .copyMetaRow,
@@ -686,7 +687,7 @@
   }
 
   .setupHeader,
-  .setupQuickStartRow,
+  .setupSelectionDigest,
   .setupNotesDisclosure {
     grid-column: 1 / -1;
   }
@@ -852,7 +853,7 @@
 
   .setupBuilderCard,
   .setupHeader,
-  .setupQuickStartRow,
+  .setupSelectionDigest,
   .setupScanBar,
   .setupPickerGrid,
   .setupCommands,
@@ -870,10 +871,8 @@
   .providerSummaryBar,
   .setupHeader,
   .setupHeaderActions,
-  .setupQuickStartRow,
   .setupScanBar,
   .setupMetaRow,
-  .sequencePill,
   .commandTitleLine {
     flex-direction: column;
     align-items: flex-start;
@@ -883,7 +882,7 @@
     justify-content: flex-start;
   }
 
-  .setupQuickStartSequence {
+  .setupDigestRow {
     width: 100%;
   }
 
