@@ -262,8 +262,8 @@
 }
 
 .setupScanBar {
-  display: grid;
-  gap: 0.3rem;
+  display: flex;
+  align-items: center;
   flex: 1 1 auto;
   min-width: 0;
 }

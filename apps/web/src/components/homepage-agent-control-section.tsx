@@ -343,16 +343,6 @@ export function HomepageAgentControlSection({
             <div className={styles.quickStartRail}>
               <div className={styles.setupScanBar}>
                 <span className={styles.orderPill}>{copy.commandOrder}</span>
-                <div className={styles.selectionSummary}>
-                  <div className={styles.selectionCard}>
-                    <span className={styles.metaLabel}>{copy.chooseProvider}</span>
-                    <strong>{selectedProvider?.label ?? copy.chooseProvider}</strong>
-                  </div>
-                  <div className={styles.selectionCard}>
-                    <span className={styles.metaLabel}>{copy.chooseTeam}</span>
-                    <strong>{selectedTeam?.name ?? copy.chooseTeam}</strong>
-                  </div>
-                </div>
               </div>
               <div className={styles.quickStartActions}>
                 {setupBriefHref ? (
