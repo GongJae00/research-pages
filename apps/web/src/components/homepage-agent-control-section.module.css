@@ -560,6 +560,48 @@
   margin-top: 0.02rem;
 }
 
+.setupScanStrip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.04rem;
+  min-width: 0;
+  margin-top: 0.04rem;
+}
+
+.setupScanItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.14rem;
+  min-width: 0;
+  padding: 0.08rem 0.12rem 0.08rem 0.08rem;
+  border: 1px solid rgba(203, 213, 225, 0.6);
+  border-radius: 12px;
+  background: rgba(248, 250, 252, 0.94);
+  flex: 1 1 10rem;
+}
+
+.setupScanCopy {
+  display: grid;
+  gap: 0.01rem;
+  min-width: 0;
+}
+
+.setupScanValueRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.16rem;
+  min-width: 0;
+}
+
+.setupScanArrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+}
+
 .setupSummaryBar {
   display: flex;
   align-items: stretch;
@@ -1152,6 +1194,15 @@
     align-items: stretch;
   }
 
+  .setupScanStrip {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .setupScanItem {
+    width: 100%;
+  }
+
   .setupSummaryBar {
     display: grid;
     grid-template-columns: 1fr;
@@ -1166,6 +1217,10 @@
   }
 
   .summaryFlowArrow {
+    display: none;
+  }
+
+  .setupScanArrow {
     display: none;
   }
 
