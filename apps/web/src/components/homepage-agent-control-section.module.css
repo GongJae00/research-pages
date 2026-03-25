@@ -259,6 +259,11 @@
   gap: 0.45rem;
 }
 
+.setupTopline {
+  display: grid;
+  gap: 0.1rem;
+}
+
 .setupTitleBlock {
   display: grid;
   gap: 0.02rem;
@@ -276,26 +281,31 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.24rem;
+  gap: 0.18rem;
 }
 
-.setupScanRow {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+.setupSelectionBar {
+  display: flex;
+  flex-wrap: wrap;
   gap: 0.12rem;
 }
 
-.setupScanCard,
+.setupSelectionPill,
 .setupSequenceCard {
   display: grid;
   gap: 0.04rem;
   min-width: 0;
-  padding: 0.28rem 0.34rem;
+  padding: 0.24rem 0.34rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 14px;
   background: rgba(248, 250, 252, 0.92);
 }
 
-.setupScanCard strong,
+.setupSelectionPill {
+  flex: 1 1 12rem;
+}
+
+.setupSelectionPill strong,
 .setupSequenceCard strong {
   color: #0f172a;
   font-size: 0.84rem;
@@ -430,7 +440,6 @@
 }
 
 .setupRail,
-.setupScanRow,
 .setupPickerGrid,
 .setupCommands {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -733,12 +742,8 @@
   }
 
   .setupHeader,
-  .setupWorkflowBar,
+  .setupTopline,
   .setupNotesDisclosure {
-    grid-column: 1 / -1;
-  }
-
-  .setupScanRow {
     grid-column: 1 / -1;
   }
 
@@ -894,7 +899,6 @@
   .heroInfoGrid,
   .providerMeta,
   .setupRail,
-  .setupScanRow,
   .setupSummaryStrip,
   .setupPickerGrid,
   .setupCommands,
@@ -904,7 +908,7 @@
 
   .setupBuilderCard,
   .setupHeader,
-  .setupScanRow,
+  .setupTopline,
   .setupPickerGrid,
   .setupCommands,
   .setupNotesDisclosure,
@@ -938,6 +942,11 @@
   .flowPanel,
   .futurePanel {
     padding: 0.9rem;
+  }
+
+  .setupSelectionBar {
+    display: grid;
+    grid-template-columns: 1fr;
   }
 
   .title {
