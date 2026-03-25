@@ -368,30 +368,38 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <div className={styles.setupSummaryStrip} aria-label={copy.activeSetup}>
-                  <div className={styles.setupSummaryItem}>
-                    <span className={styles.metaLabel}>{copy.chooseProvider}</span>
-                    <div className={styles.copyTitleGroup}>
-                      <strong>{selectedProvider?.label ?? "-"}</strong>
-                      {selectedProvider ? (
-                        <span
-                          className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
-                        >
-                          {getProviderStatusLabel(locale, selectedProvider.status)}
-                        </span>
-                      ) : null}
+                <div className={styles.setupScanBar} aria-label={copy.activeSetup}>
+                  <div className={styles.setupScanChip}>
+                    <span className={styles.setupChipStep}>1</span>
+                    <div className={styles.setupScanCopy}>
+                      <span className={styles.metaLabel}>{copy.chooseProvider}</span>
+                      <div className={styles.copyTitleGroup}>
+                        <strong>{selectedProvider?.label ?? "-"}</strong>
+                        {selectedProvider ? (
+                          <span
+                            className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
+                          >
+                            {getProviderStatusLabel(locale, selectedProvider.status)}
+                          </span>
+                        ) : null}
+                      </div>
                     </div>
-                    <span className={styles.digestMeta}>{selectedProvider?.cliName ?? "-"}</span>
                   </div>
-                  <div className={styles.setupSummaryItem}>
-                    <span className={styles.metaLabel}>{copy.chooseTeam}</span>
-                    <strong>{selectedTeam?.name ?? "-"}</strong>
-                    <span className={styles.digestMeta}>{selectedTeam?.lane ?? "-"}</span>
+                  <ArrowRight className={styles.setupScanArrow} size={14} />
+                  <div className={styles.setupScanChip}>
+                    <span className={styles.setupChipStep}>2</span>
+                    <div className={styles.setupScanCopy}>
+                      <span className={styles.metaLabel}>{copy.chooseTeam}</span>
+                      <strong>{selectedTeam?.name ?? "-"}</strong>
+                    </div>
                   </div>
-                  <div className={styles.sequencePill} aria-label={copy.commandOrder}>
-                    <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
-                    <strong>{setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}</strong>
-                    <span className={styles.digestMeta}>{copy.commandOrder}</span>
+                  <ArrowRight className={styles.setupScanArrow} size={14} />
+                  <div className={`${styles.setupScanChip} ${styles.setupScanChipAccent}`} aria-label={copy.commandOrder}>
+                    <span className={styles.setupChipStep}>3</span>
+                    <div className={styles.setupScanCopy}>
+                      <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
+                      <strong>{setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}</strong>
+                    </div>
                   </div>
                 </div>
               </div>
