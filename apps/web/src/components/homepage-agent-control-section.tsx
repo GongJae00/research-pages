@@ -378,7 +378,11 @@ export function HomepageAgentControlSection({
 
           <article className={styles.setupBuilderCard}>
             <div className={styles.setupHeader}>
-              <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
+              <div className={styles.setupTitleBlock}>
+                <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
+                <h4>{copy.setupBuilderTitle}</h4>
+                <p className={styles.setupBody}>{copy.setupBuilderBody}</p>
+              </div>
               <div className={styles.setupHeaderActions}>
                 <span className={styles.orderPill}>{copy.commandOrder}</span>
                 <Command size={18} />
