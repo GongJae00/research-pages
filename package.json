@@ -12,6 +12,7 @@
     "dev": "corepack pnpm -r --parallel --if-present dev",
     "ops": "node scripts/agent-ops.mjs",
     "ops:autonomy": "node scripts/agent-ops-daemon.mjs",
+    "ops:supervisor": "node scripts/ops-supervisor.mjs",
     "ops:stack": "node scripts/ops-stack.mjs",
     "build": "corepack pnpm -r --if-present build",
     "lint": "corepack pnpm -r --if-present lint",

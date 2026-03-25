@@ -86,8 +86,21 @@ interface OpsStackProcessMeta {
 
 interface OpsStackStatusSnapshot {
   checkedAt: string;
+  supervisor: OpsStackProcessMeta | null;
   web: OpsStackProcessMeta | null;
   autonomy: OpsStackProcessMeta | null;
+  health:
+    | {
+        status: "healthy" | "recovering" | "degraded";
+        tickMs: number | null;
+        lastHeartbeatAt: string | null;
+        lastRestartReason: string | null;
+        webRestartCount: number;
+        autonomyRestartCount: number;
+        observedLoopCount: number;
+        autonomyStateUpdatedAt: string | null;
+      }
+    | null;
   controlRoomUrl: string;
 }
 
@@ -339,6 +352,19 @@ function getProviderStatusLabel(locale: string, status: ProviderStatus) {
   if (status === "connected") return "연결됨";
   if (status === "ready") return "준비됨";
   return "확인 필요";
+}
+
+function getStackHealthLabel(
+  locale: string,
+  status: "healthy" | "recovering" | "degraded",
+) {
+  if (status === "recovering") {
+    return t(locale, "복구 중", "Recovering");
+  }
+  if (status === "degraded") {
+    return t(locale, "주의", "Degraded");
+  }
+  return t(locale, "정상", "Healthy");
 }
 
 function formatActorLabel(locale: string, actor: string) {
@@ -1000,11 +1026,14 @@ export function AgentOperationsControlRoom({
           <article className={styles.missionBarCard}>
             <span className={styles.agentLabel}>{copy.missionStackLabel}</span>
             <strong className={styles.missionBarValue}>
-              {stackStatus?.autonomy?.running || stackStatus?.web?.running
+              {stackStatus?.supervisor?.running || stackStatus?.autonomy?.running || stackStatus?.web?.running
                 ? copy.processRunning
                 : copy.processStopped}
             </strong>
             <p className={styles.missionBarBody}>
+              {t(locale, "감독자", "Supervisor")}:{" "}
+              {stackStatus?.supervisor?.running ? copy.processRunning : copy.processStopped}
+              {" · "}
               {copy.webProcessLabel}: {stackStatus?.web?.running ? copy.processRunning : copy.processStopped}
               {" · "}
               {copy.autonomyProcessLabel}: {stackStatus?.autonomy?.running ? copy.processRunning : copy.processStopped}
@@ -1012,10 +1041,14 @@ export function AgentOperationsControlRoom({
             <div className={styles.missionBarMeta}>
               <span
                 className={`${styles.statusBadge} ${
-                  stackStatus?.autonomy?.running ? styles.statusActive : styles.statusReview
+                  stackStatus?.health?.status === "recovering"
+                    ? styles.statusQueued
+                    : stackStatus?.health?.status === "degraded"
+                      ? styles.statusReview
+                      : styles.statusActive
                 }`}
               >
-                {copy.autonomyProcessLabel}
+                {getStackHealthLabel(locale, stackStatus?.health?.status ?? "healthy")}
               </span>
               <span>{stackStatus ? formatBoardTimestamp(locale, stackStatus.checkedAt) : copy.stackStatus}</span>
             </div>
@@ -1535,6 +1568,16 @@ export function AgentOperationsControlRoom({
                 <span className={styles.agentLabel}>{copy.missionStackLabel}</span>
                 <div className={styles.assistantMiniList}>
                   <div className={styles.assistantMiniRow}>
+                    <strong>{t(locale, "감독자", "Supervisor")}</strong>
+                    <span
+                      className={`${styles.statusBadge} ${
+                        stackStatus?.supervisor?.running ? styles.statusActive : styles.statusReview
+                      }`}
+                    >
+                      {stackStatus?.supervisor?.running ? copy.processRunning : copy.processStopped}
+                    </span>
+                  </div>
+                  <div className={styles.assistantMiniRow}>
                     <strong>{copy.webProcessLabel}</strong>
                     <span
                       className={`${styles.statusBadge} ${
@@ -1554,6 +1597,22 @@ export function AgentOperationsControlRoom({
                       {stackStatus?.autonomy?.running ? copy.processRunning : copy.processStopped}
                     </span>
                   </div>
+                  {stackStatus?.health ? (
+                    <div className={styles.assistantMiniRow}>
+                      <strong>{t(locale, "감독 상태", "Supervisor health")}</strong>
+                      <span
+                        className={`${styles.statusBadge} ${
+                          stackStatus.health.status === "recovering"
+                            ? styles.statusQueued
+                            : stackStatus.health.status === "degraded"
+                              ? styles.statusReview
+                              : styles.statusActive
+                        }`}
+                      >
+                        {getStackHealthLabel(locale, stackStatus.health.status)}
+                      </span>
+                    </div>
+                  ) : null}
                   {snapshot.providerConnections.map((provider) => (
                     <div className={styles.assistantMiniRow} key={provider.providerId}>
                       <strong>{provider.label}</strong>

@@ -14,8 +14,12 @@ const execFile = promisify(execFileCallback);
 
 const stateDir = path.join(process.cwd(), ".researchos");
 const runDir = path.join(stateDir, "run");
+const supervisorPidFile = path.join(runDir, "supervisor.json");
+const supervisorStateFile = path.join(stateDir, "supervisor-state.json");
 const webPidFile = path.join(runDir, "web.json");
 const autonomyPidFile = path.join(runDir, "autonomy.json");
+const supervisorOut = path.join(stateDir, "ops-supervisor.stdout.log");
+const supervisorErr = path.join(stateDir, "ops-supervisor.stderr.log");
 const webOut = path.join(stateDir, "dev-web.stdout.log");
 const webErr = path.join(stateDir, "dev-web.stderr.log");
 const autonomyOut = path.join(stateDir, "autonomy-daemon.stdout.log");
@@ -139,58 +143,37 @@ async function runBridgeAutonomyOn() {
 
 async function startStack() {
   await ensureDirs();
-  await runBridgeAutonomyOn();
-
+  const supervisorMeta = await readPidFile(supervisorPidFile);
   const webMeta = await readPidFile(webPidFile);
   const autonomyMeta = await readPidFile(autonomyPidFile);
+  const supervisorRunning = supervisorMeta ? await isProcessAlive(supervisorMeta.pid) : false;
   const webRunning = webMeta ? await isProcessAlive(webMeta.pid) : false;
   const autonomyRunning = autonomyMeta ? await isProcessAlive(autonomyMeta.pid) : false;
-
-  const status = {
-    startedAt: nowIso(),
-    web: webMeta ?? null,
-    autonomy: autonomyMeta ?? null,
-  };
-
-  if (!webRunning) {
-    const { stdoutHandle, stderrHandle } = await openLogPair(webOut, webErr);
-    const webChild = process.platform === "win32"
-      ? spawnDetached("cmd.exe", ["/d", "/s", "/c", "corepack pnpm dev:web"], process.cwd(), stdoutHandle.fd, stderrHandle.fd)
-      : spawnDetached("sh", ["-lc", "corepack pnpm dev:web"], process.cwd(), stdoutHandle.fd, stderrHandle.fd);
-    await writePidFile(webPidFile, {
-      pid: webChild.pid ?? null,
-      command: "corepack pnpm dev:web",
-      startedAt: nowIso(),
-      stdout: path.relative(process.cwd(), webOut).replace(/\\/g, "/"),
-      stderr: path.relative(process.cwd(), webErr).replace(/\\/g, "/"),
-    });
-    await stdoutHandle.close();
-    await stderrHandle.close();
-    status.web = await readPidFile(webPidFile);
-  }
-
-  if (!autonomyRunning) {
-    const { stdoutHandle, stderrHandle } = await openLogPair(autonomyOut, autonomyErr);
-    const autonomyChild = spawnDetached(
+  if (!supervisorRunning) {
+    await runBridgeAutonomyOn();
+    const { stdoutHandle, stderrHandle } = await openLogPair(supervisorOut, supervisorErr);
+    const supervisorChild = spawnDetached(
       process.execPath,
-      ["scripts/agent-ops-daemon.mjs"],
+      ["scripts/ops-supervisor.mjs"],
       process.cwd(),
       stdoutHandle.fd,
       stderrHandle.fd,
     );
-    await writePidFile(autonomyPidFile, {
-      pid: autonomyChild.pid ?? null,
-      command: "node scripts/agent-ops-daemon.mjs",
+    await writePidFile(supervisorPidFile, {
+      pid: supervisorChild.pid ?? null,
+      command: "node scripts/ops-supervisor.mjs",
       startedAt: nowIso(),
-      stdout: path.relative(process.cwd(), autonomyOut).replace(/\\/g, "/"),
-      stderr: path.relative(process.cwd(), autonomyErr).replace(/\\/g, "/"),
+      stdout: path.relative(process.cwd(), supervisorOut).replace(/\\/g, "/"),
+      stderr: path.relative(process.cwd(), supervisorErr).replace(/\\/g, "/"),
     });
     await stdoutHandle.close();
     await stderrHandle.close();
-    status.autonomy = await readPidFile(autonomyPidFile);
+    await new Promise((resolve) => setTimeout(resolve, 1200));
+  } else if (!webRunning || !autonomyRunning) {
+    await runBridgeAutonomyOn();
   }
 
-  return status;
+  return statusStack();
 }
 
 async function stopPid(meta, pidFile) {
@@ -214,30 +197,71 @@ async function stopPid(meta, pidFile) {
 }
 
 async function stopStack() {
+  const supervisorMeta = await readPidFile(supervisorPidFile);
   const webMeta = await readPidFile(webPidFile);
   const autonomyMeta = await readPidFile(autonomyPidFile);
+  const supervisorStopped = await stopPid(supervisorMeta, supervisorPidFile);
   const webStopped = await stopPid(webMeta, webPidFile);
   const autonomyStopped = await stopPid(autonomyMeta, autonomyPidFile);
+  await rm(supervisorStateFile, { force: true });
 
   return {
     stoppedAt: nowIso(),
+    supervisorStopped,
     webStopped,
     autonomyStopped,
   };
 }
 
 async function statusStack() {
+  const supervisorMeta = await readPidFile(supervisorPidFile);
+  const supervisorState = await readPidFile(supervisorStateFile);
   const webMeta = await readPidFile(webPidFile);
   const autonomyMeta = await readPidFile(autonomyPidFile);
 
   return {
     checkedAt: nowIso(),
+    supervisor: supervisorMeta
+      ? { ...supervisorMeta, running: await isProcessAlive(supervisorMeta.pid) }
+      : null,
     web: webMeta
       ? { ...webMeta, running: await isProcessAlive(webMeta.pid) }
       : null,
     autonomy: autonomyMeta
       ? { ...autonomyMeta, running: await isProcessAlive(autonomyMeta.pid) }
       : null,
+    health:
+      supervisorState && typeof supervisorState === "object"
+        ? {
+            status:
+              typeof supervisorState.status === "string" ? supervisorState.status : "healthy",
+            tickMs: typeof supervisorState.tickMs === "number" ? supervisorState.tickMs : null,
+            lastHeartbeatAt:
+              typeof supervisorState.lastHeartbeatAt === "string"
+                ? supervisorState.lastHeartbeatAt
+                : null,
+            lastRestartReason:
+              typeof supervisorState.lastRestartReason === "string"
+                ? supervisorState.lastRestartReason
+                : null,
+            webRestartCount:
+              typeof supervisorState.webRestartCount === "number"
+                ? supervisorState.webRestartCount
+                : 0,
+            autonomyRestartCount:
+              typeof supervisorState.autonomyRestartCount === "number"
+                ? supervisorState.autonomyRestartCount
+                : 0,
+            observedLoopCount:
+              typeof supervisorState.observedLoopCount === "number"
+                ? supervisorState.observedLoopCount
+                : 0,
+            autonomyStateUpdatedAt:
+              typeof supervisorState.autonomyStateUpdatedAt === "string"
+                ? supervisorState.autonomyStateUpdatedAt
+                : null,
+          }
+        : null,
     controlRoomUrl: "http://localhost:3000/ko/ops",
   };
 }
