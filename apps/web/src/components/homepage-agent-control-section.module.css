@@ -292,14 +292,14 @@
 .setupTitleBlock {
   margin: 0;
   display: grid;
-  gap: 0.03rem;
+  gap: 0.02rem;
 }
 
 .setupScanBar {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.08rem;
-  margin-top: 0;
+  margin-top: 0.02rem;
 }
 
 .setupScanCopy {
@@ -400,46 +400,6 @@
   font-size: 0.82rem;
   line-height: 1.08;
   max-width: 20rem;
-}
-
-.setupQuickSummary {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.12rem;
-  margin: 0;
-  min-width: 0;
-}
-
-.setupQuickItem {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.12rem;
-  min-width: 0;
-}
-
-.setupQuickLabel {
-  color: #64748b;
-  font-size: 0.58rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.setupQuickItem strong {
-  min-width: 0;
-  color: #0f172a;
-  font-size: 0.7rem;
-  line-height: 1.15;
-  overflow-wrap: anywhere;
-}
-
-.setupQuickDivider {
-  color: #94a3b8;
-  font-size: 0.7rem;
-  font-weight: 700;
-  line-height: 1;
 }
 
 .setupBody {
@@ -1326,14 +1286,6 @@
 
   .setupScanBar {
     grid-template-columns: 1fr;
-  }
-
-  .setupQuickSummary {
-    align-items: flex-start;
-  }
-
-  .setupQuickDivider {
-    display: none;
   }
 
   .setupTitleRow {
