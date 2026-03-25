@@ -450,20 +450,6 @@ export function HomepageAgentControlSection({
               </div>
             </div>
 
-            <div className={styles.setupCommandsHeader} aria-label={copy.commandOrder}>
-              <span className={styles.setupQuickStartLabel}>{copy.commandOrder}</span>
-              <div className={styles.setupSelectionInline}>
-                <span className={styles.selectionInlineItem}>
-                  <strong>{copy.chooseProvider}</strong>
-                  <span>{selectedProvider?.label ?? "-"}</span>
-                </span>
-                <span className={styles.selectionInlineItem}>
-                  <strong>{copy.chooseTeam}</strong>
-                  <span>{selectedTeam?.name ?? "-"}</span>
-                </span>
-              </div>
-            </div>
-
             <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>
               {setupCommandCards.map((item) => (
                 <div className={styles.copyCard} key={item.kind}>
