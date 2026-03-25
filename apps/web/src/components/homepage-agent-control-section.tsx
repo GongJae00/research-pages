@@ -389,7 +389,35 @@ export function HomepageAgentControlSection({
                       <strong>{setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}</strong>
                     </div>
                   </div>
-                  <span className={styles.summaryInlineHint}>{copy.commandOrder}</span>
+                  <div className={styles.setupFlowBar} aria-label={copy.commandOrder}>
+                    <span className={styles.setupFlowItem}>
+                      <span className={styles.setupFlowIndex}>1</span>
+                      <span className={styles.setupFlowCopy}>
+                        <span className={styles.setupFlowLabel}>{copy.chooseProvider}</span>
+                        <strong>{selectedProvider?.label ?? "-"}</strong>
+                      </span>
+                    </span>
+                    <span className={styles.setupFlowArrow} aria-hidden="true">
+                      <ArrowRight size={12} />
+                    </span>
+                    <span className={styles.setupFlowItem}>
+                      <span className={styles.setupFlowIndex}>2</span>
+                      <span className={styles.setupFlowCopy}>
+                        <span className={styles.setupFlowLabel}>{copy.chooseTeam}</span>
+                        <strong>{selectedTeam?.name ?? "-"}</strong>
+                      </span>
+                    </span>
+                    <span className={styles.setupFlowArrow} aria-hidden="true">
+                      <ArrowRight size={12} />
+                    </span>
+                    <span className={`${styles.setupFlowItem} ${styles.setupFlowItemAccent}`}>
+                      <span className={styles.setupFlowIndex}>3</span>
+                      <span className={styles.setupFlowCopy}>
+                        <span className={styles.setupFlowLabel}>{copy.nextActionLabel}</span>
+                        <strong>{setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}</strong>
+                      </span>
+                    </span>
+                  </div>
                 </div>
               </div>
               <div className={styles.setupHeaderActions}>
