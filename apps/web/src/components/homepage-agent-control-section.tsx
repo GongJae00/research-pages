@@ -364,14 +364,6 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
-                  <span className={styles.setupOrderValue}>{copy.commandOrder}</span>
-                </div>
-                <div className={styles.setupGuide} aria-label={copy.setupStepsLabel}>
-                  <span>{copy.chooseProvider}</span>
-                  <ArrowRight size={12} />
-                  <span>{copy.chooseTeam}</span>
-                  <ArrowRight size={12} />
-                  <span>{copy.setupCommand}</span>
                 </div>
                 <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
                   <div className={styles.setupSummaryBar}>
@@ -490,9 +482,6 @@ export function HomepageAgentControlSection({
                         <strong className={styles.commandTitle}>{item.title}</strong>
                       </div>
                     </div>
-                  </div>
-                  <div className={styles.commandRow}>
-                    <code>{item.command}</code>
                     <button
                       type="button"
                       className={`${styles.copyButton} ${styles.copyIconButton}`}
@@ -505,6 +494,9 @@ export function HomepageAgentControlSection({
                         {copiedCommand === item.kind ? copy.copied : item.buttonLabel}
                       </span>
                     </button>
+                  </div>
+                  <div className={styles.commandRow}>
+                    <code>{item.command}</code>
                   </div>
                 </div>
               ))}
