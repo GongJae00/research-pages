@@ -384,9 +384,10 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                <p className={styles.setupBody}>{copy.setupBuilderBody}</p>
                 <div className={styles.setupDigestBar} aria-label={copy.activeSetup}>
-                  <span className={styles.setupQuickLabel}>{copy.commandOrder}</span>
                   <div className={styles.setupDigestChip}>
+                    <span className={styles.setupDigestOrdinal}>01</span>
                     <span className={styles.setupDigestLead}>{copy.chooseProvider}</span>
                     <span className={styles.setupDigestValue}>{selectedProvider?.label ?? "-"}</span>
                     {selectedProvider ? (
@@ -398,11 +399,12 @@ export function HomepageAgentControlSection({
                     ) : null}
                   </div>
                   <div className={styles.setupDigestChip}>
+                    <span className={styles.setupDigestOrdinal}>02</span>
                     <span className={styles.setupDigestLead}>{copy.chooseTeam}</span>
                     <span className={styles.setupDigestValue}>{selectedTeam?.name ?? "-"}</span>
                   </div>
                   <div className={`${styles.setupDigestChip} ${styles.setupDigestChipAccent}`}>
-                    <span className={styles.commandStep}>{nextCommandKind === "connect" ? "01" : "02"}</span>
+                    <span className={styles.setupDigestOrdinal}>03</span>
                     <div className={styles.digestLabelGroup}>
                       <span className={styles.setupDigestLabel}>{copy.nextActionLabel}</span>
                       <span className={styles.digestMeta}>
