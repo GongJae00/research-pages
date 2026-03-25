@@ -562,12 +562,12 @@
   justify-content: flex-end;
 }
 
-.setupSummaryBar {
-  display: flex;
+.setupSummaryInline {
+  display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.06rem;
-  margin-top: -0.02rem;
+  min-width: 0;
 }
 
 .setupHeaderTools {
@@ -877,7 +877,6 @@
     grid-column: 1 / -1;
   }
 
-  .setupSummaryBar,
   .setupPickerGrid {
     grid-column: 1;
   }
@@ -1036,10 +1035,6 @@
   .setupPickerGrid,
   .setupCommands,
   .setupNotesGrid,
-  .setupSummaryBar {
-    grid-template-columns: 1fr;
-  }
-
   .setupBuilderCard,
   .setupHeader,
   .setupPickerGrid,
@@ -1074,6 +1069,10 @@
 
   .providerSummaryChips {
     justify-content: flex-start;
+  }
+
+  .setupSummaryInline {
+    width: 100%;
   }
 
   .setupFlowRow {

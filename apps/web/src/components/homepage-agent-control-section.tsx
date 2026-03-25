@@ -376,25 +376,25 @@ export function HomepageAgentControlSection({
                   <span className={styles.setupOrderHint} aria-hidden="true">
                     ??                  </span>
                   <span className={styles.setupOrderPill}>{copy.commandOrder}</span>
+                  {selectedProvider && selectedTeam ? (
+                    <span className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
+                      <span className={styles.summaryChip}>
+                        <span className={styles.setupScanLabel}>{copy.selectedCli}</span>
+                        <strong className={styles.setupScanValue}>{selectedProvider.label}</strong>
+                      </span>
+                      <span className={styles.summaryChip}>
+                        <span className={styles.setupScanLabel}>{copy.selectedTeamLabel}</span>
+                        <strong className={styles.setupScanValue}>{selectedTeam.name}</strong>
+                      </span>
+                      <span className={styles.summaryChip}>
+                        <span className={styles.setupScanLabel}>{copy.statusLabel}</span>
+                        <strong className={styles.setupScanValue}>
+                          {getProviderStatusLabel(locale, selectedProvider.status)}
+                        </strong>
+                      </span>
+                    </span>
+                  ) : null}
                 </div>
-                {selectedProvider && selectedTeam ? (
-                  <div className={styles.setupSummaryBar} aria-label={copy.activeSetup}>
-                    <span className={styles.summaryChip}>
-                      <span className={styles.setupScanLabel}>{copy.selectedCli}</span>
-                      <strong className={styles.setupScanValue}>{selectedProvider.label}</strong>
-                    </span>
-                    <span className={styles.summaryChip}>
-                      <span className={styles.setupScanLabel}>{copy.selectedTeamLabel}</span>
-                      <strong className={styles.setupScanValue}>{selectedTeam.name}</strong>
-                    </span>
-                    <span className={styles.summaryChip}>
-                      <span className={styles.setupScanLabel}>{copy.statusLabel}</span>
-                      <strong className={styles.setupScanValue}>
-                        {getProviderStatusLabel(locale, selectedProvider.status)}
-                      </strong>
-                    </span>
-                  </div>
-                ) : null}
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
