@@ -145,19 +145,19 @@ function getCopy(locale: string, opsEnabled: boolean) {
     providersBody:
       "Each developer registers a local CLI session with the bridge, and this page keeps connection state and team ownership visible.",
     setupBuilderLabel: "Homepage setup builder",
-    setupBuilderTitle: "Pick a CLI, assign a team, run the commands",
+    setupBuilderTitle: "Attach a CLI in two commands",
     connectCommand: "Copy connect command",
     assignCommand: "Copy assign command",
     copied: "Copied",
-    openBrief: "Open brief",
+    openBrief: "Brief",
     commandOrder: "Connect first, assign second",
     activeSetup: "Active setup",
     selectedCli: "Selected CLI",
     selectedTeamLabel: "Selected team",
     statusLabel: "Status",
     nextActionLabel: "Next",
-    chooseProvider: "Choose CLI",
-    chooseTeam: "Choose team",
+    chooseProvider: "CLI",
+    chooseTeam: "Team",
     setupCommand: "Setup command",
     assignedTeam: "Assigned team",
     heartbeat: "Recent update",
@@ -399,20 +399,6 @@ export function HomepageAgentControlSection({
                       <span className={styles.summaryChipCopy}>
                         <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
                         <strong className={styles.setupScanValue}>{selectedTeam?.name ?? "-"}</strong>
-                      </span>
-                    </span>
-                    <span className={styles.summaryFlowArrow} aria-hidden="true">
-                      <ArrowRight size={14} />
-                    </span>
-                    <span className={`${styles.summaryChip} ${styles.summaryChipAction}`}>
-                      <span className={styles.commandStep}>03</span>
-                      <span className={styles.summaryChipCopy}>
-                        <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
-                        <strong className={styles.setupScanValue}>
-                          {selectedProvider
-                            ? getNextSetupActionLabel(locale, selectedProvider.status)
-                            : copy.setupCommand}
-                        </strong>
                       </span>
                     </span>
                   </div>
