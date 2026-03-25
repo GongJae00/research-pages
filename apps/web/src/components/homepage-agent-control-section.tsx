@@ -364,7 +364,20 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <p className={styles.setupLead}>{copy.setupBuilderBody}</p>
+                <div className={styles.setupRunOrder} aria-label={copy.commandOrder}>
+                  <span className={styles.setupRunOrderLabel}>{copy.commandOrder}</span>
+                  <span className={styles.setupRunOrderStep}>
+                    <span className={styles.commandStep}>01</span>
+                    {isKoreanLocale(locale) ? "CLI 연결" : "Connect CLI"}
+                  </span>
+                  <span className={styles.setupRunOrderArrow} aria-hidden="true">
+                    →
+                  </span>
+                  <span className={styles.setupRunOrderStep}>
+                    <span className={styles.commandStep}>02</span>
+                    {isKoreanLocale(locale) ? "팀 배정" : "Assign team"}
+                  </span>
+                </div>
                 {selectedProvider && selectedTeam ? (
                   <div className={styles.setupSummaryBar} aria-label={copy.activeSetup}>
                     <span className={styles.summaryChip}>
