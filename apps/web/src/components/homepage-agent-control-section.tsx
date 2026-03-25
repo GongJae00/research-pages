@@ -79,13 +79,17 @@ function getCopy(locale: string, opsEnabled: boolean) {
       providersBody:
         "브라우저가 로컬 터미널을 직접 제어하지는 않지만, 각 개발자는 CLI 세션을 로컬 브리지에 등록하고 이 페이지에서 연결 상태를 확인할 수 있습니다.",
       setupBuilderLabel: "홈페이지 셋업 빌더",
-      setupBuilderTitle: "provider와 팀을 고르면 연결 명령을 바로 생성",
-      setupBuilderBody: "CLI 선택 후 connect, assign만 실행하면 됩니다.",
+      setupBuilderTitle: "CLI와 팀을 고르면 바로 실행 순서가 정리됩니다",
+      setupBuilderBody: "선택 후 connect, assign 순서만 따라가면 됩니다.",
       connectCommand: "연결 명령 복사",
       assignCommand: "재배정 명령 복사",
       copied: "복사됨",
       openBrief: "브리프 열기",
       commandOrder: "연결 후 배정",
+      activeSetup: "현재 셋업",
+      selectedCli: "선택 CLI",
+      selectedTeamLabel: "선택 팀",
+      statusLabel: "상태",
       chooseProvider: "CLI 선택",
       chooseTeam: "팀 선택",
       setupCommand: "셋업 명령",
@@ -133,8 +137,8 @@ function getCopy(locale: string, opsEnabled: boolean) {
     providersBody:
       "Each developer registers a local CLI session with the bridge, and this page keeps connection state and team ownership visible.",
     setupBuilderLabel: "Homepage setup builder",
-    setupBuilderTitle: "Connect a CLI and assign a team",
-    setupBuilderBody: "Pick a CLI, then run connect and assign.",
+    setupBuilderTitle: "Pick a CLI and team, then follow the run order",
+    setupBuilderBody: "Choose once, then run connect and assign in sequence.",
     connectCommand: "Copy connect command",
     assignCommand: "Copy assign command",
     copied: "Copied",
@@ -143,6 +147,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
     activeSetup: "Active setup",
     selectedCli: "Selected CLI",
     selectedTeamLabel: "Selected team",
+    statusLabel: "Status",
     chooseProvider: "Choose CLI",
     chooseTeam: "Choose team",
     setupCommand: "Setup command",
@@ -373,13 +378,13 @@ export function HomepageAgentControlSection({
             {selectedProvider && selectedTeam ? (
               <div className={styles.setupCompactBar} aria-label={copy.activeSetup}>
                 <span className={styles.setupDigestChip}>
+                  <span className={styles.commandStep}>01</span>
                   <span className={styles.setupScanLabel}>{copy.selectedCli}</span>
                   <strong className={styles.setupDigestValue}>{selectedProvider.label}</strong>
                 </span>
                 <span className={styles.setupDigestChip}>
-                  <span className={styles.setupScanLabel}>
-                    {isKoreanLocale(locale) ? "Status" : "Status"}
-                  </span>
+                  <span className={styles.commandStep}>02</span>
+                  <span className={styles.setupScanLabel}>{copy.statusLabel}</span>
                   <strong
                     className={`${styles.setupDigestValue} ${getProviderStatusClass(selectedProvider.status)}`}
                   >
@@ -387,6 +392,7 @@ export function HomepageAgentControlSection({
                   </strong>
                 </span>
                 <span className={styles.setupDigestChip}>
+                  <span className={styles.commandStep}>03</span>
                   <span className={styles.setupScanLabel}>{copy.selectedTeamLabel}</span>
                   <strong className={styles.setupDigestValue}>{selectedTeam.name}</strong>
                 </span>

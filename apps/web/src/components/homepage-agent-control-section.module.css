@@ -448,7 +448,7 @@
   align-items: center;
   gap: 0.28rem;
   min-width: 0;
-  padding: 0.12rem 0.3rem;
+  padding: 0.12rem 0.34rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 999px;
   background: rgba(248, 250, 252, 0.92);
@@ -460,6 +460,13 @@
   font-size: 0.72rem;
   line-height: 1.15;
   overflow-wrap: anywhere;
+}
+
+.setupCompactBar .commandStep {
+  width: 1.15rem;
+  height: 1.15rem;
+  font-size: 0.58rem;
+  flex: 0 0 1.15rem;
 }
 
 .panelHeadCopy {
