@@ -456,11 +456,6 @@ export function HomepageAgentControlSection({
               </div>
             </div>
 
-            <div className={styles.setupCommandsHeader}>
-              <span className={styles.metaLabel}>{copy.setupStepsLabel}</span>
-              <strong>{copy.commandOrder}</strong>
-            </div>
-
             <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>
               {setupCommandCards.map((item) => (
                 <div className={styles.copyCard} key={item.kind}>
@@ -472,6 +467,7 @@ export function HomepageAgentControlSection({
                         <strong>{item.kind === "connect" ? `${item.title} CLI` : item.title}</strong>
                       </div>
                     </div>
+                    <span className={styles.commandSequenceHint}>{copy.commandOrder}</span>
                   </div>
                   <div className={styles.commandRow}>
                     <code>{item.command}</code>
