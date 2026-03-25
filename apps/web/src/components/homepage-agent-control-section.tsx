@@ -572,7 +572,7 @@ export function HomepageAgentControlSection({
             {snapshot.providerConnections.map((provider) => (
               <article className={styles.providerCard} key={provider.providerId}>
                 <div className={styles.providerHead}>
-                  <div>
+                  <div className={styles.providerIdentity}>
                     <strong>{provider.label}</strong>
                     <span>{provider.cliName}</span>
                   </div>
@@ -581,19 +581,19 @@ export function HomepageAgentControlSection({
                   </span>
                 </div>
 
-                <div className={styles.providerMetaCompact}>
-                  <div className={styles.providerMetaChip}>
+                <div className={styles.providerMetaInline}>
+                  <span className={styles.providerMetaItem}>
                     <span className={styles.metaLabel}>{copy.assignedTeam}</span>
                     <strong>{provider.assignedTeamLabel}</strong>
-                  </div>
-                  <div className={styles.providerMetaChip}>
+                  </span>
+                  <span className={styles.providerMetaItem}>
                     <span className={styles.metaLabel}>{copy.heartbeat}</span>
                     <strong>{formatBoardTimestamp(locale, provider.lastHeartbeat)}</strong>
-                  </div>
-                  <div className={styles.providerMetaChip}>
+                  </span>
+                  <span className={styles.providerMetaItem}>
                     <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
                     <strong>{getNextSetupActionLabel(locale, provider.status)}</strong>
-                  </div>
+                  </span>
                 </div>
               </article>
             ))}
