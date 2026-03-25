@@ -350,12 +350,24 @@ export function HomepageAgentControlSection({
               <Command size={20} />
             </div>
             <div className={styles.quickStartRail}>
-              <div className={styles.quickStartSummary}>
-                {quickSetupSteps.map((step) => (
-                  <div className={styles.stepChip} key={step}>
-                    {step}
+              <div className={styles.setupScanBar}>
+                <div className={styles.selectionSummary}>
+                  <div className={styles.selectionCard}>
+                    <span className={styles.metaLabel}>{copy.chooseProvider}</span>
+                    <strong>{selectedProvider?.label ?? copy.chooseProvider}</strong>
                   </div>
-                ))}
+                  <div className={styles.selectionCard}>
+                    <span className={styles.metaLabel}>{copy.chooseTeam}</span>
+                    <strong>{selectedTeam?.name ?? copy.chooseTeam}</strong>
+                  </div>
+                </div>
+                <div className={styles.quickStartSummary}>
+                  {quickSetupSteps.map((step) => (
+                    <div className={styles.stepChip} key={step}>
+                      {step}
+                    </div>
+                  ))}
+                </div>
               </div>
               <div className={styles.quickStartActions}>
                 <span className={styles.quickStartHint}>{copy.commandOrder}</span>
@@ -366,17 +378,6 @@ export function HomepageAgentControlSection({
                   </Link>
                 ) : null}
               </div>
-            </div>
-
-            <div className={styles.selectionSummary}>
-                <div className={styles.selectionCard}>
-                  <span className={styles.metaLabel}>{copy.chooseProvider}</span>
-                  <strong>{selectedProvider?.label ?? copy.chooseProvider}</strong>
-                </div>
-                <div className={styles.selectionCard}>
-                  <span className={styles.metaLabel}>{copy.chooseTeam}</span>
-                  <strong>{selectedTeam?.name ?? copy.chooseTeam}</strong>
-                </div>
             </div>
 
             <div className={styles.setupPickerGrid}>
