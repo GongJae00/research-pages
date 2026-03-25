@@ -396,6 +396,21 @@ export function HomepageAgentControlSection({
                 ) : null}
               </div>
             </div>
+            <div className={styles.setupDigestGrid}>
+              <div className={styles.setupDigestCard}>
+                <span className={styles.metaLabel}>{copy.chooseProvider}</span>
+                <strong>{selectedProvider?.label ?? "-"}</strong>
+              </div>
+              <div className={styles.setupDigestCard}>
+                <span className={styles.metaLabel}>{copy.chooseTeam}</span>
+                <strong>{selectedTeam?.name ?? "-"}</strong>
+              </div>
+              <div className={styles.setupDigestCard}>
+                <span className={styles.metaLabel}>{copy.commandOrder}</span>
+                <strong>01 -&gt; 02</strong>
+                <span className={styles.digestHint}>{copy.setupCommand}</span>
+              </div>
+            </div>
             <div className={styles.setupPickerGrid}>
               <div className={styles.setupPicker}>
                 <span className={styles.metaLabel}>{copy.chooseProvider}</span>
