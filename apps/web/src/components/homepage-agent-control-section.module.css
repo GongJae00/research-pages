@@ -264,7 +264,7 @@
   gap: 0.01rem;
 }
 
-.setupDigestBar {
+.setupFlowBar {
   display: grid;
   gap: 0.04rem;
   margin-top: 0.01rem;
@@ -274,14 +274,14 @@
   display: none;
 }
 
-.setupScanBar {
+.setupFlowRow {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.1rem;
 }
 
-.setupScanItem {
+.setupFlowItem {
   display: inline-grid;
   gap: 0.04rem;
   min-width: 0;
@@ -289,6 +289,11 @@
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 999px;
   background: rgba(248, 250, 252, 0.92);
+}
+
+.setupFlowArrow {
+  flex: 0 0 auto;
+  color: #94a3b8;
 }
 
 .setupScanLabel {
@@ -939,7 +944,7 @@
     justify-content: flex-start;
   }
 
-  .setupScanBar {
+  .setupFlowRow {
     align-items: flex-start;
   }
 

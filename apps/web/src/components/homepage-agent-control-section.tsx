@@ -370,25 +370,25 @@ export function HomepageAgentControlSection({
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
                 {selectedProvider && selectedTeam ? (
-                  <div className={styles.setupDigestBar}>
+                  <div className={styles.setupFlowBar}>
                     <span className={styles.setupDigestTitle}>
                       {copy.activeSetup ?? (isKoreanLocale(locale) ? "?꾩꽦 ?뗭뾽" : "Active setup")}
                     </span>
-                    <div className={styles.setupScanBar}>
-                    <span className={styles.setupScanItem}>
-                      <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
-                      <span className={styles.setupScanValue}>{selectedProvider.label}</span>
-                    </span>
-                    <span className={styles.setupScanItem}>
-                      <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
-                      <span className={styles.setupScanValue}>{selectedTeam.name}</span>
-                    </span>
-                    <span className={styles.setupScanItem}>
-                      <span className={styles.setupScanLabel}>{copy.commandOrder}</span>
-                      <span className={styles.setupScanValue}>
-                        {isKoreanLocale(locale) ? "아래 명령 2개 실행" : "Run the 2 commands below"}
+                    <div className={styles.setupFlowRow}>
+                      <span className={styles.setupFlowItem}>
+                        <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
+                        <span className={styles.setupScanValue}>{selectedProvider.label}</span>
                       </span>
-                    </span>
+                      <ArrowRight size={14} className={styles.setupFlowArrow} aria-hidden="true" />
+                      <span className={styles.setupFlowItem}>
+                        <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
+                        <span className={styles.setupScanValue}>{selectedTeam.name}</span>
+                      </span>
+                      <ArrowRight size={14} className={styles.setupFlowArrow} aria-hidden="true" />
+                      <span className={styles.setupFlowItem}>
+                        <span className={styles.setupScanLabel}>{copy.setupCommand}</span>
+                        <span className={styles.setupScanValue}>{setupCommandCards.length} commands</span>
+                      </span>
                     </div>
                   </div>
                 ) : null}
