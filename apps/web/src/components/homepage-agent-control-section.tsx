@@ -364,7 +364,20 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <p className={styles.setupHeaderBody}>{copy.setupBuilderBody}</p>
+                <div className={styles.setupHeaderSequence} aria-label={copy.commandOrder}>
+                  <strong>{isKoreanLocale(locale) ? "실행 순서" : "Run order"}</strong>
+                  <div className={styles.sequenceStep}>
+                    <span className={styles.sequencePill}>
+                      {isKoreanLocale(locale) ? "연결" : "Connect"}
+                    </span>
+                    <span className={styles.sequenceArrow}>
+                      <ArrowRight size={14} />
+                    </span>
+                    <span className={styles.sequencePill}>
+                      {isKoreanLocale(locale) ? "배정" : "Assign"}
+                    </span>
+                  </div>
+                </div>
               </div>
               <div className={styles.setupHeaderActions}>
                 {setupBriefHref ? (
