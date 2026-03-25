@@ -411,17 +411,6 @@ export function HomepageAgentControlSection({
                     </div>
                   </div>
                 </div>
-                <div className={styles.setupActionBar}>
-                  <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
-                  <strong>
-                    {selectedProvider
-                      ? getNextSetupActionLabel(locale, selectedProvider.status)
-                      : copy.setupCommand}
-                  </strong>
-                  <span className={styles.inlineMeta}>
-                    {selectedProvider?.label ?? "-"} / {selectedTeam?.name ?? "-"}
-                  </span>
-                </div>
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
