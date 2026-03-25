@@ -442,6 +442,32 @@ export function HomepageAgentControlSection({
               </div>
             </div>
             <div className={styles.quickStartRail}>
+              <div className={styles.setupSummaryGrid}>
+                <div className={styles.summaryPill}>
+                  <span className={styles.contextLabel}>01</span>
+                  <div className={styles.summaryPillCopy}>
+                    <span className={styles.summaryPillLabel}>{copy.chooseProvider}</span>
+                    <strong>{selectedProvider?.label ?? "-"}</strong>
+                    <span className={styles.summaryDetail}>{selectedProvider?.cliName ?? "-"}</span>
+                  </div>
+                </div>
+                <div className={styles.summaryPill}>
+                  <span className={styles.contextLabel}>02</span>
+                  <div className={styles.summaryPillCopy}>
+                    <span className={styles.summaryPillLabel}>{copy.chooseTeam}</span>
+                    <strong>{selectedTeam?.name ?? "-"}</strong>
+                    <span className={styles.summaryDetail}>{selectedTeam?.lane ?? "-"}</span>
+                  </div>
+                </div>
+                <div className={styles.summaryPill}>
+                  <span className={styles.contextLabel}>03</span>
+                  <div className={styles.summaryPillCopy}>
+                    <span className={styles.summaryPillLabel}>{copy.setupCommand}</span>
+                    <strong>{copy.commandOrder}</strong>
+                    <span className={styles.summaryDetail}>{copy.openBrief}</span>
+                  </div>
+                </div>
+              </div>
               <div className={styles.setupFlowRail}>
                 <span className={styles.metaLabel}>{copy.commandOrder}</span>
                 <div className={styles.setupFlowSteps}>

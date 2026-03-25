@@ -313,6 +313,12 @@
   padding: 0;
 }
 
+.setupSummaryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.12rem;
+}
+
 .setupFlowRail,
 .setupFlowSteps {
   display: grid;
@@ -420,7 +426,7 @@
   align-items: flex-start;
   gap: 0.32rem;
   min-width: 0;
-  padding: 0.24rem 0.34rem;
+  padding: 0.22rem 0.34rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 14px;
   background: rgba(248, 250, 252, 0.9);
@@ -796,6 +802,11 @@
   .setupNotesGrid {
     grid-column: auto;
     grid-row: auto;
+  }
+
+  .setupSummaryGrid,
+  .summaryPill {
+    grid-template-columns: 1fr;
   }
 
   .summaryPill {
