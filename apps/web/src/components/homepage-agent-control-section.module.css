@@ -387,24 +387,22 @@
 }
 
 .setupSummaryBar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.08rem;
   margin-top: 0.02rem;
 }
 
 .setupSummaryBar .setupSummaryItem {
   min-width: 0;
-  padding: 0.12rem 0.18rem;
+  padding: 0.1rem 0.14rem;
 }
 
 .setupSummaryBar .setupSummaryItem strong {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.16rem;
+  display: block;
   font-size: 0.76rem;
   line-height: 1.1;
+  overflow-wrap: anywhere;
 }
 
 .setupSummaryItemAccent {
@@ -1309,11 +1307,11 @@
   }
 
   .setupSummaryBar {
-    align-items: stretch;
+    grid-template-columns: 1fr;
   }
 
   .setupSummaryBar .setupSummaryItem {
-    width: 100%;
+    width: auto;
   }
 
   .setupCommandsSummary {

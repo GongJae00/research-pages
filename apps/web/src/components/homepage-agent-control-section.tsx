@@ -388,11 +388,12 @@ export function HomepageAgentControlSection({
                 <h4>{copy.setupBuilderTitle}</h4>
                 <div className={styles.setupSummaryBar} aria-label={copy.setupStepsLabel}>
                   <span className={styles.setupSummaryItem}>
-                    <span className={styles.setupScanLabel}>{copy.activeSetup}</span>
-                    <strong>
-                      {selectedProvider?.label ?? "-"} <span aria-hidden="true">{"->"}</span>{" "}
-                      {selectedTeam?.name ?? "-"}
-                    </strong>
+                    <span className={styles.setupScanLabel}>{copy.selectedCli}</span>
+                    <strong>{selectedProvider?.label ?? "-"}</strong>
+                  </span>
+                  <span className={styles.setupSummaryItem}>
+                    <span className={styles.setupScanLabel}>{copy.selectedTeamLabel}</span>
+                    <strong>{selectedTeam?.name ?? "-"}</strong>
                   </span>
                   <span className={`${styles.setupSummaryItem} ${styles.setupSummaryItemAccent}`}>
                     <span className={styles.setupScanLabel}>{copy.runCommandLabel}</span>
