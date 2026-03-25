@@ -265,6 +265,13 @@
   gap: 0.03rem;
 }
 
+.setupHeaderBody {
+  margin: 0;
+  color: #475569;
+  font-size: 0.76rem;
+  line-height: 1.28;
+}
+
 .setupScanLabel {
   color: #64748b;
   font-size: 0.62rem;
@@ -303,37 +310,6 @@
   letter-spacing: 0.08em;
   line-height: 1.1;
   text-transform: uppercase;
-}
-
-.setupFlowSummary {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.08rem;
-}
-
-.setupFlowStep {
-  display: flex;
-  align-items: center;
-  gap: 0.34rem;
-  min-width: 0;
-  padding: 0.2rem 0.28rem;
-  border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 14px;
-  background: rgba(248, 250, 252, 0.88);
-}
-
-.setupFlowCopy {
-  display: grid;
-  gap: 0.03rem;
-  min-width: 0;
-}
-
-.setupFlowValue {
-  min-width: 0;
-  color: #0f172a;
-  font-size: 0.76rem;
-  line-height: 1.15;
-  overflow-wrap: anywhere;
 }
 
 .sequenceArrow {
@@ -376,8 +352,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.14rem;
-  padding: 0.02rem 0 0.04rem;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.82);
+  padding: 0;
 }
 
 .setupQuickLabel,
@@ -811,7 +786,6 @@
   }
 
   .setupHeader,
-  .setupFlowSummary,
   .setupNotesDisclosure {
     grid-column: 1 / -1;
   }
@@ -970,7 +944,6 @@
   .providerMeta,
   .setupRail,
   .setupDigestBar,
-  .setupFlowSummary,
   .setupPickerGrid,
   .setupCommands,
   .setupNotesGrid {

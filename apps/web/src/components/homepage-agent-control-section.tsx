@@ -279,23 +279,6 @@ export function HomepageAgentControlSection({
         },
       ]
     : [];
-  const setupScanItems = [
-    {
-      step: "01",
-      label: copy.chooseProvider,
-      value: selectedProvider?.label ?? "-",
-    },
-    {
-      step: "02",
-      label: copy.chooseTeam,
-      value: selectedTeam?.name ?? "-",
-    },
-    {
-      step: "03",
-      label: copy.setupCommand,
-      value: copy.commandOrder,
-    },
-  ];
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
       kind === "connect" ? setupManifest?.commands.connect ?? "" : setupManifest?.commands.assign ?? "";
@@ -381,6 +364,7 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                <p className={styles.setupHeaderBody}>{copy.setupBuilderBody}</p>
               </div>
               <div className={styles.setupHeaderActions}>
                 {setupBriefHref ? (
@@ -390,17 +374,6 @@ export function HomepageAgentControlSection({
                   </Link>
                 ) : null}
               </div>
-            </div>
-            <div className={styles.setupFlowSummary} aria-label={copy.activeSetup}>
-              {setupScanItems.map((item) => (
-                <div className={styles.setupFlowStep} key={item.step}>
-                  <span className={styles.commandStep}>{item.step}</span>
-                  <div className={styles.setupFlowCopy}>
-                    <span className={styles.setupScanLabel}>{item.label}</span>
-                    <strong className={styles.setupFlowValue}>{item.value}</strong>
-                  </div>
-                </div>
-              ))}
             </div>
             {selectedProvider && selectedTeam ? (
               <div className={styles.setupCompactBar}>
