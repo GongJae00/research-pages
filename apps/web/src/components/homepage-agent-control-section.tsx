@@ -142,6 +142,8 @@ function getCopy(locale: string, opsEnabled: boolean) {
     copied: "Copied",
     openBrief: "Open brief",
     commandOrder: "Connect first, assign second",
+    selectedCli: "Selected CLI",
+    selectedTeamLabel: "Selected team",
     chooseProvider: "Choose CLI",
     chooseTeam: "Choose team",
     setupCommand: "Setup command",
@@ -253,6 +255,10 @@ export function HomepageAgentControlSection({
     selectedProvider && selectedTeam
       ? `/api/ops-setup?locale=${locale}&provider=${selectedProvider.providerId}&team=${selectedTeam.id}&format=txt`
       : null;
+  const setupSelectionSummary = [
+    { label: copy.chooseProvider, value: selectedProvider?.label ?? "-" },
+    { label: copy.chooseTeam, value: selectedTeam?.name ?? "-" },
+  ];
 
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
@@ -354,6 +360,21 @@ export function HomepageAgentControlSection({
               </div>
             </div>
 
+            <div className={styles.selectionSummary}>
+              <div className={styles.selectionCard}>
+                <span className={styles.metaLabel}>{copy.selectedCli}</span>
+                <strong>{selectedProvider?.label ?? "-"}</strong>
+                <p className={styles.compactBody}>
+                  {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
+                </p>
+              </div>
+              <div className={styles.selectionCard}>
+                <span className={styles.metaLabel}>{copy.selectedTeamLabel}</span>
+                <strong>{selectedTeam?.name ?? "-"}</strong>
+                <p className={styles.compactBody}>{selectedTeam?.lane ?? "-"}</p>
+              </div>
+            </div>
+
             <div className={styles.setupPickerGrid}>
               <div className={styles.setupPicker}>
                 <span className={styles.metaLabel}>{copy.chooseProvider}</span>
@@ -397,6 +418,15 @@ export function HomepageAgentControlSection({
                   ))}
                 </div>
               </div>
+            </div>
+
+            <div className={styles.selectionSummary}>
+              {setupSelectionSummary.map((item) => (
+                <div className={styles.selectionCard} key={item.label}>
+                  <span className={styles.metaLabel}>{item.label}</span>
+                  <strong>{item.value}</strong>
+                </div>
+              ))}
             </div>
 
             <div className={styles.setupCommands}>
