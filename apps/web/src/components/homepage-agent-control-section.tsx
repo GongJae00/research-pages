@@ -332,15 +332,15 @@ export function HomepageAgentControlSection({
             <Bot size={20} />
           </div>
 
-          <div className={styles.heroInfoGrid}>
-            <div className={styles.infoBlock}>
+          <div className={styles.heroInfoStrip}>
+            <div className={styles.infoStripItem}>
               <span className={styles.metaLabel}>{copy.assistantSummary}</span>
-              <p>{snapshot.assistant.promise}</p>
+              <strong>{snapshot.assistant.promise}</strong>
             </div>
 
-            <div className={styles.infoBlock}>
+            <div className={styles.infoStripItem}>
               <span className={styles.metaLabel}>{copy.directiveLabel}</span>
-              <p>{snapshot.currentDirective.title}</p>
+              <strong>{snapshot.currentDirective.title}</strong>
               <span className={styles.inlineMeta}>
                 {formatBoardTimestamp(locale, snapshot.currentDirective.issuedAt)}
               </span>
@@ -423,6 +423,7 @@ export function HomepageAgentControlSection({
             </div>
             <div className={styles.setupPickerGrid}>
               <div className={styles.setupPicker} aria-label={copy.chooseProvider}>
+                <span className={styles.setupPickerLabel}>{copy.chooseProvider}</span>
                 <div className={styles.optionRow}>
                   {providerOrder.map((providerId) => {
                     const provider = snapshot.providerConnections.find((entry) => entry.providerId === providerId);
@@ -452,6 +453,7 @@ export function HomepageAgentControlSection({
               </div>
 
               <div className={styles.setupPicker} aria-label={copy.chooseTeam}>
+                <span className={styles.setupPickerLabel}>{copy.chooseTeam}</span>
                 <div className={styles.optionRow}>
                   {snapshot.teams.map((team) => (
                     <button
