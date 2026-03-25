@@ -369,7 +369,6 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <p className={styles.setupTitleHint}>{copy.setupBuilderBody}</p>
                 {selectedProvider && selectedTeam ? (
                   <div className={styles.setupDigestBar}>
                     <span className={styles.setupDigestTitle}>
