@@ -386,23 +386,17 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <div className={styles.setupScanBar} aria-label={copy.setupStepsLabel}>
-                  <span className={styles.setupScanItem}>
-                    <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
-                    <strong>{selectedProvider?.label ?? "-"}</strong>
+                <p className={styles.setupBody}>{copy.setupBuilderBody}</p>
+                <div className={styles.setupSummaryBar} aria-label={copy.setupStepsLabel}>
+                  <span className={styles.setupSummaryItem}>
+                    <span className={styles.setupScanLabel}>{copy.activeSetup}</span>
+                    <strong>
+                      {selectedProvider?.label ?? "-"} <span aria-hidden="true">{"->"}</span>{" "}
+                      {selectedTeam?.name ?? "-"}
+                    </strong>
                   </span>
-                  <span className={styles.setupScanDivider} aria-hidden="true">
-                    /
-                  </span>
-                  <span className={styles.setupScanItem}>
-                    <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
-                    <strong>{selectedTeam?.name ?? "-"}</strong>
-                  </span>
-                  <span className={styles.setupScanDivider} aria-hidden="true">
-                    /
-                  </span>
-                  <span className={`${styles.setupScanItem} ${styles.setupScanItemAccent}`}>
-                    <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
+                  <span className={`${styles.setupSummaryItem} ${styles.setupSummaryItemAccent}`}>
+                    <span className={styles.setupScanLabel}>{copy.runCommandLabel}</span>
                     <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
                   </span>
                 </div>
