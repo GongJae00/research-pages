@@ -386,6 +386,7 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                <p className={styles.setupSubcopy}>{copy.commandOrder}</p>
               </div>
               <div className={styles.setupHeaderActions}>
                 <Command size={18} />
@@ -407,16 +408,6 @@ export function HomepageAgentControlSection({
                 <span className={styles.setupDigestLabel}>{copy.chooseTeam}</span>
                 <strong>{selectedTeam?.name ?? "-"}</strong>
                 <span className={styles.digestMeta}>{selectedTeam?.lane ?? "-"}</span>
-              </div>
-              <div className={styles.sequencePill}>
-                <span className={styles.setupDigestLabel}>{copy.commandOrder}</span>
-                <div className={styles.sequenceSteps}>
-                  <strong>01</strong>
-                  <span>{copy.connectCommand}</span>
-                  <ArrowRight size={14} />
-                  <strong>02</strong>
-                  <span>{copy.assignCommand}</span>
-                </div>
               </div>
             </div>
             <div className={styles.setupPickerGrid}>
