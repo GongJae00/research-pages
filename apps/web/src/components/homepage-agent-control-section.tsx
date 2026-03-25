@@ -387,28 +387,17 @@ export function HomepageAgentControlSection({
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
                 <div className={styles.setupScanBar} aria-label={copy.setupStepsLabel}>
-                  <div className={styles.setupScanChip}>
-                    <span className={styles.setupChipStep}>01</span>
-                    <div className={styles.setupScanCopy}>
-                      <span className={styles.setupScanLabel}>
-                        {`${copy.chooseProvider} + ${copy.chooseTeam}`}
-                      </span>
-                      <strong>
-                        {selectedProvider?.label ?? "-"} / {selectedTeam?.name ?? "-"}
-                      </strong>
-                    </div>
+                  <div className={styles.setupDigestItem}>
+                    <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
+                    <strong>{selectedProvider?.label ?? "-"}</strong>
                   </div>
-                  <div className={`${styles.setupScanChip} ${styles.setupScanChipAccent}`}>
-                    <span className={styles.setupChipStep}>02</span>
-                    <div className={styles.setupScanCopy}>
-                      <span className={styles.setupScanLabel}>{copy.runCommandLabel}</span>
-                      <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
-                      <span className={styles.setupScanMeta}>
-                        {nextSetupCommand?.kind === "connect"
-                          ? selectedProvider?.label ?? "-"
-                          : selectedTeam?.name ?? "-"}
-                      </span>
-                    </div>
+                  <div className={styles.setupDigestItem}>
+                    <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
+                    <strong>{selectedTeam?.name ?? "-"}</strong>
+                  </div>
+                  <div className={`${styles.setupDigestItem} ${styles.setupDigestItemAccent}`}>
+                    <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
+                    <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
                   </div>
                 </div>
               </div>

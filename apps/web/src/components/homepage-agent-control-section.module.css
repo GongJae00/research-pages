@@ -297,28 +297,9 @@
 
 .setupScanBar {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.06rem;
   margin-top: 0;
-}
-
-.setupScanCopy {
-  display: grid;
-  gap: 0.03rem;
-  min-width: 0;
-}
-
-.setupScanCopy strong {
-  color: #0f172a;
-  font-size: 0.78rem;
-  line-height: 1.08;
-}
-
-.setupScanMeta {
-  color: #64748b;
-  font-size: 0.64rem;
-  font-weight: 700;
-  line-height: 1.1;
 }
 
 .setupScanArrow {
@@ -360,45 +341,28 @@
   overflow-wrap: anywhere;
 }
 
-.setupScanChip {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.14rem;
+.setupDigestItem {
+  display: grid;
+  gap: 0.03rem;
   min-width: 0;
   min-height: 100%;
-  padding: 0.1rem 0.14rem;
+  padding: 0.12rem 0.14rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 14px;
   background: rgba(248, 250, 252, 0.92);
-  flex: 1 1 auto;
 }
 
-.setupChipStep {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 1.38rem;
-  height: 1.06rem;
-  padding: 0 0.28rem;
-  border-radius: 999px;
-  background: #0f172a;
-  color: #f8fafc;
-  font-size: 0.56rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  text-transform: uppercase;
-  flex: 0 0 auto;
+.setupDigestItem strong {
+  color: #0f172a;
+  font-size: 0.76rem;
+  line-height: 1.08;
+  overflow-wrap: anywhere;
 }
 
-.setupScanChipAccent {
+.setupDigestItemAccent {
   border-color: rgba(15, 23, 42, 0.12);
   background: rgba(241, 245, 249, 0.98);
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
-}
-
-.setupScanChipAccent .setupChipStep {
-  background: #0f766e;
 }
 
 .setupTitleBlock h4 {
