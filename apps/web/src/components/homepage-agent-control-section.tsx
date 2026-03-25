@@ -368,36 +368,38 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <div className={styles.setupDigestBar} aria-label={copy.activeSetup}>
-                  <span className={styles.setupDigestLead}>{copy.commandOrder}</span>
-                  <div className={styles.setupDigestChip}>
-                    <div className={styles.digestLabelGroup}>
-                      <span className={styles.setupDigestLabel}>{copy.chooseProvider}</span>
-                      <div className={styles.copyTitleGroup}>
-                        <strong className={styles.setupDigestValue}>{selectedProvider?.label ?? "-"}</strong>
-                        {selectedProvider ? (
-                          <span
-                            className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
-                          >
-                            {getProviderStatusLabel(locale, selectedProvider.status)}
-                          </span>
-                        ) : null}
-                      </div>
+                <div className={styles.setupScanBar} aria-label={copy.activeSetup}>
+                  <span className={styles.setupQuickLabel}>{copy.commandOrder}</span>
+                  <div className={styles.setupScanChip}>
+                    <div className={styles.setupScanCopy}>
+                      <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
+                      <strong className={styles.setupScanValue}>{selectedProvider?.label ?? "-"}</strong>
+                    </div>
+                    {selectedProvider ? (
+                      <span
+                        className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
+                      >
+                        {getProviderStatusLabel(locale, selectedProvider.status)}
+                      </span>
+                    ) : null}
+                  </div>
+                  <span className={styles.setupScanArrow} aria-hidden="true">
+                    <ArrowRight size={14} />
+                  </span>
+                  <div className={styles.setupScanChip}>
+                    <div className={styles.setupScanCopy}>
+                      <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
+                      <strong className={styles.setupScanValue}>{selectedTeam?.name ?? "-"}</strong>
                     </div>
                   </div>
-                  <div className={styles.setupDigestChip}>
-                    <div className={styles.digestLabelGroup}>
-                      <span className={styles.setupDigestLabel}>{copy.chooseTeam}</span>
-                      <strong className={styles.setupDigestValue}>{selectedTeam?.name ?? "-"}</strong>
-                    </div>
-                  </div>
-                  <div
-                    className={`${styles.setupDigestChip} ${styles.setupDigestChipAccent}`}
-                    aria-label={copy.commandOrder}
-                  >
-                    <div className={styles.digestLabelGroup}>
-                      <span className={styles.setupDigestLabel}>{copy.nextActionLabel}</span>
-                      <strong className={styles.setupDigestValue}>
+                  <span className={styles.setupScanArrow} aria-hidden="true">
+                    <ArrowRight size={14} />
+                  </span>
+                  <div className={`${styles.setupScanChip} ${styles.setupScanChipAccent}`}>
+                    <span className={styles.setupChipStep}>{nextCommandKind === "connect" ? "01" : "02"}</span>
+                    <div className={styles.setupScanCopy}>
+                      <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
+                      <strong className={styles.setupScanValue}>
                         {setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}
                       </strong>
                     </div>
