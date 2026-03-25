@@ -424,19 +424,6 @@ export function HomepageAgentControlSection({
                   </span>
                 </div>
               </div>
-              <div className={`${styles.setupSummaryItem} ${styles.setupSummaryItemAction}`}>
-                <span className={styles.setupDigestLabel}>{copy.openBrief}</span>
-                {setupBriefHref ? (
-                  <Link href={setupBriefHref} className={styles.inlineTextLink} target="_blank">
-                    {selectedProvider?.label ?? copy.openBrief}
-                    <ArrowRight size={14} />
-                  </Link>
-                ) : (
-                  <div className={styles.scanPillValue}>
-                    <strong>-</strong>
-                  </div>
-                )}
-              </div>
             </div>
             <div className={styles.setupPickerGrid}>
               <div className={styles.setupPicker}>
