@@ -662,6 +662,61 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.setupNotesDisclosure {
+  margin-top: 0.02rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 16px;
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.setupNotesSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.34rem 0.42rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.setupNotesSummary::-webkit-details-marker {
+  display: none;
+}
+
+.setupNotesSummaryCopy {
+  display: grid;
+  gap: 0.04rem;
+}
+
+.setupNotesSummaryCopy strong {
+  color: #0f172a;
+  font-size: 0.84rem;
+  line-height: 1.2;
+}
+
+.setupNotesHint {
+  color: #64748b;
+  font-size: 0.74rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.setupNotesDisclosure[open] .setupNotesHint {
+  color: #0f172a;
+}
+
+.setupNotesDisclosure[open] .setupNotesHint::after {
+  content: " \2191";
+}
+
+.setupNotesDisclosure:not([open]) .setupNotesHint::after {
+  content: " \2193";
+}
+
+.setupNotesDisclosure .setupNotesGrid {
+  padding: 0 0.42rem 0.42rem;
+}
+
 @media (min-width: 901px) {
   .setupBuilderCard {
     grid-template-columns: minmax(0, 1.18fr) minmax(280px, 0.82fr);
@@ -670,7 +725,7 @@
   }
 
   .setupHeader,
-  .setupNotesGrid {
+  .setupNotesDisclosure {
     grid-column: 1 / -1;
   }
 
@@ -843,6 +898,7 @@
   .setupScanRow,
   .setupPickerGrid,
   .setupCommands,
+  .setupNotesDisclosure,
   .setupNotesGrid {
     grid-column: auto;
     grid-row: auto;

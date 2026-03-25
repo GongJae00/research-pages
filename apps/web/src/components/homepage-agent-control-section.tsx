@@ -503,46 +503,64 @@ export function HomepageAgentControlSection({
             </div>
 
             {setupManifest ? (
-              <div className={styles.setupNotesGrid}>
-                <div className={styles.noteCard}>
-                  <span className={styles.metaLabel}>
-                    {isKoreanLocale(locale) ? "사전 조건" : "Prerequisites"}
-                  </span>
-                  <div className={styles.noteList}>
-                    {setupManifest.prerequisites.map((item) => (
-                      <p className={styles.noteItem} key={item}>
-                        {item}
-                      </p>
-                    ))}
+              <details className={styles.setupNotesDisclosure}>
+                <summary className={styles.setupNotesSummary}>
+                  <div className={styles.setupNotesSummaryCopy}>
+                    <span className={styles.metaLabel}>
+                      {isKoreanLocale(locale) ? "설정 체크" : "Setup checks"}
+                    </span>
+                    <strong>
+                      {isKoreanLocale(locale)
+                        ? "사전 조건, 운영 약속, 성공 신호"
+                        : "Prerequisites, working agreement, and success signals"}
+                    </strong>
                   </div>
-                </div>
+                  <span className={styles.setupNotesHint}>
+                    {isKoreanLocale(locale) ? "펼치기" : "Expand"}
+                  </span>
+                </summary>
 
-                <div className={styles.noteCard}>
-                  <span className={styles.metaLabel}>
-                    {isKoreanLocale(locale) ? "운영 약속" : "Working agreement"}
-                  </span>
-                  <div className={styles.noteList}>
-                    {setupManifest.workingAgreement.map((item) => (
-                      <p className={styles.noteItem} key={item}>
-                        {item}
-                      </p>
-                    ))}
+                <div className={styles.setupNotesGrid}>
+                  <div className={styles.noteCard}>
+                    <span className={styles.metaLabel}>
+                      {isKoreanLocale(locale) ? "사전 조건" : "Prerequisites"}
+                    </span>
+                    <div className={styles.noteList}>
+                      {setupManifest.prerequisites.map((item) => (
+                        <p className={styles.noteItem} key={item}>
+                          {item}
+                        </p>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                <div className={styles.noteCard}>
-                  <span className={styles.metaLabel}>
-                    {isKoreanLocale(locale) ? "성공 신호" : "Success signals"}
-                  </span>
-                  <div className={styles.noteList}>
-                    {setupManifest.successSignals.map((item) => (
-                      <p className={styles.noteItem} key={item}>
-                        {item}
-                      </p>
-                    ))}
+                  <div className={styles.noteCard}>
+                    <span className={styles.metaLabel}>
+                      {isKoreanLocale(locale) ? "운영 약속" : "Working agreement"}
+                    </span>
+                    <div className={styles.noteList}>
+                      {setupManifest.workingAgreement.map((item) => (
+                        <p className={styles.noteItem} key={item}>
+                          {item}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className={styles.noteCard}>
+                    <span className={styles.metaLabel}>
+                      {isKoreanLocale(locale) ? "성공 신호" : "Success signals"}
+                    </span>
+                    <div className={styles.noteList}>
+                      {setupManifest.successSignals.map((item) => (
+                        <p className={styles.noteItem} key={item}>
+                          {item}
+                        </p>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
+              </details>
             ) : null}
           </article>
 
