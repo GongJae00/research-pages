@@ -384,27 +384,25 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <div className={styles.setupCompactRow}>
-                  <div className={styles.setupScanRow}>
-                    <div className={styles.scanPill}>
-                      <span className={styles.metaLabel}>{copy.chooseProvider}</span>
-                      <div className={styles.scanPillValue}>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
-                        {selectedProvider ? (
-                          <span
-                            className={`${styles.statusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
-                          >
-                            {getProviderStatusLabel(locale, selectedProvider.status)}
-                          </span>
-                        ) : null}
-                      </div>
-                      <span className={styles.digestMeta}>{selectedProvider?.cliName ?? "-"}</span>
+                <div className={styles.setupSummaryStrip}>
+                  <div className={styles.setupSummaryItem}>
+                    <span className={styles.metaLabel}>{copy.chooseProvider}</span>
+                    <div className={styles.scanPillValue}>
+                      <strong>{selectedProvider?.label ?? "-"}</strong>
+                      {selectedProvider ? (
+                        <span
+                          className={`${styles.statusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
+                        >
+                          {getProviderStatusLabel(locale, selectedProvider.status)}
+                        </span>
+                      ) : null}
                     </div>
-                    <div className={styles.scanPill}>
-                      <span className={styles.metaLabel}>{copy.chooseTeam}</span>
-                      <strong>{selectedTeam?.name ?? "-"}</strong>
-                      <span className={styles.digestMeta}>{selectedTeam?.lane ?? "-"}</span>
-                    </div>
+                    <span className={styles.digestMeta}>{selectedProvider?.cliName ?? "-"}</span>
+                  </div>
+                  <div className={styles.setupSummaryItem}>
+                    <span className={styles.metaLabel}>{copy.chooseTeam}</span>
+                    <strong>{selectedTeam?.name ?? "-"}</strong>
+                    <span className={styles.digestMeta}>{selectedTeam?.lane ?? "-"}</span>
                   </div>
                   <div className={styles.sequencePill}>
                     <span className={styles.metaLabel}>{copy.commandOrder}</span>
