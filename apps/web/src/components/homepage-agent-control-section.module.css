@@ -561,15 +561,16 @@
 }
 
 .setupSummaryInline {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
   gap: 0.08rem;
   min-width: 0;
   margin-top: 0.04rem;
 }
 
 .setupSummaryLead {
+  grid-column: 1 / -1;
   color: #64748b;
   font-size: 0.58rem;
   font-weight: 800;
@@ -625,7 +626,7 @@
 }
 
 .summaryChipWide {
-  min-width: min(13.5rem, 100%);
+  min-width: 0;
 }
 
 .summaryChipCopy {
@@ -650,11 +651,7 @@
 }
 
 .summaryFlowArrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: #94a3b8;
-  flex: 0 0 auto;
+  display: none;
 }
 
 .summaryChip .commandStep {
@@ -667,6 +664,10 @@
 .summaryChip .setupScanLabel,
 .summaryChip .setupScanValue {
   display: block;
+}
+
+.setupSummaryInline .summaryChip {
+  width: 100%;
 }
 
 .setupPicker {
