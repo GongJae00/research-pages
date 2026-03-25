@@ -370,7 +370,6 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <p className={styles.compactBody}>{copy.setupBuilderBody}</p>
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.providerSummaryChips}>
@@ -386,9 +385,6 @@ export function HomepageAgentControlSection({
                     <strong>{String(attentionCount).padStart(2, "0")}</strong>
                     {getProviderStatusLabel(locale, "attention")}
                   </span>
-                </div>
-                <div className={styles.setupHeaderTools}>
-                  <Command size={18} />
                 </div>
                 <div className={styles.sequencePill}>
                   <span className={styles.setupDigestLabel}>{copy.commandOrder}</span>
