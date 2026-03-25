@@ -398,8 +398,8 @@ export function HomepageAgentControlSection({
               </div>
             </div>
             <div className={styles.setupTopline}>
-              <div className={styles.setupQuickstartGrid}>
-                <div className={styles.setupSequenceCard}>
+              <div className={styles.setupScanBar}>
+                <div className={styles.setupScanItem}>
                   <span className={styles.setupDigestLabel}>{copy.commandOrder}</span>
                   <div className={styles.sequenceSteps}>
                     <span className={styles.sequenceStep}>
@@ -413,24 +413,19 @@ export function HomepageAgentControlSection({
                     </span>
                   </div>
                 </div>
-                <div className={styles.setupSelectionPill}>
-                  <span className={styles.setupDigestLabel}>{copy.setupCommand}</span>
-                  <div className={styles.selectionDigestRow}>
-                    <div className={styles.selectionDigestItem}>
-                      <span className={styles.selectionDigestKey}>
-                        {copy.selectedCli ?? copy.chooseProvider}
-                      </span>
-                      <strong>{selectedProvider?.label ?? "-"}</strong>
-                      <span className={styles.digestMeta}>{selectedProvider?.cliName ?? "-"}</span>
-                    </div>
-                    <div className={styles.selectionDigestItem}>
-                      <span className={styles.selectionDigestKey}>
-                        {copy.selectedTeamLabel ?? copy.chooseTeam}
-                      </span>
-                      <strong>{selectedTeam?.name ?? "-"}</strong>
-                      <span className={styles.digestMeta}>{selectedTeam?.lane ?? "-"}</span>
-                    </div>
-                  </div>
+                <div className={styles.setupScanItem}>
+                  <span className={styles.setupDigestLabel}>
+                    {copy.selectedCli ?? copy.chooseProvider}
+                  </span>
+                  <strong>{selectedProvider?.label ?? "-"}</strong>
+                  <span className={styles.digestMeta}>{selectedProvider?.cliName ?? "-"}</span>
+                </div>
+                <div className={styles.setupScanItem}>
+                  <span className={styles.setupDigestLabel}>
+                    {copy.selectedTeamLabel ?? copy.chooseTeam}
+                  </span>
+                  <strong>{selectedTeam?.name ?? "-"}</strong>
+                  <span className={styles.digestMeta}>{selectedTeam?.lane ?? "-"}</span>
                 </div>
               </div>
             </div>

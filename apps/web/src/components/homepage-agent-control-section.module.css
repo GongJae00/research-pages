@@ -264,12 +264,6 @@
   gap: 0.08rem;
 }
 
-.setupQuickstartGrid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.1fr);
-  gap: 0.1rem;
-}
-
 .setupTitleBlock {
   display: grid;
   gap: 0.02rem;
@@ -282,8 +276,13 @@
   line-height: 1.15;
 }
 
-.setupSelectionPill,
-.setupSequenceCard {
+.setupScanBar {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) repeat(2, minmax(0, 0.9fr));
+  gap: 0.1rem;
+}
+
+.setupScanItem {
   display: grid;
   gap: 0.04rem;
   min-width: 0;
@@ -293,16 +292,11 @@
   background: rgba(248, 250, 252, 0.92);
 }
 
-.setupSelectionPill strong,
-.setupSequenceCard strong {
+.setupScanItem strong {
   color: #0f172a;
   font-size: 0.84rem;
   line-height: 1.15;
   overflow-wrap: anywhere;
-}
-
-.setupSequenceCard {
-  align-content: center;
 }
 
 .sequenceStep {
@@ -310,27 +304,6 @@
   align-items: center;
   gap: 0.34rem;
   min-width: 0;
-}
-
-.selectionDigestRow {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.24rem;
-  align-items: start;
-}
-
-.selectionDigestItem {
-  display: grid;
-  gap: 0.04rem;
-  min-width: 0;
-}
-
-.selectionDigestKey {
-  color: #64748b;
-  font-size: 0.66rem;
-  font-weight: 700;
-  line-height: 1.1;
-  text-transform: uppercase;
 }
 
 .setupMetaRow {
@@ -955,13 +928,8 @@
     padding: 0.9rem;
   }
 
-  .setupQuickstartGrid {
+  .setupScanBar {
     grid-template-columns: 1fr;
-  }
-
-  .selectionDigestRow {
-    grid-template-columns: 1fr;
-    gap: 0.14rem;
   }
 
   .title {
