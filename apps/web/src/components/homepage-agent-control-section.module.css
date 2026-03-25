@@ -244,13 +244,17 @@
 
 .setupBuilderCard {
   display: grid;
-  gap: 0.28rem;
+  gap: 0.24rem;
   margin-top: 0.12rem;
 }
 
 .setupPickerGrid,
 .setupCommands {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.setupCommands {
+  margin-top: 0.08rem;
 }
 
 .quickStartRail {
@@ -321,7 +325,7 @@
 .setupPicker {
   display: grid;
   gap: 0.3rem;
-  padding: 0.3rem 0.42rem;
+  padding: 0.28rem 0.4rem;
 }
 
 .optionRow {

@@ -255,11 +255,6 @@ export function HomepageAgentControlSection({
     selectedProvider && selectedTeam
       ? `/api/ops-setup?locale=${locale}&provider=${selectedProvider.providerId}&team=${selectedTeam.id}&format=txt`
       : null;
-  const setupSelectionSummary = [
-    { label: copy.chooseProvider, value: selectedProvider?.label ?? "-" },
-    { label: copy.chooseTeam, value: selectedTeam?.name ?? "-" },
-  ];
-
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
       kind === "connect" ? setupManifest?.commands.connect ?? "" : setupManifest?.commands.assign ?? "";
@@ -418,15 +413,6 @@ export function HomepageAgentControlSection({
                   ))}
                 </div>
               </div>
-            </div>
-
-            <div className={styles.selectionSummary}>
-              {setupSelectionSummary.map((item) => (
-                <div className={styles.selectionCard} key={item.label}>
-                  <span className={styles.metaLabel}>{item.label}</span>
-                  <strong>{item.value}</strong>
-                </div>
-              ))}
             </div>
 
             <div className={styles.setupCommands}>
