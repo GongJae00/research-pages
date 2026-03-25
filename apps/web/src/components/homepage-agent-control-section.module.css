@@ -655,7 +655,7 @@
 }
 
 .setupSummaryInline .summaryChip {
-  flex: 1 1 0;
+  flex: 1 1 12rem;
 }
 
 .setupPicker {
@@ -740,6 +740,16 @@
   padding: 0.04rem 0.06rem;
 }
 
+.copyCardPrimary {
+  border-color: rgba(15, 23, 42, 0.22);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(241, 245, 249, 0.96));
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+}
+
+.copyCardMuted {
+  opacity: 0.76;
+}
+
 .copyMetaRow,
 .commandRow {
   display: flex;
@@ -754,12 +764,23 @@
 
 .commandTitleBlock {
   min-width: 0;
+  display: grid;
+  gap: 0.01rem;
 }
 
 .commandTitle {
   color: #0f172a;
   font-size: 0.76rem;
   line-height: 1.05;
+}
+
+.commandPriorityLabel {
+  color: #0f766e;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .copyButton {

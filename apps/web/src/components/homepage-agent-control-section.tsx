@@ -251,6 +251,8 @@ export function HomepageAgentControlSection({
     snapshot.providerConnections[0];
   const selectedTeam =
     snapshot.teams.find((entry) => entry.id === selectedTeamId) ?? snapshot.teams[0];
+  const nextCommandKind: "connect" | "assign" =
+    selectedProvider?.status === "connected" ? "assign" : "connect";
   const setupManifest = useMemo(() => {
     if (!selectedProvider || !selectedTeam) {
       return null;
@@ -393,20 +395,6 @@ export function HomepageAgentControlSection({
                         <strong>{selectedTeam?.name ?? "-"}</strong>
                       </div>
                     </div>
-                    <span className={styles.summaryFlowArrow} aria-hidden="true">
-                      <ArrowRight size={14} />
-                    </span>
-                    <div className={`${styles.summaryChip} ${styles.summaryChipWide}`}>
-                      <span className={styles.commandStep}>03</span>
-                      <div className={styles.summaryChipCopy}>
-                        <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
-                        <strong>
-                          {selectedProvider
-                            ? getNextSetupActionLabel(locale, selectedProvider.status)
-                            : copy.setupCommand}
-                        </strong>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -474,11 +462,19 @@ export function HomepageAgentControlSection({
 
             <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>
               {setupCommandCards.map((item) => (
-                <div className={styles.copyCard} key={item.kind}>
+                <div
+                  className={`${styles.copyCard} ${
+                    item.kind === nextCommandKind ? styles.copyCardPrimary : styles.copyCardMuted
+                  }`}
+                  key={item.kind}
+                >
                   <div className={styles.copyMetaRow}>
                     <div className={styles.copyTitleGroup}>
                       <span className={styles.commandStep}>{item.step}</span>
                       <div className={styles.commandTitleBlock}>
+                        {item.kind === nextCommandKind ? (
+                          <span className={styles.commandPriorityLabel}>{copy.nextActionLabel}</span>
+                        ) : null}
                         <strong className={styles.commandTitle}>{item.title}</strong>
                       </div>
                     </div>
