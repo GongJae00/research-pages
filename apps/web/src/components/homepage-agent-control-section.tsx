@@ -293,6 +293,17 @@ export function HomepageAgentControlSection({
         },
       ]
     : [];
+  const orderedSetupCommandCards = setupCommandCards.slice().sort((left, right) => {
+    if (left.kind === nextCommandKind) {
+      return -1;
+    }
+
+    if (right.kind === nextCommandKind) {
+      return 1;
+    }
+
+    return left.step.localeCompare(right.step);
+  });
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
       kind === "connect" ? setupManifest?.commands.connect ?? "" : setupManifest?.commands.assign ?? "";
@@ -469,7 +480,7 @@ export function HomepageAgentControlSection({
             </div>
 
             <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>
-              {setupCommandCards.map((item) => (
+              {orderedSetupCommandCards.map((item) => (
                 <div
                   className={`${styles.copyCard} ${
                     item.kind === nextCommandKind ? styles.copyCardPrimary : styles.copyCardMuted
