@@ -11,6 +11,7 @@
 .teamFlowGrid,
 .futureList,
 .setupRail,
+.setupScanRow,
 .setupPickerGrid,
 .setupCommands,
 .stepList,
@@ -260,7 +261,7 @@
 
 .setupTitleBlock {
   display: grid;
-  gap: 0.03rem;
+  gap: 0.02rem;
 }
 
 .setupTitleBlock h4 {
@@ -270,21 +271,46 @@
   line-height: 1.15;
 }
 
-.setupSubcopy {
-  margin: 0;
-  color: #475569;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  line-height: 1.25;
-  max-width: 34rem;
-}
-
 .setupFlowRow {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.12rem;
+}
+
+.setupScanRow {
+  grid-template-columns: minmax(0, 0.84fr) minmax(0, 0.92fr) minmax(0, 1.24fr);
+  gap: 0.12rem;
+}
+
+.setupScanCard,
+.setupSequenceCard {
+  display: grid;
+  gap: 0.04rem;
+  min-width: 0;
+  padding: 0.28rem 0.34rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 14px;
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.setupScanCard strong,
+.setupSequenceCard strong {
+  color: #0f172a;
+  font-size: 0.84rem;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.setupSequenceCard {
+  align-content: center;
+}
+
+.sequenceStep {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.34rem;
+  min-width: 0;
 }
 
 .setupFlowStep {
@@ -432,13 +458,14 @@
 }
 
 .setupRail,
+.setupScanRow,
 .setupPickerGrid,
 .setupCommands {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .setupCommands {
-  margin-top: 0.02rem;
+  margin-top: 0;
   gap: 0.06rem;
 }
 
@@ -679,6 +706,10 @@
     grid-column: 1 / -1;
   }
 
+  .setupScanRow {
+    grid-column: 1 / -1;
+  }
+
   .setupPickerGrid {
     grid-column: 1;
   }
@@ -831,6 +862,7 @@
   .heroInfoGrid,
   .providerMeta,
   .setupRail,
+  .setupScanRow,
   .setupSummaryStrip,
   .setupPickerGrid,
   .setupCommands,
@@ -840,6 +872,7 @@
 
   .setupBuilderCard,
   .setupHeader,
+  .setupScanRow,
   .setupPickerGrid,
   .setupCommands,
   .setupNotesGrid {

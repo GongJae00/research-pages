@@ -386,7 +386,6 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <p className={styles.setupSubcopy}>{copy.setupBuilderBody}</p>
               </div>
               <div className={styles.setupHeaderActions}>
                 <Command size={18} />
@@ -396,6 +395,32 @@ export function HomepageAgentControlSection({
                     <ArrowRight size={16} />
                   </Link>
                 ) : null}
+              </div>
+            </div>
+            <div className={styles.setupScanRow}>
+              <div className={styles.setupScanCard}>
+                <span className={styles.setupDigestLabel}>{copy.selectedCli ?? copy.chooseProvider}</span>
+                <strong>{selectedProvider?.label ?? "-"}</strong>
+                <span className={styles.digestMeta}>{selectedProvider?.cliName ?? "-"}</span>
+              </div>
+              <div className={styles.setupScanCard}>
+                <span className={styles.setupDigestLabel}>{copy.selectedTeamLabel ?? copy.chooseTeam}</span>
+                <strong>{selectedTeam?.name ?? "-"}</strong>
+                <span className={styles.digestMeta}>{selectedTeam?.lane ?? "-"}</span>
+              </div>
+              <div className={styles.setupSequenceCard}>
+                <span className={styles.setupDigestLabel}>{copy.commandOrder}</span>
+                <div className={styles.sequenceSteps}>
+                  <span className={styles.sequenceStep}>
+                    <span className={styles.commandStep}>01</span>
+                    <strong>{copy.connectCommand}</strong>
+                  </span>
+                  <ArrowRight size={14} />
+                  <span className={styles.sequenceStep}>
+                    <span className={styles.commandStep}>02</span>
+                    <strong>{copy.assignCommand}</strong>
+                  </span>
+                </div>
               </div>
             </div>
             <div className={styles.setupFlowRow}>
