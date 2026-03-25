@@ -366,27 +366,27 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <h4>{copy.setupBuilderTitle}</h4>
                 <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
-                  <div className={styles.setupStatusStrip} aria-label={copy.commandOrder}>
-                    <span className={styles.setupStatusItem}>
-                      <span className={styles.setupStatusLabel}>{copy.chooseProvider}</span>
-                      <span className={styles.setupStatusValueRow}>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
-                        {selectedProvider ? (
-                          <span
-                            className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
-                          >
-                            {getProviderStatusLabel(locale, selectedProvider.status)}
-                          </span>
-                        ) : null}
+                  <div className={styles.setupScanRow} aria-label={copy.commandOrder}>
+                    <span className={styles.setupScanChip}>
+                      <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
+                      <span className={styles.setupScanValue}>{selectedProvider?.label ?? "-"}</span>
+                      {selectedProvider ? (
+                        <span
+                          className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
+                        >
+                          {getProviderStatusLabel(locale, selectedProvider.status)}
+                        </span>
+                      ) : null}
+                    </span>
+                    <span className={styles.setupScanChip}>
+                      <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
+                      <span className={styles.setupScanValue}>{selectedTeam?.name ?? "-"}</span>
+                    </span>
+                    <span className={`${styles.setupScanChip} ${styles.setupScanChipAccent}`}>
+                      <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
+                      <span className={styles.setupScanValue}>
+                        {setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}
                       </span>
-                    </span>
-                    <span className={styles.setupStatusItem}>
-                      <span className={styles.setupStatusLabel}>{copy.chooseTeam}</span>
-                      <strong>{selectedTeam?.name ?? "-"}</strong>
-                    </span>
-                    <span className={`${styles.setupStatusItem} ${styles.setupStatusItemAccent}`}>
-                      <span className={styles.setupStatusLabel}>{copy.nextActionLabel}</span>
-                      <strong>{setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}</strong>
                     </span>
                   </div>
                 </div>
