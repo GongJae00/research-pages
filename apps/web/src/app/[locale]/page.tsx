@@ -502,6 +502,14 @@ export default async function LocaleRoot({ params }: Props) {
         </article>
       </section>
 
+      <section className="rp-section" id="agent-control">
+        <HomepageAgentControlSection
+          initialSnapshot={opsSnapshot}
+          locale={resolvedLocale}
+          opsEnabled={opsEnabled}
+        />
+      </section>
+
       <section className="rp-section" id="workflow">
         <div className="section-heading-stack rp-section-head">
           <span className="section-kicker">{copy.flowKicker}</span>
@@ -519,14 +527,6 @@ export default async function LocaleRoot({ params }: Props) {
             </article>
           ))}
         </div>
-      </section>
-
-      <section className="rp-section" id="agent-control">
-        <HomepageAgentControlSection
-          initialSnapshot={opsSnapshot}
-          locale={resolvedLocale}
-          opsEnabled={opsEnabled}
-        />
       </section>
 
       <section className="rp-section" id="modules">

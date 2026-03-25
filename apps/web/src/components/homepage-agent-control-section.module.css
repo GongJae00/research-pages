@@ -1,6 +1,6 @@
 .shell {
   display: grid;
-  gap: 0.35rem;
+  gap: 0.28rem;
 }
 
 .header,
@@ -16,7 +16,7 @@
 .stepList,
 .setupNotesGrid {
   display: grid;
-  gap: 0.32rem;
+  gap: 0.24rem;
 }
 
 .header,
@@ -41,7 +41,7 @@
 }
 
 .lead {
-  padding: 0.72rem;
+  padding: 0.64rem;
   background:
     radial-gradient(circle at top right, rgba(249, 115, 22, 0.14), transparent 32%),
     radial-gradient(circle at left bottom, rgba(14, 165, 233, 0.14), transparent 28%),
@@ -67,10 +67,10 @@
 }
 
 .title {
-  margin: 0.55rem 0 0;
+  margin: 0.42rem 0 0;
   white-space: pre-line;
-  font-size: clamp(1.8rem, 3.2vw, 2.45rem);
-  line-height: 1;
+  font-size: clamp(1.65rem, 3vw, 2.2rem);
+  line-height: 0.98;
   letter-spacing: -0.04em;
 }
 
@@ -87,13 +87,13 @@
 
 .summaryCard {
   display: grid;
-  gap: 0.35rem;
-  padding: 0.72rem;
+  gap: 0.24rem;
+  padding: 0.62rem;
 }
 
 .summaryCard strong {
   color: #0f172a;
-  font-size: 1.9rem;
+  font-size: 1.7rem;
   font-weight: 800;
   letter-spacing: -0.04em;
 }
@@ -110,7 +110,7 @@
 .teamFlowCard,
 .setupBuilderCard,
 .copyCard {
-  padding: 0.64rem;
+  padding: 0.56rem;
 }
 
 .cardHead,
@@ -147,24 +147,24 @@
 .flowPanel h3,
 .futurePanel h3 {
   margin: 0.15rem 0 0;
-  font-size: 1.02rem;
+  font-size: 0.98rem;
 }
 
 .infoBlock,
 .providerMeta,
 .futureList {
   display: grid;
-  gap: 0.35rem;
+  gap: 0.28rem;
 }
 
 .heroInfoGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.4rem;
+  gap: 0.32rem;
 }
 
 .heroInfoGrid .infoBlock {
-  padding: 0.5rem 0.55rem;
+  padding: 0.42rem 0.48rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 16px;
   background: rgba(248, 250, 252, 0.9);
@@ -188,7 +188,7 @@
 
 .actionRow {
   display: grid;
-  gap: 0.45rem;
+  gap: 0.3rem;
 }
 
 .primaryLink {
@@ -224,7 +224,7 @@
 
 .providerGrid,
 .teamFlowGrid {
-  margin-top: 0.35rem;
+  margin-top: 0.24rem;
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
@@ -245,7 +245,7 @@
 
 .setupBuilderCard {
   display: grid;
-  gap: 0.28rem;
+  gap: 0.22rem;
   margin-top: 0.12rem;
 }
 
@@ -254,27 +254,19 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 0.6rem;
+  gap: 0.45rem;
 }
 
 .setupTitleBlock {
   display: grid;
-  gap: 0.12rem;
+  gap: 0.06rem;
 }
 
 .setupTitleBlock h4 {
   margin: 0;
   color: #0f172a;
-  font-size: 0.98rem;
-  line-height: 1.2;
-}
-
-.setupBody {
-  margin: 0;
-  max-width: 28rem;
-  color: #475569;
-  font-size: 0.82rem;
-  line-height: 1.35;
+  font-size: 0.94rem;
+  line-height: 1.15;
 }
 
 .panelHeadCopy {
@@ -292,6 +284,12 @@
   align-items: center;
 }
 
+.setupHeaderActions {
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .setupRail,
 .setupPickerGrid,
 .setupCommands {
@@ -307,21 +305,34 @@
 }
 
 .quickStartRail {
-  display: block;
-  padding: 0.02rem 0 0.04rem;
+  display: grid;
+  gap: 0.18rem;
+  padding: 0.02rem 0;
 }
 
 .quickStartSummary {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.22rem;
+  gap: 0.18rem;
 }
 
 .setupScanBar {
   display: flex;
   align-items: center;
-  flex: 1 1 auto;
+  gap: 0.55rem;
   min-width: 0;
+  padding: 0.32rem 0.42rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 14px;
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.setupScanBar strong {
+  min-width: 0;
+  color: #0f172a;
+  font-size: 0.82rem;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 .orderPill {
@@ -340,9 +351,9 @@
 .summaryPill {
   display: inline-flex;
   align-items: flex-start;
-  gap: 0.4rem;
+  gap: 0.32rem;
   min-width: 0;
-  padding: 0.34rem 0.45rem;
+  padding: 0.28rem 0.38rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 14px;
   background: rgba(248, 250, 252, 0.9);
@@ -380,7 +391,7 @@
 
 .summaryPill strong {
   color: #0f172a;
-  font-size: 0.76rem;
+  font-size: 0.73rem;
   line-height: 1.15;
   overflow-wrap: anywhere;
 }
@@ -423,8 +434,8 @@
 
 .setupPicker {
   display: grid;
-  gap: 0.3rem;
-  padding: 0.18rem 0.3rem;
+  gap: 0.24rem;
+  padding: 0.16rem 0.26rem;
 }
 
 .optionRow {
@@ -467,8 +478,8 @@
 
 .copyCard {
   display: grid;
-  gap: 0.26rem;
-  padding: 0.3rem 0.38rem;
+  gap: 0.22rem;
+  padding: 0.28rem 0.34rem;
 }
 
 .copyHead {
@@ -501,7 +512,7 @@
 
 .copyCard code {
   display: block;
-  padding: 0.44rem 0.5rem;
+  padding: 0.38rem 0.44rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 12px;
   background: rgba(248, 250, 252, 0.92);
@@ -548,8 +559,8 @@
 
 .noteCard {
   display: grid;
-  gap: 0.28rem;
-  padding: 0.58rem;
+  gap: 0.22rem;
+  padding: 0.5rem;
 }
 
 .noteCard p {
@@ -636,14 +647,14 @@
 }
 
 .futureList {
-  margin-top: 0.8rem;
+  margin-top: 0.55rem;
 }
 
 .futureRow {
   display: flex;
   align-items: flex-start;
   gap: 0.65rem;
-  padding: 0.7rem 0.8rem;
+  padding: 0.58rem 0.68rem;
 }
 
 .futureIcon {
@@ -681,7 +692,7 @@
   }
 
   .quickStartRail {
-    display: block;
+    display: grid;
   }
 
   .summaryPill {
@@ -690,6 +701,8 @@
 
   .setupScanBar {
     width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .cardHead,
