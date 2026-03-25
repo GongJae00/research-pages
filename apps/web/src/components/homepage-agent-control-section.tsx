@@ -384,7 +384,6 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <p className={styles.setupLead}>{copy.setupBuilderBody}</p>
                 <div className={styles.setupSummaryStrip}>
                   <span className={styles.summaryInlineChip}>
                     <span className={styles.metaLabel}>{copy.commandOrder}</span>
