@@ -274,24 +274,6 @@ export function HomepageAgentControlSection({
         },
       ]
     : [];
-  const quickStartItems =
-    selectedProvider && selectedTeam
-      ? [
-          {
-            label: copy.chooseProvider,
-            value: selectedProvider.label,
-          },
-          {
-            label: isKoreanLocale(locale) ? "Status" : "Status",
-            value: getProviderStatusLabel(locale, selectedProvider.status),
-            toneClass: getProviderStatusClass(selectedProvider.status),
-          },
-          {
-            label: copy.chooseTeam,
-            value: selectedTeam.name,
-          },
-        ]
-      : [];
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
       kind === "connect" ? setupManifest?.commands.connect ?? "" : setupManifest?.commands.assign ?? "";
@@ -377,22 +359,7 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                {quickStartItems.length ? (
-                  <div className={styles.setupScanRow} aria-label={copy.activeSetup}>
-                    <span className={styles.setupQuickLabel}>{copy.activeSetup}</span>
-                    {quickStartItems.map((item) => (
-                      <span className={styles.setupDigestChip} key={item.label}>
-                        <span className={styles.setupScanLabel}>{item.label}</span>
-                        <strong
-                          className={`${styles.setupDigestValue}${item.toneClass ? ` ${item.toneClass}` : ""}`}
-                        >
-                          {item.value}
-                        </strong>
-                      </span>
-                    ))}
-                    <span className={styles.setupOrderHint}>{copy.commandOrder}</span>
-                  </div>
-                ) : null}
+                <p className={styles.setupTitleHint}>{copy.setupBuilderBody}</p>
               </div>
               <div className={styles.setupHeaderActions}>
                 {setupBriefHref ? (
@@ -403,6 +370,30 @@ export function HomepageAgentControlSection({
                 ) : null}
               </div>
             </div>
+            {selectedProvider && selectedTeam ? (
+              <div className={styles.setupCompactBar} aria-label={copy.activeSetup}>
+                <span className={styles.setupQuickLabel}>{copy.activeSetup}</span>
+                <span className={styles.setupDigestChip}>
+                  <span className={styles.setupScanLabel}>{copy.selectedCli}</span>
+                  <strong className={styles.setupDigestValue}>{selectedProvider.label}</strong>
+                </span>
+                <span className={styles.setupDigestChip}>
+                  <span className={styles.setupScanLabel}>
+                    {isKoreanLocale(locale) ? "Status" : "Status"}
+                  </span>
+                  <strong
+                    className={`${styles.setupDigestValue} ${getProviderStatusClass(selectedProvider.status)}`}
+                  >
+                    {getProviderStatusLabel(locale, selectedProvider.status)}
+                  </strong>
+                </span>
+                <span className={styles.setupDigestChip}>
+                  <span className={styles.setupScanLabel}>{copy.selectedTeamLabel}</span>
+                  <strong className={styles.setupDigestValue}>{selectedTeam.name}</strong>
+                </span>
+                <span className={styles.setupOrderPill}>{copy.commandOrder}</span>
+              </div>
+            ) : null}
             <div className={styles.setupPickerGrid}>
               <div className={styles.setupPicker}>
                 <div className={styles.setupPickerLabelRow}>

@@ -12,6 +12,7 @@
 .futureList,
 .setupRail,
 .setupScanRow,
+.setupCompactBar,
 .setupPickerGrid,
 .setupCommands,
 .stepList,
@@ -247,7 +248,7 @@
 
 .setupBuilderCard {
   display: grid;
-  gap: 0.08rem;
+  gap: 0.12rem;
   margin-top: 0.08rem;
 }
 
@@ -310,7 +311,7 @@
   font-size: 0.74rem;
   font-weight: 600;
   line-height: 1.2;
-  max-width: 22rem;
+  max-width: 28rem;
 }
 
 .setupQuickStartLabel {
@@ -363,8 +364,18 @@
   margin-top: 0.04rem;
 }
 
+.setupCompactBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.18rem;
+  padding: 0.12rem 0;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.82);
+}
+
 .setupQuickLabel,
-.setupOrderHint {
+.setupOrderHint,
+.setupOrderPill {
   color: #64748b;
   font-size: 0.64rem;
   font-weight: 700;
@@ -382,6 +393,15 @@
 }
 
 .setupOrderHint {
+  white-space: nowrap;
+}
+
+.setupOrderPill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.16rem 0.42rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.06);
   white-space: nowrap;
 }
 
@@ -469,8 +489,6 @@
 
 .setupHeader {
   align-items: flex-start;
-  padding-bottom: 0.12rem;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.82);
 }
 
 .setupHeaderActions {
@@ -859,7 +877,7 @@
 
   .setupCommands {
     grid-column: 2;
-    grid-row: 2 / span 2;
+    grid-row: 3 / span 2;
     grid-template-columns: 1fr;
     margin-top: 0;
     padding-left: 0.14rem;
