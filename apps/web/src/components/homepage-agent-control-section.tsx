@@ -351,6 +351,13 @@ export function HomepageAgentControlSection({
               </div>
               <Command size={20} />
             </div>
+            <div className={styles.setupStepRail}>
+              {quickSetupSteps.map((step) => (
+                <span className={styles.stepChip} key={step}>
+                  {step}
+                </span>
+              ))}
+            </div>
             <div className={styles.quickStartRail}>
               <div className={styles.setupScanBar}>
                 <div className={styles.selectionSummary}>
@@ -361,10 +368,6 @@ export function HomepageAgentControlSection({
                   <div className={styles.selectionCard}>
                     <span className={styles.metaLabel}>{copy.chooseTeam}</span>
                     <strong>{selectedTeam?.name ?? copy.chooseTeam}</strong>
-                  </div>
-                  <div className={styles.selectionCard}>
-                    <span className={styles.metaLabel}>{copy.commandOrder}</span>
-                    <strong>{quickSetupSteps.join(" / ")}</strong>
                   </div>
                 </div>
               </div>
