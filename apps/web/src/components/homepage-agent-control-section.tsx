@@ -88,7 +88,6 @@ function getCopy(locale: string, opsEnabled: boolean) {
         "브라우저가 로컬 터미널을 직접 제어하지는 않지만, 각 개발자는 CLI 세션을 로컬 브리지에 등록하고 이 페이지에서 연결 상태를 확인할 수 있습니다.",
       setupBuilderLabel: "홈페이지 셋업 빌더",
       setupBuilderTitle: "CLI와 팀을 고르면 바로 실행 순서가 정리됩니다",
-      setupBuilderBody: "선택 후 connect, assign 순서만 따라가면 됩니다.",
       connectCommand: "연결 명령 복사",
       assignCommand: "재배정 명령 복사",
       copied: "복사됨",
@@ -147,7 +146,6 @@ function getCopy(locale: string, opsEnabled: boolean) {
       "Each developer registers a local CLI session with the bridge, and this page keeps connection state and team ownership visible.",
     setupBuilderLabel: "Homepage setup builder",
     setupBuilderTitle: "Pick a CLI and team, then follow the run order",
-    setupBuilderBody: "Choose once, then run connect and assign in sequence.",
     connectCommand: "Copy connect command",
     assignCommand: "Copy assign command",
     copied: "Copied",
@@ -364,42 +362,25 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <p className={styles.setupHelper}>{copy.setupBuilderBody}</p>
-                <div className={styles.setupCompactBar} aria-label={copy.commandOrder}>
-                  <span className={styles.setupQuickLabel}>
+                <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
+                  <span className={styles.summaryChip}>
                     <span className={styles.commandStep}>01</span>
-                    {copy.chooseProvider}
+                    <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
+                    <strong className={styles.setupScanValue}>{selectedProvider?.label ?? "-"}</strong>
                   </span>
-                  <span className={styles.setupQuickLabel}>
+                  <span className={styles.summaryChip}>
                     <span className={styles.commandStep}>02</span>
-                    {copy.chooseTeam}
+                    <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
+                    <strong className={styles.setupScanValue}>{selectedTeam?.name ?? "-"}</strong>
                   </span>
-                  <span className={styles.setupQuickLabel}>
+                  <span className={styles.summaryChip}>
                     <span className={styles.commandStep}>03</span>
-                    {copy.setupCommand}
+                    <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
+                    <strong className={styles.setupScanValue}>
+                      {selectedProvider ? getNextSetupActionLabel(locale, selectedProvider.status) : copy.setupCommand}
+                    </strong>
                   </span>
                 </div>
-                {selectedProvider && selectedTeam ? (
-                  <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
-                    <span className={styles.summaryChip}>
-                      <span className={styles.commandStep}>01</span>
-                      <span className={styles.setupScanLabel}>{copy.selectedCli}</span>
-                      <strong className={styles.setupScanValue}>{selectedProvider.label}</strong>
-                    </span>
-                    <span className={styles.summaryChip}>
-                      <span className={styles.commandStep}>02</span>
-                      <span className={styles.setupScanLabel}>{copy.selectedTeamLabel}</span>
-                      <strong className={styles.setupScanValue}>{selectedTeam.name}</strong>
-                    </span>
-                    <span className={styles.summaryChip}>
-                      <span className={styles.commandStep}>03</span>
-                      <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
-                      <strong className={styles.setupScanValue}>
-                        {getNextSetupActionLabel(locale, selectedProvider.status)}
-                      </strong>
-                    </span>
-                  </div>
-                ) : null}
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
