@@ -368,13 +368,13 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <div className={styles.setupScanBar} aria-label={copy.activeSetup}>
-                  <div className={styles.setupScanChip}>
-                    <span className={styles.setupChipStep}>1</span>
-                    <div className={styles.setupScanCopy}>
-                      <span className={styles.metaLabel}>{copy.chooseProvider}</span>
+                <div className={styles.setupDigestBar} aria-label={copy.activeSetup}>
+                  <span className={styles.setupDigestLead}>{copy.commandOrder}</span>
+                  <div className={styles.setupDigestChip}>
+                    <div className={styles.digestLabelGroup}>
+                      <span className={styles.setupDigestLabel}>{copy.chooseProvider}</span>
                       <div className={styles.copyTitleGroup}>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
+                        <strong className={styles.setupDigestValue}>{selectedProvider?.label ?? "-"}</strong>
                         {selectedProvider ? (
                           <span
                             className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
@@ -385,20 +385,21 @@ export function HomepageAgentControlSection({
                       </div>
                     </div>
                   </div>
-                  <ArrowRight className={styles.setupScanArrow} size={14} />
-                  <div className={styles.setupScanChip}>
-                    <span className={styles.setupChipStep}>2</span>
-                    <div className={styles.setupScanCopy}>
-                      <span className={styles.metaLabel}>{copy.chooseTeam}</span>
-                      <strong>{selectedTeam?.name ?? "-"}</strong>
+                  <div className={styles.setupDigestChip}>
+                    <div className={styles.digestLabelGroup}>
+                      <span className={styles.setupDigestLabel}>{copy.chooseTeam}</span>
+                      <strong className={styles.setupDigestValue}>{selectedTeam?.name ?? "-"}</strong>
                     </div>
                   </div>
-                  <ArrowRight className={styles.setupScanArrow} size={14} />
-                  <div className={`${styles.setupScanChip} ${styles.setupScanChipAccent}`} aria-label={copy.commandOrder}>
-                    <span className={styles.setupChipStep}>3</span>
-                    <div className={styles.setupScanCopy}>
-                      <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
-                      <strong>{setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}</strong>
+                  <div
+                    className={`${styles.setupDigestChip} ${styles.setupDigestChipAccent}`}
+                    aria-label={copy.commandOrder}
+                  >
+                    <div className={styles.digestLabelGroup}>
+                      <span className={styles.setupDigestLabel}>{copy.nextActionLabel}</span>
+                      <strong className={styles.setupDigestValue}>
+                        {setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}
+                      </strong>
                     </div>
                   </div>
                 </div>
