@@ -328,6 +328,12 @@
   margin-top: 0.02rem;
 }
 
+.setupScanBar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.12rem;
+}
+
 .setupSummaryItem,
 .sequencePill {
   display: grid;
@@ -642,6 +648,7 @@
   }
 
   .setupHeader,
+  .setupScanBar,
   .setupNotesGrid {
     grid-column: 1 / -1;
   }
@@ -799,6 +806,7 @@
   .providerMeta,
   .setupRail,
   .setupSummaryStrip,
+  .setupScanBar,
   .setupPickerGrid,
   .setupCommands,
   .setupNotesGrid {

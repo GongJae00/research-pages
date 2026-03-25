@@ -384,18 +384,6 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <div className={styles.setupSummaryStrip}>
-                  <div className={styles.sequencePill}>
-                    <span className={styles.metaLabel}>{copy.commandOrder}</span>
-                    <div className={styles.sequenceSteps}>
-                      <strong>01</strong>
-                      <span>{copy.connectCommand}</span>
-                      <ArrowRight size={14} />
-                      <strong>02</strong>
-                      <span>{copy.assignCommand}</span>
-                    </div>
-                  </div>
-                </div>
               </div>
               <div className={styles.setupHeaderActions}>
                 <Command size={18} />
@@ -405,6 +393,26 @@ export function HomepageAgentControlSection({
                     <ArrowRight size={16} />
                   </Link>
                 ) : null}
+              </div>
+            </div>
+            <div className={styles.setupScanBar}>
+              <div className={styles.setupSummaryItem}>
+                <span className={styles.metaLabel}>{copy.chooseProvider}</span>
+                <strong>{selectedProvider?.label ?? "-"}</strong>
+              </div>
+              <div className={styles.setupSummaryItem}>
+                <span className={styles.metaLabel}>{copy.chooseTeam}</span>
+                <strong>{selectedTeam?.name ?? "-"}</strong>
+              </div>
+              <div className={styles.sequencePill}>
+                <span className={styles.metaLabel}>{copy.commandOrder}</span>
+                <div className={styles.sequenceSteps}>
+                  <strong>01</strong>
+                  <span>{copy.connectCommand}</span>
+                  <ArrowRight size={14} />
+                  <strong>02</strong>
+                  <span>{copy.assignCommand}</span>
+                </div>
               </div>
             </div>
             <div className={styles.setupPickerGrid}>
