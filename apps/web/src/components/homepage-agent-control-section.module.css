@@ -570,6 +570,18 @@
   color: #0f766e;
 }
 
+.setupCommandsHeader {
+  display: grid;
+  gap: 0.04rem;
+  padding: 0 0.04rem;
+}
+
+.setupCommandsHeader strong {
+  color: #0f172a;
+  font-size: 0.82rem;
+  line-height: 1.15;
+}
+
 .setupRail,
 .setupPickerGrid,
 .setupCommands {
@@ -879,9 +891,16 @@
     grid-column: 1;
   }
 
+  .setupCommandsHeader {
+    grid-column: 2;
+    grid-row: 2;
+    padding-left: 0.2rem;
+    border-left: 1px solid rgba(226, 232, 240, 0.9);
+  }
+
   .setupCommands {
     grid-column: 2;
-    grid-row: 2 / span 3;
+    grid-row: 3 / span 2;
     grid-template-columns: 1fr;
     margin-top: 0;
     padding-left: 0.1rem;
@@ -1040,6 +1059,7 @@
   .setupBuilderCard,
   .setupHeader,
   .setupPickerGrid,
+  .setupCommandsHeader,
   .setupCommands,
   .setupNotesDisclosure,
   .setupNotesGrid {
