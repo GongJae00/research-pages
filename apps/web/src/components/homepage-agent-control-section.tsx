@@ -394,45 +394,18 @@ export function HomepageAgentControlSection({
                 ) : null}
               </div>
             </div>
-            <div className={styles.setupDigestRow}>
-              <div className={styles.setupSummaryItem}>
-                <span className={styles.setupDigestLabel}>
-                  <span className={styles.commandStep}>01</span>
-                  {copy.selectedCli ?? copy.chooseProvider}
-                </span>
-                <div className={styles.scanPillValue}>
-                  <strong>{selectedProvider?.label ?? "-"}</strong>
-                  <span className={styles.digestMeta}>{selectedProvider?.cliName ?? "-"}</span>
-                </div>
-              </div>
-              <div className={styles.setupSummaryItem}>
-                <span className={styles.setupDigestLabel}>
-                  <span className={styles.commandStep}>02</span>
-                  {copy.selectedTeamLabel ?? copy.chooseTeam}
-                </span>
-                <div className={styles.scanPillValue}>
-                  <strong>{selectedTeam?.name ?? "-"}</strong>
-                  <span className={styles.digestMeta}>{selectedTeam?.lane ?? "-"}</span>
-                </div>
-              </div>
-              <div className={`${styles.setupSummaryItem} ${styles.setupFlowSummary}`}>
-                <span className={styles.setupDigestLabel}>{copy.setupCommand}</span>
-                <div className={`${styles.scanPillValue} ${styles.setupFlowValue}`}>
-                  <span className={styles.sequenceStep}>
-                    <span className={styles.commandStep}>01</span>
-                    <strong>{isKoreanLocale(locale) ? "연결" : "Connect"}</strong>
-                  </span>
-                  <ArrowRight size={14} />
-                  <span className={styles.sequenceStep}>
-                    <span className={styles.commandStep}>02</span>
-                    <strong>{isKoreanLocale(locale) ? "배정" : "Assign"}</strong>
-                  </span>
-                </div>
-              </div>
-            </div>
             <div className={styles.setupPickerGrid}>
               <div className={styles.setupPicker}>
-                <span className={styles.metaLabel}>{copy.chooseProvider}</span>
+                <div className={styles.setupPickerLabelRow}>
+                  <span className={styles.setupDigestLabel}>
+                    <span className={styles.commandStep}>01</span>
+                    {copy.chooseProvider}
+                  </span>
+                  <span className={styles.inlineSelection}>
+                    <strong>{selectedProvider?.label ?? "-"}</strong>
+                    <span>{selectedProvider?.cliName ?? "-"}</span>
+                  </span>
+                </div>
                 <div className={styles.optionRow}>
                   {providerOrder.map((providerId) => {
                     const provider = snapshot.providerConnections.find((entry) => entry.providerId === providerId);
@@ -457,7 +430,16 @@ export function HomepageAgentControlSection({
               </div>
 
               <div className={styles.setupPicker}>
-                <span className={styles.metaLabel}>{copy.chooseTeam}</span>
+                <div className={styles.setupPickerLabelRow}>
+                  <span className={styles.setupDigestLabel}>
+                    <span className={styles.commandStep}>02</span>
+                    {copy.chooseTeam}
+                  </span>
+                  <span className={styles.inlineSelection}>
+                    <strong>{selectedTeam?.name ?? "-"}</strong>
+                    <span>{selectedTeam?.lane ?? "-"}</span>
+                  </span>
+                </div>
                 <div className={styles.optionRow}>
                   {snapshot.teams.map((team) => (
                     <button

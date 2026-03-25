@@ -247,7 +247,7 @@
 
 .setupBuilderCard {
   display: grid;
-  gap: 0.06rem;
+  gap: 0.04rem;
   margin-top: 0.08rem;
 }
 
@@ -488,8 +488,38 @@
 
 .setupPicker {
   display: grid;
-  gap: 0.1rem;
-  padding: 0;
+  gap: 0.08rem;
+  padding: 0.18rem 0.22rem 0.22rem;
+}
+
+.setupPickerLabelRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.24rem;
+}
+
+.inlineSelection {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.24rem;
+  color: #64748b;
+  font-size: 0.76rem;
+  font-weight: 600;
+  min-width: 0;
+}
+
+.inlineSelection strong {
+  color: #0f172a;
+  font-size: 0.8rem;
+  line-height: 1.15;
+}
+
+.inlineSelection span {
+  overflow-wrap: anywhere;
 }
 
 .optionRow {
