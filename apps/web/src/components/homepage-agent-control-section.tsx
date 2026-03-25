@@ -385,6 +385,16 @@ export function HomepageAgentControlSection({
               <div className={styles.setupScanBar}>
                 <span className={styles.orderPill}>{copy.commandOrder}</span>
               </div>
+              <div className={styles.quickStartSummary}>
+                {setupRailItems.map((item) => (
+                  <div className={styles.summaryPill} key={item.step}>
+                    <span className={styles.contextLabel}>
+                      {item.step}. {item.label}
+                    </span>
+                    <strong>{item.value}</strong>
+                  </div>
+                ))}
+              </div>
               <div className={styles.quickStartActions}>
                 {setupBriefHref ? (
                   <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
@@ -393,19 +403,6 @@ export function HomepageAgentControlSection({
                   </Link>
                 ) : null}
               </div>
-            </div>
-
-            <div className={styles.setupRail}>
-              {setupRailItems.map((item) => (
-                <div className={styles.selectionCard} key={item.step}>
-                  <div className={styles.selectionHead}>
-                    <span className={styles.commandStep}>{item.step}</span>
-                    <span className={styles.metaLabel}>{item.label}</span>
-                  </div>
-                  <strong>{item.value}</strong>
-                  <p className={styles.compactBody}>{item.detail}</p>
-                </div>
-              ))}
             </div>
 
             <div className={styles.setupPickerGrid}>
