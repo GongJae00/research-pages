@@ -245,8 +245,21 @@
 
 .setupBuilderCard {
   display: grid;
-  gap: 0.18rem;
+  gap: 0.28rem;
   margin-top: 0.12rem;
+}
+
+.setupHeader,
+.setupHeaderActions {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.setupHeaderCopy {
+  display: grid;
+  gap: 0.14rem;
 }
 
 .setupRail,
@@ -265,10 +278,9 @@
 
 .quickStartRail {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-start;
   gap: 0.35rem;
-  padding: 0.05rem 0;
+  padding: 0.04rem 0 0.08rem;
 }
 
 .quickStartSummary {
@@ -325,6 +337,12 @@
   overflow-wrap: anywhere;
 }
 
+.summaryDetail {
+  color: #64748b;
+  font-size: 0.7rem;
+  line-height: 1.2;
+}
+
 .selectionCard {
   display: grid;
   gap: 0.14rem;
@@ -346,13 +364,6 @@
   font-size: 0.88rem;
   line-height: 1.2;
   overflow-wrap: anywhere;
-}
-
-.quickStartActions {
-  display: grid;
-  justify-items: end;
-  align-items: center;
-  flex: 0 0 auto;
 }
 
 .compactBody {
@@ -637,14 +648,12 @@
     width: 100%;
   }
 
-  .quickStartActions {
-    justify-items: stretch;
-  }
-
   .cardHead,
   .panelHead,
   .providerHead,
-  .copyHead {
+  .copyHead,
+  .setupHeader,
+  .setupHeaderActions {
     flex-direction: column;
     align-items: flex-start;
   }

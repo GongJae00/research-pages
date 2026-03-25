@@ -374,17 +374,24 @@ export function HomepageAgentControlSection({
           </div>
 
           <article className={styles.setupBuilderCard}>
-            <div className={styles.panelHead}>
-              <div>
+            <div className={styles.setupHeader}>
+              <div className={styles.setupHeaderCopy}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h3>{copy.setupBuilderTitle}</h3>
+                <p className={styles.compactBody}>{copy.setupBuilderBody}</p>
               </div>
-              <Command size={20} />
+              <div className={styles.setupHeaderActions}>
+                <Command size={20} />
+                {setupBriefHref ? (
+                  <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
+                    {copy.openBrief}
+                    <ArrowRight size={16} />
+                  </Link>
+                ) : null}
+              </div>
             </div>
             <div className={styles.quickStartRail}>
-              <div className={styles.setupScanBar}>
-                <span className={styles.orderPill}>{copy.commandOrder}</span>
-              </div>
+              <span className={styles.orderPill}>{copy.commandOrder}</span>
               <div className={styles.quickStartSummary}>
                 {setupRailItems.map((item) => (
                   <div className={styles.summaryPill} key={item.step}>
@@ -392,16 +399,9 @@ export function HomepageAgentControlSection({
                       {item.step}. {item.label}
                     </span>
                     <strong>{item.value}</strong>
+                    <span className={styles.summaryDetail}>{item.detail}</span>
                   </div>
                 ))}
-              </div>
-              <div className={styles.quickStartActions}>
-                {setupBriefHref ? (
-                  <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
-                    {copy.openBrief}
-                    <ArrowRight size={16} />
-                  </Link>
-                ) : null}
               </div>
             </div>
 
@@ -457,8 +457,8 @@ export function HomepageAgentControlSection({
                     <div className={styles.copyTitleGroup}>
                       <span className={styles.commandStep}>{item.step}</span>
                       <div className={styles.commandTitleStack}>
-                        <span className={styles.metaLabel}>{item.buttonLabel}</span>
-                        <strong>{item.title}</strong>
+                        <span className={styles.copyLabel}>{item.buttonLabel}</span>
+                        <strong>{item.kind === "connect" ? `${item.title} CLI` : item.title}</strong>
                         <span className={styles.commandDetail}>{item.detail}</span>
                       </div>
                     </div>
