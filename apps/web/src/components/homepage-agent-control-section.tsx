@@ -395,22 +395,6 @@ export function HomepageAgentControlSection({
                 ) : null}
               </div>
             </div>
-            <div className={styles.setupScanBar} aria-label={copy.setupStepsLabel}>
-              <span className={styles.scanStep}>
-                <span className={styles.commandStep}>01</span>
-                <strong>{copy.chooseProvider}</strong>
-              </span>
-              <ArrowRight size={14} />
-              <span className={styles.scanStep}>
-                <span className={styles.commandStep}>02</span>
-                <strong>{copy.connectCommand}</strong>
-              </span>
-              <ArrowRight size={14} />
-              <span className={styles.scanStep}>
-                <span className={styles.commandStep}>03</span>
-                <strong>{copy.chooseTeam}</strong>
-              </span>
-            </div>
             <div className={styles.setupDigestRow}>
               <div className={styles.setupSummaryItem}>
                 <span className={styles.setupDigestLabel}>{copy.selectedCli ?? copy.chooseProvider}</span>
@@ -439,6 +423,19 @@ export function HomepageAgentControlSection({
                     <strong>{isKoreanLocale(locale) ? "배정" : "Assign"}</strong>
                   </span>
                 </div>
+              </div>
+              <div className={`${styles.setupSummaryItem} ${styles.setupSummaryItemAction}`}>
+                <span className={styles.setupDigestLabel}>{copy.openBrief}</span>
+                {setupBriefHref ? (
+                  <Link href={setupBriefHref} className={styles.inlineTextLink} target="_blank">
+                    {selectedProvider?.label ?? copy.openBrief}
+                    <ArrowRight size={14} />
+                  </Link>
+                ) : (
+                  <div className={styles.scanPillValue}>
+                    <strong>-</strong>
+                  </div>
+                )}
               </div>
             </div>
             <div className={styles.setupPickerGrid}>
@@ -486,7 +483,7 @@ export function HomepageAgentControlSection({
               </div>
             </div>
 
-            <div className={styles.setupCommands}>
+            <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>
               {setupCommandCards.map((item) => (
                 <div className={styles.copyCard} key={item.kind}>
                   <div className={styles.copyMetaRow}>

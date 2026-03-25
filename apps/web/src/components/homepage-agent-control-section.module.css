@@ -247,7 +247,7 @@
 
 .setupBuilderCard {
   display: grid;
-  gap: 0.08rem;
+  gap: 0.06rem;
   margin-top: 0.08rem;
 }
 
@@ -389,7 +389,7 @@
 
 .setupHeader {
   align-items: center;
-  padding-bottom: 0.08rem;
+  padding-bottom: 0.1rem;
   border-bottom: 1px solid rgba(226, 232, 240, 0.82);
 }
 
@@ -428,39 +428,8 @@
 
 .setupDigestRow {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.08rem;
-}
-
-.setupScanBar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.2rem;
-  padding: 0.12rem 0.02rem 0;
-  color: #64748b;
-}
-
-.setupScanBar svg {
-  color: #94a3b8;
-  flex: 0 0 auto;
-}
-
-.scanStep {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.32rem;
-  min-width: 0;
-  padding: 0.18rem 0.26rem;
-  border-radius: 999px;
-  background: rgba(248, 250, 252, 0.96);
-  border: 1px solid rgba(203, 213, 225, 0.72);
-}
-
-.scanStep strong {
-  color: #0f172a;
-  font-size: 0.76rem;
-  line-height: 1.1;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.06rem;
 }
 
 .providerSummaryChips {
@@ -491,7 +460,9 @@
 
 .setupDigestRow .setupSummaryItem {
   min-width: 0;
-  padding: 0.2rem 0.3rem;
+  padding: 0.18rem 0.28rem;
+  align-items: flex-start;
+  align-content: start;
 }
 
 .setupDigestRow .sequenceSteps,
@@ -499,11 +470,25 @@
   min-width: 0;
 }
 
+.setupSummaryItemAction {
+  justify-content: space-between;
+}
+
+.inlineTextLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  color: #0f172a;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
 .compactBody {
   margin: 0;
   color: #475569;
-  font-size: 0.78rem;
-  line-height: 1.2;
+  font-size: 0.74rem;
+  line-height: 1.15;
 }
 
 .setupPicker {
@@ -525,8 +510,8 @@
   justify-content: center;
   gap: 0.35rem;
   border-radius: 999px;
-  min-height: 1.8rem;
-  padding: 0.26rem 0.58rem;
+  min-height: 1.72rem;
+  padding: 0.22rem 0.54rem;
   border: 1px solid rgba(203, 213, 225, 0.9);
   background: rgba(248, 250, 252, 0.96);
   color: #334155;
@@ -553,7 +538,7 @@
 .copyCard {
   display: grid;
   gap: 0.08rem;
-  padding: 0.16rem 0.2rem;
+  padding: 0.14rem 0.18rem;
 }
 
 .copyMetaRow,
@@ -603,7 +588,7 @@
 
 .copyIconButton {
   min-width: 1.9rem;
-  padding-inline: 0.52rem;
+  padding-inline: 0.46rem;
 }
 
 .copyButtonText {
@@ -622,7 +607,7 @@
   display: block;
   flex: 1 1 auto;
   min-width: 0;
-  padding: 0.28rem 0.36rem;
+  padding: 0.24rem 0.34rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 12px;
   background: rgba(248, 250, 252, 0.92);
@@ -929,7 +914,7 @@
   }
 
   .setupDigestRow {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .lead,
