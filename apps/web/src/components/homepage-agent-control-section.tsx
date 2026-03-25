@@ -396,23 +396,6 @@ export function HomepageAgentControlSection({
                 ) : null}
               </div>
             </div>
-            <div className={styles.setupGlanceBar}>
-              <span className={styles.metaLabel}>{copy.setupStepsLabel}</span>
-              <div className={styles.setupCompactFlow}>
-                <span className={styles.compactPill}>
-                  <span className={styles.contextLabel}>01</span>
-                  <span>{selectedProvider?.label ?? "-"}</span>
-                </span>
-                <span className={styles.compactPill}>
-                  <span className={styles.contextLabel}>02</span>
-                  <span>{selectedTeam?.name ?? "-"}</span>
-                </span>
-                <span className={styles.compactPill}>
-                  <span className={styles.contextLabel}>03</span>
-                  <span>{copy.commandOrder}</span>
-                </span>
-              </div>
-            </div>
             <div className={styles.setupPickerGrid}>
               <div className={styles.setupPicker}>
                 <span className={styles.metaLabel}>{copy.chooseProvider}</span>
