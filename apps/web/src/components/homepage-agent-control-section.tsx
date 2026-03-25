@@ -223,6 +223,14 @@ export function HomepageAgentControlSection({
     () => snapshot.providerConnections.filter((entry) => entry.status === "connected").length,
     [snapshot.providerConnections],
   );
+  const readyCount = useMemo(
+    () => snapshot.providerConnections.filter((entry) => entry.status === "ready").length,
+    [snapshot.providerConnections],
+  );
+  const attentionCount = useMemo(
+    () => snapshot.providerConnections.filter((entry) => entry.status === "attention").length,
+    [snapshot.providerConnections],
+  );
 
   const providersByTeam = useMemo(() => {
     const map = new Map<string, typeof snapshot.providerConnections>();
@@ -349,10 +357,26 @@ export function HomepageAgentControlSection({
             <div className={styles.panelHeadCopy}>
               <span className={styles.metaLabel}>{copy.providersLabel}</span>
               <h3>{copy.providersTitle}</h3>
-              <p className={styles.panelLead}>{copy.providersBody}</p>
             </div>
             <div className={styles.panelHeadIcon}>
               <TerminalSquare size={20} />
+            </div>
+          </div>
+          <div className={styles.providerSummaryBar}>
+            <p className={styles.panelLead}>{copy.providersBody}</p>
+            <div className={styles.providerSummaryChips}>
+              <span className={styles.summaryChip}>
+                <strong>{String(connectedCount).padStart(2, "0")}</strong>
+                {getProviderStatusLabel(locale, "connected")}
+              </span>
+              <span className={styles.summaryChip}>
+                <strong>{String(readyCount).padStart(2, "0")}</strong>
+                {getProviderStatusLabel(locale, "ready")}
+              </span>
+              <span className={styles.summaryChip}>
+                <strong>{String(attentionCount).padStart(2, "0")}</strong>
+                {getProviderStatusLabel(locale, "attention")}
+              </span>
             </div>
           </div>
 
@@ -387,6 +411,14 @@ export function HomepageAgentControlSection({
               </div>
             </div>
             <div className={styles.quickStartRail}>
+              <div className={styles.stepRail}>
+                {copy.setupSteps.slice(0, 3).map((item, index) => (
+                  <div className={styles.stepChip} key={item}>
+                    <span className={styles.commandStep}>{String(index + 1).padStart(2, "0")}</span>
+                    <p>{item}</p>
+                  </div>
+                ))}
+              </div>
               <div className={styles.setupScanBar}>
                 <span className={styles.metaLabel}>{copy.commandOrder}</span>
                 <div className={styles.scanPath}>
