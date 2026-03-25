@@ -366,21 +366,22 @@ export function HomepageAgentControlSection({
 
         <article className={styles.providerPanel}>
           <div className={styles.panelHead}>
-            <div>
+            <div className={styles.panelHeadCopy}>
               <span className={styles.metaLabel}>{copy.providersLabel}</span>
               <h3>{copy.providersTitle}</h3>
             </div>
-            <TerminalSquare size={20} />
+            <div className={styles.panelHeadMeta}>
+              <span className={styles.inlineMeta}>{copy.commandOrder}</span>
+              <TerminalSquare size={20} />
+            </div>
           </div>
 
           <article className={styles.setupBuilderCard}>
             <div className={styles.setupHeader}>
-              <div className={styles.setupHeaderCopy}>
-                <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
-                <h3>{copy.setupBuilderTitle}</h3>
-              </div>
+              <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
               <div className={styles.setupHeaderActions}>
-                <Command size={20} />
+                <span className={styles.orderPill}>{copy.commandOrder}</span>
+                <Command size={18} />
                 {setupBriefHref ? (
                   <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
                     {copy.openBrief}
@@ -390,7 +391,6 @@ export function HomepageAgentControlSection({
               </div>
             </div>
             <div className={styles.quickStartRail}>
-              <span className={styles.orderPill}>{copy.commandOrder}</span>
               <div className={styles.quickStartSummary}>
                 {setupRailItems.map((item) => (
                   <div className={styles.summaryPill} key={item.step}>
