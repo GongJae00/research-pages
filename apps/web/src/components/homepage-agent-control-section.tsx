@@ -409,18 +409,22 @@ export function HomepageAgentControlSection({
             {setupScanItems.length ? (
               <div className={styles.setupSelectionRail} aria-label={copy.commandOrder}>
                 <span className={styles.setupSelectionTitle}>{copy.commandOrder}</span>
-                <div className={styles.setupSelectionSummary}>
+                <div className={styles.setupSelectionFlow}>
                   {setupScanItems.map((item, index) => (
                     <div className={styles.setupSelectionItem} key={item.label}>
                       <span className={styles.setupStepBadge}>{`0${index + 1}`}</span>
-                      <span className={styles.setupScanLabel}>{item.label}</span>
-                      <strong>{item.value}</strong>
+                      <span className={styles.setupSelectionText}>
+                        <span className={styles.setupScanLabel}>{item.label}</span>
+                        <strong>{item.value}</strong>
+                      </span>
                     </div>
                   ))}
                   <div className={styles.setupSelectionItem}>
                     <span className={styles.setupStepBadge}>03</span>
-                    <span className={styles.setupScanLabel}>{copy.setupCommand}</span>
-                    <strong>{isKoreanLocale(locale) ? "connect / assign" : "Connect / assign"}</strong>
+                    <span className={styles.setupSelectionText}>
+                      <span className={styles.setupScanLabel}>{copy.setupCommand}</span>
+                      <strong>{isKoreanLocale(locale) ? "connect / assign" : "Connect / assign"}</strong>
+                    </span>
                   </div>
                 </div>
               </div>

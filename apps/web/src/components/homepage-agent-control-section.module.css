@@ -454,27 +454,47 @@
   text-transform: uppercase;
 }
 
-.setupSelectionSummary {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.12rem;
+.setupSelectionFlow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.08rem;
 }
 
 .setupSelectionItem {
-  display: grid;
-  gap: 0.05rem;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.24rem;
   min-width: 0;
-  padding: 0.22rem 0.28rem;
+  padding: 0.2rem 0.32rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 12px;
+  border-radius: 999px;
   background: rgba(248, 250, 252, 0.86);
+}
+
+.setupSelectionItem:not(:last-child)::after {
+  content: ">";
+  position: absolute;
+  top: 50%;
+  right: -0.55rem;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.setupSelectionText {
+  display: grid;
+  gap: 0.03rem;
+  min-width: 0;
 }
 
 .setupSelectionItem strong {
   min-width: 0;
   color: #0f172a;
-  font-size: 0.8rem;
-  line-height: 1.2;
+  font-size: 0.77rem;
+  line-height: 1.15;
   overflow-wrap: anywhere;
 }
 
@@ -929,8 +949,7 @@
   .setupSummaryStrip,
   .setupPickerGrid,
   .setupCommands,
-  .setupNotesGrid,
-  .setupSelectionSummary {
+  .setupNotesGrid {
     grid-template-columns: 1fr;
   }
 
@@ -958,9 +977,18 @@
     align-items: flex-start;
   }
 
-  .setupSelectionSummary,
+  .setupSelectionFlow {
+    align-items: stretch;
+  }
+
   .setupSelectionItem {
+    width: 100%;
+    border-radius: 16px;
     align-items: flex-start;
+  }
+
+  .setupSelectionItem::after {
+    display: none;
   }
 
   .sequenceArrow {
