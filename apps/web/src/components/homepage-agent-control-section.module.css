@@ -264,6 +264,13 @@
   gap: 0.03rem;
 }
 
+.setupHeaderScan {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.14rem;
+  margin-top: 0.04rem;
+}
+
 .setupHeaderBody {
   margin: 0;
   color: #475569;
@@ -287,6 +294,17 @@
   font-weight: 700;
   line-height: 1.2;
   overflow-wrap: anywhere;
+}
+
+.setupScanChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.24rem;
+  min-width: 0;
+  padding: 0.16rem 0.34rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 999px;
+  background: rgba(248, 250, 252, 0.92);
 }
 
 .setupTitleBlock h4 {

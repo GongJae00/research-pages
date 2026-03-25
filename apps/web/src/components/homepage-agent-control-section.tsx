@@ -364,6 +364,18 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                {selectedProvider && selectedTeam ? (
+                  <div className={styles.setupHeaderScan} aria-label={copy.activeSetup}>
+                    <span className={styles.setupScanChip}>
+                      <span className={styles.setupScanLabel}>{copy.selectedCli}</span>
+                      <strong className={styles.setupScanValue}>{selectedProvider.label}</strong>
+                    </span>
+                    <span className={styles.setupScanChip}>
+                      <span className={styles.setupScanLabel}>{copy.selectedTeamLabel}</span>
+                      <strong className={styles.setupScanValue}>{selectedTeam.name}</strong>
+                    </span>
+                  </div>
+                ) : null}
                 <div className={styles.setupHeaderSequence} aria-label={copy.commandOrder}>
                   <strong>{isKoreanLocale(locale) ? "실행 순서" : "Run order"}</strong>
                   <div className={styles.sequenceStep}>
@@ -450,14 +462,6 @@ export function HomepageAgentControlSection({
 
             {selectedProvider && selectedTeam ? (
               <div className={styles.setupSummaryBar} aria-label={copy.activeSetup}>
-                <span className={styles.summaryChip}>
-                  <span className={styles.setupDigestLead}>{copy.activeSetup}</span>
-                  <strong>{selectedProvider.label}</strong>
-                  <span className={styles.summaryDivider} aria-hidden="true">
-                    /
-                  </span>
-                  <strong>{selectedTeam.name}</strong>
-                </span>
                 <span
                   className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
                 >
