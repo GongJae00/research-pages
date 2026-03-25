@@ -379,6 +379,16 @@ export function HomepageAgentControlSection({
                 <h4>{copy.setupBuilderTitle}</h4>
                 <p className={styles.setupBuilderLead}>{copy.setupBuilderBody}</p>
                 <span className={styles.setupHeaderNote}>{copy.commandOrder}</span>
+                {quickStartItems.length ? (
+                  <div className={styles.setupSummaryStrip} aria-label={copy.commandOrder}>
+                    {quickStartItems.map((item) => (
+                      <div className={styles.setupMetaPill} key={item.label}>
+                        <span className={styles.setupScanLabel}>{item.label}</span>
+                        <strong>{item.value}</strong>
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
               </div>
               <div className={styles.setupHeaderActions}>
                 {setupBriefHref ? (
@@ -389,22 +399,6 @@ export function HomepageAgentControlSection({
                 ) : null}
               </div>
             </div>
-            {quickStartItems.length ? (
-              <div className={styles.quickStartStrip} aria-label={copy.commandOrder}>
-                <span className={styles.quickStartLabel}>{copy.setupStepsLabel}</span>
-                <div className={styles.quickStartFlow}>
-                  {quickStartItems.map((item, index) => (
-                    <div className={styles.quickStartItem} key={item.label}>
-                      <span className={styles.quickStartIndex}>{`0${index + 1}`}</span>
-                      <span className={styles.quickStartText}>
-                        <span className={styles.setupScanLabel}>{item.label}</span>
-                        <strong>{item.value}</strong>
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : null}
             <div className={styles.setupPickerGrid}>
               <div className={styles.setupPicker}>
                 <div className={styles.setupPickerLabelRow}>
