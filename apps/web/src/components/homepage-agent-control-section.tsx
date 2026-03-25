@@ -14,7 +14,7 @@ import {
   TerminalSquare,
   Waypoints,
 } from "lucide-react";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { buildAgentOpsSetupManifest } from "@/lib/agent-ops-setup";
 import type { AgentOperationsSnapshot, ProviderStatus } from "@/lib/agent-operations-snapshot";
@@ -362,22 +362,6 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <div className={styles.setupRunOrder} aria-label={copy.commandOrder}>
-                  <span className={styles.setupRunOrderLabel}>{copy.commandOrder}</span>
-                  {setupCommandCards.map((item, index) => (
-                    <Fragment key={item.kind}>
-                      {index > 0 ? (
-                        <span className={styles.setupRunOrderArrow} aria-hidden="true">
-                          <ArrowRight size={12} />
-                        </span>
-                      ) : null}
-                      <span className={styles.setupRunOrderStep}>
-                        <span className={styles.commandStep}>{item.step}</span>
-                        <span>{item.label}</span>
-                      </span>
-                    </Fragment>
-                  ))}
-                </div>
                 <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
                   <div className={styles.setupSummaryBar}>
                     <span className={`${styles.summaryChip} ${styles.summaryChipWide}`}>
