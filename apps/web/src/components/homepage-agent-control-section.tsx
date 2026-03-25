@@ -72,6 +72,14 @@ function getNextSetupActionLabel(locale: string, status: ProviderStatus) {
   return status === "connected" ? "Assign team" : "Connect CLI";
 }
 
+function getSetupCommandTitle(locale: string, kind: "connect" | "assign") {
+  if (isKoreanLocale(locale)) {
+    return kind === "connect" ? "CLI ?곌껐" : "? 諛곗젙";
+  }
+
+  return kind === "connect" ? "Connect CLI" : "Assign team";
+}
+
 function getCopy(locale: string, opsEnabled: boolean) {
   if (isKoreanLocale(locale)) {
     return {
@@ -146,7 +154,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
     providersBody:
       "Each developer registers a local CLI session with the bridge, and this page keeps connection state and team ownership visible.",
     setupBuilderLabel: "Homepage setup builder",
-    setupBuilderTitle: "Two-command CLI setup",
+    setupBuilderTitle: "Pick a CLI, run the next command",
     setupBuilderBody: "Choose a CLI and team, then run the highlighted command in the local terminal.",
     connectCommand: "Copy connect command",
     assignCommand: "Copy assign command",
@@ -276,18 +284,14 @@ export function HomepageAgentControlSection({
         {
           kind: "connect" as const,
           step: "01",
-          title: isKoreanLocale(locale)
-            ? `${selectedProvider?.label ?? "-"} CLI`
-            : `Connect ${selectedProvider?.label ?? "-"} CLI`,
+          title: getSetupCommandTitle(locale, "connect"),
           command: setupManifest.commands.connect,
           buttonLabel: copy.connectCommand,
         },
         {
           kind: "assign" as const,
           step: "02",
-          title: isKoreanLocale(locale)
-            ? `${selectedTeam?.name ?? "-"} ${copy.assignedTeam}`
-            : `Assign ${selectedTeam?.name ?? "-"}`,
+          title: getSetupCommandTitle(locale, "assign"),
           command: setupManifest.commands.assign,
           buttonLabel: copy.assignCommand,
         },
@@ -511,6 +515,9 @@ export function HomepageAgentControlSection({
                   </div>
                   <div className={styles.commandRow}>
                     <code>{item.command}</code>
+                    <span className={styles.commandTarget}>
+                      {item.kind === "connect" ? selectedProvider?.label ?? "-" : selectedTeam?.name ?? "-"}
+                    </span>
                   </div>
                 </div>
               ))}
