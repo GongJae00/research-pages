@@ -372,7 +372,7 @@ export function HomepageAgentControlSection({
                 {selectedProvider && selectedTeam ? (
                   <div className={styles.setupFlowBar}>
                     <span className={styles.setupDigestTitle}>
-                      {copy.activeSetup ?? (isKoreanLocale(locale) ? "?꾩꽦 ?뗭뾽" : "Active setup")}
+                      {copy.commandOrder}
                     </span>
                     <div className={styles.setupFlowRow}>
                       <span className={styles.setupFlowItem}>
