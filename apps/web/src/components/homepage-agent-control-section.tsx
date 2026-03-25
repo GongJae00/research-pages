@@ -371,6 +371,24 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                {selectedProvider && selectedTeam ? (
+                  <div className={styles.setupHeaderSummary}>
+                    <strong className={styles.setupDigestOrder}>{copy.commandOrder}</strong>
+                    <div className={styles.setupHeaderSelectionRow}>
+                      <span className={styles.setupHeaderSelection}>
+                        <span className={styles.commandStep}>01</span>
+                        <span className={styles.setupHeaderSelectionValue}>{selectedProvider.label}</span>
+                      </span>
+                      <span className={styles.sequenceArrow} aria-hidden="true">
+                        <ArrowRight size={14} />
+                      </span>
+                      <span className={styles.setupHeaderSelection}>
+                        <span className={styles.commandStep}>02</span>
+                        <span className={styles.setupHeaderSelectionValue}>{selectedTeam.name}</span>
+                      </span>
+                    </div>
+                  </div>
+                ) : null}
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.providerSummaryChips}>
@@ -395,28 +413,6 @@ export function HomepageAgentControlSection({
                 ) : null}
               </div>
             </div>
-            {selectedProvider && selectedTeam ? (
-              <div className={styles.setupDigestBar}>
-                <strong className={styles.setupDigestOrder}>{copy.commandOrder}</strong>
-                <div className={styles.setupDigestCard}>
-                  <span className={styles.setupDigestLabel}>
-                    <span className={styles.commandStep}>01</span>
-                    {copy.chooseProvider}
-                  </span>
-                  <span className={styles.setupDigestValue}>{selectedProvider.label}</span>
-                </div>
-                <span className={styles.sequenceArrow} aria-hidden="true">
-                  <ArrowRight size={14} />
-                </span>
-                <div className={styles.setupDigestCard}>
-                  <span className={styles.setupDigestLabel}>
-                    <span className={styles.commandStep}>02</span>
-                    {copy.chooseTeam}
-                  </span>
-                  <span className={styles.setupDigestValue}>{selectedTeam.name}</span>
-                </div>
-              </div>
-            ) : null}
             <div className={styles.setupPickerGrid}>
               <div className={styles.setupPicker}>
                 <div className={styles.setupPickerLabelRow}>
