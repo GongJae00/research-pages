@@ -272,14 +272,22 @@
 }
 
 .setupScanItem {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
+  display: inline-grid;
+  gap: 0.04rem;
   min-width: 0;
-  padding: 0.18rem 0.3rem;
+  padding: 0.2rem 0.34rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 999px;
   background: rgba(248, 250, 252, 0.92);
+}
+
+.setupScanLabel {
+  color: #64748b;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  text-transform: uppercase;
 }
 
 .setupScanValue {
@@ -553,7 +561,7 @@
 
 .copyCard {
   display: grid;
-  gap: 0.06rem;
+  gap: 0.04rem;
   padding: 0.1rem;
 }
 
@@ -570,6 +578,15 @@
   gap: 0.02rem;
 }
 
+.commandCardLabel {
+  color: #64748b;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
 .commandTitleLine {
   display: flex;
   flex-wrap: wrap;
@@ -581,12 +598,6 @@
   color: #0f172a;
   font-size: 0.88rem;
   line-height: 1.2;
-}
-
-.commandDetail {
-  color: #64748b;
-  font-size: 0.8rem;
-  line-height: 1.3;
 }
 
 .copyButton {

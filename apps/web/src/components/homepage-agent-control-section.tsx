@@ -271,7 +271,6 @@ export function HomepageAgentControlSection({
           step: "01",
           label: copy.connectCommand,
           title: selectedProvider?.label ?? "-",
-          detail: selectedProvider?.cliName ?? "-",
           command: setupManifest.commands.connect,
           buttonLabel: copy.connectCommand,
         },
@@ -280,7 +279,6 @@ export function HomepageAgentControlSection({
           step: "02",
           label: copy.assignCommand,
           title: selectedTeam?.name ?? "-",
-          detail: selectedTeam?.lane ?? "-",
           command: setupManifest.commands.assign,
           buttonLabel: copy.assignCommand,
         },
@@ -377,11 +375,11 @@ export function HomepageAgentControlSection({
                       <strong className={styles.setupDigestOrder}>{copy.commandOrder}</strong>
                     </span>
                     <span className={styles.setupScanItem}>
-                      <span className={styles.commandStep}>01</span>
+                      <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
                       <span className={styles.setupScanValue}>{selectedProvider.label}</span>
                     </span>
                     <span className={styles.setupScanItem}>
-                      <span className={styles.commandStep}>02</span>
+                      <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
                       <span className={styles.setupScanValue}>{selectedTeam.name}</span>
                     </span>
                   </div>
@@ -472,10 +470,8 @@ export function HomepageAgentControlSection({
                     <div className={styles.copyTitleGroup}>
                       <span className={styles.commandStep}>{item.step}</span>
                       <div className={styles.commandTitleStack}>
-                        <div className={styles.commandTitleLine}>
-                          <strong>{item.kind === "connect" ? `${item.title} CLI` : item.title}</strong>
-                          <span className={styles.commandDetail}>{item.detail}</span>
-                        </div>
+                        <span className={styles.commandCardLabel}>{item.label}</span>
+                        <strong>{item.kind === "connect" ? `${item.title} CLI` : item.title}</strong>
                       </div>
                     </div>
                   </div>
