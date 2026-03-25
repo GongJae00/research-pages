@@ -369,6 +369,7 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                <p className={styles.setupTitleHint}>{copy.setupBuilderBody}</p>
                 {selectedProvider && selectedTeam ? (
                   <div className={styles.setupDigestBar}>
                     <span className={styles.setupDigestTitle}>
@@ -469,11 +470,6 @@ export function HomepageAgentControlSection({
                   ))}
                 </div>
               </div>
-            </div>
-
-            <div className={styles.setupCommandHeader}>
-              <span className={styles.metaLabel}>{copy.setupCommand}</span>
-              <strong>{copy.commandOrder}</strong>
             </div>
 
             <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>

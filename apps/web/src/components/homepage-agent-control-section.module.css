@@ -247,7 +247,7 @@
 
 .setupBuilderCard {
   display: grid;
-  gap: 0.06rem;
+  gap: 0.04rem;
   margin-top: 0.08rem;
 }
 
@@ -261,7 +261,7 @@
 
 .setupTitleBlock {
   display: grid;
-  gap: 0.04rem;
+  gap: 0.03rem;
 }
 
 .setupDigestBar {
@@ -332,11 +332,12 @@
 }
 
 .setupTitleHint {
-  margin: 0.02rem 0 0;
+  margin: 0;
   color: #475569;
   font-size: 0.74rem;
   font-weight: 600;
   line-height: 1.2;
+  max-width: 30rem;
 }
 
 .setupQuickStartLabel {
@@ -454,7 +455,7 @@
 
 .setupHeader {
   align-items: flex-start;
-  padding-bottom: 0.02rem;
+  padding-bottom: 0.01rem;
   border-bottom: 1px solid rgba(226, 232, 240, 0.82);
 }
 
@@ -463,20 +464,6 @@
   flex-wrap: wrap;
   gap: 0.14rem;
   justify-content: flex-end;
-}
-
-.setupCommandHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.4rem;
-  padding: 0.1rem 0.08rem 0;
-}
-
-.setupCommandHeader strong {
-  color: #0f172a;
-  font-size: 0.76rem;
-  line-height: 1.2;
 }
 
 .setupHeaderTools {
@@ -493,13 +480,13 @@
 
 .setupCommands {
   margin-top: 0;
-  gap: 0.05rem;
+  gap: 0.04rem;
 }
 
 .setupPickerGrid {
   margin-top: 0;
   align-items: start;
-  gap: 0.04rem;
+  gap: 0.03rem;
 }
 
 .setupSelectionRow {
@@ -535,7 +522,7 @@
 
 .setupPicker {
   display: grid;
-  gap: 0.06rem;
+  gap: 0.05rem;
   padding: 0.02rem 0.08rem;
 }
 
@@ -586,7 +573,7 @@
 .copyCard {
   display: grid;
   gap: 0.04rem;
-  padding: 0.1rem;
+  padding: 0.08rem;
 }
 
 .copyMetaRow,
@@ -936,7 +923,6 @@
   .copyMetaRow,
   .commandRow,
   .providerSummaryBar,
-  .setupCommandHeader,
   .setupHeader,
   .setupHeaderActions,
   .setupMetaRow,
