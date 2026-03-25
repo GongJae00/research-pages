@@ -362,50 +362,51 @@ export function HomepageAgentControlSection({
           <article className={styles.setupBuilderCard}>
             <div className={styles.setupHeader}>
               <div className={styles.setupTitleBlock}>
-                <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                   <span className={styles.setupOrderValue}>{copy.commandOrder}</span>
                 </div>
-                <div className={styles.setupScanStrip} aria-label={copy.activeSetup}>
-                  <div className={styles.setupScanItem}>
-                    <span className={styles.commandStep}>01</span>
-                    <div className={styles.setupScanCopy}>
-                      <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
-                      <div className={styles.setupScanValueRow}>
-                        <strong className={styles.setupScanValue}>{selectedProvider?.label ?? "-"}</strong>
-                        {selectedProvider ? (
-                          <span
-                            className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
-                          >
-                            {getProviderStatusLabel(locale, selectedProvider.status)}
-                          </span>
-                        ) : null}
+                <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
+                  <div className={styles.setupSummaryBar}>
+                    <div className={styles.summaryChip}>
+                      <span className={styles.commandStep}>01</span>
+                      <div className={styles.summaryChipCopy}>
+                        <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
+                        <div className={styles.summaryChipValueRow}>
+                          <strong>{selectedProvider?.label ?? "-"}</strong>
+                          {selectedProvider ? (
+                            <span
+                              className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
+                            >
+                              {getProviderStatusLabel(locale, selectedProvider.status)}
+                            </span>
+                          ) : null}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <span className={styles.setupScanArrow} aria-hidden="true">
-                    <ArrowRight size={14} />
-                  </span>
-                  <div className={styles.setupScanItem}>
-                    <span className={styles.commandStep}>02</span>
-                    <div className={styles.setupScanCopy}>
-                      <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
-                      <strong className={styles.setupScanValue}>{selectedTeam?.name ?? "-"}</strong>
+                    <span className={styles.summaryFlowArrow} aria-hidden="true">
+                      <ArrowRight size={14} />
+                    </span>
+                    <div className={`${styles.summaryChip} ${styles.summaryChipWide}`}>
+                      <span className={styles.commandStep}>02</span>
+                      <div className={styles.summaryChipCopy}>
+                        <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
+                        <strong>{selectedTeam?.name ?? "-"}</strong>
+                      </div>
                     </div>
-                  </div>
-                  <span className={styles.setupScanArrow} aria-hidden="true">
-                    <ArrowRight size={14} />
-                  </span>
-                  <div className={styles.setupScanItem}>
-                    <span className={styles.commandStep}>03</span>
-                    <div className={styles.setupScanCopy}>
-                      <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
-                      <strong className={styles.setupScanValue}>
-                        {selectedProvider
-                          ? getNextSetupActionLabel(locale, selectedProvider.status)
-                          : copy.setupCommand}
-                      </strong>
+                    <span className={styles.summaryFlowArrow} aria-hidden="true">
+                      <ArrowRight size={14} />
+                    </span>
+                    <div className={`${styles.summaryChip} ${styles.summaryChipWide}`}>
+                      <span className={styles.commandStep}>03</span>
+                      <div className={styles.summaryChipCopy}>
+                        <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
+                        <strong>
+                          {selectedProvider
+                            ? getNextSetupActionLabel(locale, selectedProvider.status)
+                            : copy.setupCommand}
+                        </strong>
+                      </div>
                     </div>
                   </div>
                 </div>
