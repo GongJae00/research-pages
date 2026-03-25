@@ -395,19 +395,11 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <div className={styles.setupFlowLine}>
-                  <span className={styles.setupFlowLead}>{setupFlowLabel}</span>
-                  <strong>{selectedProvider?.label ?? "-"}</strong>
-                  <span className={styles.setupFlowDivider} aria-hidden="true">
-                    /
-                  </span>
-                  <strong>{selectedTeam?.name ?? "-"}</strong>
-                  <span className={styles.setupFlowDivider} aria-hidden="true">
-                    /
-                  </span>
-                  <span className={styles.setupFlowAction}>{nextSetupCommand?.title ?? copy.setupCommand}</span>
-                </div>
-                <div className={styles.setupScanBar} aria-label={copy.setupStepsLabel}>
+                <div
+                  className={styles.setupScanBar}
+                  aria-label={copy.setupStepsLabel}
+                  title={setupFlowLabel}
+                >
                   <span className={styles.setupScanItem}>
                     <span className={styles.commandStep}>01</span>
                     <span className={styles.setupScanLabel}>{copy.selectedCli}</span>
