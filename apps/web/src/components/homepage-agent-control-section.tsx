@@ -449,7 +449,29 @@ export function HomepageAgentControlSection({
             </div>
 
             {selectedProvider && selectedTeam ? (
-              <div className={styles.setupSelectionRow} aria-label={copy.activeSetup}>
+              <div className={styles.setupSummaryBar} aria-label={copy.activeSetup}>
+                <span className={styles.summaryChip}>
+                  <span className={styles.setupDigestLead}>{copy.activeSetup}</span>
+                  <strong>{selectedProvider.label}</strong>
+                  <span className={styles.summaryDivider} aria-hidden="true">
+                    /
+                  </span>
+                  <strong>{selectedTeam.name}</strong>
+                </span>
+                <span
+                  className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
+                >
+                  {getProviderStatusLabel(locale, selectedProvider.status)}
+                </span>
+                <span className={styles.summaryChip}>
+                  <span className={styles.setupDigestLead}>{copy.heartbeat}</span>
+                  <strong>{formatBoardTimestamp(locale, selectedProvider.lastHeartbeat)}</strong>
+                </span>
+              </div>
+            ) : null}
+
+            {selectedProvider && selectedTeam ? (
+              <div className={styles.setupSelectionRow}>
                 <div className={styles.setupDigestChip}>
                   <span className={styles.setupDigestLead}>{copy.selectedCli}</span>
                   <strong className={styles.setupDigestValue}>{selectedProvider.label}</strong>
@@ -462,9 +484,7 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupDigestChip}>
                   <span className={styles.setupDigestLead}>{copy.selectedTeamLabel}</span>
                   <strong className={styles.setupDigestValue}>{selectedTeam.name}</strong>
-                  <span className={styles.setupScanValue}>
-                    {copy.heartbeat}: {formatBoardTimestamp(locale, selectedProvider.lastHeartbeat)}
-                  </span>
+                  <span className={styles.setupScanValue}>{copy.commandOrder}</span>
                 </div>
               </div>
             ) : null}
