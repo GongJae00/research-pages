@@ -247,7 +247,7 @@
 
 .setupBuilderCard {
   display: grid;
-  gap: 0.06rem;
+  gap: 0.05rem;
   margin-top: 0.08rem;
 }
 
@@ -261,7 +261,7 @@
 
 .setupTopline {
   display: grid;
-  gap: 0.1rem;
+  gap: 0.08rem;
 }
 
 .setupTitleBlock {
@@ -281,13 +281,13 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.18rem;
+  gap: 0.14rem;
 }
 
 .setupSelectionBar {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.12rem;
+  gap: 0.1rem;
 }
 
 .setupSelectionPill,
@@ -436,7 +436,14 @@
 .setupHeaderActions {
   align-items: center;
   flex-wrap: wrap;
+  gap: 0.3rem;
   justify-content: flex-end;
+}
+
+.setupHeaderTools {
+  display: inline-flex;
+  align-items: center;
+  color: #0f766e;
 }
 
 .setupRail,
@@ -454,38 +461,30 @@
   margin-top: 0;
 }
 
-.providerSummaryBar {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.3rem;
-  margin-top: 0.12rem;
-}
-
 .providerSummaryChips {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 0.18rem;
+  gap: 0.12rem;
 }
 
 .summaryChip {
   display: inline-flex;
   align-items: center;
   gap: 0.28rem;
-  padding: 0.28rem 0.48rem;
+  padding: 0.24rem 0.42rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 999px;
   background: rgba(248, 250, 252, 0.92);
   color: #64748b;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 700;
   white-space: nowrap;
 }
 
 .summaryChip strong {
   color: #0f172a;
-  font-size: 0.76rem;
+  font-size: 0.74rem;
 }
 
 .selectionCard {
@@ -933,6 +932,10 @@
   .commandTitleLine {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .providerSummaryChips {
+    justify-content: flex-start;
   }
 
   .lead,

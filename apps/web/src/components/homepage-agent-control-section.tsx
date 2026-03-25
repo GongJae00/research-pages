@@ -364,22 +364,6 @@ export function HomepageAgentControlSection({
               <TerminalSquare size={20} />
             </div>
           </div>
-          <div className={styles.providerSummaryBar}>
-            <div className={styles.providerSummaryChips}>
-              <span className={styles.summaryChip}>
-                <strong>{String(connectedCount).padStart(2, "0")}</strong>
-                {getProviderStatusLabel(locale, "connected")}
-              </span>
-              <span className={styles.summaryChip}>
-                <strong>{String(readyCount).padStart(2, "0")}</strong>
-                {getProviderStatusLabel(locale, "ready")}
-              </span>
-              <span className={styles.summaryChip}>
-                <strong>{String(attentionCount).padStart(2, "0")}</strong>
-                {getProviderStatusLabel(locale, "attention")}
-              </span>
-            </div>
-          </div>
 
           <article className={styles.setupBuilderCard}>
             <div className={styles.setupHeader}>
@@ -388,7 +372,23 @@ export function HomepageAgentControlSection({
                 <h4>{copy.setupBuilderTitle}</h4>
               </div>
               <div className={styles.setupHeaderActions}>
-                <Command size={18} />
+                <div className={styles.providerSummaryChips}>
+                  <span className={styles.summaryChip}>
+                    <strong>{String(connectedCount).padStart(2, "0")}</strong>
+                    {getProviderStatusLabel(locale, "connected")}
+                  </span>
+                  <span className={styles.summaryChip}>
+                    <strong>{String(readyCount).padStart(2, "0")}</strong>
+                    {getProviderStatusLabel(locale, "ready")}
+                  </span>
+                  <span className={styles.summaryChip}>
+                    <strong>{String(attentionCount).padStart(2, "0")}</strong>
+                    {getProviderStatusLabel(locale, "attention")}
+                  </span>
+                </div>
+                <div className={styles.setupHeaderTools}>
+                  <Command size={18} />
+                </div>
                 {setupBriefHref ? (
                   <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
                     {copy.openBrief}
