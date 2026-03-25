@@ -643,15 +643,33 @@
   display: none;
 }
 
-.setupCommandsSummaryCopy {
-  display: grid;
-  gap: 0.03rem;
+.setupSequenceSummary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
 }
 
-.setupCommandsSummaryCopy strong {
+.setupSequenceStep {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.16rem;
+  min-width: 0;
+  flex: 1 1 12rem;
+}
+
+.setupSequenceCopy {
+  display: grid;
+  gap: 0.03rem;
+  min-width: 0;
+}
+
+.setupSequenceCopy strong {
   color: #0f172a;
   font-size: 0.78rem;
   line-height: 1.1;
+  overflow-wrap: anywhere;
 }
 
 .setupCommandsHint {
@@ -1257,6 +1275,15 @@
 
   .setupScanBar {
     grid-template-columns: 1fr;
+  }
+
+  .setupCommandsSummary {
+    align-items: flex-start;
+  }
+
+  .setupSequenceSummary,
+  .setupSequenceStep {
+    width: 100%;
   }
 
   .setupTitleRow {

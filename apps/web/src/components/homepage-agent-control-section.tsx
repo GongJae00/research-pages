@@ -495,9 +495,18 @@ export function HomepageAgentControlSection({
 
             <details className={styles.setupCommandsDisclosure}>
               <summary className={styles.setupCommandsSummary}>
-                <div className={styles.setupCommandsSummaryCopy}>
-                  <span className={styles.metaLabel}>{copy.commandOrder}</span>
-                  <strong>{copy.setupStepsLabel}</strong>
+                <div className={styles.setupSequenceSummary}>
+                  {orderedSetupCommandCards.map((item, index) => (
+                    <div className={styles.setupSequenceStep} key={item.kind}>
+                      <span className={styles.commandStep}>{item.step}</span>
+                      <div className={styles.setupSequenceCopy}>
+                        <span className={styles.metaLabel}>
+                          {index === 0 ? copy.commandOrder : copy.nextActionLabel}
+                        </span>
+                        <strong>{item.title}</strong>
+                      </div>
+                    </div>
+                  ))}
                 </div>
                 <span className={styles.setupCommandsHint}>
                   {isKoreanLocale(locale) ? "?紐⑤뱺 紐낅졊 蹂닿린" : "View both commands"}
