@@ -247,7 +247,7 @@
 
 .setupBuilderCard {
   display: grid;
-  gap: 0.04rem;
+  gap: 0.02rem;
   margin-top: 0.08rem;
 }
 
@@ -261,55 +261,31 @@
 
 .setupTitleBlock {
   display: grid;
-  gap: 0.01rem;
-}
-
-.setupStoryBar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.18rem;
-  padding: 0.24rem 0.28rem;
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  border-radius: 14px;
-  background: rgba(248, 250, 252, 0.84);
-}
-
-.setupDigestTitle {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.16rem 0.34rem;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.08);
-  color: #475569;
-  font-size: 0.66rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  line-height: 1.1;
-  text-transform: uppercase;
-}
-
-.setupFlowRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  flex: 1 1 18rem;
   gap: 0.08rem;
 }
 
-.setupFlowItem {
+.setupHeaderSummary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.16rem;
+}
+
+.setupHeaderSummaryItem {
   display: inline-grid;
   gap: 0.02rem;
   min-width: 0;
-  padding: 0.14rem 0.3rem;
+  padding: 0.18rem 0.34rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 999px;
+  border-radius: 12px;
   background: rgba(248, 250, 252, 0.92);
 }
 
-.setupFlowArrow {
-  flex: 0 0 auto;
-  color: #94a3b8;
+.setupHeaderSummaryItem strong {
+  min-width: 0;
+  color: #0f172a;
+  font-size: 0.78rem;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 .setupScanLabel {
@@ -483,7 +459,7 @@
 .setupHeaderActions {
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.1rem;
+  gap: 0.16rem;
   justify-content: flex-end;
 }
 
@@ -501,13 +477,13 @@
 
 .setupCommands {
   margin-top: 0;
-  gap: 0.04rem;
+  gap: 0.03rem;
 }
 
 .setupPickerGrid {
   margin-top: -0.02rem;
   align-items: start;
-  gap: 0.02rem;
+  gap: 0.04rem;
 }
 
 .setupSelectionRow {
@@ -543,7 +519,7 @@
 
 .setupPicker {
   display: grid;
-  gap: 0.05rem;
+  gap: 0.04rem;
   padding: 0.02rem 0.04rem;
 }
 
@@ -961,10 +937,6 @@
   }
 
   .setupFlowRow {
-    align-items: flex-start;
-  }
-
-  .setupHeaderSequence {
     width: 100%;
   }
 

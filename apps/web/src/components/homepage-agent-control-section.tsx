@@ -369,7 +369,22 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <p className={styles.setupTitleHint}>{copy.setupBuilderBody}</p>
+                {selectedProvider && selectedTeam ? (
+                  <div className={styles.setupHeaderSummary} aria-label={copy.commandOrder}>
+                    <span className={styles.setupHeaderSummaryItem}>
+                      <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
+                      <strong>{selectedProvider.label}</strong>
+                    </span>
+                    <span className={styles.setupHeaderSummaryItem}>
+                      <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
+                      <strong>{selectedTeam.name}</strong>
+                    </span>
+                    <span className={styles.setupHeaderSummaryItem}>
+                      <span className={styles.setupScanLabel}>{copy.setupCommand}</span>
+                      <strong>{setupCommandCards.length}</strong>
+                    </span>
+                  </div>
+                ) : null}
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.providerSummaryChips}>
@@ -394,27 +409,6 @@ export function HomepageAgentControlSection({
                 ) : null}
               </div>
             </div>
-            {selectedProvider && selectedTeam ? (
-              <div className={styles.setupStoryBar} aria-label={copy.commandOrder}>
-                <span className={styles.setupDigestTitle}>{copy.commandOrder}</span>
-                <div className={styles.setupFlowRow}>
-                  <span className={styles.setupFlowItem}>
-                    <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
-                    <span className={styles.setupScanValue}>{selectedProvider.label}</span>
-                  </span>
-                  <ArrowRight size={14} className={styles.setupFlowArrow} aria-hidden="true" />
-                  <span className={styles.setupFlowItem}>
-                    <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
-                    <span className={styles.setupScanValue}>{selectedTeam.name}</span>
-                  </span>
-                  <ArrowRight size={14} className={styles.setupFlowArrow} aria-hidden="true" />
-                  <span className={styles.setupFlowItem}>
-                    <span className={styles.setupScanLabel}>{copy.setupCommand}</span>
-                    <span className={styles.setupScanValue}>{setupCommandCards.length} commands</span>
-                  </span>
-                </div>
-              </div>
-            ) : null}
             <div className={styles.setupPickerGrid}>
               <div className={styles.setupPicker}>
                 <div className={styles.setupPickerLabelRow}>
