@@ -246,7 +246,7 @@
 
 .setupBuilderCard {
   display: grid;
-  gap: 0.06rem;
+  gap: 0.04rem;
   margin-top: 0.08rem;
 }
 
@@ -328,12 +328,6 @@
   justify-content: flex-start;
   gap: 0.14rem;
   margin-top: 0.02rem;
-}
-
-.setupScanBar {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.1rem;
 }
 
 .setupSummaryItem,
@@ -681,7 +675,6 @@
   }
 
   .setupHeader,
-  .setupScanBar,
   .setupNotesGrid {
     grid-column: 1 / -1;
   }
@@ -839,7 +832,6 @@
   .providerMeta,
   .setupRail,
   .setupSummaryStrip,
-  .setupScanBar,
   .setupPickerGrid,
   .setupCommands,
   .setupNotesGrid {
