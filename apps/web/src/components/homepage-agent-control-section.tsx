@@ -255,6 +255,26 @@ export function HomepageAgentControlSection({
     selectedProvider && selectedTeam
       ? `/api/ops-setup?locale=${locale}&provider=${selectedProvider.providerId}&team=${selectedTeam.id}&format=txt`
       : null;
+  const setupCommandCards = setupManifest
+    ? [
+        {
+          kind: "connect" as const,
+          step: "01",
+          title: selectedProvider?.label ?? "-",
+          detail: selectedProvider?.cliName ?? "-",
+          command: setupManifest.commands.connect,
+          buttonLabel: copy.connectCommand,
+        },
+        {
+          kind: "assign" as const,
+          step: "02",
+          title: selectedTeam?.name ?? "-",
+          detail: selectedTeam?.lane ?? "-",
+          command: setupManifest.commands.assign,
+          buttonLabel: copy.assignCommand,
+        },
+      ]
+    : [];
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
       kind === "connect" ? setupManifest?.commands.connect ?? "" : setupManifest?.commands.assign ?? "";
@@ -415,34 +435,31 @@ export function HomepageAgentControlSection({
               </div>
             </div>
 
-            <div className={styles.setupCommands}>
-              <div className={styles.copyCard}>
-                <div className={styles.copyHead}>
-                  <div className={styles.copyTitleGroup}>
-                    <span className={styles.commandStep}>01</span>
-                    <span className={styles.metaLabel}>{copy.connectCommand}</span>
-                  </div>
-                  <code>{setupManifest?.commands.connect}</code>
-                  <button type="button" className={styles.copyButton} onClick={() => void copyCommand("connect")}>
-                    {copiedCommand === "connect" ? <Check size={14} /> : <Copy size={14} />}
-                    {copiedCommand === "connect" ? copy.copied : copy.connectCommand}
-                  </button>
-                </div>
-              </div>
+            <div className={styles.commandSectionHead}>
+              <span className={styles.metaLabel}>{copy.setupCommand}</span>
+              <span className={styles.inlineMeta}>{copy.commandOrder}</span>
+            </div>
 
-              <div className={styles.copyCard}>
-                <div className={styles.copyHead}>
-                  <div className={styles.copyTitleGroup}>
-                    <span className={styles.commandStep}>02</span>
-                    <span className={styles.metaLabel}>{copy.assignCommand}</span>
+            <div className={styles.setupCommands}>
+              {setupCommandCards.map((item) => (
+                <div className={styles.copyCard} key={item.kind}>
+                  <div className={styles.copyHead}>
+                    <div className={styles.copyTitleGroup}>
+                      <span className={styles.commandStep}>{item.step}</span>
+                      <div className={styles.commandTitleStack}>
+                        <span className={styles.metaLabel}>{item.buttonLabel}</span>
+                        <strong>{item.title}</strong>
+                        <span className={styles.commandDetail}>{item.detail}</span>
+                      </div>
+                    </div>
+                    <button type="button" className={styles.copyButton} onClick={() => void copyCommand(item.kind)}>
+                      {copiedCommand === item.kind ? <Check size={14} /> : <Copy size={14} />}
+                      {copiedCommand === item.kind ? copy.copied : item.buttonLabel}
+                    </button>
                   </div>
-                  <code>{setupManifest?.commands.assign}</code>
-                  <button type="button" className={styles.copyButton} onClick={() => void copyCommand("assign")}>
-                    {copiedCommand === "assign" ? <Check size={14} /> : <Copy size={14} />}
-                    {copiedCommand === "assign" ? copy.copied : copy.assignCommand}
-                  </button>
+                  <code>{item.command}</code>
                 </div>
-              </div>
+              ))}
             </div>
 
             {setupManifest ? (
