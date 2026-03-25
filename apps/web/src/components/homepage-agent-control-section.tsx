@@ -363,17 +363,26 @@ export function HomepageAgentControlSection({
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
                 <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
-                  <span className={styles.summaryChip}>
+                  <span className={`${styles.summaryChip} ${styles.summaryChipWide}`}>
                     <span className={styles.commandStep}>01</span>
                     <span className={styles.summaryChipCopy}>
                       <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
-                      <strong className={styles.setupScanValue}>{selectedProvider?.label ?? "-"}</strong>
+                      <span className={styles.summaryChipValueRow}>
+                        <strong className={styles.setupScanValue}>{selectedProvider?.label ?? "-"}</strong>
+                        {selectedProvider ? (
+                          <span
+                            className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
+                          >
+                            {getProviderStatusLabel(locale, selectedProvider.status)}
+                          </span>
+                        ) : null}
+                      </span>
                     </span>
                   </span>
                   <span className={styles.summaryFlowArrow} aria-hidden="true">
                     <ArrowRight size={14} />
                   </span>
-                  <span className={styles.summaryChip}>
+                  <span className={`${styles.summaryChip} ${styles.summaryChipWide}`}>
                     <span className={styles.commandStep}>02</span>
                     <span className={styles.summaryChipCopy}>
                       <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
@@ -395,7 +404,6 @@ export function HomepageAgentControlSection({
                     </span>
                   </span>
                 </div>
-                <p className={styles.setupCommandHint}>{copy.commandOrder}</p>
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
