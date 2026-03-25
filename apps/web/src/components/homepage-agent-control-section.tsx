@@ -80,8 +80,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
         "브라우저가 로컬 터미널을 직접 제어하지는 않지만, 각 개발자는 CLI 세션을 로컬 브리지에 등록하고 이 페이지에서 연결 상태를 확인할 수 있습니다.",
       setupBuilderLabel: "홈페이지 셋업 빌더",
       setupBuilderTitle: "provider와 팀을 고르면 연결 명령을 바로 생성",
-      setupBuilderBody:
-        "연결할 CLI와 배정할 팀을 고른 뒤 명령을 복사해서 로컬 터미널에서 실행하면 보드에 즉시 반영됩니다.",
+      setupBuilderBody: "CLI와 팀을 고른 뒤 connect, assign 명령만 순서대로 실행하면 됩니다.",
       connectCommand: "연결 명령 복사",
       assignCommand: "재배정 명령 복사",
       copied: "복사됨",
@@ -135,8 +134,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
       "Each developer registers a local CLI session with the bridge, and this page keeps connection state and team ownership visible.",
     setupBuilderLabel: "Homepage setup builder",
     setupBuilderTitle: "Connect a CLI and assign a team",
-    setupBuilderBody:
-      "Choose the CLI and team, then run the generated command.",
+    setupBuilderBody: "Pick a CLI, pick a team, then run the two generated commands.",
     connectCommand: "Copy connect command",
     assignCommand: "Copy assign command",
     copied: "Copied",
@@ -296,8 +294,9 @@ export function HomepageAgentControlSection({
             value: selectedTeam.name,
           },
           {
-            label: copy.setupCommand,
-            value: isKoreanLocale(locale) ? "connect -> assign" : "Connect -> assign",
+            label: copy.queueMode,
+            value:
+              snapshot.assistant.modes.find((item) => item.id === snapshot.activeMode)?.label ?? "-",
           },
         ]
       : [];
@@ -387,6 +386,7 @@ export function HomepageAgentControlSection({
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
                 <p className={styles.setupBuilderLead}>{copy.setupBuilderBody}</p>
+                <span className={styles.setupHeaderNote}>{copy.commandOrder}</span>
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.providerSummaryChips}>
