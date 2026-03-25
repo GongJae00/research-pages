@@ -452,7 +452,7 @@
 .setupHeaderActions {
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.12rem;
+  gap: 0.08rem;
   justify-content: flex-end;
 }
 
@@ -460,15 +460,30 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.18rem;
-  padding: 0.04rem 0 0;
+  gap: 0.12rem;
+  padding: 0.14rem 0 0.08rem;
+}
+
+.quickStartLabel {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 0.14rem 0.4rem;
+  background: rgba(15, 23, 42, 0.06);
+  color: #64748b;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  text-transform: uppercase;
 }
 
 .quickStartFlow {
   display: flex;
   flex: 1 1 20rem;
   flex-wrap: wrap;
-  gap: 0.08rem;
+  gap: 0.06rem;
 }
 
 .quickStartItem {
@@ -476,10 +491,10 @@
   align-items: center;
   gap: 0.24rem;
   min-width: 0;
-  padding: 0.16rem 0.24rem;
+  padding: 0.14rem 0.22rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 14px;
-  background: rgba(248, 250, 252, 0.88);
+  background: rgba(241, 245, 249, 0.9);
 }
 
 .quickStartIndex {
@@ -604,6 +619,10 @@
     color 140ms ease;
 }
 
+.optionButtonText {
+  line-height: 1;
+}
+
 .optionButton:hover,
 .copyButton:hover {
   transform: translateY(-1px);
@@ -613,6 +632,23 @@
   border-color: rgba(15, 23, 42, 0.8);
   background: linear-gradient(180deg, #0f172a, #172554);
   color: #f8fafc;
+}
+
+.inlineStatusBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.12rem 0.36rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.optionButtonActive .inlineStatusBadge {
+  background: rgba(255, 255, 255, 0.16);
+  color: inherit;
 }
 
 .copyCard {

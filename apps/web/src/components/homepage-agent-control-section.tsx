@@ -222,14 +222,6 @@ export function HomepageAgentControlSection({
     () => snapshot.providerConnections.filter((entry) => entry.status === "connected").length,
     [snapshot.providerConnections],
   );
-  const readyCount = useMemo(
-    () => snapshot.providerConnections.filter((entry) => entry.status === "ready").length,
-    [snapshot.providerConnections],
-  );
-  const attentionCount = useMemo(
-    () => snapshot.providerConnections.filter((entry) => entry.status === "attention").length,
-    [snapshot.providerConnections],
-  );
 
   const providersByTeam = useMemo(() => {
     const map = new Map<string, typeof snapshot.providerConnections>();
@@ -389,20 +381,6 @@ export function HomepageAgentControlSection({
                 <span className={styles.setupHeaderNote}>{copy.commandOrder}</span>
               </div>
               <div className={styles.setupHeaderActions}>
-                <div className={styles.providerSummaryChips}>
-                  <span className={styles.summaryChip}>
-                    <strong>{String(connectedCount).padStart(2, "0")}</strong>
-                    {getProviderStatusLabel(locale, "connected")}
-                  </span>
-                  <span className={styles.summaryChip}>
-                    <strong>{String(readyCount).padStart(2, "0")}</strong>
-                    {getProviderStatusLabel(locale, "ready")}
-                  </span>
-                  <span className={styles.summaryChip}>
-                    <strong>{String(attentionCount).padStart(2, "0")}</strong>
-                    {getProviderStatusLabel(locale, "attention")}
-                  </span>
-                </div>
                 {setupBriefHref ? (
                   <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
                     {copy.openBrief}
@@ -451,7 +429,12 @@ export function HomepageAgentControlSection({
                         }`}
                         onClick={() => setSelectedProviderId(provider.providerId)}
                       >
-                        {provider.label}
+                        <span className={styles.optionButtonText}>{provider.label}</span>
+                        <span
+                          className={`${styles.inlineStatusBadge} ${getProviderStatusClass(provider.status)}`}
+                        >
+                          {getProviderStatusLabel(locale, provider.status)}
+                        </span>
                       </button>
                     );
                   })}
