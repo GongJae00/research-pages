@@ -64,16 +64,6 @@ function getProviderStatusClass(status: ProviderStatus) {
   }
 }
 
-function getQuickSetupSteps(locale: string) {
-  if (isKoreanLocale(locale)) {
-    return ["1. CLI 선택", "2. 명령 복사", "3. 로컬 실행"];
-  }
-
-  return ["1. Choose CLI", "2. Copy command", "3. Run locally"];
-}
-
-void getQuickSetupSteps;
-
 function getCopy(locale: string, opsEnabled: boolean) {
   if (isKoreanLocale(locale)) {
     return {
@@ -196,7 +186,6 @@ export function HomepageAgentControlSection({
   const [selectedTeamId, setSelectedTeamId] = useState(initialSnapshot.selectedTeamId);
   const [copiedCommand, setCopiedCommand] = useState<"connect" | "assign" | null>(null);
   const copy = getCopy(locale, opsEnabled);
-  const quickSetupSteps = getQuickSetupSteps(locale);
 
   useEffect(() => {
     let mounted = true;
@@ -351,15 +340,9 @@ export function HomepageAgentControlSection({
               </div>
               <Command size={20} />
             </div>
-            <div className={styles.setupStepRail}>
-              {quickSetupSteps.map((step) => (
-                <span className={styles.stepChip} key={step}>
-                  {step}
-                </span>
-              ))}
-            </div>
             <div className={styles.quickStartRail}>
               <div className={styles.setupScanBar}>
+                <span className={styles.orderPill}>{copy.commandOrder}</span>
                 <div className={styles.selectionSummary}>
                   <div className={styles.selectionCard}>
                     <span className={styles.metaLabel}>{copy.chooseProvider}</span>
