@@ -479,10 +479,6 @@ export function HomepageAgentControlSection({
             </div>
 
             <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>
-              <div className={styles.setupCommandLead}>
-                <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
-                <strong>{setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}</strong>
-              </div>
               {orderedSetupCommandCards.map((item) => (
                 <div
                   className={`${styles.copyCard} ${

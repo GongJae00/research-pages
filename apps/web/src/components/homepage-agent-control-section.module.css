@@ -607,18 +607,6 @@
   align-content: start;
 }
 
-.setupCommandLead {
-  display: grid;
-  gap: 0.02rem;
-  padding: 0.02rem 0 0.04rem;
-}
-
-.setupCommandLead strong {
-  color: #0f172a;
-  font-size: 0.74rem;
-  line-height: 1.05;
-}
-
 .setupPickerGrid {
   margin-top: 0;
   align-items: start;
@@ -710,26 +698,23 @@
 .setupPicker {
   display: grid;
   gap: 0.02rem;
-  padding: 0;
+  padding: 0.1rem 0.12rem 0.12rem;
 }
 
 .setupPickerLabel {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+  color: #64748b;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .optionRow {
   display: flex;
   flex-wrap: wrap;
   gap: 0.05rem;
-  padding: 0.04rem 0.05rem 0.03rem;
+  padding: 0.03rem 0 0;
 }
 
 .optionButton,
