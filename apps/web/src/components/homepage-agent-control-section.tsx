@@ -367,11 +367,7 @@ export function HomepageAgentControlSection({
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
-                  <span className={styles.setupOrderValue}>
-                    {selectedProvider
-                      ? getNextSetupActionLabel(locale, selectedProvider.status)
-                      : copy.setupCommand}
-                  </span>
+                  <span className={styles.setupOrderValue}>{copy.commandOrder}</span>
                 </div>
                 <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
                   <div className={styles.setupSummaryBar}>
@@ -399,6 +395,20 @@ export function HomepageAgentControlSection({
                       <span className={styles.summaryChipCopy}>
                         <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
                         <strong className={styles.setupScanValue}>{selectedTeam?.name ?? "-"}</strong>
+                      </span>
+                    </span>
+                    <span className={styles.summaryFlowArrow} aria-hidden="true">
+                      <ArrowRight size={14} />
+                    </span>
+                    <span className={styles.summaryChip}>
+                      <span className={styles.commandStep}>03</span>
+                      <span className={styles.summaryChipCopy}>
+                        <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
+                        <strong className={styles.setupScanValue}>
+                          {selectedProvider
+                            ? getNextSetupActionLabel(locale, selectedProvider.status)
+                            : copy.setupCommand}
+                        </strong>
                       </span>
                     </span>
                   </div>
