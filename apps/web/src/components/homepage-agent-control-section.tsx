@@ -370,6 +370,7 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                <p className={styles.compactBody}>{copy.setupBuilderBody}</p>
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.providerSummaryChips}>
@@ -411,16 +412,27 @@ export function HomepageAgentControlSection({
                 ) : null}
               </div>
             </div>
-            <div className={styles.setupSelectionRow}>
-              <div className={styles.selectionCard}>
+            <div className={styles.setupDigestRow}>
+              <div className={styles.setupSummaryItem}>
                 <span className={styles.setupDigestLabel}>{copy.selectedCli ?? copy.chooseProvider}</span>
-                <strong>{selectedProvider?.label ?? "-"}</strong>
-                <span className={styles.digestMeta}>{selectedProvider?.cliName ?? "-"}</span>
+                <div className={styles.scanPillValue}>
+                  <strong>{selectedProvider?.label ?? "-"}</strong>
+                  <span className={styles.digestMeta}>{selectedProvider?.cliName ?? "-"}</span>
+                </div>
               </div>
-              <div className={styles.selectionCard}>
+              <div className={styles.setupSummaryItem}>
                 <span className={styles.setupDigestLabel}>{copy.selectedTeamLabel ?? copy.chooseTeam}</span>
-                <strong>{selectedTeam?.name ?? "-"}</strong>
-                <span className={styles.digestMeta}>{selectedTeam?.lane ?? "-"}</span>
+                <div className={styles.scanPillValue}>
+                  <strong>{selectedTeam?.name ?? "-"}</strong>
+                  <span className={styles.digestMeta}>{selectedTeam?.lane ?? "-"}</span>
+                </div>
+              </div>
+              <div className={styles.setupSummaryItem}>
+                <span className={styles.setupDigestLabel}>{copy.setupCommand}</span>
+                <div className={styles.scanPillValue}>
+                  <strong>{isKoreanLocale(locale) ? "濡쒖뺄 ?곕??먯꽌 ?ㅽ뻾" : "Run locally"}</strong>
+                  <span className={styles.digestMeta}>{copy.commandOrder}</span>
+                </div>
               </div>
             </div>
             <div className={styles.setupPickerGrid}>
