@@ -364,11 +364,9 @@ export function HomepageAgentControlSection({
           <article className={styles.setupBuilderCard}>
             <div className={styles.setupHeader}>
               <div className={styles.setupTitleBlock}>
-                <div className={styles.setupTitleRow}>
-                  <h4>{copy.setupBuilderTitle}</h4>
-                </div>
+                <h4>{copy.setupBuilderTitle}</h4>
                 <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
-                  <div className={styles.setupSummaryBar}>
+                  <div className={styles.setupSelectionBar}>
                     <div className={styles.summaryChip}>
                       <span className={styles.commandStep}>01</span>
                       <div className={styles.summaryChipCopy}>
@@ -385,9 +383,6 @@ export function HomepageAgentControlSection({
                         </div>
                       </div>
                     </div>
-                    <span className={styles.summaryFlowArrow} aria-hidden="true">
-                      <ArrowRight size={14} />
-                    </span>
                     <div className={`${styles.summaryChip} ${styles.summaryChipWide}`}>
                       <span className={styles.commandStep}>02</span>
                       <div className={styles.summaryChipCopy}>
@@ -395,13 +390,14 @@ export function HomepageAgentControlSection({
                         <strong>{selectedTeam?.name ?? "-"}</strong>
                       </div>
                     </div>
-                    <span className={styles.summaryFlowArrow} aria-hidden="true">
-                      <ArrowRight size={14} />
-                    </span>
-                    <div className={`${styles.summaryChip} ${styles.summaryChipAccent}`}>
+                  </div>
+                  <div className={styles.setupActionCallout}>
+                    <span className={styles.commandStep}>03</span>
+                    <div className={styles.setupActionCopy}>
                       <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
                       <strong>{setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}</strong>
                     </div>
+                    <span className={styles.setupActionHint}>{copy.commandOrder}</span>
                   </div>
                 </div>
               </div>
