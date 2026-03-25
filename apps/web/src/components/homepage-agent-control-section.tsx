@@ -422,6 +422,36 @@ export function HomepageAgentControlSection({
                 ) : null}
               </div>
             </div>
+            {nextSetupCommand ? (
+              <div className={styles.nextCommandBanner}>
+                <div className={styles.nextCommandHeader}>
+                  <div className={styles.nextCommandTitleBlock}>
+                    <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
+                    <strong>{nextSetupCommand.title}</strong>
+                  </div>
+                  <button
+                    type="button"
+                    className={`${styles.copyButton} ${styles.copyIconButton}`}
+                    onClick={() => void copyCommand(nextSetupCommand.kind)}
+                    aria-label={nextSetupCommand.buttonLabel}
+                    title={nextSetupCommand.buttonLabel}
+                  >
+                    {copiedCommand === nextSetupCommand.kind ? <Check size={14} /> : <Copy size={14} />}
+                    <span className={styles.copyButtonText}>
+                      {copiedCommand === nextSetupCommand.kind ? copy.copied : nextSetupCommand.buttonLabel}
+                    </span>
+                  </button>
+                </div>
+                <div className={styles.nextCommandRow}>
+                  <span className={styles.commandStep}>{nextSetupCommand.step}</span>
+                  <code>{nextSetupCommand.command}</code>
+                  <span className={styles.commandTarget}>
+                    {nextSetupCommand.kind === "connect" ? selectedProvider?.label ?? "-" : selectedTeam?.name ?? "-"}
+                  </span>
+                </div>
+              </div>
+            ) : null}
+
             <div className={styles.setupPickerGrid}>
               <div className={styles.setupPicker} aria-label={copy.chooseProvider}>
                 <span className={styles.setupPickerLabel}>{copy.chooseProvider}</span>
@@ -471,36 +501,6 @@ export function HomepageAgentControlSection({
                 </div>
               </div>
             </div>
-
-            {nextSetupCommand ? (
-              <div className={styles.nextCommandBanner}>
-                <div className={styles.nextCommandHeader}>
-                  <div className={styles.nextCommandTitleBlock}>
-                    <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
-                    <strong>{nextSetupCommand.title}</strong>
-                  </div>
-                  <button
-                    type="button"
-                    className={`${styles.copyButton} ${styles.copyIconButton}`}
-                    onClick={() => void copyCommand(nextSetupCommand.kind)}
-                    aria-label={nextSetupCommand.buttonLabel}
-                    title={nextSetupCommand.buttonLabel}
-                  >
-                    {copiedCommand === nextSetupCommand.kind ? <Check size={14} /> : <Copy size={14} />}
-                    <span className={styles.copyButtonText}>
-                      {copiedCommand === nextSetupCommand.kind ? copy.copied : nextSetupCommand.buttonLabel}
-                    </span>
-                  </button>
-                </div>
-                <div className={styles.nextCommandRow}>
-                  <span className={styles.commandStep}>{nextSetupCommand.step}</span>
-                  <code>{nextSetupCommand.command}</code>
-                  <span className={styles.commandTarget}>
-                    {nextSetupCommand.kind === "connect" ? selectedProvider?.label ?? "-" : selectedTeam?.name ?? "-"}
-                  </span>
-                </div>
-              </div>
-            ) : null}
 
             <details className={styles.setupCommandsDisclosure}>
               <summary className={styles.setupCommandsSummary}>
