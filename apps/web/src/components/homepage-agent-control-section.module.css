@@ -457,15 +457,23 @@
 }
 
 .quickStartStrip {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.08rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.18rem;
   padding: 0.04rem 0 0;
 }
 
-.quickStartItem {
+.quickStartFlow {
   display: flex;
-  align-items: flex-start;
+  flex: 1 1 20rem;
+  flex-wrap: wrap;
+  gap: 0.08rem;
+}
+
+.quickStartItem {
+  display: inline-flex;
+  align-items: center;
   gap: 0.24rem;
   min-width: 0;
   padding: 0.16rem 0.24rem;
@@ -972,9 +980,9 @@
     align-items: stretch;
   }
 
-  .quickStartStrip {
-    display: grid;
-    grid-template-columns: 1fr;
+  .quickStartStrip,
+  .quickStartFlow {
+    width: 100%;
   }
 
   .quickStartItem {

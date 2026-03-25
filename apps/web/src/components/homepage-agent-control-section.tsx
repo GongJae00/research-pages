@@ -413,15 +413,18 @@ export function HomepageAgentControlSection({
             </div>
             {quickStartItems.length ? (
               <div className={styles.quickStartStrip} aria-label={copy.commandOrder}>
-                {quickStartItems.map((item, index) => (
-                  <div className={styles.quickStartItem} key={item.label}>
-                    <span className={styles.quickStartIndex}>{`0${index + 1}`}</span>
-                    <span className={styles.quickStartText}>
-                      <span className={styles.setupScanLabel}>{item.label}</span>
-                      <strong>{item.value}</strong>
-                    </span>
-                  </div>
-                ))}
+                <span className={styles.quickStartLabel}>{copy.setupStepsLabel}</span>
+                <div className={styles.quickStartFlow}>
+                  {quickStartItems.map((item, index) => (
+                    <div className={styles.quickStartItem} key={item.label}>
+                      <span className={styles.quickStartIndex}>{`0${index + 1}`}</span>
+                      <span className={styles.quickStartText}>
+                        <span className={styles.setupScanLabel}>{item.label}</span>
+                        <strong>{item.value}</strong>
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
             ) : null}
             <div className={styles.setupPickerGrid}>
