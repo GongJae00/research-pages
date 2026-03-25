@@ -364,7 +364,6 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <p className={styles.setupHeaderBody}>{copy.setupBuilderBody}</p>
                 {selectedProvider && selectedTeam ? (
                   <div className={styles.setupSummaryBar} aria-label={copy.activeSetup}>
                     <span className={styles.summaryChip}>
