@@ -369,11 +369,9 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                <p className={styles.setupTitleHint}>{copy.setupBuilderBody}</p>
                 {selectedProvider && selectedTeam ? (
                   <div className={styles.setupScanBar}>
-                    <span className={styles.setupScanItem}>
-                      <strong className={styles.setupDigestOrder}>{copy.commandOrder}</strong>
-                    </span>
                     <span className={styles.setupScanItem}>
                       <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
                       <span className={styles.setupScanValue}>{selectedProvider.label}</span>
@@ -381,6 +379,12 @@ export function HomepageAgentControlSection({
                     <span className={styles.setupScanItem}>
                       <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
                       <span className={styles.setupScanValue}>{selectedTeam.name}</span>
+                    </span>
+                    <span className={styles.setupScanItem}>
+                      <span className={styles.setupScanLabel}>{copy.commandOrder}</span>
+                      <span className={styles.setupScanValue}>
+                        {isKoreanLocale(locale) ? "아래 명령 2개 실행" : "Run the 2 commands below"}
+                      </span>
                     </span>
                   </div>
                 ) : null}
