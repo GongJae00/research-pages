@@ -268,7 +268,8 @@
 .copyCard,
 .setupPicker,
 .stepRow,
-.noteCard {
+.noteCard,
+.setupCommandsDisclosure {
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 16px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.95));
@@ -651,6 +652,59 @@
   align-content: start;
 }
 
+.setupCommandsDisclosure {
+  margin-top: 0.02rem;
+  overflow: hidden;
+}
+
+.setupCommandsSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.24rem 0.3rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.setupCommandsSummary::-webkit-details-marker {
+  display: none;
+}
+
+.setupCommandsSummaryCopy {
+  display: grid;
+  gap: 0.03rem;
+}
+
+.setupCommandsSummaryCopy strong {
+  color: #0f172a;
+  font-size: 0.78rem;
+  line-height: 1.1;
+}
+
+.setupCommandsHint {
+  color: #64748b;
+  font-size: 0.7rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.setupCommandsDisclosure[open] .setupCommandsHint {
+  color: #0f172a;
+}
+
+.setupCommandsDisclosure[open] .setupCommandsHint::after {
+  content: " \2191";
+}
+
+.setupCommandsDisclosure:not([open]) .setupCommandsHint::after {
+  content: " \2193";
+}
+
+.setupCommandsDisclosure .setupCommands {
+  padding: 0 0.08rem 0.08rem;
+}
+
 .setupPickerGrid {
   margin-top: 0.02rem;
   align-items: start;
@@ -1003,7 +1057,8 @@
   }
 
   .setupHeader,
-  .setupNotesDisclosure {
+  .setupNotesDisclosure,
+  .setupCommandsDisclosure {
     grid-column: 1 / -1;
   }
 
@@ -1013,11 +1068,10 @@
 
   .setupCommands {
     grid-column: 2;
-    grid-row: 2 / span 2;
+    grid-row: auto;
     grid-template-columns: 1fr;
     margin-top: 0;
     padding-left: 0.05rem;
-    border-left: 1px solid rgba(226, 232, 240, 0.9);
     align-content: start;
   }
 

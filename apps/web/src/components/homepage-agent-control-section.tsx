@@ -504,43 +504,55 @@ export function HomepageAgentControlSection({
               </div>
             ) : null}
 
-            <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>
-              {orderedSetupCommandCards.map((item) => (
-                <div
-                  className={`${styles.copyCard} ${
-                    item.kind === nextCommandKind ? styles.copyCardPrimary : styles.copyCardMuted
-                  }`}
-                  key={item.kind}
-                >
-                  <div className={styles.copyMetaRow}>
-                    <div className={styles.copyTitleGroup}>
-                      <span className={styles.commandStep}>{item.step}</span>
-                      <div className={styles.commandTitleBlock}>
-                        <strong className={styles.commandTitle}>{item.title}</strong>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      className={`${styles.copyButton} ${styles.copyIconButton}`}
-                      onClick={() => void copyCommand(item.kind)}
-                      aria-label={item.buttonLabel}
-                      title={item.buttonLabel}
-                    >
-                      {copiedCommand === item.kind ? <Check size={14} /> : <Copy size={14} />}
-                      <span className={styles.copyButtonText}>
-                        {copiedCommand === item.kind ? copy.copied : item.buttonLabel}
-                      </span>
-                    </button>
-                  </div>
-                  <div className={styles.commandRow}>
-                    <code>{item.command}</code>
-                    <span className={styles.commandTarget}>
-                      {item.kind === "connect" ? selectedProvider?.label ?? "-" : selectedTeam?.name ?? "-"}
-                    </span>
-                  </div>
+            <details className={styles.setupCommandsDisclosure}>
+              <summary className={styles.setupCommandsSummary}>
+                <div className={styles.setupCommandsSummaryCopy}>
+                  <span className={styles.metaLabel}>{copy.commandOrder}</span>
+                  <strong>{copy.setupStepsLabel}</strong>
                 </div>
-              ))}
-            </div>
+                <span className={styles.setupCommandsHint}>
+                  {isKoreanLocale(locale) ? "?紐⑤뱺 紐낅졊 蹂닿린" : "View both commands"}
+                </span>
+              </summary>
+
+              <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>
+                {orderedSetupCommandCards.map((item) => (
+                  <div
+                    className={`${styles.copyCard} ${
+                      item.kind === nextCommandKind ? styles.copyCardPrimary : styles.copyCardMuted
+                    }`}
+                    key={item.kind}
+                  >
+                    <div className={styles.copyMetaRow}>
+                      <div className={styles.copyTitleGroup}>
+                        <span className={styles.commandStep}>{item.step}</span>
+                        <div className={styles.commandTitleBlock}>
+                          <strong className={styles.commandTitle}>{item.title}</strong>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        className={`${styles.copyButton} ${styles.copyIconButton}`}
+                        onClick={() => void copyCommand(item.kind)}
+                        aria-label={item.buttonLabel}
+                        title={item.buttonLabel}
+                      >
+                        {copiedCommand === item.kind ? <Check size={14} /> : <Copy size={14} />}
+                        <span className={styles.copyButtonText}>
+                          {copiedCommand === item.kind ? copy.copied : item.buttonLabel}
+                        </span>
+                      </button>
+                    </div>
+                    <div className={styles.commandRow}>
+                      <code>{item.command}</code>
+                      <span className={styles.commandTarget}>
+                        {item.kind === "connect" ? selectedProvider?.label ?? "-" : selectedTeam?.name ?? "-"}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </details>
 
             {setupManifest ? (
               <details className={styles.setupNotesDisclosure}>
