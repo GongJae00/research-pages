@@ -285,6 +285,13 @@
   gap: 0.05rem;
 }
 
+.setupHelper {
+  margin: 0;
+  color: #475569;
+  font-size: 0.74rem;
+  line-height: 1.28;
+}
+
 .setupScanLabel {
   color: #64748b;
   font-size: 0.62rem;
@@ -422,12 +429,14 @@
 }
 
 .setupCompactBar {
-  display: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.18rem;
+  margin-top: 0.04rem;
 }
 
-.setupQuickLabel,
-.setupOrderHint,
-.setupOrderPill {
+.setupQuickLabel {
   color: #64748b;
   font-size: 0.6rem;
   font-weight: 700;
@@ -440,31 +449,10 @@
   display: inline-flex;
   align-items: center;
   gap: 0.28rem;
-  padding: 0.07rem 0.22rem 0.07rem 0.12rem;
+  padding: 0.08rem 0.24rem 0.08rem 0.12rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.06);
-}
-
-.setupOrderHint {
-  font-size: 0;
-  white-space: nowrap;
-}
-
-.setupOrderHint::before {
-  content: "->";
-  color: #94a3b8;
-  font-size: 0.66rem;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.setupOrderPill {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.07rem 0.24rem;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.08);
-  white-space: nowrap;
+  background: rgba(248, 250, 252, 0.92);
 }
 
 .setupDigestLead {
@@ -580,9 +568,9 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: stretch;
-  gap: 0.04rem;
+  gap: 0.06rem;
   min-width: 0;
-  margin-top: 0.02rem;
+  margin-top: 0.04rem;
 }
 
 .setupHeaderTools {
@@ -621,7 +609,7 @@
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   gap: 0.12rem;
-  padding: 0.12rem 0.2rem 0.12rem 0.12rem;
+  padding: 0.14rem 0.22rem 0.14rem 0.12rem;
   border: 1px solid rgba(203, 213, 225, 0.6);
   border-radius: 14px;
   background: rgba(248, 250, 252, 0.94);
@@ -729,7 +717,7 @@
 .copyCard {
   display: grid;
   gap: 0.06rem;
-  padding: 0.08rem 0.1rem;
+  padding: 0.1rem 0.12rem;
 }
 
 .copyMetaRow,

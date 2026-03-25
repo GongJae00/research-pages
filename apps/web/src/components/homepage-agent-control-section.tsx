@@ -364,28 +364,20 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                <p className={styles.setupHelper}>{copy.setupBuilderBody}</p>
                 <div className={styles.setupCompactBar} aria-label={copy.commandOrder}>
                   <span className={styles.setupQuickLabel}>
                     <span className={styles.commandStep}>01</span>
                     {copy.chooseProvider}
                   </span>
-                  <span className={styles.setupOrderHint} aria-hidden="true">
-                    →
-                  </span>
                   <span className={styles.setupQuickLabel}>
                     <span className={styles.commandStep}>02</span>
                     {copy.chooseTeam}
-                  </span>
-                  <span className={styles.setupOrderHint} aria-hidden="true">
-                    →
                   </span>
                   <span className={styles.setupQuickLabel}>
                     <span className={styles.commandStep}>03</span>
                     {copy.setupCommand}
                   </span>
-                  <span className={styles.setupOrderHint} aria-hidden="true">
-                    ??                  </span>
-                  <span className={styles.setupOrderPill}>{copy.commandOrder}</span>
                 </div>
                 {selectedProvider && selectedTeam ? (
                   <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
