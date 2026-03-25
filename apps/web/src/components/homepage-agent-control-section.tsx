@@ -390,14 +390,14 @@ export function HomepageAgentControlSection({
                         <strong>{selectedTeam?.name ?? "-"}</strong>
                       </div>
                     </div>
-                  </div>
-                  <div className={styles.setupActionCallout}>
-                    <span className={styles.commandStep}>03</span>
-                    <div className={styles.setupActionCopy}>
-                      <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
-                      <strong>{setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}</strong>
+                    <div className={`${styles.summaryChip} ${styles.summaryChipWide} ${styles.summaryChipAccent}`}>
+                      <span className={styles.commandStep}>03</span>
+                      <div className={styles.summaryChipCopy}>
+                        <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
+                        <strong>{setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}</strong>
+                      </div>
                     </div>
-                    <span className={styles.setupActionHint}>{copy.commandOrder}</span>
+                    <span className={styles.summaryInlineHint}>{copy.commandOrder}</span>
                   </div>
                 </div>
               </div>

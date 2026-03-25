@@ -577,6 +577,16 @@
   min-width: 0;
 }
 
+.summaryInlineHint {
+  display: inline-flex;
+  align-items: center;
+  color: #64748b;
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
 .setupHeaderTools {
   display: inline-flex;
   align-items: center;
@@ -632,40 +642,6 @@
   padding: 0.08rem 0.14rem;
   border-color: rgba(15, 23, 42, 0.12);
   background: rgba(241, 245, 249, 0.98);
-}
-
-.setupActionCallout {
-  display: flex;
-  align-items: center;
-  gap: 0.16rem;
-  min-width: 0;
-  padding: 0.08rem 0.12rem;
-  border: 1px solid rgba(15, 23, 42, 0.1);
-  border-radius: 14px;
-  background: linear-gradient(180deg, rgba(241, 245, 249, 0.98), rgba(255, 255, 255, 0.98));
-}
-
-.setupActionCopy {
-  display: grid;
-  gap: 0.02rem;
-  min-width: 0;
-  flex: 1 1 auto;
-}
-
-.setupActionCopy strong {
-  color: #0f172a;
-  font-size: 0.72rem;
-  line-height: 1.15;
-  overflow-wrap: anywhere;
-}
-
-.setupActionHint {
-  color: #64748b;
-  font-size: 0.62rem;
-  font-weight: 700;
-  line-height: 1.1;
-  text-align: right;
-  white-space: nowrap;
 }
 
 .summaryChipCopy {
@@ -1215,8 +1191,7 @@
     grid-template-columns: 1fr;
   }
 
-  .setupSelectionBar,
-  .setupActionCallout {
+  .setupSelectionBar {
     display: grid;
     grid-template-columns: 1fr;
   }
@@ -1233,7 +1208,7 @@
     display: none;
   }
 
-  .setupActionHint {
+  .summaryInlineHint {
     text-align: left;
     white-space: normal;
   }
