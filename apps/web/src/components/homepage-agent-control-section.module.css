@@ -588,6 +588,41 @@
   gap: 0.03rem;
 }
 
+.commandScanRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.3rem;
+  margin-top: 0.02rem;
+  padding: 0 0.06rem;
+}
+
+.commandOrderLabel {
+  color: #475569;
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.commandScanMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.18rem;
+  min-width: 0;
+  padding: 0.08rem 0.14rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 999px;
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.commandScanMeta strong {
+  min-width: 0;
+  color: #0f172a;
+  font-size: 0.68rem;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
 .providerSummaryChips {
   display: flex;
   flex-wrap: wrap;
@@ -1112,6 +1147,7 @@
   .providerHead,
   .copyMetaRow,
   .commandRow,
+  .commandScanRow,
   .providerSummaryBar,
   .setupHeader,
   .setupHeaderActions,

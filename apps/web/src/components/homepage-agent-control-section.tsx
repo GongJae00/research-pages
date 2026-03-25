@@ -460,6 +460,14 @@ export function HomepageAgentControlSection({
               </div>
             </div>
 
+            <div className={styles.commandScanRow}>
+              <span className={styles.commandOrderLabel}>{copy.commandOrder}</span>
+              <span className={styles.commandScanMeta}>
+                <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
+                <strong>{setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}</strong>
+              </span>
+            </div>
+
             <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>
               {setupCommandCards.map((item) => (
                 <div
