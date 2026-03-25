@@ -88,6 +88,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
         "브라우저가 로컬 터미널을 직접 제어하지는 않지만, 각 개발자는 CLI 세션을 로컬 브리지에 등록하고 이 페이지에서 연결 상태를 확인할 수 있습니다.",
       setupBuilderLabel: "홈페이지 셋업 빌더",
       setupBuilderTitle: "CLI와 팀을 고르면 바로 실행 순서가 정리됩니다",
+      setupBuilderBody: "CLI와 팀을 고른 뒤 강조된 명령만 로컬 터미널에서 실행하면 됩니다.",
       connectCommand: "연결 명령 복사",
       assignCommand: "재배정 명령 복사",
       copied: "복사됨",
@@ -146,6 +147,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
       "Each developer registers a local CLI session with the bridge, and this page keeps connection state and team ownership visible.",
     setupBuilderLabel: "Homepage setup builder",
     setupBuilderTitle: "Attach a CLI in two commands",
+    setupBuilderBody: "Choose a CLI and team, then run the highlighted command in the local terminal.",
     connectCommand: "Copy connect command",
     assignCommand: "Copy assign command",
     copied: "Copied",
@@ -364,7 +366,9 @@ export function HomepageAgentControlSection({
           <article className={styles.setupBuilderCard}>
             <div className={styles.setupHeader}>
               <div className={styles.setupTitleBlock}>
+                <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                <p className={styles.setupBody}>{copy.setupBuilderBody}</p>
                 <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
                   <div className={styles.setupScanRow} aria-label={copy.commandOrder}>
                     <span className={styles.setupScanChip}>
