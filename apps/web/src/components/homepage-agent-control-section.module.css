@@ -440,15 +440,12 @@
 }
 
 .setupSelectionRail {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.24rem;
-  padding: 0.12rem 0.02rem 0.02rem;
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.08rem 0 0.02rem;
 }
 
 .setupSelectionTitle {
-  flex: 0 0 auto;
   color: #64748b;
   font-size: 0.64rem;
   font-weight: 700;
@@ -458,18 +455,19 @@
 }
 
 .setupSelectionSummary {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.18rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.12rem;
 }
 
 .setupSelectionItem {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.18rem;
+  display: grid;
+  gap: 0.05rem;
   min-width: 0;
+  padding: 0.22rem 0.28rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 12px;
+  background: rgba(248, 250, 252, 0.86);
 }
 
 .setupSelectionItem strong {
@@ -480,23 +478,18 @@
   overflow-wrap: anywhere;
 }
 
-.selectionArrow {
-  color: #94a3b8;
-  font-size: 0.72rem;
-  font-weight: 700;
-}
-
-.setupFlowHint {
+.setupStepBadge {
   display: inline-flex;
   align-items: center;
-  padding: 0.18rem 0.4rem;
+  justify-content: center;
+  width: 1.2rem;
+  height: 1.2rem;
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.06);
-  color: #475569;
-  font-size: 0.68rem;
-  font-weight: 700;
+  background: #0f172a;
+  color: #f8fafc;
+  font-size: 0.62rem;
+  font-weight: 800;
   line-height: 1.1;
-  white-space: nowrap;
 }
 
 .setupHeaderTools {
@@ -936,7 +929,8 @@
   .setupSummaryStrip,
   .setupPickerGrid,
   .setupCommands,
-  .setupNotesGrid {
+  .setupNotesGrid,
+  .setupSelectionSummary {
     grid-template-columns: 1fr;
   }
 
@@ -967,14 +961,6 @@
   .setupSelectionSummary,
   .setupSelectionItem {
     align-items: flex-start;
-  }
-
-  .setupSelectionRail {
-    align-items: flex-start;
-  }
-
-  .setupFlowHint {
-    white-space: normal;
   }
 
   .sequenceArrow {

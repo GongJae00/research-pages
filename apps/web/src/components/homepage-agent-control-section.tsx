@@ -408,16 +408,20 @@ export function HomepageAgentControlSection({
             </div>
             {setupScanItems.length ? (
               <div className={styles.setupSelectionRail} aria-label={copy.commandOrder}>
-                <span className={styles.setupSelectionTitle}>{copy.activeSetup}</span>
+                <span className={styles.setupSelectionTitle}>{copy.commandOrder}</span>
                 <div className={styles.setupSelectionSummary}>
                   {setupScanItems.map((item, index) => (
                     <div className={styles.setupSelectionItem} key={item.label}>
+                      <span className={styles.setupStepBadge}>{`0${index + 1}`}</span>
                       <span className={styles.setupScanLabel}>{item.label}</span>
                       <strong>{item.value}</strong>
-                      {index < setupScanItems.length - 1 ? <span className={styles.selectionArrow}>/</span> : null}
                     </div>
                   ))}
-                  <span className={styles.setupFlowHint}>{copy.commandOrder}</span>
+                  <div className={styles.setupSelectionItem}>
+                    <span className={styles.setupStepBadge}>03</span>
+                    <span className={styles.setupScanLabel}>{copy.setupCommand}</span>
+                    <strong>{isKoreanLocale(locale) ? "connect / assign" : "Connect / assign"}</strong>
+                  </div>
                 </div>
               </div>
             ) : null}
