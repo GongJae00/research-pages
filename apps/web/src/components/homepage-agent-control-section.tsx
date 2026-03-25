@@ -275,26 +275,6 @@ export function HomepageAgentControlSection({
         },
       ]
     : [];
-  const setupRailItems = [
-    {
-      step: "01",
-      label: copy.chooseProvider,
-      value: selectedProvider?.label ?? "-",
-      detail: selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-",
-    },
-    {
-      step: "02",
-      label: copy.chooseTeam,
-      value: selectedTeam?.name ?? "-",
-      detail: selectedTeam?.lane ?? "-",
-    },
-    {
-      step: "03",
-      label: copy.setupCommand,
-      value: setupCommandCards.map((item) => item.step).join(" / ") || "-",
-      detail: copy.commandOrder,
-    },
-  ];
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
       kind === "connect" ? setupManifest?.commands.connect ?? "" : setupManifest?.commands.assign ?? "";
@@ -381,7 +361,20 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <p className={styles.panelLead}>{copy.setupBuilderBody}</p>
+                <div className={styles.setupHeaderSummary}>
+                  <div className={styles.headerSummaryPill}>
+                    <span className={styles.summaryPillLabel}>{copy.chooseProvider}</span>
+                    <strong>{selectedProvider?.label ?? "-"}</strong>
+                    <span className={styles.summaryDetail}>
+                      {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
+                    </span>
+                  </div>
+                  <div className={styles.headerSummaryPill}>
+                    <span className={styles.summaryPillLabel}>{copy.chooseTeam}</span>
+                    <strong>{selectedTeam?.name ?? "-"}</strong>
+                    <span className={styles.summaryDetail}>{selectedTeam?.lane ?? "-"}</span>
+                  </div>
+                </div>
               </div>
               <div className={styles.setupHeaderActions}>
                 <Command size={18} />
@@ -403,18 +396,6 @@ export function HomepageAgentControlSection({
                   <span aria-hidden="true">{"->"}</span>
                   <strong>{copy.setupCommand}</strong>
                 </div>
-              </div>
-              <div className={styles.quickStartSummary}>
-                {setupRailItems.map((item) => (
-                  <div className={styles.summaryPill} key={item.step}>
-                    <span className={styles.contextLabel}>{item.step}</span>
-                    <div className={styles.summaryPillCopy}>
-                      <span className={styles.summaryPillLabel}>{item.label}</span>
-                      <strong>{item.value}</strong>
-                      <span className={styles.summaryDetail}>{item.detail}</span>
-                    </div>
-                  </div>
-                ))}
               </div>
             </div>
 
