@@ -281,11 +281,19 @@
 
 .setupSelectionDigest {
   display: grid;
-  gap: 0.12rem;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.16rem;
   padding: 0.04rem 0 0;
 }
 
 .setupQuickStartLabel {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.18rem 0.36rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.06);
   color: #64748b;
   font-size: 0.68rem;
   font-weight: 700;
@@ -295,8 +303,8 @@
 }
 
 .setupDigestRow {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.12rem;
 }
 
@@ -328,11 +336,10 @@
 }
 
 .sequencePill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.18rem;
+  display: grid;
+  gap: 0.02rem;
   min-width: 0;
-  padding: 0.14rem 0.22rem;
+  padding: 0.16rem 0.24rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 14px;
   background: rgba(248, 250, 252, 0.92);
@@ -340,14 +347,17 @@
 
 .digestLabelGroup {
   display: grid;
-  gap: 0.01rem;
+  gap: 0.04rem;
   min-width: 0;
 }
 
 .sequencePill strong {
-  color: #0f172a;
-  font-size: 0.76rem;
-  line-height: 1.15;
+  color: #64748b;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  text-transform: uppercase;
 }
 
 .setupDigestLabel {
@@ -363,10 +373,10 @@
 }
 
 .digestMeta {
-  color: #64748b;
-  font-size: 0.76rem;
-  font-weight: 600;
-  line-height: 1.3;
+  color: #0f172a;
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.25;
 }
 
 .setupMetaPill {
@@ -884,6 +894,7 @@
 
   .setupDigestRow {
     width: 100%;
+    grid-template-columns: 1fr;
   }
 
   .commandStackHeader {

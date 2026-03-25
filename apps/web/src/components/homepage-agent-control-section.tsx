@@ -371,7 +371,6 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <p className={styles.setupTitleHint}>{copy.commandOrder}</p>
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.providerSummaryChips}>
@@ -400,14 +399,12 @@ export function HomepageAgentControlSection({
               <span className={styles.setupQuickStartLabel}>{copy.commandOrder}</span>
               <div className={styles.setupDigestRow}>
                 <span className={styles.sequencePill}>
-                  <span className={styles.commandStep}>01</span>
                   <span className={styles.digestLabelGroup}>
                     <strong>{copy.chooseProvider}</strong>
                     <span className={styles.digestMeta}>{selectedProvider?.label ?? "-"}</span>
                   </span>
                 </span>
                 <span className={styles.sequencePill}>
-                  <span className={styles.commandStep}>02</span>
                   <span className={styles.digestLabelGroup}>
                     <strong>{copy.chooseTeam}</strong>
                     <span className={styles.digestMeta}>{selectedTeam?.name ?? "-"}</span>
