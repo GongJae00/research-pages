@@ -264,7 +264,7 @@ export function HomepageAgentControlSection({
         {
           kind: "connect" as const,
           step: "01",
-          label: copy.connectCommand,
+          label: isKoreanLocale(locale) ? "CLI 연결" : "Connect CLI",
           title: selectedProvider?.label ?? "-",
           command: setupManifest.commands.connect,
           buttonLabel: copy.connectCommand,
@@ -272,7 +272,7 @@ export function HomepageAgentControlSection({
         {
           kind: "assign" as const,
           step: "02",
-          label: copy.assignCommand,
+          label: isKoreanLocale(locale) ? "팀 배정" : "Assign team",
           title: selectedTeam?.name ?? "-",
           command: setupManifest.commands.assign,
           buttonLabel: copy.assignCommand,
@@ -479,6 +479,7 @@ export function HomepageAgentControlSection({
                     <div className={styles.copyTitleGroup}>
                       <span className={styles.commandStep}>{item.step}</span>
                       <div className={styles.commandTitleStack}>
+                        <span className={styles.commandEyebrow}>{item.label}</span>
                         <strong>{item.kind === "connect" ? `${item.title} CLI` : item.title}</strong>
                       </div>
                     </div>
