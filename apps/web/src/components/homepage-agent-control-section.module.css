@@ -336,8 +336,10 @@
 
 .setupSummaryItem,
 .sequencePill {
-  display: grid;
-  gap: 0.05rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.24rem;
   min-width: 0;
   padding: 0.22rem 0.32rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
@@ -350,6 +352,15 @@
   font-size: 0.84rem;
   line-height: 1.15;
   overflow-wrap: anywhere;
+}
+
+.setupDigestLabel {
+  color: #64748b;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  text-transform: uppercase;
 }
 
 .scanPillValue {
@@ -371,6 +382,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.16rem;
+  min-width: 0;
   color: #475569;
   font-size: 0.76rem;
   line-height: 1.25;
@@ -558,6 +570,13 @@
 .commandTitleStack {
   display: grid;
   gap: 0.02rem;
+}
+
+.commandTitleLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.28rem;
 }
 
 .commandTitleStack strong {
@@ -831,7 +850,10 @@
   .setupHeaderActions,
   .setupFlowRow,
   .setupMetaRow,
-  .scanPillValue {
+  .scanPillValue,
+  .setupSummaryItem,
+  .sequencePill,
+  .commandTitleLine {
     flex-direction: column;
     align-items: flex-start;
   }

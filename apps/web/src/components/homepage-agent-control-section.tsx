@@ -397,15 +397,17 @@ export function HomepageAgentControlSection({
             </div>
             <div className={styles.setupScanBar}>
               <div className={styles.setupSummaryItem}>
-                <span className={styles.metaLabel}>{copy.chooseProvider}</span>
+                <span className={styles.setupDigestLabel}>{copy.chooseProvider}</span>
                 <strong>{selectedProvider?.label ?? "-"}</strong>
+                <span className={styles.digestMeta}>{selectedProvider?.cliName ?? "-"}</span>
               </div>
               <div className={styles.setupSummaryItem}>
-                <span className={styles.metaLabel}>{copy.chooseTeam}</span>
+                <span className={styles.setupDigestLabel}>{copy.chooseTeam}</span>
                 <strong>{selectedTeam?.name ?? "-"}</strong>
+                <span className={styles.digestMeta}>{selectedTeam?.lane ?? "-"}</span>
               </div>
               <div className={styles.sequencePill}>
-                <span className={styles.metaLabel}>{copy.commandOrder}</span>
+                <span className={styles.setupDigestLabel}>{copy.commandOrder}</span>
                 <div className={styles.sequenceSteps}>
                   <strong>01</strong>
                   <span>{copy.connectCommand}</span>
@@ -467,8 +469,10 @@ export function HomepageAgentControlSection({
                     <div className={styles.copyTitleGroup}>
                       <span className={styles.commandStep}>{item.step}</span>
                       <div className={styles.commandTitleStack}>
-                        <strong>{item.kind === "connect" ? `${item.title} CLI` : item.title}</strong>
-                        <span className={styles.commandDetail}>{item.detail}</span>
+                        <div className={styles.commandTitleLine}>
+                          <strong>{item.kind === "connect" ? `${item.title} CLI` : item.title}</strong>
+                          <span className={styles.commandDetail}>{item.detail}</span>
+                        </div>
                       </div>
                     </div>
                     <button
