@@ -368,8 +368,8 @@ export function HomepageAgentControlSection({
           <article className={styles.setupBuilderCard}>
             <div className={styles.setupHeader}>
               <div className={styles.setupTitleBlock}>
-                <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                <p className={styles.setupTitleHint}>{copy.commandOrder}</p>
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.providerSummaryChips}>
@@ -476,10 +476,6 @@ export function HomepageAgentControlSection({
             </div>
 
             <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>
-              <div className={styles.commandStackHeader}>
-                <span className={styles.metaLabel}>{copy.setupCommand}</span>
-                <strong>{copy.commandOrder}</strong>
-              </div>
               {setupCommandCards.map((item) => (
                 <div className={styles.copyCard} key={item.kind}>
                   <div className={styles.copyMetaRow}>

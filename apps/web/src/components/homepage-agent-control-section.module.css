@@ -271,6 +271,14 @@
   line-height: 1.15;
 }
 
+.setupTitleHint {
+  margin: 0.04rem 0 0;
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
 .sequenceStep {
   display: inline-flex;
   align-items: center;
@@ -419,20 +427,6 @@
 .setupCommands {
   margin-top: 0;
   gap: 0.04rem;
-}
-
-.commandStackHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  padding: 0.08rem 0.08rem 0;
-}
-
-.commandStackHeader strong {
-  color: #0f172a;
-  font-size: 0.78rem;
-  line-height: 1.2;
 }
 
 .setupPickerGrid {
