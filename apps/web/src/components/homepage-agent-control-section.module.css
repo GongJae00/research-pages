@@ -247,7 +247,7 @@
 
 .setupBuilderCard {
   display: grid;
-  gap: 0;
+  gap: 0.08rem;
   margin-top: 0.08rem;
 }
 
@@ -437,7 +437,7 @@
 
 .setupHeader {
   align-items: flex-start;
-  padding-bottom: 0.08rem;
+  padding-bottom: 0.06rem;
   border-bottom: 1px solid rgba(226, 232, 240, 0.82);
 }
 
@@ -531,29 +531,14 @@
 }
 
 .setupCommands {
-  margin-top: 0.08rem;
+  margin-top: 0.02rem;
   gap: 0.12rem;
 }
 
-.commandStackHeader {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.35rem;
-  padding: 0.02rem 0.02rem 0.08rem;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.82);
-}
-
-.commandStackHeader strong {
-  color: #0f172a;
-  font-size: 0.84rem;
-  line-height: 1.15;
-}
-
 .setupPickerGrid {
-  margin-top: -0.02rem;
+  margin-top: 0;
   align-items: start;
-  gap: 0;
+  gap: 0.12rem;
 }
 
 .setupSelectionRow {
@@ -590,7 +575,7 @@
 .setupPicker {
   display: grid;
   gap: 0.08rem;
-  padding: 0.08rem 0.01rem 0.01rem;
+  padding: 0.02rem 0;
 }
 
 .setupPickerLabelRow {
@@ -612,8 +597,8 @@
   justify-content: center;
   gap: 0.35rem;
   border-radius: 999px;
-  min-height: 1.72rem;
-  padding: 0.22rem 0.54rem;
+  min-height: 1.58rem;
+  padding: 0.18rem 0.5rem;
   border: 1px solid rgba(203, 213, 225, 0.9);
   background: rgba(248, 250, 252, 0.96);
   color: #334155;
@@ -661,7 +646,7 @@
 .copyCard {
   display: grid;
   gap: 0.04rem;
-  padding: 0.1rem 0.02rem 0.02rem;
+  padding: 0.02rem 0;
 }
 
 .copyMetaRow,
