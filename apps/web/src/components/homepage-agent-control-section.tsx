@@ -370,7 +370,6 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <p className={styles.compactBody}>{copy.commandOrder}</p>
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.providerSummaryChips}>
@@ -397,20 +396,26 @@ export function HomepageAgentControlSection({
             </div>
             <div className={styles.setupDigestRow}>
               <div className={styles.setupSummaryItem}>
-                <span className={styles.setupDigestLabel}>{copy.selectedCli ?? copy.chooseProvider}</span>
+                <span className={styles.setupDigestLabel}>
+                  <span className={styles.commandStep}>01</span>
+                  {copy.selectedCli ?? copy.chooseProvider}
+                </span>
                 <div className={styles.scanPillValue}>
                   <strong>{selectedProvider?.label ?? "-"}</strong>
                   <span className={styles.digestMeta}>{selectedProvider?.cliName ?? "-"}</span>
                 </div>
               </div>
               <div className={styles.setupSummaryItem}>
-                <span className={styles.setupDigestLabel}>{copy.selectedTeamLabel ?? copy.chooseTeam}</span>
+                <span className={styles.setupDigestLabel}>
+                  <span className={styles.commandStep}>02</span>
+                  {copy.selectedTeamLabel ?? copy.chooseTeam}
+                </span>
                 <div className={styles.scanPillValue}>
                   <strong>{selectedTeam?.name ?? "-"}</strong>
                   <span className={styles.digestMeta}>{selectedTeam?.lane ?? "-"}</span>
                 </div>
               </div>
-              <div className={styles.setupSummaryItem}>
+              <div className={`${styles.setupSummaryItem} ${styles.setupFlowSummary}`}>
                 <span className={styles.setupDigestLabel}>{copy.setupCommand}</span>
                 <div className={`${styles.scanPillValue} ${styles.setupFlowValue}`}>
                   <span className={styles.sequenceStep}>
