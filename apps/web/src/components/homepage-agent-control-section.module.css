@@ -261,7 +261,7 @@
 
 .setupTitleBlock {
   display: grid;
-  gap: 0.02rem;
+  gap: 0.04rem;
 }
 
 .setupHeaderScan {
@@ -274,8 +274,9 @@
 .setupHeaderBody {
   margin: 0;
   color: #475569;
-  font-size: 0.76rem;
-  line-height: 1.28;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  max-width: 32rem;
 }
 
 .setupScanLabel {
@@ -521,15 +522,8 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.1rem;
+  gap: 0.18rem;
   margin-top: 0.08rem;
-}
-
-.summaryDivider {
-  color: #94a3b8;
-  font-weight: 700;
-  font-size: 0.72rem;
-  line-height: 1;
 }
 
 .setupHeaderTools {
@@ -563,12 +557,12 @@
 }
 
 .summaryChip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.22rem;
-  padding: 0.12rem 0.28rem;
+  display: inline-grid;
+  gap: 0.03rem;
+  align-items: start;
+  padding: 0.16rem 0.34rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 999px;
+  border-radius: 12px;
   background: rgba(248, 250, 252, 0.92);
   color: #64748b;
   font-size: 0.64rem;
@@ -584,7 +578,7 @@
 .setupPicker {
   display: grid;
   gap: 0.06rem;
-  padding: 0;
+  padding: 0.02rem 0;
 }
 
 .setupPickerLabelRow {
@@ -655,7 +649,7 @@
 .copyCard {
   display: grid;
   gap: 0.01rem;
-  padding: 0;
+  padding: 0.02rem;
 }
 
 .copyMetaRow,
@@ -719,7 +713,7 @@
   display: block;
   flex: 1 1 auto;
   min-width: 0;
-  padding: 0.1rem 0.18rem;
+  padding: 0.08rem 0.16rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 12px;
   background: rgba(248, 250, 252, 0.92);
