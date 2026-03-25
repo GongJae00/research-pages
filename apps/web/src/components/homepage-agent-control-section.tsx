@@ -395,6 +395,7 @@ export function HomepageAgentControlSection({
                     </span>
                   </span>
                 </div>
+                <p className={styles.setupCommandHint}>{copy.commandOrder}</p>
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
