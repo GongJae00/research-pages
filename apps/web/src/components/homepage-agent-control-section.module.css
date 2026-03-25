@@ -652,24 +652,30 @@
     margin-top: 0;
     align-content: start;
   }
+
+  .noteCard {
+    grid-template-columns: minmax(96px, auto) minmax(0, 1fr);
+    align-items: start;
+    column-gap: 0.24rem;
+  }
 }
 
 .noteCard {
   display: grid;
-  gap: 0.16rem;
-  padding: 0.42rem 0.46rem;
+  gap: 0.12rem;
+  padding: 0.36rem 0.42rem;
 }
 
 .noteList {
   display: grid;
-  gap: 0.12rem;
+  gap: 0.08rem;
 }
 
 .noteItem {
   margin: 0;
   color: #475569;
-  font-size: 0.8rem;
-  line-height: 1.35;
+  font-size: 0.77rem;
+  line-height: 1.28;
 }
 
 .stepRow {
