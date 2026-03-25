@@ -369,9 +369,9 @@ export function HomepageAgentControlSection({
             <div className={styles.panelHeadCopy}>
               <span className={styles.metaLabel}>{copy.providersLabel}</span>
               <h3>{copy.providersTitle}</h3>
+              <p className={styles.panelLead}>{copy.providersBody}</p>
             </div>
-            <div className={styles.panelHeadMeta}>
-              <span className={styles.inlineMeta}>{copy.commandOrder}</span>
+            <div className={styles.panelHeadIcon}>
               <TerminalSquare size={20} />
             </div>
           </div>
@@ -381,9 +381,9 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                <p className={styles.panelLead}>{copy.setupBuilderBody}</p>
               </div>
               <div className={styles.setupHeaderActions}>
-                <span className={styles.orderPill}>{copy.commandOrder}</span>
                 <Command size={18} />
                 {setupBriefHref ? (
                   <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
@@ -395,11 +395,14 @@ export function HomepageAgentControlSection({
             </div>
             <div className={styles.quickStartRail}>
               <div className={styles.setupScanBar}>
-                <span className={styles.metaLabel}>{copy.setupCommand}</span>
-                <strong>
-                  {selectedProvider?.label ?? "-"} {"->"} {selectedTeam?.name ?? "-"}
-                </strong>
-                <span className={styles.inlineMeta}>{copy.commandOrder}</span>
+                <span className={styles.metaLabel}>{copy.commandOrder}</span>
+                <div className={styles.scanPath}>
+                  <strong>{selectedProvider?.label ?? "-"}</strong>
+                  <span aria-hidden="true">{"->"}</span>
+                  <strong>{selectedTeam?.name ?? "-"}</strong>
+                  <span aria-hidden="true">{"->"}</span>
+                  <strong>{copy.setupCommand}</strong>
+                </div>
               </div>
               <div className={styles.quickStartSummary}>
                 {setupRailItems.map((item) => (
