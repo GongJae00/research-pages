@@ -328,6 +328,10 @@
   gap: 0.22rem;
 }
 
+.setupFlowValue {
+  row-gap: 0.12rem;
+}
+
 .digestMeta {
   color: #64748b;
   font-size: 0.76rem;
@@ -392,7 +396,7 @@
 .setupHeaderActions {
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.18rem;
+  gap: 0.14rem;
   justify-content: flex-end;
 }
 
@@ -457,6 +461,11 @@
 .setupDigestRow .setupSummaryItem {
   min-width: 0;
   padding: 0.2rem 0.3rem;
+}
+
+.setupDigestRow .sequenceSteps,
+.setupFlowValue {
+  min-width: 0;
 }
 
 .compactBody {

@@ -386,20 +386,6 @@ export function HomepageAgentControlSection({
                     {getProviderStatusLabel(locale, "attention")}
                   </span>
                 </div>
-                <div className={styles.sequencePill}>
-                  <span className={styles.setupDigestLabel}>{copy.commandOrder}</span>
-                  <div className={styles.sequenceSteps}>
-                    <span className={styles.sequenceStep}>
-                      <span className={styles.commandStep}>01</span>
-                      <strong>{isKoreanLocale(locale) ? "연결" : "Connect"}</strong>
-                    </span>
-                    <ArrowRight size={14} />
-                    <span className={styles.sequenceStep}>
-                      <span className={styles.commandStep}>02</span>
-                      <strong>{isKoreanLocale(locale) ? "배정" : "Assign"}</strong>
-                    </span>
-                  </div>
-                </div>
                 {setupBriefHref ? (
                   <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
                     {copy.openBrief}
@@ -425,9 +411,16 @@ export function HomepageAgentControlSection({
               </div>
               <div className={styles.setupSummaryItem}>
                 <span className={styles.setupDigestLabel}>{copy.setupCommand}</span>
-                <div className={styles.scanPillValue}>
-                  <strong>{isKoreanLocale(locale) ? "濡쒖뺄 ?곕??먯꽌 ?ㅽ뻾" : "Run locally"}</strong>
-                  <span className={styles.digestMeta}>{copy.commandOrder}</span>
+                <div className={`${styles.scanPillValue} ${styles.setupFlowValue}`}>
+                  <span className={styles.sequenceStep}>
+                    <span className={styles.commandStep}>01</span>
+                    <strong>{isKoreanLocale(locale) ? "연결" : "Connect"}</strong>
+                  </span>
+                  <ArrowRight size={14} />
+                  <span className={styles.sequenceStep}>
+                    <span className={styles.commandStep}>02</span>
+                    <strong>{isKoreanLocale(locale) ? "배정" : "Assign"}</strong>
+                  </span>
                 </div>
               </div>
             </div>
