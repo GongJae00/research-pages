@@ -364,6 +364,7 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                <p className={styles.setupLead}>{copy.setupBuilderBody}</p>
                 {selectedProvider && selectedTeam ? (
                   <div className={styles.setupSummaryBar} aria-label={copy.activeSetup}>
                     <span className={styles.summaryChip}>
@@ -388,19 +389,6 @@ export function HomepageAgentControlSection({
                     </span>
                   </div>
                 ) : null}
-                <div className={styles.setupHeaderSequence} aria-label={copy.commandOrder}>
-                  <div className={styles.sequenceStep}>
-                    <span className={styles.sequencePill}>
-                      {isKoreanLocale(locale) ? "연결" : "Connect"}
-                    </span>
-                    <span className={styles.sequenceArrow}>
-                      <ArrowRight size={14} />
-                    </span>
-                    <span className={styles.sequencePill}>
-                      {isKoreanLocale(locale) ? "배정" : "Assign"}
-                    </span>
-                  </div>
-                </div>
               </div>
               <div className={styles.setupHeaderActions}>
                 {setupBriefHref ? (
