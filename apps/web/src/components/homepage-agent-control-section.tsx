@@ -390,14 +390,17 @@ export function HomepageAgentControlSection({
                 {selectedProvider && selectedTeam ? (
                   <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
                     <span className={styles.summaryChip}>
+                      <span className={styles.commandStep}>01</span>
                       <span className={styles.setupScanLabel}>{copy.selectedCli}</span>
                       <strong className={styles.setupScanValue}>{selectedProvider.label}</strong>
                     </span>
                     <span className={styles.summaryChip}>
+                      <span className={styles.commandStep}>02</span>
                       <span className={styles.setupScanLabel}>{copy.selectedTeamLabel}</span>
                       <strong className={styles.setupScanValue}>{selectedTeam.name}</strong>
                     </span>
                     <span className={styles.summaryChip}>
+                      <span className={styles.commandStep}>03</span>
                       <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
                       <strong className={styles.setupScanValue}>
                         {getNextSetupActionLabel(locale, selectedProvider.status)}
@@ -419,13 +422,7 @@ export function HomepageAgentControlSection({
               </div>
             </div>
             <div className={styles.setupPickerGrid}>
-              <div className={styles.setupPicker}>
-                <div className={styles.setupPickerLabelRow}>
-                  <span className={styles.setupDigestLabel}>
-                    <span className={styles.commandStep}>01</span>
-                    {copy.chooseProvider}
-                  </span>
-                </div>
+              <div className={styles.setupPicker} aria-label={copy.chooseProvider}>
                 <div className={styles.optionRow}>
                   {providerOrder.map((providerId) => {
                     const provider = snapshot.providerConnections.find((entry) => entry.providerId === providerId);
@@ -454,13 +451,7 @@ export function HomepageAgentControlSection({
                 </div>
               </div>
 
-              <div className={styles.setupPicker}>
-                <div className={styles.setupPickerLabelRow}>
-                  <span className={styles.setupDigestLabel}>
-                    <span className={styles.commandStep}>02</span>
-                    {copy.chooseTeam}
-                  </span>
-                </div>
+              <div className={styles.setupPicker} aria-label={copy.chooseTeam}>
                 <div className={styles.optionRow}>
                   {snapshot.teams.map((team) => (
                     <button
