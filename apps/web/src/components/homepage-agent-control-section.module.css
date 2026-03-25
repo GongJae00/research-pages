@@ -299,7 +299,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.08rem;
-  margin-top: 0.04rem;
+  margin-top: 0.03rem;
 }
 
 .setupScanCopy {
@@ -359,7 +359,7 @@
   align-items: center;
   gap: 0.18rem;
   min-width: 0;
-  padding: 0.1rem 0.2rem;
+  padding: 0.08rem 0.18rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 999px;
   background: rgba(248, 250, 252, 0.92);
@@ -603,8 +603,20 @@
 
 .setupCommands {
   margin-top: 0;
-  gap: 0.04rem;
+  gap: 0.03rem;
   align-content: start;
+}
+
+.setupCommandLead {
+  display: grid;
+  gap: 0.02rem;
+  padding: 0.02rem 0 0.04rem;
+}
+
+.setupCommandLead strong {
+  color: #0f172a;
+  font-size: 0.74rem;
+  line-height: 1.05;
 }
 
 .setupPickerGrid {

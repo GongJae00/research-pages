@@ -380,7 +380,6 @@ export function HomepageAgentControlSection({
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
                 <div className={styles.setupScanBar} aria-label={copy.activeSetup}>
-                  <span className={styles.setupQuickLabel}>{copy.commandOrder}</span>
                   <div className={styles.setupScanChip}>
                     <div className={styles.setupScanCopy}>
                       <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
@@ -480,6 +479,10 @@ export function HomepageAgentControlSection({
             </div>
 
             <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>
+              <div className={styles.setupCommandLead}>
+                <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
+                <strong>{setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}</strong>
+              </div>
               {orderedSetupCommandCards.map((item) => (
                 <div
                   className={`${styles.copyCard} ${
