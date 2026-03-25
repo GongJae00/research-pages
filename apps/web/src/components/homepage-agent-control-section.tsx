@@ -352,27 +352,18 @@ export function HomepageAgentControlSection({
           <article className={styles.setupBuilderCard}>
             <div className={styles.setupHeader}>
               <div className={styles.setupTitleBlock}>
-                <div className={styles.setupKickerRow}>
-                  <span className={styles.metaLabel}>{copy.providersLabel}</span>
-                  <span className={styles.setupKickerDivider} aria-hidden="true">
-                    /
-                  </span>
-                  <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
-                </div>
+                <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <div className={styles.setupRunOrder} aria-label={copy.commandOrder}>
-                  <span className={styles.setupRunOrderLabel}>{copy.commandOrder}</span>
-                  <span className={styles.setupRunOrderStep}>
-                    <span className={styles.commandStep}>01</span>
-                    {isKoreanLocale(locale) ? "CLI 연결" : "Connect CLI"}
-                  </span>
-                  <span className={styles.setupRunOrderArrow} aria-hidden="true">
+                <div className={styles.setupCompactBar} aria-label={copy.commandOrder}>
+                  <span className={styles.setupQuickLabel}>{copy.chooseProvider}</span>
+                  <span className={styles.setupOrderHint} aria-hidden="true">
                     →
                   </span>
-                  <span className={styles.setupRunOrderStep}>
-                    <span className={styles.commandStep}>02</span>
-                    {isKoreanLocale(locale) ? "팀 배정" : "Assign team"}
+                  <span className={styles.setupQuickLabel}>{copy.chooseTeam}</span>
+                  <span className={styles.setupOrderHint} aria-hidden="true">
+                    →
                   </span>
+                  <span className={styles.setupOrderPill}>{copy.commandOrder}</span>
                 </div>
                 {selectedProvider && selectedTeam ? (
                   <div className={styles.setupSummaryBar} aria-label={copy.activeSetup}>
