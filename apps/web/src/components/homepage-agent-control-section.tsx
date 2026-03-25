@@ -480,14 +480,21 @@ export function HomepageAgentControlSection({
                     <div className={styles.copyTitleGroup}>
                       <span className={styles.commandStep}>{item.step}</span>
                       <div className={styles.commandTitleStack}>
-                        <span className={styles.copyLabel}>{item.buttonLabel}</span>
                         <strong>{item.kind === "connect" ? `${item.title} CLI` : item.title}</strong>
                         <span className={styles.commandDetail}>{item.detail}</span>
                       </div>
                     </div>
-                    <button type="button" className={styles.copyButton} onClick={() => void copyCommand(item.kind)}>
+                    <button
+                      type="button"
+                      className={`${styles.copyButton} ${styles.copyIconButton}`}
+                      onClick={() => void copyCommand(item.kind)}
+                      aria-label={item.buttonLabel}
+                      title={item.buttonLabel}
+                    >
                       {copiedCommand === item.kind ? <Check size={14} /> : <Copy size={14} />}
-                      {copiedCommand === item.kind ? copy.copied : item.buttonLabel}
+                      <span className={styles.copyButtonText}>
+                        {copiedCommand === item.kind ? copy.copied : item.buttonLabel}
+                      </span>
                     </button>
                   </div>
                   <code>{item.command}</code>
