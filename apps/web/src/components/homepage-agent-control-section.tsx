@@ -275,7 +275,6 @@ export function HomepageAgentControlSection({
           title: isKoreanLocale(locale)
             ? `${selectedProvider?.label ?? "-"} CLI`
             : `Connect ${selectedProvider?.label ?? "-"} CLI`,
-          detail: selectedProvider?.cliName ?? "-",
           command: setupManifest.commands.connect,
           buttonLabel: copy.connectCommand,
         },
@@ -285,7 +284,6 @@ export function HomepageAgentControlSection({
           title: isKoreanLocale(locale)
             ? `${selectedTeam?.name ?? "-"} ${copy.assignedTeam}`
             : `Assign ${selectedTeam?.name ?? "-"}`,
-          detail: selectedTeam?.lane ?? "-",
           command: setupManifest.commands.assign,
           buttonLabel: copy.assignCommand,
         },
@@ -482,7 +480,6 @@ export function HomepageAgentControlSection({
                       <span className={styles.commandStep}>{item.step}</span>
                       <div className={styles.commandTitleBlock}>
                         <strong className={styles.commandTitle}>{item.title}</strong>
-                        <span className={styles.commandDetail}>{item.detail}</span>
                       </div>
                     </div>
                   </div>
