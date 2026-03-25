@@ -308,17 +308,19 @@ export function HomepageAgentControlSection({
             <Bot size={20} />
           </div>
 
-          <div className={styles.infoBlock}>
-            <span className={styles.metaLabel}>{copy.assistantSummary}</span>
-            <p>{snapshot.assistant.promise}</p>
-          </div>
+          <div className={styles.heroInfoGrid}>
+            <div className={styles.infoBlock}>
+              <span className={styles.metaLabel}>{copy.assistantSummary}</span>
+              <p>{snapshot.assistant.promise}</p>
+            </div>
 
-          <div className={styles.infoBlock}>
-            <span className={styles.metaLabel}>{copy.directiveLabel}</span>
-            <p>{snapshot.currentDirective.title}</p>
-            <span className={styles.inlineMeta}>
-              {formatBoardTimestamp(locale, snapshot.currentDirective.issuedAt)}
-            </span>
+            <div className={styles.infoBlock}>
+              <span className={styles.metaLabel}>{copy.directiveLabel}</span>
+              <p>{snapshot.currentDirective.title}</p>
+              <span className={styles.inlineMeta}>
+                {formatBoardTimestamp(locale, snapshot.currentDirective.issuedAt)}
+              </span>
+            </div>
           </div>
 
           <div className={styles.actionRow}>
@@ -360,17 +362,13 @@ export function HomepageAgentControlSection({
                     <span className={styles.metaLabel}>{copy.chooseTeam}</span>
                     <strong>{selectedTeam?.name ?? copy.chooseTeam}</strong>
                   </div>
-                </div>
-                <div className={styles.quickStartSummary}>
-                  {quickSetupSteps.map((step) => (
-                    <div className={styles.stepChip} key={step}>
-                      {step}
-                    </div>
-                  ))}
+                  <div className={styles.selectionCard}>
+                    <span className={styles.metaLabel}>{copy.commandOrder}</span>
+                    <strong>{quickSetupSteps.join(" / ")}</strong>
+                  </div>
                 </div>
               </div>
               <div className={styles.quickStartActions}>
-                <span className={styles.quickStartHint}>{copy.commandOrder}</span>
                 {setupBriefHref ? (
                   <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
                     {copy.openBrief}
