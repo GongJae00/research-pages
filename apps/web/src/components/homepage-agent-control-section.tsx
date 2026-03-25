@@ -581,16 +581,16 @@ export function HomepageAgentControlSection({
                   </span>
                 </div>
 
-                <div className={styles.providerMeta}>
-                  <div>
+                <div className={styles.providerMetaCompact}>
+                  <div className={styles.providerMetaChip}>
                     <span className={styles.metaLabel}>{copy.assignedTeam}</span>
                     <strong>{provider.assignedTeamLabel}</strong>
                   </div>
-                  <div>
+                  <div className={styles.providerMetaChip}>
                     <span className={styles.metaLabel}>{copy.heartbeat}</span>
                     <strong>{formatBoardTimestamp(locale, provider.lastHeartbeat)}</strong>
                   </div>
-                  <div>
+                  <div className={styles.providerMetaChip}>
                     <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
                     <strong>{getNextSetupActionLabel(locale, provider.status)}</strong>
                   </div>

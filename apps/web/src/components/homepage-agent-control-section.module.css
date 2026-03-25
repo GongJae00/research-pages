@@ -255,7 +255,8 @@
 
 .providerCard {
   display: grid;
-  gap: 0.24rem;
+  gap: 0.16rem;
+  padding: 0.18rem 0.2rem;
 }
 
 .setupBuilderCard,
@@ -1024,15 +1025,26 @@
   color: #b45309;
 }
 
-.providerMeta {
-  margin-top: 0.02rem;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.18rem 0.24rem;
+.providerMetaCompact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.12rem;
 }
 
-.providerMeta > div {
-  display: grid;
-  gap: 0.04rem;
+.providerMetaChip {
+  display: inline-grid;
+  gap: 0.03rem;
+  min-width: 0;
+  padding: 0.14rem 0.18rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 12px;
+  background: rgba(248, 250, 252, 0.9);
+  flex: 1 1 7.5rem;
+}
+
+.providerMetaChip strong {
+  font-size: 0.72rem;
+  line-height: 1.15;
 }
 
 .badgeRow {
@@ -1174,7 +1186,8 @@
     padding: 0.9rem;
   }
 
-  .providerMeta {
+  .providerMetaCompact {
+    display: grid;
     grid-template-columns: 1fr;
   }
 
