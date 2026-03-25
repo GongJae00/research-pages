@@ -274,7 +274,7 @@
   color: #475569;
   font-size: 0.8rem;
   line-height: 1.35;
-  max-width: 30rem;
+  max-width: 26rem;
 }
 
 .panelHeadCopy {
@@ -289,6 +289,41 @@
 
 .setupHeader {
   align-items: center;
+}
+
+.setupGlanceBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.3rem 0.36rem 0.12rem;
+  border-top: 1px solid rgba(226, 232, 240, 0.85);
+}
+
+.setupCompactFlow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.16rem;
+}
+
+.compactPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.22rem;
+  min-width: 0;
+  padding: 0.18rem 0.34rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 999px;
+  background: rgba(248, 250, 252, 0.92);
+  color: #0f172a;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.compactPill span:last-child {
+  overflow-wrap: anywhere;
 }
 
 .setupHeaderActions {
@@ -311,12 +346,6 @@
   display: grid;
   gap: 0.1rem;
   padding: 0;
-}
-
-.setupSummaryGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.1rem;
 }
 
 .setupFlowHeader {
@@ -392,17 +421,6 @@
   color: #64748b;
 }
 
-.summaryPill {
-  display: inline-flex;
-  align-items: flex-start;
-  gap: 0.32rem;
-  min-width: 0;
-  padding: 0.22rem 0.34rem;
-  border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 14px;
-  background: rgba(248, 250, 252, 0.9);
-}
-
 .contextLabel {
   display: inline-flex;
   align-items: center;
@@ -417,33 +435,6 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-}
-
-.summaryPillCopy {
-  display: grid;
-  gap: 0.02rem;
-  min-width: 0;
-}
-
-.summaryPillLabel {
-  color: #64748b;
-  font-size: 0.63rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.summaryPill strong {
-  color: #0f172a;
-  font-size: 0.73rem;
-  line-height: 1.15;
-  overflow-wrap: anywhere;
-}
-
-.summaryDetail {
-  color: #64748b;
-  font-size: 0.68rem;
-  line-height: 1.15;
 }
 
 .selectionCard {
@@ -766,21 +757,13 @@
 
   .setupBuilderCard,
   .setupHeader,
+  .setupGlanceBar,
   .quickStartRail,
   .setupPickerGrid,
   .setupCommands,
   .setupNotesGrid {
     grid-column: auto;
     grid-row: auto;
-  }
-
-  .setupSummaryGrid,
-  .summaryPill {
-    grid-template-columns: 1fr;
-  }
-
-  .summaryPill {
-    border-radius: 14px;
   }
 
   .setupFlowHeader {
@@ -793,6 +776,7 @@
   .copyHead,
   .providerSummaryBar,
   .setupHeader,
+  .setupGlanceBar,
   .setupHeaderActions {
     flex-direction: column;
     align-items: flex-start;

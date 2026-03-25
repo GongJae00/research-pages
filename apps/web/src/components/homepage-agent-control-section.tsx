@@ -384,7 +384,6 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <p className={styles.setupLead}>{copy.setupBuilderBody}</p>
               </div>
               <div className={styles.setupHeaderActions}>
                 <Command size={18} />
@@ -394,6 +393,23 @@ export function HomepageAgentControlSection({
                     <ArrowRight size={16} />
                   </Link>
                 ) : null}
+              </div>
+            </div>
+            <div className={styles.setupGlanceBar}>
+              <p className={styles.setupLead}>{copy.setupBuilderBody}</p>
+              <div className={styles.setupCompactFlow}>
+                <span className={styles.compactPill}>
+                  <span className={styles.contextLabel}>01</span>
+                  <span>{selectedProvider?.label ?? "-"}</span>
+                </span>
+                <span className={styles.compactPill}>
+                  <span className={styles.contextLabel}>02</span>
+                  <span>{selectedTeam?.name ?? "-"}</span>
+                </span>
+                <span className={styles.compactPill}>
+                  <span className={styles.contextLabel}>03</span>
+                  <span>{copy.commandOrder}</span>
+                </span>
               </div>
             </div>
             <div className={styles.setupPickerGrid}>
@@ -441,32 +457,6 @@ export function HomepageAgentControlSection({
               </div>
             </div>
             <div className={styles.quickStartRail}>
-              <div className={styles.setupSummaryGrid}>
-                <div className={styles.summaryPill}>
-                  <span className={styles.contextLabel}>01</span>
-                  <div className={styles.summaryPillCopy}>
-                    <span className={styles.summaryPillLabel}>{copy.chooseProvider}</span>
-                    <strong>{selectedProvider?.label ?? "-"}</strong>
-                    <span className={styles.summaryDetail}>{selectedProvider?.cliName ?? "-"}</span>
-                  </div>
-                </div>
-                <div className={styles.summaryPill}>
-                  <span className={styles.contextLabel}>02</span>
-                  <div className={styles.summaryPillCopy}>
-                    <span className={styles.summaryPillLabel}>{copy.chooseTeam}</span>
-                    <strong>{selectedTeam?.name ?? "-"}</strong>
-                    <span className={styles.summaryDetail}>{selectedTeam?.lane ?? "-"}</span>
-                  </div>
-                </div>
-                <div className={styles.summaryPill}>
-                  <span className={styles.contextLabel}>03</span>
-                  <div className={styles.summaryPillCopy}>
-                    <span className={styles.summaryPillLabel}>{copy.setupCommand}</span>
-                    <strong>{copy.commandOrder}</strong>
-                    <span className={styles.summaryDetail}>{copy.openBrief}</span>
-                  </div>
-                </div>
-              </div>
               <div className={styles.setupFlowHeader}>
                 <span className={styles.metaLabel}>{copy.commandOrder}</span>
                 <div className={styles.scanPath}>
