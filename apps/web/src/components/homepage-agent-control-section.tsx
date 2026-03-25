@@ -375,30 +375,6 @@ export function HomepageAgentControlSection({
                 ) : null}
               </div>
             </div>
-            {selectedProvider && selectedTeam ? (
-              <div className={styles.setupCompactBar}>
-                <span className={styles.setupDigestChip}>
-                  <span className={styles.commandStep}>01</span>
-                  <span className={styles.setupScanLabel}>{copy.selectedCli}</span>
-                  <strong className={styles.setupDigestValue}>{selectedProvider.label}</strong>
-                </span>
-                <span className={styles.setupDigestChip}>
-                  <span className={styles.commandStep}>02</span>
-                  <span className={styles.setupScanLabel}>{copy.statusLabel}</span>
-                  <strong
-                    className={`${styles.setupDigestValue} ${getProviderStatusClass(selectedProvider.status)}`}
-                  >
-                    {getProviderStatusLabel(locale, selectedProvider.status)}
-                  </strong>
-                </span>
-                <span className={styles.setupDigestChip}>
-                  <span className={styles.commandStep}>03</span>
-                  <span className={styles.setupScanLabel}>{copy.selectedTeamLabel}</span>
-                  <strong className={styles.setupDigestValue}>{selectedTeam.name}</strong>
-                </span>
-                <span className={styles.setupOrderPill}>{copy.commandOrder}</span>
-              </div>
-            ) : null}
             <div className={styles.setupPickerGrid}>
               <div className={styles.setupPicker}>
                 <div className={styles.setupPickerLabelRow}>
@@ -460,6 +436,19 @@ export function HomepageAgentControlSection({
             </div>
 
             <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>
+              {selectedProvider && selectedTeam ? (
+                <div className={styles.setupCommandLead}>
+                  <span className={styles.setupOrderPill}>{copy.commandOrder}</span>
+                  <span className={styles.setupDigestChip}>
+                    <span className={styles.setupScanLabel}>{copy.selectedCli}</span>
+                    <strong className={styles.setupDigestValue}>{selectedProvider.label}</strong>
+                  </span>
+                  <span className={styles.setupDigestChip}>
+                    <span className={styles.setupScanLabel}>{copy.selectedTeamLabel}</span>
+                    <strong className={styles.setupDigestValue}>{selectedTeam.name}</strong>
+                  </span>
+                </div>
+              ) : null}
               {setupCommandCards.map((item) => (
                 <div className={styles.copyCard} key={item.kind}>
                   <div className={styles.copyMetaRow}>

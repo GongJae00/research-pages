@@ -504,6 +504,14 @@
   gap: 0.08rem;
 }
 
+.setupCommandLead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.14rem;
+  grid-column: 1 / -1;
+}
+
 .setupPickerGrid {
   margin-top: 0;
   align-items: start;
@@ -615,7 +623,7 @@
 .copyCard {
   display: grid;
   gap: 0.04rem;
-  padding: 0.04rem;
+  padding: 0.02rem;
 }
 
 .copyMetaRow,
