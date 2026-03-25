@@ -442,6 +442,7 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.08rem;
+  grid-column: 1 / -1;
 }
 
 .providerSummaryChips {
