@@ -418,10 +418,6 @@ export function HomepageAgentControlSection({
                     <span className={styles.commandStep}>01</span>
                     {copy.chooseProvider}
                   </span>
-                  <span className={styles.inlineSelection}>
-                    <strong>{selectedProvider?.label ?? "-"}</strong>
-                    <span>{selectedProvider?.cliName ?? "-"}</span>
-                  </span>
                 </div>
                 <div className={styles.optionRow}>
                   {providerOrder.map((providerId) => {
@@ -451,10 +447,6 @@ export function HomepageAgentControlSection({
                   <span className={styles.setupDigestLabel}>
                     <span className={styles.commandStep}>02</span>
                     {copy.chooseTeam}
-                  </span>
-                  <span className={styles.inlineSelection}>
-                    <strong>{selectedTeam?.name ?? "-"}</strong>
-                    <span>{selectedTeam?.lane ?? "-"}</span>
                   </span>
                 </div>
                 <div className={styles.optionRow}>
