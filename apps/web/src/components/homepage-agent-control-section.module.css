@@ -782,7 +782,7 @@
 
 .copyCard {
   display: grid;
-  gap: 0.03rem;
+  gap: 0.02rem;
   padding: 0.03rem;
 }
 
@@ -794,27 +794,6 @@
   gap: 0.12rem;
 }
 
-.commandTitleStack {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.2rem;
-  min-width: 0;
-}
-
-.commandTitleStackCompact {
-  gap: 0.18rem;
-}
-
-.commandEyebrow {
-  color: #64748b;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
 .commandTitleLine {
   display: flex;
   flex-wrap: wrap;
@@ -822,18 +801,10 @@
   gap: 0.28rem;
 }
 
-.commandTitleStack strong {
+.commandTitle {
   color: #0f172a;
   font-size: 0.76rem;
   line-height: 1.05;
-}
-
-.commandInlineHint {
-  color: #64748b;
-  font-size: 0.66rem;
-  font-weight: 600;
-  line-height: 1.15;
-  display: none;
 }
 
 .copyButton {
@@ -861,7 +832,7 @@
   display: block;
   flex: 1 1 auto;
   min-width: 0;
-  padding: 0.02rem 0.05rem;
+  padding: 0.02rem 0.04rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 12px;
   background: rgba(248, 250, 252, 0.92);
@@ -882,7 +853,7 @@
 .copyTitleGroup {
   display: inline-flex;
   align-items: center;
-  gap: 0.34rem;
+  gap: 0.22rem;
 }
 
 .commandStep {

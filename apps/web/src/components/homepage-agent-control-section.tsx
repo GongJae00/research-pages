@@ -272,7 +272,6 @@ export function HomepageAgentControlSection({
         {
           kind: "connect" as const,
           step: "01",
-          label: isKoreanLocale(locale) ? "CLI 연결" : "Connect CLI",
           title: isKoreanLocale(locale)
             ? `${selectedProvider?.label ?? "-"} CLI`
             : `Connect ${selectedProvider?.label ?? "-"} CLI`,
@@ -282,7 +281,6 @@ export function HomepageAgentControlSection({
         {
           kind: "assign" as const,
           step: "02",
-          label: isKoreanLocale(locale) ? "팀 배정" : "Assign team",
           title: isKoreanLocale(locale)
             ? `${selectedTeam?.name ?? "-"} ${copy.assignedTeam}`
             : `Assign ${selectedTeam?.name ?? "-"}`,
@@ -480,19 +478,7 @@ export function HomepageAgentControlSection({
                   <div className={styles.copyMetaRow}>
                     <div className={styles.copyTitleGroup}>
                       <span className={styles.commandStep}>{item.step}</span>
-                      <div className={`${styles.commandTitleStack} ${styles.commandTitleStackCompact}`}>
-                        <span className={styles.commandEyebrow}>{item.label}</span>
-                        <strong>{item.title}</strong>
-                        <span className={styles.commandInlineHint}>
-                          {item.kind === "connect"
-                            ? isKoreanLocale(locale)
-                              ? "로컬 터미널에서 연결"
-                              : "Run in a local terminal to connect"
-                            : isKoreanLocale(locale)
-                              ? "팀 레인에 배정"
-                              : "Run after connect to assign the lane"}
-                        </span>
-                      </div>
+                      <strong className={styles.commandTitle}>{item.title}</strong>
                     </div>
                   </div>
                   <div className={styles.commandRow}>
