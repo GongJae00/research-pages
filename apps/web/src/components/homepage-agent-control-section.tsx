@@ -396,28 +396,18 @@ export function HomepageAgentControlSection({
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
                 <p className={styles.setupBody}>{copy.setupBuilderBody}</p>
-                <div
-                  className={styles.setupScanBar}
-                  aria-label={copy.setupStepsLabel}
-                  title={setupFlowLabel}
-                >
-                  <span className={styles.setupScanItem}>
+                <div className={styles.setupScanGrid} aria-label={copy.setupStepsLabel} title={setupFlowLabel}>
+                  <span className={styles.setupScanCell}>
                     <span className={styles.commandStep}>01</span>
                     <span className={styles.setupScanLabel}>{copy.selectedCli}</span>
                     <strong>{selectedProvider?.label ?? "-"}</strong>
                   </span>
-                  <span className={styles.setupScanArrow} aria-hidden="true">
-                    <ArrowRight size={14} />
-                  </span>
-                  <span className={styles.setupScanItem}>
+                  <span className={styles.setupScanCell}>
                     <span className={styles.commandStep}>02</span>
                     <span className={styles.setupScanLabel}>{copy.selectedTeamLabel}</span>
                     <strong>{selectedTeam?.name ?? "-"}</strong>
                   </span>
-                  <span className={styles.setupScanArrow} aria-hidden="true">
-                    <ArrowRight size={14} />
-                  </span>
-                  <span className={`${styles.setupScanItem} ${styles.setupScanItemAccent}`}>
+                  <span className={`${styles.setupScanCell} ${styles.setupScanCellAccent}`}>
                     <span className={styles.commandStep}>03</span>
                     <span className={styles.setupScanLabel}>{copy.runCommandLabel}</span>
                     <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>

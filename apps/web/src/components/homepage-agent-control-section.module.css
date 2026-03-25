@@ -295,18 +295,11 @@
   gap: 0.03rem;
 }
 
-.setupScanBar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.12rem;
+.setupScanGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.08rem;
   margin-top: 0.02rem;
-}
-
-.setupScanArrow {
-  display: inline-flex;
-  align-items: center;
-  color: #94a3b8;
 }
 
 .setupEyebrow {
@@ -344,36 +337,36 @@
   overflow-wrap: anywhere;
 }
 
-.setupScanItem {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.14rem;
+.setupScanCell {
+  display: grid;
+  gap: 0.04rem;
   min-width: 0;
-  padding: 0.08rem 0.14rem 0.08rem 0.1rem;
-  border-radius: 999px;
+  padding: 0.12rem 0.14rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 14px;
   background: rgba(248, 250, 252, 0.92);
 }
 
-.setupScanItem .commandStep {
+.setupScanCell .commandStep {
   width: 1rem;
   height: 1rem;
   font-size: 0.54rem;
   flex: 0 0 1rem;
 }
 
-.setupScanItem strong {
+.setupScanCell strong {
   color: #0f172a;
   font-size: 0.72rem;
-  line-height: 1.1;
+  line-height: 1.15;
   overflow-wrap: anywhere;
 }
 
-.setupScanItemAccent {
+.setupScanCellAccent {
   border: 1px solid rgba(15, 23, 42, 0.12);
   background: rgba(241, 245, 249, 0.98);
 }
 
-.setupScanItemAccent .commandStep {
+.setupScanCellAccent .commandStep {
   background: #0f766e;
 }
 
@@ -1309,8 +1302,8 @@
     justify-content: flex-start;
   }
 
-  .setupScanArrow {
-    display: none;
+  .setupScanGrid {
+    grid-template-columns: 1fr;
   }
 
   .setupSummaryBar {
