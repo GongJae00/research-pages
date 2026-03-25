@@ -269,6 +269,14 @@
   line-height: 1.15;
 }
 
+.setupLead {
+  margin: 0;
+  color: #475569;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  max-width: 30rem;
+}
+
 .panelHeadCopy {
   display: grid;
   gap: 0.08rem;
@@ -305,13 +313,17 @@
   padding: 0;
 }
 
-.stepRail {
+.setupFlowRail,
+.setupFlowSteps {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.12rem;
 }
 
-.stepChip {
+.setupFlowSteps {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.setupFlowStep {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
@@ -323,11 +335,11 @@
   background: rgba(248, 250, 252, 0.92);
 }
 
-.stepChip p {
-  margin: 0;
-  color: #475569;
-  font-size: 0.75rem;
-  line-height: 1.28;
+.setupFlowStep strong {
+  color: #0f172a;
+  font-size: 0.78rem;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
 }
 
 .setupScanBar {
@@ -412,29 +424,6 @@
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 14px;
   background: rgba(248, 250, 252, 0.9);
-}
-
-.setupHeaderSummary {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.12rem;
-}
-
-.headerSummaryPill {
-  display: grid;
-  gap: 0.02rem;
-  min-width: 0;
-  padding: 0.24rem 0.36rem;
-  border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 12px;
-  background: rgba(248, 250, 252, 0.9);
-}
-
-.headerSummaryPill strong {
-  color: #0f172a;
-  font-size: 0.75rem;
-  line-height: 1.15;
-  overflow-wrap: anywhere;
 }
 
 .contextLabel {
@@ -788,7 +777,7 @@
   .heroInfoGrid,
   .providerMeta,
   .setupRail,
-  .stepRail,
+  .setupFlowSteps,
   .setupPickerGrid,
   .setupCommands,
   .setupNotesGrid {
@@ -811,14 +800,6 @@
 
   .summaryPill {
     border-radius: 14px;
-  }
-
-  .setupHeaderSummary {
-    width: 100%;
-  }
-
-  .headerSummaryPill {
-    flex: 1 1 100%;
   }
 
   .setupScanBar {

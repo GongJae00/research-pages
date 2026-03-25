@@ -283,6 +283,7 @@ export function HomepageAgentControlSection({
         },
       ]
     : [];
+  const setupFlowSteps = [copy.chooseProvider, copy.chooseTeam, copy.setupCommand];
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
       kind === "connect" ? setupManifest?.commands.connect ?? "" : setupManifest?.commands.assign ?? "";
@@ -384,20 +385,7 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <div className={styles.setupHeaderSummary}>
-                  <div className={styles.headerSummaryPill}>
-                    <span className={styles.summaryPillLabel}>{copy.chooseProvider}</span>
-                    <strong>{selectedProvider?.label ?? "-"}</strong>
-                    <span className={styles.summaryDetail}>
-                      {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
-                    </span>
-                  </div>
-                  <div className={styles.headerSummaryPill}>
-                    <span className={styles.summaryPillLabel}>{copy.chooseTeam}</span>
-                    <strong>{selectedTeam?.name ?? "-"}</strong>
-                    <span className={styles.summaryDetail}>{selectedTeam?.lane ?? "-"}</span>
-                  </div>
-                </div>
+                <p className={styles.setupLead}>{copy.setupBuilderBody}</p>
               </div>
               <div className={styles.setupHeaderActions}>
                 <Command size={18} />
@@ -454,16 +442,19 @@ export function HomepageAgentControlSection({
               </div>
             </div>
             <div className={styles.quickStartRail}>
-              <div className={styles.stepRail}>
-                {copy.setupSteps.slice(0, 3).map((item, index) => (
-                  <div className={styles.stepChip} key={item}>
-                    <span className={styles.commandStep}>{String(index + 1).padStart(2, "0")}</span>
-                    <p>{item}</p>
-                  </div>
-                ))}
+              <div className={styles.setupFlowRail}>
+                <span className={styles.metaLabel}>{copy.commandOrder}</span>
+                <div className={styles.setupFlowSteps}>
+                  {setupFlowSteps.map((item, index) => (
+                    <div className={styles.setupFlowStep} key={item}>
+                      <span className={styles.commandStep}>{String(index + 1).padStart(2, "0")}</span>
+                      <strong>{item}</strong>
+                    </div>
+                  ))}
+                </div>
               </div>
               <div className={styles.setupScanBar}>
-                <span className={styles.metaLabel}>{copy.commandOrder}</span>
+                <span className={styles.metaLabel}>{copy.setupStepsLabel}</span>
                 <div className={styles.scanPath}>
                   <strong>{selectedProvider?.label ?? "-"}</strong>
                   <span aria-hidden="true">{"->"}</span>
