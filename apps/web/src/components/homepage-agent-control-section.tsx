@@ -107,6 +107,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
       selectedTeamLabel: "선택 팀",
       statusLabel: "상태",
       nextActionLabel: "다음",
+      runCommandLabel: "명령 실행",
       chooseProvider: "CLI 선택",
       chooseTeam: "팀 선택",
       setupCommand: "셋업 명령",
@@ -166,6 +167,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
     selectedTeamLabel: "Selected team",
     statusLabel: "Status",
     nextActionLabel: "Next",
+    runCommandLabel: "Run command",
     chooseProvider: "CLI",
     chooseTeam: "Team",
     setupCommand: "Setup command",
@@ -384,7 +386,6 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <p className={styles.setupBody}>{copy.setupBuilderBody}</p>
                 <div className={styles.setupScanBar} aria-label={copy.setupStepsLabel}>
                   <div className={styles.setupScanChip}>
                     <span className={styles.setupChipStep}>01</span>
@@ -403,7 +404,7 @@ export function HomepageAgentControlSection({
                   <div className={`${styles.setupScanChip} ${styles.setupScanChipAccent}`}>
                     <span className={styles.setupChipStep}>03</span>
                     <div className={styles.setupScanCopy}>
-                      <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
+                      <span className={styles.setupScanLabel}>{copy.runCommandLabel}</span>
                       <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
                     </div>
                   </div>
