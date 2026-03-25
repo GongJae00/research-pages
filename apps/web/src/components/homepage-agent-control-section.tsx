@@ -283,7 +283,6 @@ export function HomepageAgentControlSection({
         },
       ]
     : [];
-  const setupFlowSteps = [copy.chooseProvider, copy.chooseTeam, copy.setupCommand];
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
       kind === "connect" ? setupManifest?.commands.connect ?? "" : setupManifest?.commands.assign ?? "";
@@ -468,19 +467,8 @@ export function HomepageAgentControlSection({
                   </div>
                 </div>
               </div>
-              <div className={styles.setupFlowRail}>
+              <div className={styles.setupFlowHeader}>
                 <span className={styles.metaLabel}>{copy.commandOrder}</span>
-                <div className={styles.setupFlowSteps}>
-                  {setupFlowSteps.map((item, index) => (
-                    <div className={styles.setupFlowStep} key={item}>
-                      <span className={styles.commandStep}>{String(index + 1).padStart(2, "0")}</span>
-                      <strong>{item}</strong>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className={styles.setupScanBar}>
-                <span className={styles.metaLabel}>{copy.setupStepsLabel}</span>
                 <div className={styles.scanPath}>
                   <strong>{selectedProvider?.label ?? "-"}</strong>
                   <span aria-hidden="true">{"->"}</span>

@@ -309,46 +309,17 @@
 
 .quickStartRail {
   display: grid;
-  gap: 0.12rem;
+  gap: 0.1rem;
   padding: 0;
 }
 
 .setupSummaryGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.12rem;
+  gap: 0.1rem;
 }
 
-.setupFlowRail,
-.setupFlowSteps {
-  display: grid;
-  gap: 0.12rem;
-}
-
-.setupFlowSteps {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.setupFlowStep {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: 0.35rem;
-  min-width: 0;
-  padding: 0.24rem 0.34rem;
-  border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 14px;
-  background: rgba(248, 250, 252, 0.92);
-}
-
-.setupFlowStep strong {
-  color: #0f172a;
-  font-size: 0.78rem;
-  line-height: 1.15;
-  overflow-wrap: anywhere;
-}
-
-.setupScanBar {
+.setupFlowHeader {
   display: grid;
   gap: 0.08rem;
   min-width: 0;
@@ -783,7 +754,6 @@
   .heroInfoGrid,
   .providerMeta,
   .setupRail,
-  .setupFlowSteps,
   .setupPickerGrid,
   .setupCommands,
   .setupNotesGrid {
@@ -813,7 +783,7 @@
     border-radius: 14px;
   }
 
-  .setupScanBar {
+  .setupFlowHeader {
     width: 100%;
   }
 
