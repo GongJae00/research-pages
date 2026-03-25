@@ -369,9 +369,12 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <p className={styles.setupTitleHint}>{copy.setupBuilderBody}</p>
                 {selectedProvider && selectedTeam ? (
-                  <div className={styles.setupScanBar}>
+                  <div className={styles.setupDigestBar}>
+                    <span className={styles.setupDigestTitle}>
+                      {copy.activeSetup ?? (isKoreanLocale(locale) ? "?꾩꽦 ?뗭뾽" : "Active setup")}
+                    </span>
+                    <div className={styles.setupScanBar}>
                     <span className={styles.setupScanItem}>
                       <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
                       <span className={styles.setupScanValue}>{selectedProvider.label}</span>
@@ -386,6 +389,7 @@ export function HomepageAgentControlSection({
                         {isKoreanLocale(locale) ? "아래 명령 2개 실행" : "Run the 2 commands below"}
                       </span>
                     </span>
+                    </div>
                   </div>
                 ) : null}
               </div>

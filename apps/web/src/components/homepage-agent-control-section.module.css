@@ -264,6 +264,21 @@
   gap: 0.04rem;
 }
 
+.setupDigestBar {
+  display: grid;
+  gap: 0.08rem;
+  margin-top: 0.02rem;
+}
+
+.setupDigestTitle {
+  color: #64748b;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
 .setupScanBar {
   display: flex;
   flex-wrap: wrap;
@@ -475,7 +490,7 @@
 .setupPickerGrid {
   margin-top: 0;
   align-items: start;
-  gap: 0.05rem;
+  gap: 0.04rem;
 }
 
 .setupSelectionRow {
@@ -512,7 +527,7 @@
 .setupPicker {
   display: grid;
   gap: 0.06rem;
-  padding: 0.04rem 0.08rem;
+  padding: 0.02rem 0.08rem;
 }
 
 .setupPickerLabelRow {
@@ -562,7 +577,7 @@
 .copyCard {
   display: grid;
   gap: 0.04rem;
-  padding: 0.08rem;
+  padding: 0.12rem;
 }
 
 .copyMetaRow,
@@ -625,7 +640,7 @@
   display: block;
   flex: 1 1 auto;
   min-width: 0;
-  padding: 0.18rem 0.28rem;
+  padding: 0.24rem 0.32rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 12px;
   background: rgba(248, 250, 252, 0.92);
