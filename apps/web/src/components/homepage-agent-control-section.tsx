@@ -155,8 +155,8 @@ function getCopy(locale: string, opsEnabled: boolean) {
     providersBody:
       "Each developer registers a local CLI session with the bridge, and this page keeps connection state and team ownership visible.",
     setupBuilderLabel: "Homepage setup builder",
-    setupBuilderTitle: "Pick a CLI, run the next command",
-    setupBuilderBody: "Choose a CLI and team, then run the highlighted command in the local terminal.",
+    setupBuilderTitle: "Choose a CLI, run the next command",
+    setupBuilderBody: "Select a CLI and team, then run only the highlighted command in the local terminal.",
     connectCommand: "Copy connect command",
     assignCommand: "Copy assign command",
     copied: "Copied",
@@ -386,7 +386,6 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <p className={styles.setupBody}>{copy.setupBuilderBody}</p>
                 <div className={styles.setupSummaryBar} aria-label={copy.setupStepsLabel}>
                   <span className={styles.setupSummaryItem}>
                     <span className={styles.setupScanLabel}>{copy.activeSetup}</span>
@@ -543,7 +542,11 @@ export function HomepageAgentControlSection({
                     </div>
                     <div className={styles.commandRow}>
                       <code>{item.command}</code>
-                      <span className={styles.commandTarget}>
+                      <span
+                        className={`${styles.commandTarget} ${
+                          item.kind === nextCommandKind ? styles.commandTargetActive : ""
+                        }`}
+                      >
                         {item.kind === "connect" ? selectedProvider?.label ?? "-" : selectedTeam?.name ?? "-"}
                       </span>
                     </div>
