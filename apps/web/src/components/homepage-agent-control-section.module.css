@@ -278,7 +278,7 @@
 .setupBuilderCard {
   display: grid;
   gap: 0.04rem;
-  padding: 0.04rem;
+  padding: 0.02rem;
 }
 
 .setupHeader,
@@ -292,7 +292,41 @@
 .setupTitleBlock {
   margin: 0;
   display: grid;
-  gap: 0.03rem;
+  gap: 0.02rem;
+}
+
+.setupFlowLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.12rem;
+  min-width: 0;
+}
+
+.setupFlowLead,
+.setupFlowAction {
+  color: #64748b;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.setupFlowLine strong {
+  color: #0f172a;
+  font-size: 0.72rem;
+  line-height: 1.1;
+}
+
+.setupFlowDivider {
+  color: #94a3b8;
+  font-size: 0.62rem;
+  line-height: 1;
+}
+
+.setupFlowAction {
+  color: #0f766e;
 }
 
 .setupScanBar {
@@ -300,7 +334,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.12rem;
-  margin-top: 0.02rem;
+  margin-top: 0;
 }
 
 .setupScanArrow {
@@ -349,7 +383,7 @@
   align-items: baseline;
   gap: 0.14rem;
   min-width: 0;
-  padding: 0.08rem 0.14rem 0.08rem 0.1rem;
+  padding: 0.06rem 0.12rem 0.06rem 0.08rem;
   border-radius: 999px;
   background: rgba(248, 250, 252, 0.92);
 }
@@ -629,11 +663,11 @@
   display: grid;
   gap: 0.06rem;
   margin-top: 0.02rem;
-  padding: 0.1rem 0.14rem;
+  padding: 0.08rem 0.12rem;
   border: 1px solid rgba(15, 23, 42, 0.14);
   border-radius: 16px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(241, 245, 249, 0.98));
-  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
 }
 
 .nextCommandLead,
@@ -1323,6 +1357,10 @@
   }
 
   .setupCommandsSummary {
+    align-items: flex-start;
+  }
+
+  .setupFlowLine {
     align-items: flex-start;
   }
 

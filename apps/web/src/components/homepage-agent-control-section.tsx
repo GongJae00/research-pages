@@ -80,6 +80,14 @@ function getSetupCommandTitle(locale: string, kind: "connect" | "assign") {
   return kind === "connect" ? "Connect CLI" : "Assign team";
 }
 
+function getSetupFlowLabel(locale: string) {
+  if (isKoreanLocale(locale)) {
+    return "?ㅼ젙 ?먮쫫";
+  }
+
+  return "Setup flow";
+}
+
 function getCopy(locale: string, opsEnabled: boolean) {
   if (isKoreanLocale(locale)) {
     return {
@@ -311,6 +319,7 @@ export function HomepageAgentControlSection({
     return left.step.localeCompare(right.step);
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
+  const setupFlowLabel = getSetupFlowLabel(locale);
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
       kind === "connect" ? setupManifest?.commands.connect ?? "" : setupManifest?.commands.assign ?? "";
@@ -386,6 +395,18 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                <div className={styles.setupFlowLine}>
+                  <span className={styles.setupFlowLead}>{setupFlowLabel}</span>
+                  <strong>{selectedProvider?.label ?? "-"}</strong>
+                  <span className={styles.setupFlowDivider} aria-hidden="true">
+                    /
+                  </span>
+                  <strong>{selectedTeam?.name ?? "-"}</strong>
+                  <span className={styles.setupFlowDivider} aria-hidden="true">
+                    /
+                  </span>
+                  <span className={styles.setupFlowAction}>{nextSetupCommand?.title ?? copy.setupCommand}</span>
+                </div>
                 <div className={styles.setupScanBar} aria-label={copy.setupStepsLabel}>
                   <span className={styles.setupScanItem}>
                     <span className={styles.commandStep}>01</span>
