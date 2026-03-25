@@ -384,14 +384,6 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <div className={styles.setupStepRail} aria-label={copy.commandOrder}>
-                  {[copy.chooseProvider, copy.chooseTeam, copy.setupCommand].map((item, index) => (
-                    <div className={styles.setupStepChip} key={item}>
-                      <span className={styles.commandStep}>{String(index + 1).padStart(2, "0")}</span>
-                      <strong>{item}</strong>
-                    </div>
-                  ))}
-                </div>
                 <div className={styles.setupCompactRow}>
                   <div className={styles.setupScanRow}>
                     <div className={styles.scanPill}>
