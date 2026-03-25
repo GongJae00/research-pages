@@ -395,6 +395,13 @@ export function HomepageAgentControlSection({
                         <strong>{selectedTeam?.name ?? "-"}</strong>
                       </div>
                     </div>
+                    <span className={styles.summaryFlowArrow} aria-hidden="true">
+                      <ArrowRight size={14} />
+                    </span>
+                    <div className={`${styles.summaryChip} ${styles.summaryChipAccent}`}>
+                      <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
+                      <strong>{setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}</strong>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -458,14 +465,6 @@ export function HomepageAgentControlSection({
                   ))}
                 </div>
               </div>
-            </div>
-
-            <div className={styles.commandScanRow}>
-              <span className={styles.commandOrderLabel}>{copy.commandOrder}</span>
-              <span className={styles.commandScanMeta}>
-                <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
-                <strong>{setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}</strong>
-              </span>
             </div>
 
             <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>
