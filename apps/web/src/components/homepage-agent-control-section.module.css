@@ -661,7 +661,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.6rem;
-  padding: 0.2rem 0.26rem;
+  padding: 0.16rem 0.22rem;
   cursor: pointer;
   list-style: none;
 }
@@ -670,29 +670,13 @@
   display: none;
 }
 
-.setupSequenceSummary {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.3rem;
-  min-width: 0;
-}
-
-.setupSequenceStep {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.16rem;
-  min-width: 0;
-  flex: 1 1 12rem;
-}
-
-.setupSequenceCopy {
+.setupCommandsSummaryCopy {
   display: grid;
   gap: 0.03rem;
   min-width: 0;
 }
 
-.setupSequenceCopy strong {
+.setupCommandsSummaryCopy strong {
   color: #0f172a;
   font-size: 0.78rem;
   line-height: 1.1;
@@ -1316,11 +1300,6 @@
 
   .setupCommandsSummary {
     align-items: flex-start;
-  }
-
-  .setupSequenceSummary,
-  .setupSequenceStep {
-    width: 100%;
   }
 
   .setupTitleRow {
