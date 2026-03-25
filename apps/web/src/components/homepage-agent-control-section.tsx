@@ -365,22 +365,25 @@ export function HomepageAgentControlSection({
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
                 {selectedProvider && selectedTeam ? (
-                  <div className={styles.setupHeaderScan} aria-label={copy.activeSetup}>
-                    <span className={styles.setupScanChip}>
+                  <div className={styles.setupSummaryBar} aria-label={copy.activeSetup}>
+                    <span className={styles.summaryChip}>
                       <span className={styles.setupScanLabel}>{copy.selectedCli}</span>
                       <strong className={styles.setupScanValue}>{selectedProvider.label}</strong>
                     </span>
-                    <span className={styles.setupScanChip}>
+                    <span className={styles.summaryDivider}>/</span>
+                    <span className={styles.summaryChip}>
                       <span className={styles.setupScanLabel}>{copy.selectedTeamLabel}</span>
                       <strong className={styles.setupScanValue}>{selectedTeam.name}</strong>
                     </span>
-                    <span className={styles.setupScanChip}>
+                    <span className={styles.summaryDivider}>/</span>
+                    <span className={styles.summaryChip}>
                       <span className={styles.setupScanLabel}>{copy.statusLabel}</span>
                       <strong className={styles.setupScanValue}>
                         {getProviderStatusLabel(locale, selectedProvider.status)}
                       </strong>
                     </span>
-                    <span className={styles.setupScanChip}>
+                    <span className={styles.summaryDivider}>/</span>
+                    <span className={styles.summaryChip}>
                       <span className={styles.setupScanLabel}>{copy.heartbeat}</span>
                       <strong className={styles.setupScanValue}>
                         {formatBoardTimestamp(locale, selectedProvider.lastHeartbeat)}

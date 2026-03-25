@@ -518,13 +518,15 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.14rem;
-  margin-top: 0.02rem;
+  gap: 0.1rem;
+  margin-top: 0.08rem;
 }
 
 .summaryDivider {
   color: #94a3b8;
   font-weight: 700;
+  font-size: 0.72rem;
+  line-height: 1;
 }
 
 .setupHeaderTools {
@@ -560,20 +562,20 @@
 .summaryChip {
   display: inline-flex;
   align-items: center;
-  gap: 0.28rem;
-  padding: 0.16rem 0.34rem;
+  gap: 0.22rem;
+  padding: 0.12rem 0.28rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 999px;
   background: rgba(248, 250, 252, 0.92);
   color: #64748b;
-  font-size: 0.68rem;
+  font-size: 0.64rem;
   font-weight: 700;
   white-space: nowrap;
 }
 
 .summaryChip strong {
   color: #0f172a;
-  font-size: 0.74rem;
+  font-size: 0.7rem;
 }
 
 .setupPicker {
