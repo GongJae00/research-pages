@@ -669,20 +669,22 @@
 }
 
 .setupPickerLabel {
-  color: #64748b;
-  font-size: 0.56rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  text-transform: uppercase;
-  padding: 0.07rem 0.12rem 0;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .optionRow {
   display: flex;
   flex-wrap: wrap;
   gap: 0.04rem;
-  padding: 0 0.05rem 0.03rem;
+  padding: 0.04rem 0.05rem 0.03rem;
 }
 
 .optionButton,
