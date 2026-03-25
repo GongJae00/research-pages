@@ -371,6 +371,30 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                {selectedProvider && selectedTeam ? (
+                  <div className={styles.setupHeaderSequence}>
+                    <strong>{copy.commandOrder}</strong>
+                    <div className={styles.setupSummaryStrip}>
+                      <div className={styles.sequenceStep}>
+                        <span className={styles.commandStep}>01</span>
+                        <div className={styles.digestLabelGroup}>
+                          <span className={styles.setupDigestLabel}>{copy.chooseProvider}</span>
+                          <span className={styles.digestMeta}>{selectedProvider.label}</span>
+                        </div>
+                      </div>
+                      <span className={styles.sequenceArrow} aria-hidden="true">
+                        <ArrowRight size={14} />
+                      </span>
+                      <div className={styles.sequenceStep}>
+                        <span className={styles.commandStep}>02</span>
+                        <div className={styles.digestLabelGroup}>
+                          <span className={styles.setupDigestLabel}>{copy.chooseTeam}</span>
+                          <span className={styles.digestMeta}>{selectedTeam.name}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.providerSummaryChips}>
@@ -449,33 +473,6 @@ export function HomepageAgentControlSection({
                 </div>
               </div>
             </div>
-
-            {selectedProvider && selectedTeam ? (
-              <div className={styles.setupFlowSummary}>
-                <div className={styles.sequencePill}>
-                  <strong>{copy.commandOrder}</strong>
-                  <div className={styles.setupSummaryStrip}>
-                    <div className={styles.sequenceStep}>
-                      <span className={styles.commandStep}>01</span>
-                      <div className={styles.digestLabelGroup}>
-                        <span className={styles.setupDigestLabel}>{copy.chooseProvider}</span>
-                        <span className={styles.digestMeta}>{selectedProvider.label}</span>
-                      </div>
-                    </div>
-                    <span className={styles.sequenceArrow} aria-hidden="true">
-                      <ArrowRight size={14} />
-                    </span>
-                    <div className={styles.sequenceStep}>
-                      <span className={styles.commandStep}>02</span>
-                      <div className={styles.digestLabelGroup}>
-                        <span className={styles.setupDigestLabel}>{copy.chooseTeam}</span>
-                        <span className={styles.digestMeta}>{selectedTeam.name}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : null}
 
             <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>
               {setupCommandCards.map((item) => (
