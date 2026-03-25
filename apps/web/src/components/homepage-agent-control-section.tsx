@@ -365,20 +365,34 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
                   <span className={styles.summaryChip}>
                     <span className={styles.commandStep}>01</span>
-                    <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
-                    <strong className={styles.setupScanValue}>{selectedProvider?.label ?? "-"}</strong>
+                    <span className={styles.summaryChipCopy}>
+                      <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
+                      <strong className={styles.setupScanValue}>{selectedProvider?.label ?? "-"}</strong>
+                    </span>
+                  </span>
+                  <span className={styles.summaryFlowArrow} aria-hidden="true">
+                    <ArrowRight size={14} />
                   </span>
                   <span className={styles.summaryChip}>
                     <span className={styles.commandStep}>02</span>
-                    <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
-                    <strong className={styles.setupScanValue}>{selectedTeam?.name ?? "-"}</strong>
+                    <span className={styles.summaryChipCopy}>
+                      <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
+                      <strong className={styles.setupScanValue}>{selectedTeam?.name ?? "-"}</strong>
+                    </span>
+                  </span>
+                  <span className={styles.summaryFlowArrow} aria-hidden="true">
+                    <ArrowRight size={14} />
                   </span>
                   <span className={styles.summaryChip}>
                     <span className={styles.commandStep}>03</span>
-                    <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
-                    <strong className={styles.setupScanValue}>
-                      {selectedProvider ? getNextSetupActionLabel(locale, selectedProvider.status) : copy.setupCommand}
-                    </strong>
+                    <span className={styles.summaryChipCopy}>
+                      <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
+                      <strong className={styles.setupScanValue}>
+                        {selectedProvider
+                          ? getNextSetupActionLabel(locale, selectedProvider.status)
+                          : copy.setupCommand}
+                      </strong>
+                    </span>
                   </span>
                 </div>
               </div>

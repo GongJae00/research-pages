@@ -268,8 +268,8 @@
 
 .setupBuilderCard {
   display: grid;
-  gap: 0.08rem;
-  padding: 0.18rem;
+  gap: 0.06rem;
+  padding: 0.16rem;
 }
 
 .setupHeader,
@@ -559,10 +559,10 @@
 }
 
 .setupSummaryInline {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: stretch;
-  gap: 0.05rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.06rem;
   min-width: 0;
   margin-top: 0.02rem;
 }
@@ -599,11 +599,10 @@
 }
 
 .summaryChip {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  display: inline-flex;
   align-items: center;
   gap: 0.12rem;
-  padding: 0.12rem 0.2rem 0.12rem 0.12rem;
+  padding: 0.1rem 0.18rem 0.1rem 0.1rem;
   border: 1px solid rgba(203, 213, 225, 0.6);
   border-radius: 12px;
   background: rgba(248, 250, 252, 0.94);
@@ -614,11 +613,25 @@
   line-height: 1.1;
 }
 
+.summaryChipCopy {
+  display: grid;
+  gap: 0.02rem;
+  min-width: 0;
+}
+
 .summaryChip strong {
   color: #0f172a;
   font-size: 0.68rem;
   line-height: 1.1;
   overflow-wrap: anywhere;
+}
+
+.summaryFlowArrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  flex: 0 0 auto;
 }
 
 .summaryChip .commandStep {
@@ -1084,7 +1097,11 @@
 
   .setupSummaryInline {
     width: 100%;
-    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .summaryFlowArrow {
+    display: none;
   }
 
   .setupFlowRow {
