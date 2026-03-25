@@ -52,6 +52,18 @@ function getSessionErrorResponse(error: unknown) {
     );
   }
 
+  if (message.includes('" is stopping.')) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: message,
+        recovery: "Wait for the stop request to settle, refresh sessions, then retry with a new active session.",
+        sessions: listOpsTerminalSessions(),
+      },
+      { status: 409 },
+    );
+  }
+
   return NextResponse.json(
     {
       ok: false,

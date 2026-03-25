@@ -377,6 +377,10 @@ export function sendOpsTerminalInput(sessionId: string, input: string) {
 
   reconcileSessionState(record);
 
+  if (record.stopRequestedAt) {
+    throw new Error(`Session "${sessionId}" is stopping.`);
+  }
+
   if (record.snapshot.status !== "running") {
     throw new Error(`Session "${sessionId}" is not running.`);
   }

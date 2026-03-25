@@ -3113,6 +3113,31 @@ export function LabWorkspace({ locale, initialDocuments, initialTimetableEntries
   const heroEditLabel = isKo ? "연구실 편집" : "Edit lab";
   const activeSectionLabel = sectionLabels[locale][activeSection];
   const activeSectionDescription = sectionDescriptions[locale][activeSection];
+  const sectionCounts: Record<Section, number> = {
+    people: professorRoster.length + memberRoster.length + alumniRoster.length,
+    research: orderedResearchProjects.length,
+    papers: sharedPublications.length,
+    documents: sharedDocuments.length,
+    timetable: groupedLab.length,
+  };
+  const sectionCountLabels: Record<Locale, Record<Section, string>> = {
+    ko: {
+      people: "명",
+      research: "건",
+      papers: "편",
+      documents: "건",
+      timetable: "묶음",
+    },
+    en: {
+      people: "people",
+      research: "items",
+      papers: "papers",
+      documents: "docs",
+      timetable: "groups",
+    },
+  };
+  const activeSectionCount = sectionCounts[activeSection];
+  const activeSectionCountLabel = sectionCountLabels[locale][activeSection];
 
   return (
     <div className="lab-workspace">
@@ -3180,19 +3205,29 @@ export function LabWorkspace({ locale, initialDocuments, initialTimetableEntries
                 key={section}
                 type="button"
                 className={`lab-subnav-btn document-filter-chip profile-homepage-nav-link${activeSection === section ? " lab-subnav-btn-active document-filter-chip-active" : ""}`}
+                aria-label={
+                  isKo
+                    ? `${sectionLabels[locale][section]} 섹션, ${sectionCounts[section]}${sectionCountLabels[locale][section]}`
+                    : `${sectionLabels[locale][section]} section, ${sectionCounts[section]} ${sectionCountLabels[locale][section]}`
+                }
                 onClick={() => {
                   resetSectionState();
                   route(activeLab.slug, section);
                 }}
               >
-                {sectionLabels[locale][section]}
+                <span>{sectionLabels[locale][section]}</span>
+                <span aria-hidden="true">&nbsp;·&nbsp;</span>
+                <span>
+                  {sectionCounts[section]}
+                  {isKo ? sectionCountLabels[locale][section] : ` ${sectionCountLabels[locale][section]}`}
+                </span>
               </button>
             ))}
           </div>
           <p className="card-support-text">
             {isKo
-              ? `현재 섹션: ${activeSectionLabel}. ${activeSectionDescription}`
-              : `Current section: ${activeSectionLabel}. ${activeSectionDescription}`}
+              ? `현재 섹션: ${activeSectionLabel} · ${activeSectionCount}${activeSectionCountLabel}. ${activeSectionDescription}`
+              : `Current section: ${activeSectionLabel} · ${activeSectionCount} ${activeSectionCountLabel}. ${activeSectionDescription}`}
           </p>
         </section>
         {labSettingsSection}
