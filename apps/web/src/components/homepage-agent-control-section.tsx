@@ -378,7 +378,6 @@ export function HomepageAgentControlSection({
               <div className={styles.setupHeaderCopy}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h3>{copy.setupBuilderTitle}</h3>
-                <p className={styles.compactBody}>{copy.setupBuilderBody}</p>
               </div>
               <div className={styles.setupHeaderActions}>
                 <Command size={20} />
@@ -395,11 +394,12 @@ export function HomepageAgentControlSection({
               <div className={styles.quickStartSummary}>
                 {setupRailItems.map((item) => (
                   <div className={styles.summaryPill} key={item.step}>
-                    <span className={styles.contextLabel}>
-                      {item.step}. {item.label}
-                    </span>
-                    <strong>{item.value}</strong>
-                    <span className={styles.summaryDetail}>{item.detail}</span>
+                    <span className={styles.contextLabel}>{item.step}</span>
+                    <div className={styles.summaryPillCopy}>
+                      <span className={styles.summaryPillLabel}>{item.label}</span>
+                      <strong>{item.value}</strong>
+                      <span className={styles.summaryDetail}>{item.detail}</span>
+                    </div>
                   </div>
                 ))}
               </div>
