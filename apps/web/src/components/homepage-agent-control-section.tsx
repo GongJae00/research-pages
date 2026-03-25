@@ -449,26 +449,12 @@ export function HomepageAgentControlSection({
             </div>
 
             <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>
-              {selectedProvider && selectedTeam ? (
-                <div className={styles.setupCommandLead}>
-                  <span className={styles.setupOrderPill}>{copy.commandOrder}</span>
-                  <span className={styles.setupDigestChip}>
-                    <span className={styles.setupScanLabel}>{copy.selectedCli}</span>
-                    <strong className={styles.setupDigestValue}>{selectedProvider.label}</strong>
-                  </span>
-                  <span className={styles.setupDigestChip}>
-                    <span className={styles.setupScanLabel}>{copy.selectedTeamLabel}</span>
-                    <strong className={styles.setupDigestValue}>{selectedTeam.name}</strong>
-                  </span>
-                </div>
-              ) : null}
               {setupCommandCards.map((item) => (
                 <div className={styles.copyCard} key={item.kind}>
                   <div className={styles.copyMetaRow}>
                     <div className={styles.copyTitleGroup}>
                       <span className={styles.commandStep}>{item.step}</span>
                       <div className={styles.commandTitleStack}>
-                        <span className={styles.commandCardLabel}>{item.label}</span>
                         <strong>{item.kind === "connect" ? `${item.title} CLI` : item.title}</strong>
                       </div>
                     </div>

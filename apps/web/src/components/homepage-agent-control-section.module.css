@@ -248,7 +248,7 @@
 
 .setupBuilderCard {
   display: grid;
-  gap: 0.04rem;
+  gap: 0.02rem;
   margin-top: 0.08rem;
 }
 
@@ -508,15 +508,7 @@
 
 .setupCommands {
   margin-top: 0.02rem;
-  gap: 0.08rem;
-}
-
-.setupCommandLead {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.14rem;
-  grid-column: 1 / -1;
+  gap: 0.04rem;
 }
 
 .setupPickerGrid {
@@ -629,7 +621,7 @@
 
 .copyCard {
   display: grid;
-  gap: 0.04rem;
+  gap: 0.02rem;
   padding: 0.02rem;
 }
 
@@ -642,17 +634,7 @@
 }
 
 .commandTitleStack {
-  display: grid;
-  gap: 0.02rem;
-}
-
-.commandCardLabel {
-  color: #64748b;
-  font-size: 0.66rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  line-height: 1.1;
-  text-transform: uppercase;
+  min-width: 0;
 }
 
 .commandTitleLine {
@@ -664,8 +646,8 @@
 
 .commandTitleStack strong {
   color: #0f172a;
-  font-size: 0.88rem;
-  line-height: 1.2;
+  font-size: 0.82rem;
+  line-height: 1.1;
 }
 
 .copyButton {
@@ -693,7 +675,7 @@
   display: block;
   flex: 1 1 auto;
   min-width: 0;
-  padding: 0.16rem 0.24rem;
+  padding: 0.14rem 0.22rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 12px;
   background: rgba(248, 250, 252, 0.92);
@@ -707,8 +689,8 @@
 .copyCard code {
   overflow-wrap: anywhere;
   color: #0f172a;
-  font-size: 0.74rem;
-  line-height: 1.25;
+  font-size: 0.72rem;
+  line-height: 1.2;
 }
 
 .copyTitleGroup {
