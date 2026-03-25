@@ -395,23 +395,6 @@ export function HomepageAgentControlSection({
                 ) : null}
               </div>
             </div>
-            <div className={styles.setupSelectionDigest} aria-label={copy.commandOrder}>
-              <span className={styles.setupQuickStartLabel}>{copy.commandOrder}</span>
-              <div className={styles.setupDigestRow}>
-                <span className={styles.sequencePill}>
-                  <span className={styles.digestLabelGroup}>
-                    <strong>{copy.chooseProvider}</strong>
-                    <span className={styles.digestMeta}>{selectedProvider?.label ?? "-"}</span>
-                  </span>
-                </span>
-                <span className={styles.sequencePill}>
-                  <span className={styles.digestLabelGroup}>
-                    <strong>{copy.chooseTeam}</strong>
-                    <span className={styles.digestMeta}>{selectedTeam?.name ?? "-"}</span>
-                  </span>
-                </span>
-              </div>
-            </div>
             <div className={styles.setupPickerGrid}>
               <div className={styles.setupPicker}>
                 <div className={styles.setupPickerLabelRow}>
@@ -464,6 +447,20 @@ export function HomepageAgentControlSection({
                     </button>
                   ))}
                 </div>
+              </div>
+            </div>
+
+            <div className={styles.setupCommandsHeader} aria-label={copy.commandOrder}>
+              <span className={styles.setupQuickStartLabel}>{copy.commandOrder}</span>
+              <div className={styles.setupSelectionInline}>
+                <span className={styles.selectionInlineItem}>
+                  <strong>{copy.chooseProvider}</strong>
+                  <span>{selectedProvider?.label ?? "-"}</span>
+                </span>
+                <span className={styles.selectionInlineItem}>
+                  <strong>{copy.chooseTeam}</strong>
+                  <span>{selectedTeam?.name ?? "-"}</span>
+                </span>
               </div>
             </div>
 

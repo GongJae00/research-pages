@@ -279,14 +279,6 @@
   line-height: 1.2;
 }
 
-.setupSelectionDigest {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: 0.16rem;
-  padding: 0.04rem 0 0;
-}
-
 .setupQuickStartLabel {
   display: inline-flex;
   align-items: center;
@@ -300,12 +292,6 @@
   letter-spacing: 0.08em;
   line-height: 1.1;
   text-transform: uppercase;
-}
-
-.setupDigestRow {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.12rem;
 }
 
 .sequenceArrow {
@@ -377,6 +363,50 @@
   font-size: 0.82rem;
   font-weight: 700;
   line-height: 1.25;
+}
+
+.setupCommandsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.24rem;
+  padding-top: 0.02rem;
+}
+
+.setupSelectionInline {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.12rem;
+}
+
+.selectionInlineItem {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.28rem;
+  min-width: 0;
+  padding: 0.18rem 0.34rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 999px;
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.selectionInlineItem strong {
+  color: #64748b;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.selectionInlineItem span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: #0f172a;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .setupMetaPill {
@@ -479,7 +509,7 @@
 .setupPicker {
   display: grid;
   gap: 0.06rem;
-  padding: 0.12rem 0.16rem 0.16rem;
+  padding: 0.1rem 0.14rem 0.14rem;
 }
 
 .setupPickerLabelRow {
@@ -529,7 +559,7 @@
 .copyCard {
   display: grid;
   gap: 0.06rem;
-  padding: 0.08rem 0.1rem;
+  padding: 0.08rem;
 }
 
 .copyMetaRow,
@@ -589,7 +619,7 @@
   display: block;
   flex: 1 1 auto;
   min-width: 0;
-  padding: 0.24rem 0.34rem;
+  padding: 0.22rem 0.3rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 12px;
   background: rgba(248, 250, 252, 0.92);
@@ -697,7 +727,7 @@
   }
 
   .setupHeader,
-  .setupSelectionDigest,
+  .setupCommandsHeader,
   .setupNotesDisclosure {
     grid-column: 1 / -1;
   }
@@ -863,7 +893,7 @@
 
   .setupBuilderCard,
   .setupHeader,
-  .setupSelectionDigest,
+  .setupCommandsHeader,
   .setupScanBar,
   .setupPickerGrid,
   .setupCommands,
@@ -892,9 +922,11 @@
     justify-content: flex-start;
   }
 
-  .setupDigestRow {
+  .setupCommandsHeader,
+  .setupSelectionInline {
     width: 100%;
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .commandStackHeader {
