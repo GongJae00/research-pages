@@ -16,8 +16,7 @@
 .setupPickerGrid,
 .setupCommands,
 .stepList,
-.setupNotesGrid,
-.setupSelectionRow {
+.setupNotesGrid {
   display: grid;
   gap: 0.16rem;
 }
@@ -533,12 +532,6 @@
   gap: 0.06rem;
 }
 
-.setupSelectionRow {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.08rem;
-  margin-top: 0.02rem;
-}
-
 .providerSummaryChips {
   display: flex;
   flex-wrap: wrap;
@@ -805,8 +798,7 @@
   }
 
   .setupSummaryBar,
-  .setupPickerGrid,
-  .setupSelectionRow {
+  .setupPickerGrid {
     grid-column: 1;
   }
 
@@ -962,8 +954,7 @@
   .setupDigestBar,
   .setupPickerGrid,
   .setupCommands,
-  .setupNotesGrid,
-  .setupSelectionRow {
+  .setupNotesGrid {
     grid-template-columns: 1fr;
   }
 
