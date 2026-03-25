@@ -297,7 +297,7 @@
 
 .setupScanBar {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
   gap: 0.06rem;
   margin-top: 0;
 }
@@ -312,6 +312,13 @@
   color: #0f172a;
   font-size: 0.78rem;
   line-height: 1.08;
+}
+
+.setupScanMeta {
+  color: #64748b;
+  font-size: 0.64rem;
+  font-weight: 700;
+  line-height: 1.1;
 }
 
 .setupScanArrow {
