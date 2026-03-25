@@ -274,7 +274,7 @@
   color: #475569;
   font-size: 0.8rem;
   line-height: 1.35;
-  max-width: 26rem;
+  max-width: 22rem;
 }
 
 .panelHeadCopy {
@@ -296,7 +296,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
-  padding: 0.3rem 0.36rem 0.12rem;
+  padding: 0.24rem 0.36rem 0.08rem;
   border-top: 1px solid rgba(226, 232, 240, 0.85);
 }
 
