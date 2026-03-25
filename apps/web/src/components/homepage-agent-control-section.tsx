@@ -308,6 +308,7 @@ export function HomepageAgentControlSection({
 
     return left.step.localeCompare(right.step);
   });
+  const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
       kind === "connect" ? setupManifest?.commands.connect ?? "" : setupManifest?.commands.assign ?? "";
@@ -473,6 +474,36 @@ export function HomepageAgentControlSection({
               </div>
             </div>
 
+            {nextSetupCommand ? (
+              <div className={styles.nextCommandBanner}>
+                <div className={styles.nextCommandHeader}>
+                  <div className={styles.nextCommandTitleBlock}>
+                    <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
+                    <strong>{nextSetupCommand.title}</strong>
+                  </div>
+                  <button
+                    type="button"
+                    className={`${styles.copyButton} ${styles.copyIconButton}`}
+                    onClick={() => void copyCommand(nextSetupCommand.kind)}
+                    aria-label={nextSetupCommand.buttonLabel}
+                    title={nextSetupCommand.buttonLabel}
+                  >
+                    {copiedCommand === nextSetupCommand.kind ? <Check size={14} /> : <Copy size={14} />}
+                    <span className={styles.copyButtonText}>
+                      {copiedCommand === nextSetupCommand.kind ? copy.copied : nextSetupCommand.buttonLabel}
+                    </span>
+                  </button>
+                </div>
+                <div className={styles.nextCommandRow}>
+                  <span className={styles.commandStep}>{nextSetupCommand.step}</span>
+                  <code>{nextSetupCommand.command}</code>
+                  <span className={styles.commandTarget}>
+                    {nextSetupCommand.kind === "connect" ? selectedProvider?.label ?? "-" : selectedTeam?.name ?? "-"}
+                  </span>
+                </div>
+              </div>
+            ) : null}
+
             <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>
               {orderedSetupCommandCards.map((item) => (
                 <div
@@ -485,9 +516,6 @@ export function HomepageAgentControlSection({
                     <div className={styles.copyTitleGroup}>
                       <span className={styles.commandStep}>{item.step}</span>
                       <div className={styles.commandTitleBlock}>
-                        {item.kind === nextCommandKind ? (
-                          <span className={styles.commandPriorityLabel}>{copy.nextActionLabel}</span>
-                        ) : null}
                         <strong className={styles.commandTitle}>{item.title}</strong>
                       </div>
                     </div>
