@@ -566,7 +566,16 @@
   align-items: center;
   gap: 0.08rem;
   min-width: 0;
-  margin-top: 0.08rem;
+  margin-top: 0.04rem;
+}
+
+.setupSummaryLead {
+  color: #64748b;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .setupHeaderTools {
@@ -604,7 +613,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.14rem;
-  padding: 0.1rem 0.18rem 0.1rem 0.1rem;
+  padding: 0.08rem 0.16rem 0.08rem 0.08rem;
   border: 1px solid rgba(203, 213, 225, 0.6);
   border-radius: 12px;
   background: rgba(248, 250, 252, 0.94);
@@ -739,7 +748,7 @@
 .copyCard {
   display: grid;
   gap: 0.06rem;
-  padding: 0.1rem 0.12rem;
+  padding: 0.08rem 0.1rem;
 }
 
 .copyMetaRow,
@@ -754,6 +763,10 @@
   display: grid;
   gap: 0.04rem;
   min-width: 0;
+}
+
+.commandTitleStackCompact {
+  gap: 0.02rem;
 }
 
 .commandEyebrow {
@@ -774,8 +787,15 @@
 
 .commandTitleStack strong {
   color: #0f172a;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   line-height: 1.1;
+}
+
+.commandInlineHint {
+  color: #64748b;
+  font-size: 0.66rem;
+  font-weight: 600;
+  line-height: 1.15;
 }
 
 .copyButton {
@@ -803,7 +823,7 @@
   display: block;
   flex: 1 1 auto;
   min-width: 0;
-  padding: 0.06rem 0.12rem;
+  padding: 0.05rem 0.1rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 12px;
   background: rgba(248, 250, 252, 0.92);
@@ -817,8 +837,8 @@
 .copyCard code {
   overflow-wrap: anywhere;
   color: #0f172a;
-  font-size: 0.68rem;
-  line-height: 1.18;
+  font-size: 0.66rem;
+  line-height: 1.14;
 }
 
 .copyTitleGroup {

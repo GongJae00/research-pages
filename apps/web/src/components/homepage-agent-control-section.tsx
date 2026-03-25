@@ -145,7 +145,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
     providersBody:
       "Each developer registers a local CLI session with the bridge, and this page keeps connection state and team ownership visible.",
     setupBuilderLabel: "Homepage setup builder",
-    setupBuilderTitle: "Pick a CLI and team, then follow the run order",
+    setupBuilderTitle: "Pick a CLI, assign a team, run the commands",
     connectCommand: "Copy connect command",
     assignCommand: "Copy assign command",
     copied: "Copied",
@@ -363,6 +363,9 @@ export function HomepageAgentControlSection({
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
                 <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
+                  <span className={styles.setupSummaryLead}>
+                    {isKoreanLocale(locale) ? "셋업 스캔" : "Setup scan"}
+                  </span>
                   <span className={`${styles.summaryChip} ${styles.summaryChipWide}`}>
                     <span className={styles.commandStep}>01</span>
                     <span className={styles.summaryChipCopy}>
@@ -473,9 +476,18 @@ export function HomepageAgentControlSection({
                   <div className={styles.copyMetaRow}>
                     <div className={styles.copyTitleGroup}>
                       <span className={styles.commandStep}>{item.step}</span>
-                      <div className={styles.commandTitleStack}>
+                      <div className={`${styles.commandTitleStack} ${styles.commandTitleStackCompact}`}>
                         <span className={styles.commandEyebrow}>{item.label}</span>
                         <strong>{item.kind === "connect" ? `${item.title} CLI` : item.title}</strong>
+                        <span className={styles.commandInlineHint}>
+                          {item.kind === "connect"
+                            ? isKoreanLocale(locale)
+                              ? "로컬 터미널에서 연결"
+                              : "Run in a local terminal to connect"
+                            : isKoreanLocale(locale)
+                              ? "팀 레인에 배정"
+                              : "Run after connect to assign the lane"}
+                        </span>
                       </div>
                     </div>
                   </div>
