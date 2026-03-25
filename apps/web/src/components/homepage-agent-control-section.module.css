@@ -355,6 +355,36 @@
   margin-top: 0.02rem;
 }
 
+.setupScanRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.18rem;
+  margin-top: 0.04rem;
+}
+
+.setupQuickLabel,
+.setupOrderHint {
+  color: #64748b;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.setupQuickLabel {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.18rem 0.4rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.06);
+}
+
+.setupOrderHint {
+  white-space: nowrap;
+}
+
 .setupDigestLead {
   color: #64748b;
   font-size: 0.66rem;
@@ -413,7 +443,7 @@
   align-items: center;
   gap: 0.28rem;
   min-width: 0;
-  padding: 0.18rem 0.38rem;
+  padding: 0.14rem 0.34rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 999px;
   background: rgba(248, 250, 252, 0.92);
@@ -422,7 +452,7 @@
 .setupDigestValue {
   min-width: 0;
   color: #0f172a;
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   line-height: 1.15;
   overflow-wrap: anywhere;
 }
@@ -577,7 +607,7 @@
 .setupPicker {
   display: grid;
   gap: 0.08rem;
-  padding: 0.02rem 0;
+  padding: 0;
 }
 
 .setupPickerLabelRow {
@@ -589,7 +619,7 @@
 .optionRow {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.1rem;
+  gap: 0.08rem;
 }
 
 .optionButton,
@@ -599,8 +629,8 @@
   justify-content: center;
   gap: 0.35rem;
   border-radius: 999px;
-  min-height: 1.58rem;
-  padding: 0.18rem 0.5rem;
+  min-height: 1.5rem;
+  padding: 0.14rem 0.46rem;
   border: 1px solid rgba(203, 213, 225, 0.9);
   background: rgba(248, 250, 252, 0.96);
   color: #334155;
@@ -648,7 +678,7 @@
 .copyCard {
   display: grid;
   gap: 0.04rem;
-  padding: 0.04rem 0;
+  padding: 0;
 }
 
 .copyMetaRow,
@@ -711,7 +741,7 @@
   display: block;
   flex: 1 1 auto;
   min-width: 0;
-  padding: 0.22rem 0.3rem;
+  padding: 0.18rem 0.26rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 12px;
   background: rgba(248, 250, 252, 0.92);

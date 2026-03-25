@@ -282,13 +282,13 @@ export function HomepageAgentControlSection({
             value: selectedProvider.label,
           },
           {
-            label: copy.chooseTeam,
-            value: selectedTeam.name,
+            label: isKoreanLocale(locale) ? "Status" : "Status",
+            value: getProviderStatusLabel(locale, selectedProvider.status),
+            toneClass: getProviderStatusClass(selectedProvider.status),
           },
           {
-            label: copy.queueMode,
-            value:
-              snapshot.assistant.modes.find((item) => item.id === snapshot.activeMode)?.label ?? "-",
+            label: copy.chooseTeam,
+            value: selectedTeam.name,
           },
         ]
       : [];
@@ -378,14 +378,19 @@ export function HomepageAgentControlSection({
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
                 {quickStartItems.length ? (
-                  <div className={styles.setupDigestBar} aria-label={copy.commandOrder}>
-                    <span className={styles.setupDigestLead}>{copy.commandOrder}</span>
+                  <div className={styles.setupScanRow} aria-label={copy.activeSetup}>
+                    <span className={styles.setupQuickLabel}>{copy.activeSetup}</span>
                     {quickStartItems.map((item) => (
                       <span className={styles.setupDigestChip} key={item.label}>
                         <span className={styles.setupScanLabel}>{item.label}</span>
-                        <strong className={styles.setupDigestValue}>{item.value}</strong>
+                        <strong
+                          className={`${styles.setupDigestValue}${item.toneClass ? ` ${item.toneClass}` : ""}`}
+                        >
+                          {item.value}
+                        </strong>
                       </span>
                     ))}
+                    <span className={styles.setupOrderHint}>{copy.commandOrder}</span>
                   </div>
                 ) : null}
               </div>
