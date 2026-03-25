@@ -366,6 +366,13 @@ export function HomepageAgentControlSection({
                   <h4>{copy.setupBuilderTitle}</h4>
                   <span className={styles.setupOrderValue}>{copy.commandOrder}</span>
                 </div>
+                <div className={styles.setupGuide} aria-label={copy.setupStepsLabel}>
+                  <span>{copy.chooseProvider}</span>
+                  <ArrowRight size={12} />
+                  <span>{copy.chooseTeam}</span>
+                  <ArrowRight size={12} />
+                  <span>{copy.setupCommand}</span>
+                </div>
                 <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
                   <div className={styles.setupSummaryBar}>
                     <div className={styles.summaryChip}>
@@ -425,9 +432,7 @@ export function HomepageAgentControlSection({
             </div>
             <div className={styles.setupPickerGrid}>
               <div className={styles.setupPicker} aria-label={copy.chooseProvider}>
-                <span className={styles.setupPickerLabel}>
-                  {isKoreanLocale(locale) ? `01 ${copy.chooseProvider}` : `01 Choose ${copy.chooseProvider}`}
-                </span>
+                <span className={styles.setupPickerLabel}>{copy.chooseProvider}</span>
                 <div className={styles.optionRow}>
                   {providerOrder.map((providerId) => {
                     const provider = snapshot.providerConnections.find((entry) => entry.providerId === providerId);
@@ -457,9 +462,7 @@ export function HomepageAgentControlSection({
               </div>
 
               <div className={styles.setupPicker} aria-label={copy.chooseTeam}>
-                <span className={styles.setupPickerLabel}>
-                  {isKoreanLocale(locale) ? `02 ${copy.chooseTeam}` : `02 Choose ${copy.chooseTeam}`}
-                </span>
+                <span className={styles.setupPickerLabel}>{copy.chooseTeam}</span>
                 <div className={styles.optionRow}>
                   {snapshot.teams.map((team) => (
                     <button

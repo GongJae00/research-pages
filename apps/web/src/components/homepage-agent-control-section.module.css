@@ -297,6 +297,28 @@
   margin-top: 0.02rem;
 }
 
+.setupGuide {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.16rem;
+  width: fit-content;
+  padding: 0.12rem 0.2rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 999px;
+  background: rgba(248, 250, 252, 0.92);
+  color: #475569;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.setupGuide svg {
+  color: #94a3b8;
+}
+
 .setupOrderLabel,
 .setupOrderValue {
   display: inline-flex;
@@ -711,7 +733,7 @@
 
 .setupPickerLabel {
   color: #64748b;
-  font-size: 0.58rem;
+  font-size: 0.56rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   line-height: 1;
@@ -723,7 +745,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.04rem;
-  padding: 0 0.05rem 0.05rem;
+  padding: 0 0.05rem 0.04rem;
 }
 
 .optionButton,
@@ -782,7 +804,7 @@
 .copyCard {
   display: grid;
   gap: 0.04rem;
-  padding: 0.03rem;
+  padding: 0.02rem;
 }
 
 .copyMetaRow,
@@ -1154,6 +1176,10 @@
   .setupSummaryInline {
     width: 100%;
     align-items: stretch;
+  }
+
+  .setupGuide {
+    width: 100%;
   }
 
   .setupTitleRow {
