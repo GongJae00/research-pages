@@ -362,6 +362,10 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                <div className={styles.setupOrderBadge}>
+                  <span className={styles.commandStep}>01</span>
+                  <span>{copy.commandOrder}</span>
+                </div>
                 <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
                   <span className={styles.setupSummaryLead}>
                     {isKoreanLocale(locale) ? "셋업 스캔" : "Setup scan"}
