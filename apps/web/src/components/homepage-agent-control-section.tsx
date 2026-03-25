@@ -369,29 +369,6 @@ export function HomepageAgentControlSection({
                 ) : null}
               </div>
             </div>
-            <div className={styles.quickStartStrip} aria-label={copy.setupStepsLabel}>
-              <span className={styles.quickStartLabel}>{copy.setupStepsLabel}</span>
-              <div className={styles.quickStartFlow}>
-                <div className={styles.quickStartItem}>
-                  <span className={styles.quickStartIndex}>01</span>
-                  <div className={styles.quickStartText}>
-                    <strong>{selectedProvider?.label ?? copy.chooseProvider}</strong>
-                  </div>
-                </div>
-                <div className={styles.quickStartItem}>
-                  <span className={styles.quickStartIndex}>02</span>
-                  <div className={styles.quickStartText}>
-                    <strong>{selectedTeam?.name ?? copy.chooseTeam}</strong>
-                  </div>
-                </div>
-                <div className={styles.quickStartItem}>
-                  <span className={styles.quickStartIndex}>03</span>
-                  <div className={styles.quickStartText}>
-                    <strong>{copy.commandOrder}</strong>
-                  </div>
-                </div>
-              </div>
-            </div>
             {selectedProvider && selectedTeam ? (
               <div className={styles.setupCompactBar} aria-label={copy.activeSetup}>
                 <span className={styles.setupQuickLabel}>{copy.activeSetup}</span>
@@ -413,6 +390,7 @@ export function HomepageAgentControlSection({
                   <span className={styles.setupScanLabel}>{copy.selectedTeamLabel}</span>
                   <strong className={styles.setupDigestValue}>{selectedTeam.name}</strong>
                 </span>
+                <span className={styles.setupOrderPill}>{copy.commandOrder}</span>
               </div>
             ) : null}
             <div className={styles.setupPickerGrid}>
