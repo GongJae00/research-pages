@@ -464,12 +464,19 @@ export function HomepageAgentControlSection({
             </div>
 
             {nextSetupCommand ? (
-              <div className={styles.nextCommandBanner}>
-                <div className={styles.nextCommandHeader}>
-                  <div className={styles.nextCommandTitleBlock}>
-                    <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
-                    <strong>{nextSetupCommand.title}</strong>
-                  </div>
+              <div className={styles.nextCommandStrip}>
+                <div className={styles.nextCommandLead}>
+                  <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
+                  <strong>{nextSetupCommand.title}</strong>
+                  <span className={styles.inlineMeta}>
+                    {nextSetupCommand.kind === "connect"
+                      ? selectedProvider?.label ?? "-"
+                      : selectedTeam?.name ?? "-"}
+                  </span>
+                </div>
+                <div className={styles.nextCommandMain}>
+                  <span className={styles.commandStep}>{nextSetupCommand.step}</span>
+                  <code>{nextSetupCommand.command}</code>
                   <button
                     type="button"
                     className={`${styles.copyButton} ${styles.copyIconButton}`}
@@ -482,13 +489,6 @@ export function HomepageAgentControlSection({
                       {copiedCommand === nextSetupCommand.kind ? copy.copied : nextSetupCommand.buttonLabel}
                     </span>
                   </button>
-                </div>
-                <div className={styles.nextCommandRow}>
-                  <span className={styles.commandStep}>{nextSetupCommand.step}</span>
-                  <code>{nextSetupCommand.command}</code>
-                  <span className={styles.commandTarget}>
-                    {nextSetupCommand.kind === "connect" ? selectedProvider?.label ?? "-" : selectedTeam?.name ?? "-"}
-                  </span>
                 </div>
               </div>
             ) : null}
