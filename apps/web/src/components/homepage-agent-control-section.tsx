@@ -284,6 +284,23 @@ export function HomepageAgentControlSection({
         },
       ]
     : [];
+  const setupScanItems =
+    selectedProvider && selectedTeam
+      ? [
+          {
+            label: copy.chooseProvider,
+            value: selectedProvider.label,
+          },
+          {
+            label: copy.chooseTeam,
+            value: selectedTeam.name,
+          },
+          {
+            label: copy.setupCommand,
+            value: setupCommandCards.map((item) => item.step).join(" + "),
+          },
+        ]
+      : [];
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
       kind === "connect" ? setupManifest?.commands.connect ?? "" : setupManifest?.commands.assign ?? "";
@@ -369,22 +386,6 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                {selectedProvider && selectedTeam ? (
-                  <div className={styles.setupHeaderSummary} aria-label={copy.commandOrder}>
-                    <span className={styles.setupHeaderSummaryItem}>
-                      <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
-                      <strong>{selectedProvider.label}</strong>
-                    </span>
-                    <span className={styles.setupHeaderSummaryItem}>
-                      <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
-                      <strong>{selectedTeam.name}</strong>
-                    </span>
-                    <span className={styles.setupHeaderSummaryItem}>
-                      <span className={styles.setupScanLabel}>{copy.setupCommand}</span>
-                      <strong>{setupCommandCards.length}</strong>
-                    </span>
-                  </div>
-                ) : null}
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.providerSummaryChips}>
@@ -409,6 +410,20 @@ export function HomepageAgentControlSection({
                 ) : null}
               </div>
             </div>
+            {setupScanItems.length ? (
+              <div className={styles.setupSelectionRail} aria-label={copy.commandOrder}>
+                <span className={styles.setupSelectionTitle}>{copy.activeSetup}</span>
+                <div className={styles.setupSelectionSummary}>
+                  {setupScanItems.map((item, index) => (
+                    <div className={styles.setupSelectionItem} key={item.label}>
+                      <span className={styles.setupScanLabel}>{item.label}</span>
+                      <strong>{item.value}</strong>
+                      {index < setupScanItems.length - 1 ? <span className={styles.selectionArrow}>/</span> : null}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
             <div className={styles.setupPickerGrid}>
               <div className={styles.setupPicker}>
                 <div className={styles.setupPickerLabelRow}>

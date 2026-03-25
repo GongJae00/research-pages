@@ -264,30 +264,6 @@
   gap: 0.08rem;
 }
 
-.setupHeaderSummary {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.16rem;
-}
-
-.setupHeaderSummaryItem {
-  display: inline-grid;
-  gap: 0.02rem;
-  min-width: 0;
-  padding: 0.18rem 0.34rem;
-  border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 12px;
-  background: rgba(248, 250, 252, 0.92);
-}
-
-.setupHeaderSummaryItem strong {
-  min-width: 0;
-  color: #0f172a;
-  font-size: 0.78rem;
-  line-height: 1.2;
-  overflow-wrap: anywhere;
-}
-
 .setupScanLabel {
   color: #64748b;
   font-size: 0.62rem;
@@ -452,7 +428,7 @@
 
 .setupHeader {
   align-items: flex-start;
-  padding-bottom: 0.04rem;
+  padding-bottom: 0.02rem;
   border-bottom: 1px solid rgba(226, 232, 240, 0.82);
 }
 
@@ -461,6 +437,49 @@
   flex-wrap: wrap;
   gap: 0.16rem;
   justify-content: flex-end;
+}
+
+.setupSelectionRail {
+  display: grid;
+  gap: 0.08rem;
+  padding: 0.16rem 0.02rem 0.04rem;
+}
+
+.setupSelectionTitle {
+  color: #64748b;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.setupSelectionSummary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.22rem;
+}
+
+.setupSelectionItem {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.18rem;
+  min-width: 0;
+}
+
+.setupSelectionItem strong {
+  min-width: 0;
+  color: #0f172a;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.selectionArrow {
+  color: #94a3b8;
+  font-size: 0.72rem;
+  font-weight: 700;
 }
 
 .setupHeaderTools {
@@ -483,7 +502,7 @@
 .setupPickerGrid {
   margin-top: -0.02rem;
   align-items: start;
-  gap: 0.04rem;
+  gap: 0.02rem;
 }
 
 .setupSelectionRow {
@@ -520,7 +539,7 @@
 .setupPicker {
   display: grid;
   gap: 0.04rem;
-  padding: 0.02rem 0.04rem;
+  padding: 0.02rem;
 }
 
 .setupPickerLabelRow {
@@ -570,7 +589,7 @@
 .copyCard {
   display: grid;
   gap: 0.04rem;
-  padding: 0.06rem;
+  padding: 0.04rem;
 }
 
 .copyMetaRow,
@@ -925,6 +944,11 @@
   .setupMetaRow,
   .commandTitleLine {
     flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .setupSelectionSummary,
+  .setupSelectionItem {
     align-items: flex-start;
   }
 
