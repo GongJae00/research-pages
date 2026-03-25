@@ -273,7 +273,9 @@ export function HomepageAgentControlSection({
           kind: "connect" as const,
           step: "01",
           label: isKoreanLocale(locale) ? "CLI 연결" : "Connect CLI",
-          title: selectedProvider?.label ?? "-",
+          title: isKoreanLocale(locale)
+            ? `${selectedProvider?.label ?? "-"} CLI`
+            : `Connect ${selectedProvider?.label ?? "-"} CLI`,
           command: setupManifest.commands.connect,
           buttonLabel: copy.connectCommand,
         },
@@ -281,7 +283,9 @@ export function HomepageAgentControlSection({
           kind: "assign" as const,
           step: "02",
           label: isKoreanLocale(locale) ? "팀 배정" : "Assign team",
-          title: selectedTeam?.name ?? "-",
+          title: isKoreanLocale(locale)
+            ? `${selectedTeam?.name ?? "-"} ${copy.assignedTeam}`
+            : `Assign ${selectedTeam?.name ?? "-"}`,
           command: setupManifest.commands.assign,
           buttonLabel: copy.assignCommand,
         },
@@ -477,7 +481,7 @@ export function HomepageAgentControlSection({
                       <span className={styles.commandStep}>{item.step}</span>
                       <div className={`${styles.commandTitleStack} ${styles.commandTitleStackCompact}`}>
                         <span className={styles.commandEyebrow}>{item.label}</span>
-                        <strong>{item.kind === "connect" ? `${item.title} CLI` : item.title}</strong>
+                        <strong>{item.title}</strong>
                         <span className={styles.commandInlineHint}>
                           {item.kind === "connect"
                             ? isKoreanLocale(locale)
