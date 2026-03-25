@@ -385,6 +385,20 @@ export function HomepageAgentControlSection({
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
                 <p className={styles.setupLead}>{copy.setupBuilderBody}</p>
+                <div className={styles.setupSummaryStrip}>
+                  <span className={styles.summaryInlineChip}>
+                    <span className={styles.metaLabel}>{copy.commandOrder}</span>
+                    <strong>01 -&gt; 02</strong>
+                  </span>
+                  <span className={styles.summaryInlineChip}>
+                    <span className={styles.metaLabel}>{copy.chooseProvider}</span>
+                    <strong>{selectedProvider?.label ?? "-"}</strong>
+                  </span>
+                  <span className={styles.summaryInlineChip}>
+                    <span className={styles.metaLabel}>{copy.chooseTeam}</span>
+                    <strong>{selectedTeam?.name ?? "-"}</strong>
+                  </span>
+                </div>
               </div>
               <div className={styles.setupHeaderActions}>
                 <Command size={18} />
@@ -437,31 +451,6 @@ export function HomepageAgentControlSection({
                       {team.name}
                     </button>
                   ))}
-                </div>
-              </div>
-            </div>
-            <div className={styles.quickStartRail}>
-              <div className={styles.setupScanCard}>
-                <div className={styles.setupScanHead}>
-                  <span className={styles.metaLabel}>{copy.commandOrder}</span>
-                  <span className={styles.scanOrder}>01 -&gt; 02</span>
-                </div>
-                <div className={styles.setupSelectionRow}>
-                  <span className={styles.selectionChip}>
-                    <span className={styles.metaLabel}>{copy.chooseProvider}</span>
-                    <strong>{selectedProvider?.label ?? "-"}</strong>
-                  </span>
-                  <span className={styles.selectionChip}>
-                    <span className={styles.metaLabel}>{copy.chooseTeam}</span>
-                    <strong>{selectedTeam?.name ?? "-"}</strong>
-                  </span>
-                </div>
-                <div className={styles.scanPath}>
-                  <strong>{selectedProvider?.label ?? "-"}</strong>
-                  <span aria-hidden="true">{"->"}</span>
-                  <strong>{selectedTeam?.name ?? "-"}</strong>
-                  <span aria-hidden="true">{"->"}</span>
-                  <strong>{copy.setupCommand}</strong>
                 </div>
               </div>
             </div>

@@ -246,7 +246,7 @@
 
 .setupBuilderCard {
   display: grid;
-  gap: 0.14rem;
+  gap: 0.1rem;
   margin-top: 0.08rem;
 }
 
@@ -260,7 +260,7 @@
 
 .setupTitleBlock {
   display: grid;
-  gap: 0.16rem;
+  gap: 0.14rem;
 }
 
 .setupTitleBlock h4 {
@@ -276,6 +276,29 @@
   font-size: 0.8rem;
   line-height: 1.35;
   max-width: 22rem;
+}
+
+.setupSummaryStrip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.18rem;
+}
+
+.summaryInlineChip {
+  display: grid;
+  gap: 0.04rem;
+  min-width: 0;
+  padding: 0.34rem 0.42rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 12px;
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.summaryInlineChip strong {
+  color: #0f172a;
+  font-size: 0.78rem;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
 }
 
 .panelHeadCopy {
@@ -306,58 +329,6 @@
 
 .setupCommands {
   margin-top: 0.08rem;
-}
-
-.quickStartRail {
-  display: grid;
-  gap: 0.1rem;
-  padding: 0.02rem 0 0;
-}
-
-.setupScanCard {
-  display: grid;
-  gap: 0.18rem;
-  min-width: 0;
-  padding: 0.42rem 0.48rem;
-  border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 14px;
-  background: rgba(248, 250, 252, 0.92);
-}
-
-.setupScanHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-}
-
-.scanOrder {
-  color: #0f172a;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-}
-
-.setupSelectionRow {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.18rem;
-}
-
-.selectionChip {
-  display: grid;
-  gap: 0.06rem;
-  min-width: 0;
-  padding: 0.36rem 0.42rem;
-  border: 1px solid rgba(203, 213, 225, 0.7);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.72);
-}
-
-.selectionChip strong {
-  color: #0f172a;
-  font-size: 0.84rem;
-  line-height: 1.2;
-  overflow-wrap: anywhere;
 }
 
 .panelLead {
@@ -400,27 +371,6 @@
 .summaryChip strong {
   color: #0f172a;
   font-size: 0.76rem;
-}
-
-.scanPath {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-width: 0;
-  flex-wrap: wrap;
-}
-
-.scanPath strong,
-.scanPath span {
-  min-width: 0;
-  color: #0f172a;
-  font-size: 0.82rem;
-  line-height: 1.2;
-  overflow-wrap: anywhere;
-}
-
-.scanPath span {
-  color: #64748b;
 }
 
 .selectionCard {
@@ -590,7 +540,6 @@
     grid-column: 1 / -1;
   }
 
-  .quickStartRail,
   .setupPickerGrid {
     grid-column: 1;
   }
@@ -733,27 +682,17 @@
   .setupRail,
   .setupPickerGrid,
   .setupCommands,
-  .setupNotesGrid,
-  .setupSelectionRow {
+  .setupNotesGrid {
     grid-template-columns: 1fr;
-  }
-
-  .quickStartRail {
-    display: grid;
   }
 
   .setupBuilderCard,
   .setupHeader,
-  .quickStartRail,
   .setupPickerGrid,
   .setupCommands,
   .setupNotesGrid {
     grid-column: auto;
     grid-row: auto;
-  }
-
-  .setupScanCard {
-    width: 100%;
   }
 
   .cardHead,
