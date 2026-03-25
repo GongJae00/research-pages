@@ -363,7 +363,6 @@ export function HomepageAgentControlSection({
             </div>
           </div>
           <div className={styles.providerSummaryBar}>
-            <p className={styles.panelLead}>{copy.providersBody}</p>
             <div className={styles.providerSummaryChips}>
               <span className={styles.summaryChip}>
                 <strong>{String(connectedCount).padStart(2, "0")}</strong>
@@ -410,27 +409,6 @@ export function HomepageAgentControlSection({
                 ) : null}
               </div>
             </div>
-            <div className={styles.quickStartRail}>
-              <div className={styles.stepRail}>
-                {copy.setupSteps.slice(0, 3).map((item, index) => (
-                  <div className={styles.stepChip} key={item}>
-                    <span className={styles.commandStep}>{String(index + 1).padStart(2, "0")}</span>
-                    <p>{item}</p>
-                  </div>
-                ))}
-              </div>
-              <div className={styles.setupScanBar}>
-                <span className={styles.metaLabel}>{copy.commandOrder}</span>
-                <div className={styles.scanPath}>
-                  <strong>{selectedProvider?.label ?? "-"}</strong>
-                  <span aria-hidden="true">{"->"}</span>
-                  <strong>{selectedTeam?.name ?? "-"}</strong>
-                  <span aria-hidden="true">{"->"}</span>
-                  <strong>{copy.setupCommand}</strong>
-                </div>
-              </div>
-            </div>
-
             <div className={styles.setupPickerGrid}>
               <div className={styles.setupPicker}>
                 <span className={styles.metaLabel}>{copy.chooseProvider}</span>
@@ -472,6 +450,26 @@ export function HomepageAgentControlSection({
                       {team.name}
                     </button>
                   ))}
+                </div>
+              </div>
+            </div>
+            <div className={styles.quickStartRail}>
+              <div className={styles.stepRail}>
+                {copy.setupSteps.slice(0, 3).map((item, index) => (
+                  <div className={styles.stepChip} key={item}>
+                    <span className={styles.commandStep}>{String(index + 1).padStart(2, "0")}</span>
+                    <p>{item}</p>
+                  </div>
+                ))}
+              </div>
+              <div className={styles.setupScanBar}>
+                <span className={styles.metaLabel}>{copy.commandOrder}</span>
+                <div className={styles.scanPath}>
+                  <strong>{selectedProvider?.label ?? "-"}</strong>
+                  <span aria-hidden="true">{"->"}</span>
+                  <strong>{selectedTeam?.name ?? "-"}</strong>
+                  <span aria-hidden="true">{"->"}</span>
+                  <strong>{copy.setupCommand}</strong>
                 </div>
               </div>
             </div>
