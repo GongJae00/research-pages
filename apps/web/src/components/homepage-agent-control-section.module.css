@@ -520,6 +520,44 @@
   margin-top: 0.06rem;
 }
 
+.setupDigestRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.04rem;
+  min-width: 0;
+}
+
+.setupDigestItem {
+  display: grid;
+  gap: 0.02rem;
+  min-width: 0;
+  padding: 0.12rem 0.16rem;
+  border: 1px solid rgba(203, 213, 225, 0.6);
+  border-radius: 12px;
+  background: rgba(248, 250, 252, 0.94);
+  flex: 1 1 9rem;
+}
+
+.setupDigestItemAccent {
+  border-color: rgba(15, 23, 42, 0.12);
+  background: rgba(241, 245, 249, 0.98);
+}
+
+.setupDigestValueRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.16rem;
+  min-width: 0;
+}
+
+.setupDigestItem strong {
+  color: #0f172a;
+  font-size: 0.7rem;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
 .setupScanStrip {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -562,14 +600,6 @@
 }
 
 .setupSummaryBar {
-  display: flex;
-  align-items: stretch;
-  flex-wrap: wrap;
-  gap: 0.04rem;
-  min-width: 0;
-}
-
-.setupSelectionBar {
   display: flex;
   align-items: stretch;
   flex-wrap: wrap;
@@ -1191,15 +1221,6 @@
     grid-template-columns: 1fr;
   }
 
-  .setupSelectionBar {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-
-  .summaryChipWide {
-    min-width: 0;
-  }
-
   .actionRow {
     align-items: flex-start;
   }
@@ -1211,6 +1232,11 @@
   .summaryInlineHint {
     text-align: left;
     white-space: normal;
+  }
+
+  .setupDigestRow {
+    display: grid;
+    grid-template-columns: 1fr;
   }
 
   .setupScanArrow {

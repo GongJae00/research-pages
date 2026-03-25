@@ -366,39 +366,30 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <h4>{copy.setupBuilderTitle}</h4>
                 <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
-                  <div className={styles.setupSelectionBar}>
-                    <div className={styles.summaryChip}>
-                      <span className={styles.commandStep}>01</span>
-                      <div className={styles.summaryChipCopy}>
-                        <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
-                        <div className={styles.summaryChipValueRow}>
-                          <strong>{selectedProvider?.label ?? "-"}</strong>
-                          {selectedProvider ? (
-                            <span
-                              className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
-                            >
-                              {getProviderStatusLabel(locale, selectedProvider.status)}
-                            </span>
-                          ) : null}
-                        </div>
+                  <div className={styles.setupDigestRow}>
+                    <div className={styles.setupDigestItem}>
+                      <span className={styles.setupDigestLabel}>{copy.chooseProvider}</span>
+                      <div className={styles.setupDigestValueRow}>
+                        <strong>{selectedProvider?.label ?? "-"}</strong>
+                        {selectedProvider ? (
+                          <span
+                            className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
+                          >
+                            {getProviderStatusLabel(locale, selectedProvider.status)}
+                          </span>
+                        ) : null}
                       </div>
                     </div>
-                    <div className={`${styles.summaryChip} ${styles.summaryChipWide}`}>
-                      <span className={styles.commandStep}>02</span>
-                      <div className={styles.summaryChipCopy}>
-                        <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
-                        <strong>{selectedTeam?.name ?? "-"}</strong>
-                      </div>
+                    <div className={styles.setupDigestItem}>
+                      <span className={styles.setupDigestLabel}>{copy.chooseTeam}</span>
+                      <strong>{selectedTeam?.name ?? "-"}</strong>
                     </div>
-                    <div className={`${styles.summaryChip} ${styles.summaryChipWide} ${styles.summaryChipAccent}`}>
-                      <span className={styles.commandStep}>03</span>
-                      <div className={styles.summaryChipCopy}>
-                        <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
-                        <strong>{setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}</strong>
-                      </div>
+                    <div className={`${styles.setupDigestItem} ${styles.setupDigestItemAccent}`}>
+                      <span className={styles.setupDigestLabel}>{copy.nextActionLabel}</span>
+                      <strong>{setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}</strong>
                     </div>
-                    <span className={styles.summaryInlineHint}>{copy.commandOrder}</span>
                   </div>
+                  <span className={styles.summaryInlineHint}>{copy.commandOrder}</span>
                 </div>
               </div>
               <div className={styles.setupHeaderActions}>
