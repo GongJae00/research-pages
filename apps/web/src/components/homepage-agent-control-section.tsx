@@ -268,6 +268,7 @@ export function HomepageAgentControlSection({
         {
           kind: "connect" as const,
           step: "01",
+          label: copy.connectCommand,
           title: selectedProvider?.label ?? "-",
           detail: selectedProvider?.cliName ?? "-",
           command: setupManifest.commands.connect,
@@ -276,6 +277,7 @@ export function HomepageAgentControlSection({
         {
           kind: "assign" as const,
           step: "02",
+          label: copy.assignCommand,
           title: selectedTeam?.name ?? "-",
           detail: selectedTeam?.lane ?? "-",
           command: setupManifest.commands.assign,
@@ -465,16 +467,20 @@ export function HomepageAgentControlSection({
             <div className={styles.setupCommands}>
               {setupCommandCards.map((item) => (
                 <div className={styles.copyCard} key={item.kind}>
-                  <div className={styles.copyHead}>
+                  <div className={styles.copyMetaRow}>
                     <div className={styles.copyTitleGroup}>
                       <span className={styles.commandStep}>{item.step}</span>
                       <div className={styles.commandTitleStack}>
+                        <span className={styles.commandEyebrow}>{item.label}</span>
                         <div className={styles.commandTitleLine}>
                           <strong>{item.kind === "connect" ? `${item.title} CLI` : item.title}</strong>
                           <span className={styles.commandDetail}>{item.detail}</span>
                         </div>
                       </div>
                     </div>
+                  </div>
+                  <div className={styles.commandRow}>
+                    <code>{item.command}</code>
                     <button
                       type="button"
                       className={`${styles.copyButton} ${styles.copyIconButton}`}
@@ -488,7 +494,6 @@ export function HomepageAgentControlSection({
                       </span>
                     </button>
                   </div>
-                  <code>{item.command}</code>
                 </div>
               ))}
             </div>

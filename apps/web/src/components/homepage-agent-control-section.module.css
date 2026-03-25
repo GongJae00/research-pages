@@ -556,11 +556,12 @@
 
 .copyCard {
   display: grid;
-  gap: 0.06rem;
-  padding: 0.1rem;
+  gap: 0.08rem;
+  padding: 0.24rem 0.28rem;
 }
 
-.copyHead {
+.copyMetaRow,
+.commandRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -579,9 +580,18 @@
   gap: 0.28rem;
 }
 
+.commandEyebrow {
+  color: #64748b;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
 .commandTitleStack strong {
   color: #0f172a;
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   line-height: 1.2;
 }
 
@@ -614,14 +624,16 @@
 
 .copyCard code {
   display: block;
-  padding: 0.32rem 0.4rem;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0.38rem 0.46rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 12px;
   background: rgba(248, 250, 252, 0.92);
 }
 
-.copyCard code,
-.copyTitleGroup {
+.copyTitleGroup,
+.copyCard code {
   min-width: 0;
 }
 
@@ -844,7 +856,8 @@
   .cardHead,
   .panelHead,
   .providerHead,
-  .copyHead,
+  .copyMetaRow,
+  .commandRow,
   .providerSummaryBar,
   .setupHeader,
   .setupHeaderActions,
