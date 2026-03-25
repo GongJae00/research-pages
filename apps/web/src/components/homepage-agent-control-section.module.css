@@ -289,15 +289,6 @@
   line-height: 1.15;
 }
 
-.setupHeaderNote {
-  color: #64748b;
-  font-size: 0.66rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  line-height: 1.1;
-  text-transform: uppercase;
-}
-
 .setupHeaderSequence {
   display: grid;
   gap: 0.08rem;
@@ -356,12 +347,21 @@
   gap: 0.18rem;
 }
 
-.setupSummaryStrip {
+.setupDigestBar {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  align-items: center;
   gap: 0.18rem;
   margin-top: 0.02rem;
+}
+
+.setupDigestLead {
+  color: #64748b;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  text-transform: uppercase;
 }
 
 .sequencePill {
@@ -408,19 +408,21 @@
   line-height: 1.25;
 }
 
-.setupMetaPill {
-  display: inline-grid;
-  gap: 0.04rem;
+.setupDigestChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
   min-width: 0;
-  padding: 0.22rem 0.42rem;
+  padding: 0.18rem 0.38rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 12px;
+  border-radius: 999px;
   background: rgba(248, 250, 252, 0.92);
 }
 
-.setupMetaPill strong {
+.setupDigestValue {
+  min-width: 0;
   color: #0f172a;
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   line-height: 1.15;
   overflow-wrap: anywhere;
 }
@@ -437,7 +439,7 @@
 
 .setupHeader {
   align-items: flex-start;
-  padding-bottom: 0.06rem;
+  padding-bottom: 0.12rem;
   border-bottom: 1px solid rgba(226, 232, 240, 0.82);
 }
 
@@ -646,7 +648,7 @@
 .copyCard {
   display: grid;
   gap: 0.04rem;
-  padding: 0.02rem 0;
+  padding: 0.04rem 0;
 }
 
 .copyMetaRow,
@@ -974,7 +976,7 @@
   .heroInfoGrid,
   .providerMeta,
   .setupRail,
-  .setupSummaryStrip,
+  .setupDigestBar,
   .setupPickerGrid,
   .setupCommands,
   .setupNotesGrid {

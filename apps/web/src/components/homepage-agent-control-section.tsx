@@ -377,14 +377,14 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <span className={styles.setupHeaderNote}>{copy.commandOrder}</span>
                 {quickStartItems.length ? (
-                  <div className={styles.setupSummaryStrip} aria-label={copy.commandOrder}>
+                  <div className={styles.setupDigestBar} aria-label={copy.commandOrder}>
+                    <span className={styles.setupDigestLead}>{copy.commandOrder}</span>
                     {quickStartItems.map((item) => (
-                      <div className={styles.setupMetaPill} key={item.label}>
+                      <span className={styles.setupDigestChip} key={item.label}>
                         <span className={styles.setupScanLabel}>{item.label}</span>
-                        <strong>{item.value}</strong>
-                      </div>
+                        <strong className={styles.setupDigestValue}>{item.value}</strong>
+                      </span>
                     ))}
                   </div>
                 ) : null}
