@@ -271,13 +271,6 @@
   line-height: 1.15;
 }
 
-.setupFlowRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.12rem;
-}
-
 .setupScanRow {
   grid-template-columns: minmax(0, 0.84fr) minmax(0, 0.92fr) minmax(0, 1.24fr);
   gap: 0.12rem;
@@ -311,35 +304,6 @@
   align-items: center;
   gap: 0.34rem;
   min-width: 0;
-}
-
-.setupFlowStep {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.34rem;
-  min-width: 0;
-  padding: 0.18rem 0.3rem;
-  border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 12px;
-  background: rgba(248, 250, 252, 0.92);
-}
-
-.setupFlowCopy {
-  display: grid;
-  gap: 0.03rem;
-  min-width: 0;
-}
-
-.setupFlowCopy strong {
-  color: #0f172a;
-  font-size: 0.76rem;
-  line-height: 1.15;
-  overflow-wrap: anywhere;
-}
-
-.setupFlowArrow {
-  color: #94a3b8;
-  flex: 0 0 auto;
 }
 
 .setupMetaRow {
@@ -467,6 +431,10 @@
 .setupCommands {
   margin-top: 0;
   gap: 0.06rem;
+}
+
+.setupPickerGrid {
+  margin-top: 0.02rem;
 }
 
 .providerSummaryBar {
@@ -888,7 +856,6 @@
   .providerSummaryBar,
   .setupHeader,
   .setupHeaderActions,
-  .setupFlowRow,
   .setupMetaRow,
   .scanPillValue,
   .setupSummaryItem,

@@ -423,45 +423,6 @@ export function HomepageAgentControlSection({
                 </div>
               </div>
             </div>
-            <div className={styles.setupFlowRow}>
-              <div className={styles.setupFlowStep}>
-                <span className={styles.commandStep}>A</span>
-                <div className={styles.setupFlowCopy}>
-                  <span className={styles.setupDigestLabel}>{copy.chooseProvider}</span>
-                  <strong>{selectedProvider?.label ?? "-"}</strong>
-                </div>
-              </div>
-              <span className={styles.setupFlowArrow} aria-hidden="true">
-                <ArrowRight size={14} />
-              </span>
-              <div className={styles.setupFlowStep}>
-                <span className={styles.commandStep}>B</span>
-                <div className={styles.setupFlowCopy}>
-                  <span className={styles.setupDigestLabel}>{copy.chooseTeam}</span>
-                  <strong>{selectedTeam?.name ?? "-"}</strong>
-                </div>
-              </div>
-              <span className={styles.setupFlowArrow} aria-hidden="true">
-                <ArrowRight size={14} />
-              </span>
-              <div className={styles.setupFlowStep}>
-                <span className={styles.commandStep}>01</span>
-                <div className={styles.setupFlowCopy}>
-                  <span className={styles.setupDigestLabel}>{copy.commandOrder}</span>
-                  <strong>{copy.connectCommand}</strong>
-                </div>
-              </div>
-              <span className={styles.setupFlowArrow} aria-hidden="true">
-                <ArrowRight size={14} />
-              </span>
-              <div className={styles.setupFlowStep}>
-                <span className={styles.commandStep}>02</span>
-                <div className={styles.setupFlowCopy}>
-                  <span className={styles.setupDigestLabel}>{copy.commandOrder}</span>
-                  <strong>{copy.assignCommand}</strong>
-                </div>
-              </div>
-            </div>
             <div className={styles.setupPickerGrid}>
               <div className={styles.setupPicker}>
                 <span className={styles.metaLabel}>{copy.chooseProvider}</span>
