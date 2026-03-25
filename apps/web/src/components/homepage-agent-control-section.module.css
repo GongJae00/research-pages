@@ -14,7 +14,8 @@
 .setupPickerGrid,
 .setupCommands,
 .stepList,
-.setupNotesGrid {
+.setupNotesGrid,
+.setupSelectionRow {
   display: grid;
   gap: 0.24rem;
 }
@@ -298,38 +299,9 @@
 }
 
 .setupRail,
-.setupDigestGrid,
 .setupPickerGrid,
 .setupCommands {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.setupDigestGrid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.22rem;
-}
-
-.setupDigestCard {
-  display: grid;
-  gap: 0.08rem;
-  min-width: 0;
-  padding: 0.38rem 0.46rem;
-  border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 14px;
-  background: rgba(248, 250, 252, 0.92);
-}
-
-.setupDigestCard strong {
-  color: #0f172a;
-  font-size: 0.85rem;
-  line-height: 1.2;
-  overflow-wrap: anywhere;
-}
-
-.digestHint {
-  color: #64748b;
-  font-size: 0.76rem;
-  font-weight: 700;
 }
 
 .setupCommands {
@@ -342,14 +314,50 @@
   padding: 0.02rem 0 0;
 }
 
-.setupFlowHeader {
+.setupScanCard {
   display: grid;
-  gap: 0.08rem;
+  gap: 0.18rem;
   min-width: 0;
-  padding: 0.34rem 0.44rem;
+  padding: 0.42rem 0.48rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 14px;
   background: rgba(248, 250, 252, 0.92);
+}
+
+.setupScanHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.scanOrder {
+  color: #0f172a;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.setupSelectionRow {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.18rem;
+}
+
+.selectionChip {
+  display: grid;
+  gap: 0.06rem;
+  min-width: 0;
+  padding: 0.36rem 0.42rem;
+  border: 1px solid rgba(203, 213, 225, 0.7);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.selectionChip strong {
+  color: #0f172a;
+  font-size: 0.84rem;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 .panelLead {
@@ -578,7 +586,6 @@
   }
 
   .setupHeader,
-  .setupDigestGrid,
   .setupNotesGrid {
     grid-column: 1 / -1;
   }
@@ -724,10 +731,10 @@
   .heroInfoGrid,
   .providerMeta,
   .setupRail,
-  .setupDigestGrid,
   .setupPickerGrid,
   .setupCommands,
-  .setupNotesGrid {
+  .setupNotesGrid,
+  .setupSelectionRow {
     grid-template-columns: 1fr;
   }
 
@@ -745,7 +752,7 @@
     grid-row: auto;
   }
 
-  .setupFlowHeader {
+  .setupScanCard {
     width: 100%;
   }
 
