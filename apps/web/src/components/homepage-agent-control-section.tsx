@@ -384,6 +384,7 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                <p className={styles.setupBody}>{copy.setupBuilderBody}</p>
                 <div className={styles.setupScanBar} aria-label={copy.setupStepsLabel}>
                   <div className={styles.setupScanChip}>
                     <span className={styles.setupChipStep}>01</span>

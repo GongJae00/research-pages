@@ -292,7 +292,7 @@
 .setupTitleBlock {
   margin: 0;
   display: grid;
-  gap: 0.02rem;
+  gap: 0.04rem;
 }
 
 .setupScanBar {
@@ -404,10 +404,10 @@
 
 .setupBody {
   margin: 0;
-  max-width: 28rem;
+  max-width: 30rem;
   color: #475569;
-  font-size: 0.68rem;
-  line-height: 1.24;
+  font-size: 0.7rem;
+  line-height: 1.3;
 }
 
 .sequenceArrow {
