@@ -368,6 +368,7 @@ export function HomepageAgentControlSection({
           <article className={styles.setupBuilderCard}>
             <div className={styles.setupHeader}>
               <div className={styles.setupTitleBlock}>
+                <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
                 <p className={styles.setupTitleHint}>{copy.commandOrder}</p>
               </div>
@@ -392,6 +393,24 @@ export function HomepageAgentControlSection({
                     <ArrowRight size={16} />
                   </Link>
                 ) : null}
+              </div>
+            </div>
+            <div className={styles.setupQuickStartRow} aria-label={copy.commandOrder}>
+              <span className={styles.setupQuickStartLabel}>{copy.commandOrder}</span>
+              <div className={styles.setupQuickStartSequence}>
+                <span className={styles.sequencePill}>
+                  <span className={styles.commandStep}>01</span>
+                  <strong>{copy.chooseProvider}</strong>
+                  <span className={styles.digestMeta}>{selectedProvider?.label ?? "-"}</span>
+                </span>
+                <span className={styles.sequenceArrow} aria-hidden="true">
+                  <ArrowRight size={14} />
+                </span>
+                <span className={styles.sequencePill}>
+                  <span className={styles.commandStep}>02</span>
+                  <strong>{copy.chooseTeam}</strong>
+                  <span className={styles.digestMeta}>{selectedTeam?.name ?? "-"}</span>
+                </span>
               </div>
             </div>
             <div className={styles.setupPickerGrid}>

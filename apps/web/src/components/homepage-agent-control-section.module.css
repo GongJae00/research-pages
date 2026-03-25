@@ -272,11 +272,42 @@
 }
 
 .setupTitleHint {
-  margin: 0.04rem 0 0;
+  margin: 0.02rem 0 0;
   color: #475569;
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   font-weight: 600;
-  line-height: 1.3;
+  line-height: 1.2;
+}
+
+.setupQuickStartRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.18rem;
+  padding: 0.08rem 0 0.02rem;
+}
+
+.setupQuickStartLabel {
+  color: #64748b;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.setupQuickStartSequence {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.12rem;
+}
+
+.sequenceArrow {
+  display: inline-flex;
+  align-items: center;
+  color: #94a3b8;
 }
 
 .sequenceStep {
@@ -311,6 +342,12 @@
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 14px;
   background: rgba(248, 250, 252, 0.92);
+}
+
+.sequencePill strong {
+  color: #0f172a;
+  font-size: 0.76rem;
+  line-height: 1.15;
 }
 
 .setupSummaryItem strong {
@@ -473,7 +510,7 @@
 
 .setupDigestRow .setupSummaryItem {
   min-width: 0;
-  padding: 0.16rem 0.24rem;
+  padding: 0.14rem 0.22rem;
   align-items: flex-start;
   align-content: start;
 }
@@ -490,7 +527,7 @@
 .setupPicker {
   display: grid;
   gap: 0.06rem;
-  padding: 0.18rem 0.22rem 0.22rem;
+  padding: 0.16rem 0.2rem 0.2rem;
 }
 
 .setupPickerLabelRow {
@@ -540,7 +577,7 @@
 .copyCard {
   display: grid;
   gap: 0.06rem;
-  padding: 0.12rem 0.16rem;
+  padding: 0.1rem 0.14rem;
 }
 
 .copyMetaRow,
@@ -708,6 +745,7 @@
   }
 
   .setupHeader,
+  .setupQuickStartRow,
   .setupDigestRow,
   .setupNotesDisclosure {
     grid-column: 1 / -1;
@@ -874,6 +912,7 @@
 
   .setupBuilderCard,
   .setupHeader,
+  .setupQuickStartRow,
   .setupScanBar,
   .setupDigestRow,
   .setupPickerGrid,
@@ -892,6 +931,7 @@
   .providerSummaryBar,
   .setupHeader,
   .setupHeaderActions,
+  .setupQuickStartRow,
   .setupScanBar,
   .setupMetaRow,
   .scanPillValue,
@@ -904,6 +944,10 @@
 
   .providerSummaryChips {
     justify-content: flex-start;
+  }
+
+  .setupQuickStartSequence {
+    width: 100%;
   }
 
   .commandStackHeader {
