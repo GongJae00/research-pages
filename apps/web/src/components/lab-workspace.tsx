@@ -205,11 +205,11 @@ const sections: Section[] = [
 
 const sectionLabels: Record<Locale, Record<Section, string>> = {
   ko: {
-    people: "People",
-    papers: "Papers",
-    research: "Research",
-    documents: "Documents",
-    timetable: "Timetable",
+    people: "구성원",
+    papers: "논문",
+    research: "연구",
+    documents: "문서",
+    timetable: "시간표",
   },
   en: {
     people: "People",
@@ -217,6 +217,23 @@ const sectionLabels: Record<Locale, Record<Section, string>> = {
     research: "Research",
     documents: "Documents",
     timetable: "Timetable",
+  },
+};
+
+const sectionDescriptions: Record<Locale, Record<Section, string>> = {
+  ko: {
+    people: "지도교수, 현재 멤버, 동문 구성을 한 번에 확인합니다.",
+    research: "진행 중인 연구와 종료된 연구를 상태별로 정리합니다.",
+    papers: "연구실이 함께 보는 논문 목록과 반입 대상을 관리합니다.",
+    documents: "공유 문서함과 개인 문서 반입 대상을 한 화면에서 다룹니다.",
+    timetable: "공동 시간표와 개인 일정 반입 흐름을 함께 확인합니다.",
+  },
+  en: {
+    people: "Review professors, current members, and alumni in one pass.",
+    research: "Track ongoing and completed research items by status.",
+    papers: "Manage shared papers and personal papers ready to import.",
+    documents: "Review shared files and import-ready personal documents together.",
+    timetable: "See the shared timetable and personal schedule import flow together.",
   },
 };
 
@@ -3094,6 +3111,8 @@ export function LabWorkspace({ locale, initialDocuments, initialTimetableEntries
     timetableSection
   );
   const heroEditLabel = isKo ? "연구실 편집" : "Edit lab";
+  const activeSectionLabel = sectionLabels[locale][activeSection];
+  const activeSectionDescription = sectionDescriptions[locale][activeSection];
 
   return (
     <div className="lab-workspace">
@@ -3102,6 +3121,11 @@ export function LabWorkspace({ locale, initialDocuments, initialTimetableEntries
           <div className="lab-hub-hero-head">
             <div className="lab-hub-hero-copy">
               <h2>{activeLab.name}</h2>
+              <p className="card-support-text">
+                {isKo
+                  ? "비공개 연구실 워크스페이스에서 구성원, 연구, 논문, 문서, 공동 시간표를 관리합니다."
+                  : "Manage people, research, papers, documents, and the shared timetable from this private lab workspace."}
+              </p>
             </div>
             <div className="lab-hero-actions">
               {publicLabHref ? (
@@ -3165,6 +3189,11 @@ export function LabWorkspace({ locale, initialDocuments, initialTimetableEntries
               </button>
             ))}
           </div>
+          <p className="card-support-text">
+            {isKo
+              ? `현재 섹션: ${activeSectionLabel}. ${activeSectionDescription}`
+              : `Current section: ${activeSectionLabel}. ${activeSectionDescription}`}
+          </p>
         </section>
         {labSettingsSection}
         {sectionContent}
