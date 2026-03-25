@@ -569,10 +569,11 @@
 }
 
 .setupSummaryBar {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.08rem;
-  margin-top: 0.06rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.06rem;
+  margin-top: 0.04rem;
 }
 
 .setupHeaderTools {
@@ -606,22 +607,29 @@
 }
 
 .summaryChip {
-  display: inline-grid;
-  gap: 0.03rem;
-  align-items: start;
-  padding: 0.14rem 0.3rem;
-  border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 12px;
-  background: rgba(248, 250, 252, 0.92);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.2rem;
+  padding: 0.12rem 0.28rem;
+  border: 1px solid rgba(203, 213, 225, 0.68);
+  border-radius: 999px;
+  background: rgba(248, 250, 252, 0.94);
   color: #64748b;
-  font-size: 0.64rem;
+  font-size: 0.62rem;
   font-weight: 700;
   min-width: 0;
+  line-height: 1.1;
 }
 
 .summaryChip strong {
   color: #0f172a;
-  font-size: 0.7rem;
+  font-size: 0.66rem;
+  line-height: 1.1;
+}
+
+.summaryChip .setupScanLabel,
+.summaryChip .setupScanValue {
+  display: inline;
 }
 
 .setupPicker {
