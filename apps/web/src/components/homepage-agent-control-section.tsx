@@ -384,18 +384,15 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <div className={styles.setupMetaRow}>
-                  <div className={styles.setupMetaPill}>
+                <div className={styles.setupScanRow}>
+                  <span className={styles.setupOrderBadge}>{copy.commandOrder}</span>
+                  <div className={styles.setupScanItem}>
                     <span className={styles.metaLabel}>{copy.chooseProvider}</span>
                     <strong>{selectedProvider?.label ?? "-"}</strong>
                   </div>
-                  <div className={styles.setupMetaPill}>
+                  <div className={styles.setupScanItem}>
                     <span className={styles.metaLabel}>{copy.chooseTeam}</span>
                     <strong>{selectedTeam?.name ?? "-"}</strong>
-                  </div>
-                  <div className={styles.setupMetaPill}>
-                    <span className={styles.metaLabel}>{copy.setupCommand}</span>
-                    <strong>Connect -&gt; Assign</strong>
                   </div>
                 </div>
               </div>
