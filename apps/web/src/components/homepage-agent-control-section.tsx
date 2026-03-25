@@ -372,21 +372,18 @@ export function HomepageAgentControlSection({
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
                 {selectedProvider && selectedTeam ? (
-                  <div className={styles.setupHeaderSummary}>
-                    <strong className={styles.setupDigestOrder}>{copy.commandOrder}</strong>
-                    <div className={styles.setupHeaderSelectionRow}>
-                      <span className={styles.setupHeaderSelection}>
-                        <span className={styles.commandStep}>01</span>
-                        <span className={styles.setupHeaderSelectionValue}>{selectedProvider.label}</span>
-                      </span>
-                      <span className={styles.sequenceArrow} aria-hidden="true">
-                        <ArrowRight size={14} />
-                      </span>
-                      <span className={styles.setupHeaderSelection}>
-                        <span className={styles.commandStep}>02</span>
-                        <span className={styles.setupHeaderSelectionValue}>{selectedTeam.name}</span>
-                      </span>
-                    </div>
+                  <div className={styles.setupScanBar}>
+                    <span className={styles.setupScanItem}>
+                      <strong className={styles.setupDigestOrder}>{copy.commandOrder}</strong>
+                    </span>
+                    <span className={styles.setupScanItem}>
+                      <span className={styles.commandStep}>01</span>
+                      <span className={styles.setupScanValue}>{selectedProvider.label}</span>
+                    </span>
+                    <span className={styles.setupScanItem}>
+                      <span className={styles.commandStep}>02</span>
+                      <span className={styles.setupScanValue}>{selectedTeam.name}</span>
+                    </span>
                   </div>
                 ) : null}
               </div>

@@ -261,22 +261,17 @@
 
 .setupTitleBlock {
   display: grid;
-  gap: 0.08rem;
+  gap: 0.06rem;
 }
 
-.setupHeaderSummary {
-  display: grid;
-  gap: 0.08rem;
-}
-
-.setupHeaderSelectionRow {
+.setupScanBar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.14rem;
+  gap: 0.12rem;
 }
 
-.setupHeaderSelection {
+.setupScanItem {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
@@ -287,7 +282,7 @@
   background: rgba(248, 250, 252, 0.92);
 }
 
-.setupHeaderSelectionValue {
+.setupScanValue {
   min-width: 0;
   color: #0f172a;
   font-size: 0.78rem;
@@ -441,7 +436,7 @@
 
 .setupHeader {
   align-items: center;
-  padding-bottom: 0.04rem;
+  padding-bottom: 0.02rem;
   border-bottom: 1px solid rgba(226, 232, 240, 0.82);
 }
 
@@ -509,7 +504,7 @@
 .setupPicker {
   display: grid;
   gap: 0.06rem;
-  padding: 0.08rem 0.12rem;
+  padding: 0.06rem 0.1rem;
 }
 
 .setupPickerLabelRow {
@@ -559,7 +554,7 @@
 .copyCard {
   display: grid;
   gap: 0.06rem;
-  padding: 0.12rem;
+  padding: 0.1rem;
 }
 
 .copyMetaRow,
@@ -619,7 +614,7 @@
   display: block;
   flex: 1 1 auto;
   min-width: 0;
-  padding: 0.22rem 0.3rem;
+  padding: 0.18rem 0.28rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 12px;
   background: rgba(248, 250, 252, 0.92);
@@ -922,7 +917,7 @@
     justify-content: flex-start;
   }
 
-  .setupHeaderSelectionRow {
+  .setupScanBar {
     align-items: flex-start;
   }
 
