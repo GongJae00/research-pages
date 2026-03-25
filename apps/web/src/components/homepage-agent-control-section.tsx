@@ -414,23 +414,6 @@ export function HomepageAgentControlSection({
               </div>
             </div>
             <div className={styles.setupPickerGrid}>
-              <div className={styles.setupDigestRow}>
-                <div className={styles.setupSummaryItem}>
-                  <span className={styles.setupDigestLabel}>{copy.chooseProvider}</span>
-                  <div className={styles.scanPillValue}>
-                    <strong>{selectedProvider?.label ?? "-"}</strong>
-                    <span className={styles.digestMeta}>{selectedProvider?.cliName ?? "-"}</span>
-                  </div>
-                </div>
-                <div className={styles.setupSummaryItem}>
-                  <span className={styles.setupDigestLabel}>{copy.chooseTeam}</span>
-                  <div className={styles.scanPillValue}>
-                    <strong>{selectedTeam?.name ?? "-"}</strong>
-                    <span className={styles.digestMeta}>{selectedTeam?.lane ?? "-"}</span>
-                  </div>
-                </div>
-              </div>
-
               <div className={styles.setupPicker}>
                 <div className={styles.setupPickerLabelRow}>
                   <span className={styles.setupDigestLabel}>
