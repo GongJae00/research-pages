@@ -473,6 +473,15 @@ export function HomepageAgentControlSection({
             </div>
 
             <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>
+              <div className={styles.commandStackHeader}>
+                <div className={styles.commandStackCopy}>
+                  <span className={styles.metaLabel}>{copy.setupCommand}</span>
+                  <strong className={styles.commandStackTitle}>{copy.commandOrder}</strong>
+                </div>
+                <span className={styles.commandStackHint}>
+                  {(selectedProvider?.label ?? "-") + " / " + (selectedTeam?.name ?? "-")}
+                </span>
+              </div>
               {setupCommandCards.map((item) => (
                 <div className={styles.copyCard} key={item.kind}>
                   <div className={styles.copyMetaRow}>
