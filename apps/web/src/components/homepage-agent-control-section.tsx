@@ -354,12 +354,19 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                <p className={styles.setupLead}>{copy.setupBuilderBody}</p>
                 <div className={styles.setupCompactBar} aria-label={copy.commandOrder}>
-                  <span className={styles.setupQuickLabel}>{copy.chooseProvider}</span>
+                  <span className={styles.setupQuickLabel}>
+                    <span className={styles.commandStep}>01</span>
+                    {copy.chooseProvider}
+                  </span>
                   <span className={styles.setupOrderHint} aria-hidden="true">
                     →
                   </span>
-                  <span className={styles.setupQuickLabel}>{copy.chooseTeam}</span>
+                  <span className={styles.setupQuickLabel}>
+                    <span className={styles.commandStep}>02</span>
+                    {copy.chooseTeam}
+                  </span>
                   <span className={styles.setupOrderHint} aria-hidden="true">
                     →
                   </span>
@@ -467,7 +474,6 @@ export function HomepageAgentControlSection({
                         <strong>{item.kind === "connect" ? `${item.title} CLI` : item.title}</strong>
                       </div>
                     </div>
-                    <span className={styles.commandSequenceHint}>{copy.commandOrder}</span>
                   </div>
                   <div className={styles.commandRow}>
                     <code>{item.command}</code>
