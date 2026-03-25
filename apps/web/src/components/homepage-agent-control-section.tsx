@@ -366,6 +366,14 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                <div className={styles.setupOrderRow}>
+                  <span className={styles.setupOrderLabel}>{copy.commandOrder}</span>
+                  <span className={styles.setupOrderValue}>
+                    {selectedProvider
+                      ? getNextSetupActionLabel(locale, selectedProvider.status)
+                      : copy.setupCommand}
+                  </span>
+                </div>
                 <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
                   <div className={styles.setupSummaryBar}>
                     <span className={`${styles.summaryChip} ${styles.summaryChipWide}`}>
