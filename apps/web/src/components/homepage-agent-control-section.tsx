@@ -359,7 +359,6 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <p className={styles.setupTitleHint}>{copy.setupBuilderBody}</p>
               </div>
               <div className={styles.setupHeaderActions}>
                 {setupBriefHref ? (
@@ -368,6 +367,29 @@ export function HomepageAgentControlSection({
                     <ArrowRight size={16} />
                   </Link>
                 ) : null}
+              </div>
+            </div>
+            <div className={styles.quickStartStrip} aria-label={copy.setupStepsLabel}>
+              <span className={styles.quickStartLabel}>{copy.setupStepsLabel}</span>
+              <div className={styles.quickStartFlow}>
+                <div className={styles.quickStartItem}>
+                  <span className={styles.quickStartIndex}>01</span>
+                  <div className={styles.quickStartText}>
+                    <strong>{selectedProvider?.label ?? copy.chooseProvider}</strong>
+                  </div>
+                </div>
+                <div className={styles.quickStartItem}>
+                  <span className={styles.quickStartIndex}>02</span>
+                  <div className={styles.quickStartText}>
+                    <strong>{selectedTeam?.name ?? copy.chooseTeam}</strong>
+                  </div>
+                </div>
+                <div className={styles.quickStartItem}>
+                  <span className={styles.quickStartIndex}>03</span>
+                  <div className={styles.quickStartText}>
+                    <strong>{copy.commandOrder}</strong>
+                  </div>
+                </div>
               </div>
             </div>
             {selectedProvider && selectedTeam ? (
@@ -391,7 +413,6 @@ export function HomepageAgentControlSection({
                   <span className={styles.setupScanLabel}>{copy.selectedTeamLabel}</span>
                   <strong className={styles.setupDigestValue}>{selectedTeam.name}</strong>
                 </span>
-                <span className={styles.setupOrderPill}>{copy.commandOrder}</span>
               </div>
             ) : null}
             <div className={styles.setupPickerGrid}>
