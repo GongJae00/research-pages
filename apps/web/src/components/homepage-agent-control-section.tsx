@@ -384,6 +384,13 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                <p className={styles.panelLead}>
+                  <strong>{selectedProvider?.label ?? "-"}</strong>
+                  <span className={styles.flowDivider}>{"->"}</span>
+                  <strong>{selectedTeam?.name ?? "-"}</strong>
+                  <span className={styles.flowDivider}>{"-"}</span>
+                  <span>{copy.commandOrder}</span>
+                </p>
                 <div className={styles.setupDigestRow}>
                   <div className={styles.setupDigestCard}>
                     <span className={styles.metaLabel}>{copy.chooseProvider}</span>
@@ -403,11 +410,6 @@ export function HomepageAgentControlSection({
                     <span className={styles.metaLabel}>{copy.chooseTeam}</span>
                     <strong>{selectedTeam?.name ?? "-"}</strong>
                     <span className={styles.digestMeta}>{selectedTeam?.lane ?? "-"}</span>
-                  </div>
-                  <div className={styles.setupDigestCard}>
-                    <span className={styles.metaLabel}>{copy.setupCommand}</span>
-                    <strong>{copy.commandOrder}</strong>
-                    <span className={styles.digestMeta}>01 / 02</span>
                   </div>
                 </div>
               </div>
