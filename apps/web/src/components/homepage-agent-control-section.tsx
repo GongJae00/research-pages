@@ -368,12 +368,11 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
-                  <div className={styles.setupScanRow} aria-label={copy.commandOrder}>
-                    <span className={styles.setupScanChip}>
-                      <span className={styles.setupChipStep}>01</span>
-                      <span className={styles.setupScanLabel}>{copy.chooseProvider}</span>
-                      <span className={styles.setupScanValue}>{selectedProvider?.label ?? "-"}</span>
+                <div className={styles.setupSummaryStrip} aria-label={copy.activeSetup}>
+                  <div className={styles.setupSummaryItem}>
+                    <span className={styles.metaLabel}>{copy.chooseProvider}</span>
+                    <div className={styles.copyTitleGroup}>
+                      <strong>{selectedProvider?.label ?? "-"}</strong>
                       {selectedProvider ? (
                         <span
                           className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
@@ -381,19 +380,18 @@ export function HomepageAgentControlSection({
                           {getProviderStatusLabel(locale, selectedProvider.status)}
                         </span>
                       ) : null}
-                    </span>
-                    <span className={styles.setupScanChip}>
-                      <span className={styles.setupChipStep}>02</span>
-                      <span className={styles.setupScanLabel}>{copy.chooseTeam}</span>
-                      <span className={styles.setupScanValue}>{selectedTeam?.name ?? "-"}</span>
-                    </span>
-                    <span className={`${styles.setupScanChip} ${styles.setupScanChipAccent}`}>
-                      <span className={styles.setupChipStep}>Now</span>
-                      <span className={styles.setupScanLabel}>{copy.nextActionLabel}</span>
-                      <span className={styles.setupScanValue}>
-                        {setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}
-                      </span>
-                    </span>
+                    </div>
+                    <span className={styles.digestMeta}>{selectedProvider?.cliName ?? "-"}</span>
+                  </div>
+                  <div className={styles.setupSummaryItem}>
+                    <span className={styles.metaLabel}>{copy.chooseTeam}</span>
+                    <strong>{selectedTeam?.name ?? "-"}</strong>
+                    <span className={styles.digestMeta}>{selectedTeam?.lane ?? "-"}</span>
+                  </div>
+                  <div className={styles.sequencePill} aria-label={copy.commandOrder}>
+                    <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
+                    <strong>{setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}</strong>
+                    <span className={styles.digestMeta}>{copy.commandOrder}</span>
                   </div>
                 </div>
               </div>
