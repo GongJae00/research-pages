@@ -393,6 +393,20 @@ export function HomepageAgentControlSection({
                 <span className={styles.setupOrderPill}>{copy.commandOrder}</span>
               </div>
             ) : null}
+            <div className={styles.setupFlowBar} aria-label={copy.setupStepsLabel}>
+              <span className={styles.setupFlowStep}>
+                <span className={styles.commandStep}>01</span>
+                <span className={styles.setupFlowLabel}>{copy.chooseProvider}</span>
+              </span>
+              <span className={styles.setupFlowStep}>
+                <span className={styles.commandStep}>02</span>
+                <span className={styles.setupFlowLabel}>{copy.chooseTeam}</span>
+              </span>
+              <span className={styles.setupFlowStep}>
+                <span className={styles.commandStep}>03</span>
+                <span className={styles.setupFlowLabel}>{copy.setupCommand}</span>
+              </span>
+            </div>
             <div className={styles.setupPickerGrid}>
               <div className={styles.setupPicker}>
                 <div className={styles.setupPickerLabelRow}>
