@@ -275,6 +275,7 @@ export function HomepageAgentControlSection({
           title: isKoreanLocale(locale)
             ? `${selectedProvider?.label ?? "-"} CLI`
             : `Connect ${selectedProvider?.label ?? "-"} CLI`,
+          detail: selectedProvider?.cliName ?? "-",
           command: setupManifest.commands.connect,
           buttonLabel: copy.connectCommand,
         },
@@ -284,6 +285,7 @@ export function HomepageAgentControlSection({
           title: isKoreanLocale(locale)
             ? `${selectedTeam?.name ?? "-"} ${copy.assignedTeam}`
             : `Assign ${selectedTeam?.name ?? "-"}`,
+          detail: selectedTeam?.lane ?? "-",
           command: setupManifest.commands.assign,
           buttonLabel: copy.assignCommand,
         },
@@ -473,21 +475,15 @@ export function HomepageAgentControlSection({
             </div>
 
             <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>
-              <div className={styles.commandStackHeader}>
-                <div className={styles.commandStackCopy}>
-                  <span className={styles.metaLabel}>{copy.setupCommand}</span>
-                  <strong className={styles.commandStackTitle}>{copy.commandOrder}</strong>
-                </div>
-                <span className={styles.commandStackHint}>
-                  {(selectedProvider?.label ?? "-") + " / " + (selectedTeam?.name ?? "-")}
-                </span>
-              </div>
               {setupCommandCards.map((item) => (
                 <div className={styles.copyCard} key={item.kind}>
                   <div className={styles.copyMetaRow}>
                     <div className={styles.copyTitleGroup}>
                       <span className={styles.commandStep}>{item.step}</span>
-                      <strong className={styles.commandTitle}>{item.title}</strong>
+                      <div className={styles.commandTitleBlock}>
+                        <strong className={styles.commandTitle}>{item.title}</strong>
+                        <span className={styles.commandDetail}>{item.detail}</span>
+                      </div>
                     </div>
                   </div>
                   <div className={styles.commandRow}>

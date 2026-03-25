@@ -624,40 +624,8 @@
 
 .setupCommands {
   margin-top: 0;
-  gap: 0.02rem;
+  gap: 0.04rem;
   align-content: start;
-}
-
-.commandStackHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.24rem;
-  grid-column: 1 / -1;
-  padding: 0.08rem 0.12rem;
-  border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 14px;
-  background: rgba(248, 250, 252, 0.88);
-}
-
-.commandStackCopy {
-  display: grid;
-  gap: 0.02rem;
-  min-width: 0;
-}
-
-.commandStackTitle {
-  color: #0f172a;
-  font-size: 0.76rem;
-  line-height: 1.1;
-}
-
-.commandStackHint {
-  color: #475569;
-  font-size: 0.68rem;
-  font-weight: 700;
-  line-height: 1.1;
-  text-align: right;
 }
 
 .setupPickerGrid {
@@ -814,8 +782,8 @@
 
 .copyCard {
   display: grid;
-  gap: 0.02rem;
-  padding: 0.02rem;
+  gap: 0.04rem;
+  padding: 0.04rem;
 }
 
 .copyMetaRow,
@@ -824,6 +792,12 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.12rem;
+}
+
+.commandTitleBlock {
+  display: grid;
+  gap: 0.03rem;
+  min-width: 0;
 }
 
 .commandTitleLine {
@@ -837,6 +811,14 @@
   color: #0f172a;
   font-size: 0.76rem;
   line-height: 1.05;
+}
+
+.commandDetail {
+  color: #64748b;
+  font-size: 0.66rem;
+  font-weight: 700;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
 }
 
 .copyButton {
@@ -1229,15 +1211,6 @@
 
   .setupFlowRow {
     width: 100%;
-  }
-
-  .commandStackHeader {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .commandStackHint {
-    text-align: left;
   }
 
   .lead,
