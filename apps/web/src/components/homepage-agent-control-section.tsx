@@ -196,6 +196,7 @@ export function HomepageAgentControlSection({
   const [selectedTeamId, setSelectedTeamId] = useState(initialSnapshot.selectedTeamId);
   const [copiedCommand, setCopiedCommand] = useState<"connect" | "assign" | null>(null);
   const copy = getCopy(locale, opsEnabled);
+  const quickSetupSteps = getQuickSetupSteps(locale);
 
   useEffect(() => {
     let mounted = true;
@@ -350,6 +351,24 @@ export function HomepageAgentControlSection({
             </div>
             <div className={styles.quickStartRail}>
               <div className={styles.quickStartSummary}>
+                {quickSetupSteps.map((step) => (
+                  <div className={styles.stepChip} key={step}>
+                    {step}
+                  </div>
+                ))}
+              </div>
+              <div className={styles.quickStartActions}>
+                <span className={styles.quickStartHint}>{copy.commandOrder}</span>
+                {setupBriefHref ? (
+                  <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
+                    {copy.openBrief}
+                    <ArrowRight size={16} />
+                  </Link>
+                ) : null}
+              </div>
+            </div>
+
+            <div className={styles.selectionSummary}>
                 <div className={styles.selectionCard}>
                   <span className={styles.metaLabel}>{copy.chooseProvider}</span>
                   <strong>{selectedProvider?.label ?? copy.chooseProvider}</strong>
@@ -358,19 +377,6 @@ export function HomepageAgentControlSection({
                   <span className={styles.metaLabel}>{copy.chooseTeam}</span>
                   <strong>{selectedTeam?.name ?? copy.chooseTeam}</strong>
                 </div>
-                <div className={styles.selectionCard}>
-                  <span className={styles.metaLabel}>{copy.setupCommand}</span>
-                  <strong>{copy.commandOrder}</strong>
-                </div>
-              </div>
-              <div className={styles.quickStartActions}>
-                {setupBriefHref ? (
-                  <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
-                    {copy.openBrief}
-                    <ArrowRight size={16} />
-                  </Link>
-                ) : null}
-              </div>
             </div>
 
             <div className={styles.setupPickerGrid}>

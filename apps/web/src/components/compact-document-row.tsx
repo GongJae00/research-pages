@@ -4,6 +4,8 @@ import type { DocumentRecord } from "@research-os/types";
 
 interface CompactDocumentRowProps {
   document: DocumentRecord;
+  primaryLabel?: string;
+  secondaryLabel?: string;
   meta?: React.ReactNode;
   detail?: React.ReactNode;
   actions: React.ReactNode;
@@ -13,16 +15,20 @@ interface CompactDocumentRowProps {
 
 export function CompactDocumentRow({
   document,
+  primaryLabel,
+  secondaryLabel,
   meta,
   detail,
   actions,
   onOpen,
   className,
 }: CompactDocumentRowProps) {
-  const displayName = document.originalFileName || document.title;
+  const displayName = primaryLabel || document.originalFileName || document.title;
+  const supportingName =
+    secondaryLabel && secondaryLabel !== displayName ? secondaryLabel : undefined;
   const accessibleTitle =
-    document.originalFileName && document.originalFileName !== document.title
-      ? `${document.originalFileName} (${document.title})`
+    supportingName
+      ? `${displayName} (${supportingName})`
       : displayName;
 
   return (
@@ -39,6 +45,7 @@ export function CompactDocumentRow({
         >
           {displayName}
         </button>
+        {supportingName ? <p className="card-support-text">{supportingName}</p> : null}
         {detail ? <div>{detail}</div> : null}
       </div>
 

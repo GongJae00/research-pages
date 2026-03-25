@@ -452,6 +452,51 @@ function containsKeyword(text, keywords) {
   return keywords.some((keyword) => text.includes(keyword));
 }
 
+function getDirectiveText(directive) {
+  return directive && typeof directive.body === "string" ? directive.body.toLowerCase() : "";
+}
+
+function getScopedTeamIdsForDirective(directive) {
+  const directiveText = getDirectiveText(directive);
+
+  if (!directiveText) {
+    return null;
+  }
+
+  if (
+    containsKeyword(directiveText, [
+      "홈페이지",
+      "homepage",
+      "landing",
+      "hero",
+      "onboarding",
+      "home",
+      "shell",
+      "네비",
+      "navigation",
+      "header",
+      "sidebar",
+      "cli",
+    ])
+  ) {
+    return ["shell-experience"];
+  }
+
+  if (containsKeyword(directiveText, ["document", "documents", "문서", "profile", "profiles", "프로필", "lab", "labs", "연구실", "랩"])) {
+    return ["workflow-systems"];
+  }
+
+  if (containsKeyword(directiveText, ["reliability", "runtime", "validation", "lint", "typecheck", "신뢰성", "안정성"])) {
+    return ["reliability-desk"];
+  }
+
+  if (containsKeyword(directiveText, ["ops", "control plane", "queue", "handoff", "관제", "운영 모델", "agent ops"])) {
+    return ["executive-desk"];
+  }
+
+  return null;
+}
+
 function selectWorkItem(teamId, loopCount, operatorDirective = null) {
   const items = getWorkItems(teamId);
   if (!items.length) {
@@ -465,10 +510,7 @@ function selectWorkItem(teamId, loopCount, operatorDirective = null) {
     };
   }
 
-  const directiveText =
-    operatorDirective && typeof operatorDirective.body === "string"
-      ? operatorDirective.body.toLowerCase()
-      : "";
+  const directiveText = getDirectiveText(operatorDirective);
 
   if (teamId === "shell-experience") {
     if (containsKeyword(directiveText, ["홈페이지", "homepage", "landing", "home"])) {
@@ -1554,6 +1596,175 @@ async function autoLandExecutionChanges(executionRecords, loopCount) {
   }
 }
 
+function getLatestChangedExecutionForTeam(state, teamId) {
+  const currentExecution = state.autonomy?.currentExecution;
+  if (
+    currentExecution &&
+    currentExecution.teamId === teamId &&
+    currentExecution.outcome === "changed" &&
+    Array.isArray(currentExecution.changedFiles) &&
+    currentExecution.changedFiles.length > 0
+  ) {
+    return currentExecution;
+  }
+
+  return [...(state.autonomy?.executionHistory ?? [])].find(
+    (entry) =>
+      entry &&
+      entry.teamId === teamId &&
+      entry.outcome === "changed" &&
+      Array.isArray(entry.changedFiles) &&
+      entry.changedFiles.length > 0,
+  );
+}
+
+async function recoverDirtyExecution(team, taskPacket, loopCount, state, operatorDirective, workItem, dirtyPaths) {
+  const latestExecution = getLatestChangedExecutionForTeam(state, team.id);
+  if (!latestExecution) {
+    return null;
+  }
+
+  const recoverablePaths = getUniquePaths(dirtyPaths);
+  const latestChangedPaths = getUniquePaths(latestExecution.changedFiles ?? []);
+  if (
+    !recoverablePaths.length ||
+    recoverablePaths.some((entry) => !latestChangedPaths.includes(entry))
+  ) {
+    return null;
+  }
+
+  const guidance = getLaneGuidance(team.id);
+  const validation = await Promise.all(guidance.validationCommands.map((command) => runValidationCommand(command)));
+  const validationFailed = validation.some((entry) => entry.status === "failed");
+
+  if (validationFailed) {
+    const result = {
+      summary: `${team.name} found previous autonomy changes still open, but recovery validation failed before they could be landed.`,
+      operatorBrief: `${team.lead} needs the pending ${team.name} slice reviewed because recovery validation failed.`,
+      nextAction: "Review the current dirty files and validation output before the lane continues.",
+      outcome: "blocked",
+    };
+    const artifactPath = await writeExecutionArtifact({
+      loopCount,
+      providerId: "codex",
+      providerLabel: "Codex CLI",
+      team,
+      prompt: buildExecutionPrompt(team, taskPacket, operatorDirective, workItem),
+      result,
+      changedFiles: recoverablePaths,
+      validation,
+      outcome: "blocked",
+      raw: {
+        dirtyBefore: recoverablePaths,
+        recoveredFromExecutionId: latestExecution.id,
+      },
+      errorMessage: "Recovery validation failed.",
+    });
+
+    return buildExecutionRecord({
+      loopCount,
+      team,
+      providerId: "codex",
+      providerLabel: "Codex CLI",
+      result,
+      changedFiles: recoverablePaths,
+      validation,
+      artifactPath,
+      outcome: "blocked",
+      workItem,
+      sessionId: latestExecution.sessionId ?? null,
+    });
+  }
+
+  const landingResult = await autoLandExecutionChanges(
+    [
+      {
+        teamId: team.id,
+        outcome: "changed",
+        changedFiles: recoverablePaths,
+      },
+    ],
+    loopCount,
+  );
+
+  if (!landingResult.committed) {
+    const result = {
+      summary: `${team.name} found a recoverable dirty slice but could not auto-land it yet.`,
+      operatorBrief: `${team.lead} still needs the pending ${team.name} slice reconciled before the lane continues.`,
+      nextAction: landingResult.reason,
+      outcome: "blocked",
+    };
+    const artifactPath = await writeExecutionArtifact({
+      loopCount,
+      providerId: "codex",
+      providerLabel: "Codex CLI",
+      team,
+      prompt: buildExecutionPrompt(team, taskPacket, operatorDirective, workItem),
+      result,
+      changedFiles: recoverablePaths,
+      validation,
+      outcome: "blocked",
+      raw: {
+        dirtyBefore: recoverablePaths,
+        recoveredFromExecutionId: latestExecution.id,
+        landingResult,
+      },
+      errorMessage: landingResult.reason,
+    });
+
+    return buildExecutionRecord({
+      loopCount,
+      team,
+      providerId: "codex",
+      providerLabel: "Codex CLI",
+      result,
+      changedFiles: recoverablePaths,
+      validation,
+      artifactPath,
+      outcome: "blocked",
+      workItem,
+      sessionId: latestExecution.sessionId ?? null,
+    });
+  }
+
+  const result = {
+    summary: `${team.name} auto-landed its previous bounded slice and cleared the owned paths for the next pass.`,
+    operatorBrief: `${team.lead} recovered the pending ${team.name} slice and landed commit ${landingResult.commitSha ?? "created"}.`,
+    nextAction: "Start the next bounded slice on clean owned paths.",
+    outcome: "changed",
+  };
+  const artifactPath = await writeExecutionArtifact({
+    loopCount,
+    providerId: "codex",
+    providerLabel: "Codex CLI",
+    team,
+    prompt: buildExecutionPrompt(team, taskPacket, operatorDirective, workItem),
+    result,
+    changedFiles: recoverablePaths,
+    validation,
+    outcome: "changed",
+    raw: {
+      dirtyBefore: recoverablePaths,
+      recoveredFromExecutionId: latestExecution.id,
+      landingResult,
+    },
+  });
+
+  return buildExecutionRecord({
+    loopCount,
+    team,
+    providerId: "codex",
+    providerLabel: "Codex CLI",
+    result,
+    changedFiles: recoverablePaths,
+    validation,
+    artifactPath,
+    outcome: "changed",
+    workItem,
+    sessionId: latestExecution.sessionId ?? null,
+  });
+}
+
 function trimTerminalBlock(value, maxLength = 700) {
   const trimmed = value.trim();
 
@@ -1697,12 +1908,25 @@ function isLowQualityExecutionResult(result, workItem) {
   return genericPatterns.some((entry) => text.includes(entry)) || !mentionsWorkItem;
 }
 
-async function runCodexExecutor(team, taskPacket, loopCount, operatorDirective, workItem) {
+async function runCodexExecutor(team, taskPacket, loopCount, state, operatorDirective, workItem) {
   await ensureAutonomyAssets();
   const guidance = getLaneGuidance(team.id);
   const dirtyBefore = await listDirtyOwnedPaths(guidance.ownedPaths);
 
   if (dirtyBefore.length) {
+    const recoveredExecution = await recoverDirtyExecution(
+      team,
+      taskPacket,
+      loopCount,
+      state,
+      operatorDirective,
+      workItem,
+      dirtyBefore,
+    );
+    if (recoveredExecution) {
+      return recoveredExecution;
+    }
+
     const result = {
       summary: `${team.name} skipped execution because owned paths already contain local changes.`,
       operatorBrief: `Execution stayed blocked to avoid overlapping edits in ${team.name}.`,
@@ -2143,10 +2367,18 @@ function selectPreferredTeamForCycle(state, loopCount) {
 }
 
 function orderTeamsForCycle(state, loopCount) {
-  const preferredTeam = selectPreferredTeamForCycle(state, loopCount);
+  const scopedTeamIds = getScopedTeamIdsForDirective(state.currentDirective);
+  const scopedTeamCycle =
+    scopedTeamIds && scopedTeamIds.length
+      ? teamCycle.filter((team) => scopedTeamIds.includes(team.id))
+      : teamCycle;
+  const preferredCandidate = selectPreferredTeamForCycle(state, loopCount);
+  const preferredTeam =
+    scopedTeamCycle.find((team) => team.id === preferredCandidate.id) ?? scopedTeamCycle[0] ?? preferredCandidate;
+  const offsetBase = Math.max(loopCount, 1) - 1;
   const rotatedTeams = [
-    ...teamCycle.slice((Math.max(loopCount, 1) - 1) % teamCycle.length),
-    ...teamCycle.slice(0, (Math.max(loopCount, 1) - 1) % teamCycle.length),
+    ...scopedTeamCycle.slice(offsetBase % scopedTeamCycle.length),
+    ...scopedTeamCycle.slice(0, offsetBase % scopedTeamCycle.length),
   ];
 
   return {
@@ -2352,7 +2584,7 @@ async function runExecutionStep(team, loopCount, taskPacket, state, provider) {
     };
   }
 
-  return runCodexExecutor(team, taskPacket, loopCount, state.currentDirective, workItem);
+  return runCodexExecutor(team, taskPacket, loopCount, state, state.currentDirective, workItem);
 }
 
 async function runAutonomyCycle() {

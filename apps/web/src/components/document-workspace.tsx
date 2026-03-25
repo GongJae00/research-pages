@@ -1005,6 +1005,12 @@ export function DocumentWorkspace({ locale, initialDocuments }: DocumentWorkspac
                 <CompactDocumentRow
                   key={document.id}
                   document={document}
+                  primaryLabel={document.title}
+                  secondaryLabel={
+                    document.originalFileName && document.originalFileName !== document.title
+                      ? document.originalFileName
+                      : undefined
+                  }
                   detail={
                     <div>
                       <p className="card-support-text">
@@ -1015,9 +1021,9 @@ export function DocumentWorkspace({ locale, initialDocuments }: DocumentWorkspac
                           document.fileExtension,
                         )}
                       </p>
-                      <p className="card-support-text">
-                        {document.summary || text.noSummary}
-                      </p>
+                      {document.summary ? (
+                        <p className="card-support-text">{document.summary}</p>
+                      ) : null}
                     </div>
                   }
                   meta={

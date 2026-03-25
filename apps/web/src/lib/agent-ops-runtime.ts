@@ -40,6 +40,55 @@ function isLocalizedDefaultDirective(directive: AgentOpsRuntimeState["currentDir
   );
 }
 
+const validConversationChannels = new Set<AgentOperationsSnapshot["conversationFeed"][number]["channel"]>([
+  "assistant",
+  "team",
+  "review",
+]);
+
+function isRuntimeMergeEntry(candidate: unknown): candidate is Record<string, unknown> {
+  return typeof candidate === "object" && candidate !== null;
+}
+
+function sanitizeConversationFeed(
+  entries: unknown[],
+): AgentOpsRuntimeState["conversationFeed"] {
+  return entries.flatMap((entry) => {
+    type ConversationChannel = AgentOperationsSnapshot["conversationFeed"][number]["channel"];
+    const channel =
+      isRuntimeMergeEntry(entry) && typeof entry.channel === "string" ? entry.channel : undefined;
+    const typedChannel = validConversationChannels.has(channel as ConversationChannel)
+      ? (channel as ConversationChannel)
+      : undefined;
+
+    if (
+      !isRuntimeMergeEntry(entry) ||
+      typeof entry.id !== "string" ||
+      !typedChannel ||
+      typeof entry.time !== "string" ||
+      typeof entry.from !== "string" ||
+      typeof entry.to !== "string" ||
+      typeof entry.subject !== "string" ||
+      typeof entry.body !== "string"
+    ) {
+      return [];
+    }
+
+    return [
+      {
+        id: entry.id,
+        channel: typedChannel,
+        time: entry.time,
+        from: entry.from,
+        to: entry.to,
+        subject: entry.subject,
+        body: entry.body,
+        teamId: typeof entry.teamId === "string" ? entry.teamId : undefined,
+      },
+    ];
+  });
+}
+
 function normalizeRuntimeState(candidate: unknown, locale: string): AgentOpsRuntimeState {
   const fallback = createDefaultAgentOpsRuntimeState(locale);
   const defaultAutonomy = createDefaultAutonomyRuntime(locale, fallback.updatedAt);
@@ -78,7 +127,9 @@ function normalizeRuntimeState(candidate: unknown, locale: string): AgentOpsRunt
             ...value.currentDirective,
           }
         : fallback.currentDirective,
-    conversationFeed: Array.isArray(value.conversationFeed) ? value.conversationFeed : [],
+    conversationFeed: Array.isArray(value.conversationFeed)
+      ? sanitizeConversationFeed(value.conversationFeed)
+      : [],
     teamUpdates: Array.isArray(value.teamUpdates) ? value.teamUpdates : [],
     memberUpdates: Array.isArray(value.memberUpdates) ? value.memberUpdates : [],
     providerConnections: Array.isArray(value.providerConnections) ? value.providerConnections : [],
@@ -148,10 +199,6 @@ const validProviderStatuses = new Set<ProviderConnectionCard["status"]>([
   "connected",
   "attention",
 ]);
-
-function isRuntimeMergeEntry(candidate: unknown): candidate is Record<string, unknown> {
-  return typeof candidate === "object" && candidate !== null;
-}
 
 function sanitizeRuntimeTeamUpdates(teams: TeamUnit[], runtimeState: AgentOpsRuntimeState) {
   const knownTeamIds = new Set(teams.map((team) => team.id));
