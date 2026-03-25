@@ -365,6 +365,12 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
+                <div className={styles.setupHeaderSequence} aria-label={copy.commandOrder}>
+                  <span className={styles.setupOrderLabel}>
+                    {isKoreanLocale(locale) ? "순서" : "Flow"}
+                  </span>
+                  <span className={styles.setupOrderValue}>{copy.commandOrder}</span>
+                </div>
                 <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
                   <div className={styles.setupSummaryBar}>
                     <div className={styles.summaryChip}>
