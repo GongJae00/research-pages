@@ -384,6 +384,7 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                <p className={styles.setupSubcopy}>{copy.setupBuilderBody}</p>
                 <div className={styles.setupCompactRow}>
                   <div className={styles.setupScanRow}>
                     <div className={styles.scanPill}>
@@ -407,7 +408,7 @@ export function HomepageAgentControlSection({
                     </div>
                   </div>
                   <div className={styles.sequencePill}>
-                    <span className={styles.metaLabel}>{copy.setupCommand}</span>
+                    <span className={styles.metaLabel}>{copy.commandOrder}</span>
                     <div className={styles.sequenceSteps}>
                       <strong>01</strong>
                       <span>{copy.connectCommand}</span>

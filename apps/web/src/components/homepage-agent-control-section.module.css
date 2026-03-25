@@ -270,6 +270,14 @@
   line-height: 1.15;
 }
 
+.setupSubcopy {
+  margin: 0;
+  color: #475569;
+  font-size: 0.79rem;
+  line-height: 1.3;
+  max-width: 34rem;
+}
+
 .setupFlowRow {
   display: flex;
   flex-wrap: wrap;
@@ -314,8 +322,8 @@
 
 .setupCompactRow {
   display: grid;
-  gap: 0.16rem;
-  margin-top: 0.02rem;
+  gap: 0.12rem;
+  margin-top: 0.04rem;
 }
 
 .setupScanRow {
@@ -358,7 +366,7 @@
 .sequencePill {
   display: grid;
   gap: 0.08rem;
-  padding: 0.28rem 0.38rem;
+  padding: 0.26rem 0.38rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 14px;
   background: rgba(248, 250, 252, 0.92);
@@ -368,10 +376,10 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.28rem;
+  gap: 0.24rem;
   color: #475569;
-  font-size: 0.78rem;
-  line-height: 1.3;
+  font-size: 0.76rem;
+  line-height: 1.25;
 }
 
 .sequenceSteps strong {
@@ -499,7 +507,7 @@
 .setupPicker {
   display: grid;
   gap: 0.16rem;
-  padding: 0.02rem 0.06rem;
+  padding: 0;
 }
 
 .optionRow {
@@ -542,8 +550,8 @@
 
 .copyCard {
   display: grid;
-  gap: 0.12rem;
-  padding: 0.1rem 0.12rem;
+  gap: 0.1rem;
+  padding: 0.08rem 0.1rem;
 }
 
 .copyHead {
@@ -576,7 +584,7 @@
 
 .copyCard code {
   display: block;
-  padding: 0.28rem 0.34rem;
+  padding: 0.24rem 0.3rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 12px;
   background: rgba(248, 250, 252, 0.92);
