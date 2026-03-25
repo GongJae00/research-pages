@@ -366,42 +366,27 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <h4>{copy.setupBuilderTitle}</h4>
                 <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
-                  <div className={styles.setupFlowBar} aria-label={copy.commandOrder}>
-                    <span className={styles.setupFlowItem}>
-                      <span className={styles.setupFlowIndex}>1</span>
-                      <span className={styles.setupFlowCopy}>
-                        <span className={styles.setupFlowLabel}>{copy.chooseProvider}</span>
-                        <span className={styles.setupFlowValueRow}>
-                          <strong>{selectedProvider?.label ?? "-"}</strong>
-                          {selectedProvider ? (
-                            <span
-                              className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
-                            >
-                              {getProviderStatusLabel(locale, selectedProvider.status)}
-                            </span>
-                          ) : null}
-                        </span>
+                  <div className={styles.setupStatusStrip} aria-label={copy.commandOrder}>
+                    <span className={styles.setupStatusItem}>
+                      <span className={styles.setupStatusLabel}>{copy.chooseProvider}</span>
+                      <span className={styles.setupStatusValueRow}>
+                        <strong>{selectedProvider?.label ?? "-"}</strong>
+                        {selectedProvider ? (
+                          <span
+                            className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
+                          >
+                            {getProviderStatusLabel(locale, selectedProvider.status)}
+                          </span>
+                        ) : null}
                       </span>
                     </span>
-                    <span className={styles.setupFlowArrow} aria-hidden="true">
-                      <ArrowRight size={12} />
+                    <span className={styles.setupStatusItem}>
+                      <span className={styles.setupStatusLabel}>{copy.chooseTeam}</span>
+                      <strong>{selectedTeam?.name ?? "-"}</strong>
                     </span>
-                    <span className={styles.setupFlowItem}>
-                      <span className={styles.setupFlowIndex}>2</span>
-                      <span className={styles.setupFlowCopy}>
-                        <span className={styles.setupFlowLabel}>{copy.chooseTeam}</span>
-                        <strong>{selectedTeam?.name ?? "-"}</strong>
-                      </span>
-                    </span>
-                    <span className={styles.setupFlowArrow} aria-hidden="true">
-                      <ArrowRight size={12} />
-                    </span>
-                    <span className={`${styles.setupFlowItem} ${styles.setupFlowItemAccent}`}>
-                      <span className={styles.setupFlowIndex}>3</span>
-                      <span className={styles.setupFlowCopy}>
-                        <span className={styles.setupFlowLabel}>{copy.nextActionLabel}</span>
-                        <strong>{setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}</strong>
-                      </span>
+                    <span className={`${styles.setupStatusItem} ${styles.setupStatusItemAccent}`}>
+                      <span className={styles.setupStatusLabel}>{copy.nextActionLabel}</span>
+                      <strong>{setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}</strong>
                     </span>
                   </div>
                 </div>
