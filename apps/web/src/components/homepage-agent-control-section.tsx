@@ -349,20 +349,16 @@ export function HomepageAgentControlSection({
         </article>
 
         <article className={styles.providerPanel}>
-          <div className={styles.panelHead}>
-            <div className={styles.panelHeadCopy}>
-              <span className={styles.metaLabel}>{copy.providersLabel}</span>
-              <h3>{copy.providersTitle}</h3>
-            </div>
-            <div className={styles.panelHeadIcon}>
-              <TerminalSquare size={20} />
-            </div>
-          </div>
-
           <article className={styles.setupBuilderCard}>
             <div className={styles.setupHeader}>
               <div className={styles.setupTitleBlock}>
-                <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
+                <div className={styles.setupKickerRow}>
+                  <span className={styles.metaLabel}>{copy.providersLabel}</span>
+                  <span className={styles.setupKickerDivider} aria-hidden="true">
+                    /
+                  </span>
+                  <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
+                </div>
                 <h4>{copy.setupBuilderTitle}</h4>
                 <div className={styles.setupRunOrder} aria-label={copy.commandOrder}>
                   <span className={styles.setupRunOrderLabel}>{copy.commandOrder}</span>
@@ -404,6 +400,9 @@ export function HomepageAgentControlSection({
                 ) : null}
               </div>
               <div className={styles.setupHeaderActions}>
+                <div className={styles.panelHeadIcon}>
+                  <TerminalSquare size={20} />
+                </div>
                 {setupBriefHref ? (
                   <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
                     {copy.openBrief}
