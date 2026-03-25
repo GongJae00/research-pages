@@ -80,7 +80,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
         "브라우저가 로컬 터미널을 직접 제어하지는 않지만, 각 개발자는 CLI 세션을 로컬 브리지에 등록하고 이 페이지에서 연결 상태를 확인할 수 있습니다.",
       setupBuilderLabel: "홈페이지 셋업 빌더",
       setupBuilderTitle: "provider와 팀을 고르면 연결 명령을 바로 생성",
-      setupBuilderBody: "CLI와 팀을 고른 뒤 connect, assign 명령만 순서대로 실행하면 됩니다.",
+      setupBuilderBody: "CLI 선택 후 connect, assign만 실행하면 됩니다.",
       connectCommand: "연결 명령 복사",
       assignCommand: "재배정 명령 복사",
       copied: "복사됨",
@@ -134,7 +134,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
       "Each developer registers a local CLI session with the bridge, and this page keeps connection state and team ownership visible.",
     setupBuilderLabel: "Homepage setup builder",
     setupBuilderTitle: "Connect a CLI and assign a team",
-    setupBuilderBody: "Pick a CLI, pick a team, then run the two generated commands.",
+    setupBuilderBody: "Pick a CLI, then run connect and assign.",
     connectCommand: "Copy connect command",
     assignCommand: "Copy assign command",
     copied: "Copied",
@@ -393,20 +393,6 @@ export function HomepageAgentControlSection({
                 <span className={styles.setupOrderPill}>{copy.commandOrder}</span>
               </div>
             ) : null}
-            <div className={styles.setupFlowBar} aria-label={copy.setupStepsLabel}>
-              <span className={styles.setupFlowStep}>
-                <span className={styles.commandStep}>01</span>
-                <span className={styles.setupFlowLabel}>{copy.chooseProvider}</span>
-              </span>
-              <span className={styles.setupFlowStep}>
-                <span className={styles.commandStep}>02</span>
-                <span className={styles.setupFlowLabel}>{copy.chooseTeam}</span>
-              </span>
-              <span className={styles.setupFlowStep}>
-                <span className={styles.commandStep}>03</span>
-                <span className={styles.setupFlowLabel}>{copy.setupCommand}</span>
-              </span>
-            </div>
             <div className={styles.setupPickerGrid}>
               <div className={styles.setupPicker}>
                 <div className={styles.setupPickerLabelRow}>
