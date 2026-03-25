@@ -134,9 +134,9 @@ function getCopy(locale: string, opsEnabled: boolean) {
     providersBody:
       "Each developer registers a local CLI session with the bridge, and this page keeps connection state and team ownership visible.",
     setupBuilderLabel: "Homepage setup builder",
-    setupBuilderTitle: "Pick a provider, pick a team, run the command",
+    setupBuilderTitle: "Connect a CLI and assign a team",
     setupBuilderBody:
-      "Choose the CLI and team, then run the generated connect or assign command.",
+      "Choose the CLI and team, then run the generated command.",
     connectCommand: "Copy connect command",
     assignCommand: "Copy assign command",
     copied: "Copied",
@@ -389,6 +389,20 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupHeaderTools}>
                   <Command size={18} />
                 </div>
+                <div className={styles.sequencePill}>
+                  <span className={styles.setupDigestLabel}>{copy.commandOrder}</span>
+                  <div className={styles.sequenceSteps}>
+                    <span className={styles.sequenceStep}>
+                      <span className={styles.commandStep}>01</span>
+                      <strong>{isKoreanLocale(locale) ? "연결" : "Connect"}</strong>
+                    </span>
+                    <ArrowRight size={14} />
+                    <span className={styles.sequenceStep}>
+                      <span className={styles.commandStep}>02</span>
+                      <strong>{isKoreanLocale(locale) ? "배정" : "Assign"}</strong>
+                    </span>
+                  </div>
+                </div>
                 {setupBriefHref ? (
                   <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
                     {copy.openBrief}
@@ -397,36 +411,16 @@ export function HomepageAgentControlSection({
                 ) : null}
               </div>
             </div>
-            <div className={styles.setupTopline}>
-              <div className={styles.setupScanBar}>
-                <div className={styles.setupScanItem}>
-                  <span className={styles.setupDigestLabel}>{copy.commandOrder}</span>
-                  <div className={styles.sequenceSteps}>
-                    <span className={styles.sequenceStep}>
-                      <span className={styles.commandStep}>01</span>
-                      <strong>{copy.connectCommand}</strong>
-                    </span>
-                    <ArrowRight size={14} />
-                    <span className={styles.sequenceStep}>
-                      <span className={styles.commandStep}>02</span>
-                      <strong>{copy.assignCommand}</strong>
-                    </span>
-                  </div>
-                </div>
-                <div className={styles.setupScanItem}>
-                  <span className={styles.setupDigestLabel}>
-                    {copy.selectedCli ?? copy.chooseProvider}
-                  </span>
-                  <strong>{selectedProvider?.label ?? "-"}</strong>
-                  <span className={styles.digestMeta}>{selectedProvider?.cliName ?? "-"}</span>
-                </div>
-                <div className={styles.setupScanItem}>
-                  <span className={styles.setupDigestLabel}>
-                    {copy.selectedTeamLabel ?? copy.chooseTeam}
-                  </span>
-                  <strong>{selectedTeam?.name ?? "-"}</strong>
-                  <span className={styles.digestMeta}>{selectedTeam?.lane ?? "-"}</span>
-                </div>
+            <div className={styles.setupSelectionRow}>
+              <div className={styles.selectionCard}>
+                <span className={styles.setupDigestLabel}>{copy.selectedCli ?? copy.chooseProvider}</span>
+                <strong>{selectedProvider?.label ?? "-"}</strong>
+                <span className={styles.digestMeta}>{selectedProvider?.cliName ?? "-"}</span>
+              </div>
+              <div className={styles.selectionCard}>
+                <span className={styles.setupDigestLabel}>{copy.selectedTeamLabel ?? copy.chooseTeam}</span>
+                <strong>{selectedTeam?.name ?? "-"}</strong>
+                <span className={styles.digestMeta}>{selectedTeam?.lane ?? "-"}</span>
               </div>
             </div>
             <div className={styles.setupPickerGrid}>
