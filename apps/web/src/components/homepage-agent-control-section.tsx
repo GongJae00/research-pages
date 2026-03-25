@@ -398,21 +398,21 @@ export function HomepageAgentControlSection({
               </div>
             </div>
             <div className={styles.setupTopline}>
-              <div className={styles.setupWorkflowBar}>
-                <span className={styles.setupDigestLabel}>{copy.commandOrder}</span>
-                <div className={styles.sequenceSteps}>
-                  <span className={styles.sequenceStep}>
-                    <span className={styles.commandStep}>01</span>
-                    <strong>{copy.connectCommand}</strong>
-                  </span>
-                  <ArrowRight size={14} />
-                  <span className={styles.sequenceStep}>
-                    <span className={styles.commandStep}>02</span>
-                    <strong>{copy.assignCommand}</strong>
-                  </span>
+              <div className={styles.setupQuickstartGrid}>
+                <div className={styles.setupSequenceCard}>
+                  <span className={styles.setupDigestLabel}>{copy.commandOrder}</span>
+                  <div className={styles.sequenceSteps}>
+                    <span className={styles.sequenceStep}>
+                      <span className={styles.commandStep}>01</span>
+                      <strong>{copy.connectCommand}</strong>
+                    </span>
+                    <ArrowRight size={14} />
+                    <span className={styles.sequenceStep}>
+                      <span className={styles.commandStep}>02</span>
+                      <strong>{copy.assignCommand}</strong>
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div className={styles.setupSelectionBar}>
                 <div className={styles.setupSelectionPill}>
                   <span className={styles.setupDigestLabel}>{copy.selectedCli ?? copy.chooseProvider}</span>
                   <strong>{selectedProvider?.label ?? "-"}</strong>

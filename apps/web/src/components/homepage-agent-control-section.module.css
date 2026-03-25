@@ -264,6 +264,12 @@
   gap: 0.08rem;
 }
 
+.setupQuickstartGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) repeat(2, minmax(0, 1fr));
+  gap: 0.1rem;
+}
+
 .setupTitleBlock {
   display: grid;
   gap: 0.02rem;
@@ -276,20 +282,6 @@
   line-height: 1.15;
 }
 
-.setupWorkflowBar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.14rem;
-}
-
-.setupSelectionBar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.1rem;
-}
-
 .setupSelectionPill,
 .setupSequenceCard {
   display: grid;
@@ -299,10 +291,6 @@
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 14px;
   background: rgba(248, 250, 252, 0.92);
-}
-
-.setupSelectionPill {
-  flex: 1 1 12rem;
 }
 
 .setupSelectionPill strong,
@@ -923,7 +911,6 @@
   .commandRow,
   .providerSummaryBar,
   .setupHeader,
-  .setupWorkflowBar,
   .setupHeaderActions,
   .setupMetaRow,
   .scanPillValue,
@@ -947,8 +934,7 @@
     padding: 0.9rem;
   }
 
-  .setupSelectionBar {
-    display: grid;
+  .setupQuickstartGrid {
     grid-template-columns: 1fr;
   }
 
