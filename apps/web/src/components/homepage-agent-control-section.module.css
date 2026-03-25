@@ -289,6 +289,14 @@
   line-height: 1.15;
 }
 
+.setupBuilderLead {
+  margin: 0;
+  max-width: 28rem;
+  color: #475569;
+  font-size: 0.76rem;
+  line-height: 1.28;
+}
+
 .setupHeaderSequence {
   display: grid;
   gap: 0.08rem;
@@ -439,77 +447,51 @@
   justify-content: flex-end;
 }
 
-.setupSelectionRail {
-  display: grid;
-  gap: 0.1rem;
+.quickStartStrip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.12rem;
   padding: 0.08rem 0 0.02rem;
 }
 
-.setupSelectionTitle {
-  color: #64748b;
-  font-size: 0.64rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  line-height: 1.1;
-  text-transform: uppercase;
-}
-
-.setupSelectionFlow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.08rem;
-}
-
-.setupSelectionItem {
-  position: relative;
+.quickStartItem {
   display: inline-flex;
   align-items: center;
-  gap: 0.24rem;
+  gap: 0.28rem;
   min-width: 0;
-  padding: 0.2rem 0.32rem;
+  padding: 0.22rem 0.34rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 14px;
+  background: rgba(248, 250, 252, 0.88);
+}
+
+.quickStartIndex {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.12rem;
+  height: 1.12rem;
   border-radius: 999px;
-  background: rgba(248, 250, 252, 0.86);
+  background: #0f172a;
+  color: #f8fafc;
+  font-size: 0.6rem;
+  font-weight: 800;
+  line-height: 1;
+  flex: 0 0 auto;
 }
 
-.setupSelectionItem:not(:last-child)::after {
-  content: ">";
-  position: absolute;
-  top: 50%;
-  right: -0.55rem;
-  transform: translateY(-50%);
-  color: #94a3b8;
-  font-size: 0.74rem;
-  font-weight: 700;
-}
-
-.setupSelectionText {
+.quickStartText {
   display: grid;
   gap: 0.03rem;
   min-width: 0;
 }
 
-.setupSelectionItem strong {
+.quickStartText strong {
   min-width: 0;
   color: #0f172a;
-  font-size: 0.77rem;
+  font-size: 0.76rem;
   line-height: 1.15;
   overflow-wrap: anywhere;
-}
-
-.setupStepBadge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.2rem;
-  height: 1.2rem;
-  border-radius: 999px;
-  background: #0f172a;
-  color: #f8fafc;
-  font-size: 0.62rem;
-  font-weight: 800;
-  line-height: 1.1;
 }
 
 .setupHeaderTools {
@@ -981,14 +963,14 @@
     align-items: stretch;
   }
 
-  .setupSelectionItem {
-    width: 100%;
-    border-radius: 16px;
-    align-items: flex-start;
+  .quickStartStrip {
+    display: grid;
+    grid-template-columns: 1fr;
   }
 
-  .setupSelectionItem::after {
-    display: none;
+  .quickStartItem {
+    width: 100%;
+    align-items: flex-start;
   }
 
   .sequenceArrow {

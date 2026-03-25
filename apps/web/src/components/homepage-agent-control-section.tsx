@@ -284,7 +284,7 @@ export function HomepageAgentControlSection({
         },
       ]
     : [];
-  const setupScanItems =
+  const quickStartItems =
     selectedProvider && selectedTeam
       ? [
           {
@@ -294,6 +294,10 @@ export function HomepageAgentControlSection({
           {
             label: copy.chooseTeam,
             value: selectedTeam.name,
+          },
+          {
+            label: copy.setupCommand,
+            value: isKoreanLocale(locale) ? "connect -> assign" : "Connect -> assign",
           },
         ]
       : [];
@@ -382,6 +386,7 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
+                <p className={styles.setupBuilderLead}>{copy.setupBuilderBody}</p>
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.providerSummaryChips}>
@@ -406,27 +411,17 @@ export function HomepageAgentControlSection({
                 ) : null}
               </div>
             </div>
-            {setupScanItems.length ? (
-              <div className={styles.setupSelectionRail} aria-label={copy.commandOrder}>
-                <span className={styles.setupSelectionTitle}>{copy.commandOrder}</span>
-                <div className={styles.setupSelectionFlow}>
-                  {setupScanItems.map((item, index) => (
-                    <div className={styles.setupSelectionItem} key={item.label}>
-                      <span className={styles.setupStepBadge}>{`0${index + 1}`}</span>
-                      <span className={styles.setupSelectionText}>
-                        <span className={styles.setupScanLabel}>{item.label}</span>
-                        <strong>{item.value}</strong>
-                      </span>
-                    </div>
-                  ))}
-                  <div className={styles.setupSelectionItem}>
-                    <span className={styles.setupStepBadge}>03</span>
-                    <span className={styles.setupSelectionText}>
-                      <span className={styles.setupScanLabel}>{copy.setupCommand}</span>
-                      <strong>{isKoreanLocale(locale) ? "connect / assign" : "Connect / assign"}</strong>
+            {quickStartItems.length ? (
+              <div className={styles.quickStartStrip} aria-label={copy.commandOrder}>
+                {quickStartItems.map((item, index) => (
+                  <div className={styles.quickStartItem} key={item.label}>
+                    <span className={styles.quickStartIndex}>{`0${index + 1}`}</span>
+                    <span className={styles.quickStartText}>
+                      <span className={styles.setupScanLabel}>{item.label}</span>
+                      <strong>{item.value}</strong>
                     </span>
                   </div>
-                </div>
+                ))}
               </div>
             ) : null}
             <div className={styles.setupPickerGrid}>
