@@ -365,9 +365,8 @@ export function HomepageAgentControlSection({
             <div className={styles.setupHeader}>
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
-                <h4>{copy.setupBuilderTitle}</h4>
-                <div className={styles.setupOrderRow}>
-                  <span className={styles.setupOrderLabel}>{copy.commandOrder}</span>
+                <div className={styles.setupTitleRow}>
+                  <h4>{copy.setupBuilderTitle}</h4>
                   <span className={styles.setupOrderValue}>
                     {selectedProvider
                       ? getNextSetupActionLabel(locale, selectedProvider.status)

@@ -288,12 +288,12 @@
   gap: 0;
 }
 
-.setupOrderRow {
+.setupTitleRow {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.24rem;
-  margin-top: 0.06rem;
+  margin-top: 0.04rem;
 }
 
 .setupOrderLabel,
@@ -358,6 +358,7 @@
   font-size: 0.82rem;
   line-height: 1.08;
   max-width: 30rem;
+  flex: 1 1 14rem;
 }
 
 .setupHeaderSequence {
@@ -1138,7 +1139,7 @@
     align-items: stretch;
   }
 
-  .setupOrderRow {
+  .setupTitleRow {
     align-items: stretch;
   }
 
