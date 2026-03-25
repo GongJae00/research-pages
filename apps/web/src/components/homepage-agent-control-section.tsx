@@ -374,6 +374,18 @@ export function HomepageAgentControlSection({
                       <span className={styles.setupScanLabel}>{copy.selectedTeamLabel}</span>
                       <strong className={styles.setupScanValue}>{selectedTeam.name}</strong>
                     </span>
+                    <span className={styles.setupScanChip}>
+                      <span className={styles.setupScanLabel}>{copy.statusLabel}</span>
+                      <strong className={styles.setupScanValue}>
+                        {getProviderStatusLabel(locale, selectedProvider.status)}
+                      </strong>
+                    </span>
+                    <span className={styles.setupScanChip}>
+                      <span className={styles.setupScanLabel}>{copy.heartbeat}</span>
+                      <strong className={styles.setupScanValue}>
+                        {formatBoardTimestamp(locale, selectedProvider.lastHeartbeat)}
+                      </strong>
+                    </span>
                   </div>
                 ) : null}
                 <div className={styles.setupHeaderSequence} aria-label={copy.commandOrder}>
@@ -459,20 +471,6 @@ export function HomepageAgentControlSection({
                 </div>
               </div>
             </div>
-
-            {selectedProvider && selectedTeam ? (
-              <div className={styles.setupSummaryBar} aria-label={copy.activeSetup}>
-                <span
-                  className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
-                >
-                  {getProviderStatusLabel(locale, selectedProvider.status)}
-                </span>
-                <span className={styles.summaryChip}>
-                  <span className={styles.setupDigestLead}>{copy.heartbeat}</span>
-                  <strong>{formatBoardTimestamp(locale, selectedProvider.lastHeartbeat)}</strong>
-                </span>
-              </div>
-            ) : null}
 
             <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>
               {setupCommandCards.map((item) => (
