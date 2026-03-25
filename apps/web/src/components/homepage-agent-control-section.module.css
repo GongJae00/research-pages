@@ -255,7 +255,7 @@
 
 .providerCard {
   display: grid;
-  gap: 0.35rem;
+  gap: 0.24rem;
 }
 
 .setupBuilderCard,
@@ -991,7 +991,14 @@
 }
 
 .providerMeta {
+  margin-top: 0.02rem;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.18rem 0.24rem;
+}
+
+.providerMeta > div {
+  display: grid;
+  gap: 0.04rem;
 }
 
 .badgeRow {
@@ -1048,7 +1055,6 @@
   .summaryGrid,
   .heroInfoGrid,
   .heroInfoStrip,
-  .providerMeta,
   .setupRail,
   .setupDigestBar,
   .setupPickerGrid,
@@ -1128,6 +1134,10 @@
   .flowPanel,
   .futurePanel {
     padding: 0.9rem;
+  }
+
+  .providerMeta {
+    grid-template-columns: 1fr;
   }
 
   .title {

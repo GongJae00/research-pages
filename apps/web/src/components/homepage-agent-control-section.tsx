@@ -584,8 +584,6 @@ export function HomepageAgentControlSection({
                   </span>
                 </div>
 
-                <p>{provider.summary}</p>
-
                 <div className={styles.providerMeta}>
                   <div>
                     <span className={styles.metaLabel}>{copy.assignedTeam}</span>
@@ -594,6 +592,10 @@ export function HomepageAgentControlSection({
                   <div>
                     <span className={styles.metaLabel}>{copy.heartbeat}</span>
                     <strong>{formatBoardTimestamp(locale, provider.lastHeartbeat)}</strong>
+                  </div>
+                  <div>
+                    <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
+                    <strong>{getNextSetupActionLabel(locale, provider.status)}</strong>
                   </div>
                 </div>
               </article>
