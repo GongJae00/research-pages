@@ -138,6 +138,35 @@ function appendTranscript(record: OpsTerminalSessionRecord, chunk: string) {
   record.snapshot.updatedAt = new Date().toISOString();
 }
 
+function reconcileSessionState(record: OpsTerminalSessionRecord) {
+  if (record.snapshot.status !== "running") {
+    return record.snapshot;
+  }
+
+  const exitCode = record.child.exitCode;
+  const signalCode = record.child.signalCode;
+
+  if (exitCode === null && signalCode === null && !record.child.stdin.destroyed) {
+    return record.snapshot;
+  }
+
+  record.snapshot.status = record.stopRequestedAt || exitCode === 0 ? "closed" : "error";
+  record.snapshot.exitCode = exitCode;
+  record.snapshot.pid = null;
+
+  const transitionMessage = record.stopRequestedAt
+    ? `${os.EOL}[ops] session stop is still settling; refresh and retry once it closes.${os.EOL}`
+    : `${os.EOL}[ops] session is no longer accepting input (exit code ${String(
+        exitCode ?? signalCode ?? "unknown",
+      )}). Start a new session and retry.${os.EOL}`;
+
+  if (!record.snapshot.transcript.includes(transitionMessage.trim())) {
+    appendTranscript(record, transitionMessage);
+  }
+
+  return record.snapshot;
+}
+
 function getShellSpec(shellId: OpsShellId) {
   if (process.platform === "win32") {
     switch (shellId) {
@@ -219,7 +248,7 @@ export function listOpsTerminalSessions() {
   const { sessions } = getManagerStore();
 
   return Array.from(sessions.values())
-    .map((record) => record.snapshot)
+    .map((record) => reconcileSessionState(record))
     .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt));
 }
 
@@ -345,6 +374,8 @@ export function sendOpsTerminalInput(sessionId: string, input: string) {
   if (!record) {
     throw new Error(`Unknown session "${sessionId}".`);
   }
+
+  reconcileSessionState(record);
 
   if (record.snapshot.status !== "running") {
     throw new Error(`Session "${sessionId}" is not running.`);
