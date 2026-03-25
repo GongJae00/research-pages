@@ -557,6 +557,32 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+@media (min-width: 901px) {
+  .setupBuilderCard {
+    grid-template-columns: minmax(0, 1.18fr) minmax(280px, 0.82fr);
+    align-items: start;
+    column-gap: 0.32rem;
+  }
+
+  .setupHeader,
+  .setupNotesGrid {
+    grid-column: 1 / -1;
+  }
+
+  .quickStartRail,
+  .setupPickerGrid {
+    grid-column: 1;
+  }
+
+  .setupCommands {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    grid-template-columns: 1fr;
+    margin-top: 0;
+    align-content: start;
+  }
+}
+
 .noteCard {
   display: grid;
   gap: 0.22rem;
@@ -693,6 +719,16 @@
 
   .quickStartRail {
     display: grid;
+  }
+
+  .setupBuilderCard,
+  .setupHeader,
+  .quickStartRail,
+  .setupPickerGrid,
+  .setupCommands,
+  .setupNotesGrid {
+    grid-column: auto;
+    grid-row: auto;
   }
 
   .summaryPill {
