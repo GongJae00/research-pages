@@ -421,6 +421,20 @@
   gap: 0.04rem;
 }
 
+.commandStackHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.08rem 0.08rem 0;
+}
+
+.commandStackHeader strong {
+  color: #0f172a;
+  font-size: 0.78rem;
+  line-height: 1.2;
+}
+
 .setupPickerGrid {
   margin-top: 0;
 }
@@ -524,8 +538,8 @@
 
 .copyCard {
   display: grid;
-  gap: 0.08rem;
-  padding: 0.14rem 0.18rem;
+  gap: 0.06rem;
+  padding: 0.12rem 0.16rem;
 }
 
 .copyMetaRow,
@@ -546,15 +560,6 @@
   flex-wrap: wrap;
   align-items: baseline;
   gap: 0.28rem;
-}
-
-.commandEyebrow {
-  color: #64748b;
-  font-size: 0.66rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  line-height: 1.1;
-  text-transform: uppercase;
 }
 
 .commandTitleStack strong {
@@ -898,6 +903,11 @@
 
   .providerSummaryChips {
     justify-content: flex-start;
+  }
+
+  .commandStackHeader {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .setupDigestRow {

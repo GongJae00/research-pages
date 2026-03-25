@@ -476,13 +476,16 @@ export function HomepageAgentControlSection({
             </div>
 
             <div className={styles.setupCommands} aria-label={copy.setupStepsLabel}>
+              <div className={styles.commandStackHeader}>
+                <span className={styles.metaLabel}>{copy.setupCommand}</span>
+                <strong>{copy.commandOrder}</strong>
+              </div>
               {setupCommandCards.map((item) => (
                 <div className={styles.copyCard} key={item.kind}>
                   <div className={styles.copyMetaRow}>
                     <div className={styles.copyTitleGroup}>
                       <span className={styles.commandStep}>{item.step}</span>
                       <div className={styles.commandTitleStack}>
-                        <span className={styles.commandEyebrow}>{item.label}</span>
                         <div className={styles.commandTitleLine}>
                           <strong>{item.kind === "connect" ? `${item.title} CLI` : item.title}</strong>
                           <span className={styles.commandDetail}>{item.detail}</span>
