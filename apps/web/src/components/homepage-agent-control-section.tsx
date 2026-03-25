@@ -366,35 +366,21 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <h4>{copy.setupBuilderTitle}</h4>
                 <div className={styles.setupSummaryInline} aria-label={copy.activeSetup}>
-                  <div className={styles.setupDigestRow}>
-                    <div className={styles.setupDigestItem}>
-                      <span className={styles.setupDigestLabel}>{copy.chooseProvider}</span>
-                      <div className={styles.setupDigestValueRow}>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
-                        {selectedProvider ? (
-                          <span
-                            className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
-                          >
-                            {getProviderStatusLabel(locale, selectedProvider.status)}
-                          </span>
-                        ) : null}
-                      </div>
-                    </div>
-                    <div className={styles.setupDigestItem}>
-                      <span className={styles.setupDigestLabel}>{copy.chooseTeam}</span>
-                      <strong>{selectedTeam?.name ?? "-"}</strong>
-                    </div>
-                    <div className={`${styles.setupDigestItem} ${styles.setupDigestItemAccent}`}>
-                      <span className={styles.setupDigestLabel}>{copy.nextActionLabel}</span>
-                      <strong>{setupCommandCards.find((item) => item.kind === nextCommandKind)?.title ?? "-"}</strong>
-                    </div>
-                  </div>
                   <div className={styles.setupFlowBar} aria-label={copy.commandOrder}>
                     <span className={styles.setupFlowItem}>
                       <span className={styles.setupFlowIndex}>1</span>
                       <span className={styles.setupFlowCopy}>
                         <span className={styles.setupFlowLabel}>{copy.chooseProvider}</span>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
+                        <span className={styles.setupFlowValueRow}>
+                          <strong>{selectedProvider?.label ?? "-"}</strong>
+                          {selectedProvider ? (
+                            <span
+                              className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
+                            >
+                              {getProviderStatusLabel(locale, selectedProvider.status)}
+                            </span>
+                          ) : null}
+                        </span>
                       </span>
                     </span>
                     <span className={styles.setupFlowArrow} aria-hidden="true">

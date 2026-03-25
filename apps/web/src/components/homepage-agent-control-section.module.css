@@ -515,47 +515,9 @@
 .setupSummaryInline {
   display: grid;
   align-items: start;
-  gap: 0.03rem;
-  min-width: 0;
-  margin-top: 0.04rem;
-}
-
-.setupDigestRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.03rem;
-  min-width: 0;
-}
-
-.setupDigestItem {
-  display: grid;
   gap: 0.02rem;
   min-width: 0;
-  padding: 0.12rem 0.16rem;
-  border: 1px solid rgba(203, 213, 225, 0.6);
-  border-radius: 12px;
-  background: rgba(248, 250, 252, 0.94);
-  flex: 1 1 9rem;
-}
-
-.setupDigestItemAccent {
-  border-color: rgba(15, 23, 42, 0.12);
-  background: rgba(241, 245, 249, 0.98);
-}
-
-.setupDigestValueRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.16rem;
-  min-width: 0;
-}
-
-.setupDigestItem strong {
-  color: #0f172a;
-  font-size: 0.7rem;
-  line-height: 1.15;
-  overflow-wrap: anywhere;
+  margin-top: 0.02rem;
 }
 
 .setupScanStrip {
@@ -620,7 +582,7 @@
   align-items: center;
   gap: 0.16rem;
   min-width: 0;
-  padding: 0.08rem 0.12rem;
+  padding: 0.07rem 0.11rem;
   border: 1px solid rgba(203, 213, 225, 0.6);
   border-radius: 999px;
   background: rgba(248, 250, 252, 0.9);
@@ -649,6 +611,14 @@
 .setupFlowCopy {
   display: grid;
   gap: 0.01rem;
+  min-width: 0;
+}
+
+.setupFlowValueRow {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.16rem;
   min-width: 0;
 }
 
@@ -1285,11 +1255,6 @@
 
   .summaryFlowArrow {
     display: none;
-  }
-
-  .setupDigestRow {
-    display: grid;
-    grid-template-columns: 1fr;
   }
 
   .setupFlowBar {
