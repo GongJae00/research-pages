@@ -386,16 +386,25 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <div className={styles.setupSummaryBar} aria-label={copy.setupStepsLabel}>
-                  <span className={styles.setupSummaryItem}>
+                <div className={styles.setupScanBar} aria-label={copy.setupStepsLabel}>
+                  <span className={styles.setupScanItem}>
+                    <span className={styles.commandStep}>01</span>
                     <span className={styles.setupScanLabel}>{copy.selectedCli}</span>
                     <strong>{selectedProvider?.label ?? "-"}</strong>
                   </span>
-                  <span className={styles.setupSummaryItem}>
+                  <span className={styles.setupScanArrow} aria-hidden="true">
+                    <ArrowRight size={14} />
+                  </span>
+                  <span className={styles.setupScanItem}>
+                    <span className={styles.commandStep}>02</span>
                     <span className={styles.setupScanLabel}>{copy.selectedTeamLabel}</span>
                     <strong>{selectedTeam?.name ?? "-"}</strong>
                   </span>
-                  <span className={`${styles.setupSummaryItem} ${styles.setupSummaryItemAccent}`}>
+                  <span className={styles.setupScanArrow} aria-hidden="true">
+                    <ArrowRight size={14} />
+                  </span>
+                  <span className={`${styles.setupScanItem} ${styles.setupScanItemAccent}`}>
+                    <span className={styles.commandStep}>03</span>
                     <span className={styles.setupScanLabel}>{copy.runCommandLabel}</span>
                     <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
                   </span>
