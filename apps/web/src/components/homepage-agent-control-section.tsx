@@ -384,15 +384,30 @@ export function HomepageAgentControlSection({
               <div className={styles.setupTitleBlock}>
                 <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                 <h4>{copy.setupBuilderTitle}</h4>
-                <div className={styles.setupScanRow}>
-                  <span className={styles.setupOrderBadge}>{copy.commandOrder}</span>
-                  <div className={styles.setupScanItem}>
+                <div className={styles.setupDigestRow}>
+                  <div className={styles.setupDigestCard}>
                     <span className={styles.metaLabel}>{copy.chooseProvider}</span>
-                    <strong>{selectedProvider?.label ?? "-"}</strong>
+                    <div className={styles.setupDigestValueRow}>
+                      <strong>{selectedProvider?.label ?? "-"}</strong>
+                      {selectedProvider ? (
+                        <span
+                          className={`${styles.statusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
+                        >
+                          {getProviderStatusLabel(locale, selectedProvider.status)}
+                        </span>
+                      ) : null}
+                    </div>
+                    <span className={styles.digestMeta}>{selectedProvider?.cliName ?? "-"}</span>
                   </div>
-                  <div className={styles.setupScanItem}>
+                  <div className={styles.setupDigestCard}>
                     <span className={styles.metaLabel}>{copy.chooseTeam}</span>
                     <strong>{selectedTeam?.name ?? "-"}</strong>
+                    <span className={styles.digestMeta}>{selectedTeam?.lane ?? "-"}</span>
+                  </div>
+                  <div className={styles.setupDigestCard}>
+                    <span className={styles.metaLabel}>{copy.setupCommand}</span>
+                    <strong>{copy.commandOrder}</strong>
+                    <span className={styles.digestMeta}>01 / 02</span>
                   </div>
                 </div>
               </div>
@@ -479,27 +494,39 @@ export function HomepageAgentControlSection({
                   <span className={styles.metaLabel}>
                     {isKoreanLocale(locale) ? "사전 조건" : "Prerequisites"}
                   </span>
-                  {setupManifest.prerequisites.map((item) => (
-                    <p key={item}>{item}</p>
-                  ))}
+                  <div className={styles.noteList}>
+                    {setupManifest.prerequisites.map((item) => (
+                      <p className={styles.noteItem} key={item}>
+                        {item}
+                      </p>
+                    ))}
+                  </div>
                 </div>
 
                 <div className={styles.noteCard}>
                   <span className={styles.metaLabel}>
                     {isKoreanLocale(locale) ? "운영 약속" : "Working agreement"}
                   </span>
-                  {setupManifest.workingAgreement.map((item) => (
-                    <p key={item}>{item}</p>
-                  ))}
+                  <div className={styles.noteList}>
+                    {setupManifest.workingAgreement.map((item) => (
+                      <p className={styles.noteItem} key={item}>
+                        {item}
+                      </p>
+                    ))}
+                  </div>
                 </div>
 
                 <div className={styles.noteCard}>
                   <span className={styles.metaLabel}>
                     {isKoreanLocale(locale) ? "성공 신호" : "Success signals"}
                   </span>
-                  {setupManifest.successSignals.map((item) => (
-                    <p key={item}>{item}</p>
-                  ))}
+                  <div className={styles.noteList}>
+                    {setupManifest.successSignals.map((item) => (
+                      <p className={styles.noteItem} key={item}>
+                        {item}
+                      </p>
+                    ))}
+                  </div>
                 </div>
               </div>
             ) : null}
