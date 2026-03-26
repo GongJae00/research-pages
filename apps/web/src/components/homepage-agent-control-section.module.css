@@ -698,6 +698,42 @@
   max-width: 36rem;
 }
 
+.setupActionOrder {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.04rem;
+  margin-top: 0.01rem;
+}
+
+.setupActionStep {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1rem;
+  padding: 0.06rem 0.12rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 999px;
+  background: rgba(248, 250, 252, 0.92);
+  color: #475569;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.setupActionStepActive {
+  border-color: rgba(15, 23, 42, 0.16);
+  background: rgba(241, 245, 249, 0.98);
+  color: #0f172a;
+}
+
+.setupActionArrow {
+  display: inline-flex;
+  align-items: center;
+  color: #94a3b8;
+}
+
 .setupSummaryLead {
   display: flex;
   flex-wrap: wrap;
@@ -1999,6 +2035,10 @@
     align-items: stretch;
   }
 
+  .setupActionOrder {
+    align-items: flex-start;
+  }
+
   .setupSummaryLead {
     align-items: flex-start;
   }
@@ -2021,6 +2061,10 @@
 
   .setupDigestRow {
     grid-template-columns: 1fr;
+  }
+
+  .setupActionArrow {
+    display: none;
   }
 
   .sequenceArrowCompact {

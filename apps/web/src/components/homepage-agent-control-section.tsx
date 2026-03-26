@@ -425,7 +425,19 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
-                <p className={styles.setupSequenceIntro}>{copy.setupSequenceIntro}</p>
+                <div className={styles.setupActionOrder} aria-label={copy.setupSequenceIntro}>
+                  <span className={styles.setupActionStep}>01 {copy.chooseProvider}</span>
+                  <span className={styles.setupActionArrow} aria-hidden="true">
+                    <ArrowRight size={12} />
+                  </span>
+                  <span className={styles.setupActionStep}>02 {copy.chooseTeam}</span>
+                  <span className={styles.setupActionArrow} aria-hidden="true">
+                    <ArrowRight size={12} />
+                  </span>
+                  <span className={`${styles.setupActionStep} ${styles.setupActionStepActive}`}>
+                    03 {nextSetupCommand?.title ?? copy.runCommandLabel}
+                  </span>
+                </div>
                 {setupFlowDigest ? (
                   <div className={styles.setupSummaryBar} aria-label={copy.setupStepsLabel}>
                     <div className={styles.setupSummaryLeadCompact}>
