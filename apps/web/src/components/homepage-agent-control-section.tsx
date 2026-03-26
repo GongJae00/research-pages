@@ -431,53 +431,45 @@ export function HomepageAgentControlSection({
                     </span>
                   ) : null}
                 </div>
-                <p className={styles.setupSequenceIntro}>{copy.setupSequenceIntro}</p>
-                <div className={styles.setupScanSummary} aria-label={setupFlowLabel}>
-                  <div className={styles.setupScanSummaryItem}>
-                    <span className={styles.setupPickerStep}>01</span>
-                    <div className={styles.setupScanSummaryCopy}>
-                      <span className={styles.metaLabel}>{copy.chooseProvider}</span>
-                      <div className={styles.setupScanSummaryValueRow}>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
-                        {selectedProvider ? (
-                          <span
-                            className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
-                          >
-                            {getProviderStatusLabel(locale, selectedProvider.status)}
-                          </span>
-                        ) : null}
-                      </div>
-                    </div>
-                  </div>
-
-                  <span className={styles.setupScanArrow} aria-hidden="true">
-                    &rarr;
-                  </span>
-
-                  <div className={styles.setupScanSummaryItem}>
-                    <span className={styles.setupPickerStep}>02</span>
-                    <div className={styles.setupScanSummaryCopy}>
-                      <span className={styles.metaLabel}>{copy.chooseTeam}</span>
-                      <strong>{selectedTeam?.name ?? "-"}</strong>
-                      <span className={styles.setupSummaryMeta}>{selectedTeam?.lane ?? "-"}</span>
-                    </div>
-                  </div>
-
-                  <span className={styles.setupScanArrow} aria-hidden="true">
-                    &rarr;
-                  </span>
-
-                  <div className={`${styles.setupScanSummaryItem} ${styles.setupScanSummaryItemAccent}`}>
-                    <span className={styles.setupPickerStep}>03</span>
-                    <div className={styles.setupScanSummaryCopy}>
-                      <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
-                      <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
-                      {setupFlowDigest ? (
-                        <span className={styles.setupSummaryMeta}>
-                          {formatSetupPair(selectedProvider?.label, selectedTeam?.name)}
+                <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
+                  <div className={styles.setupCompactSummaryItem}>
+                    <span className={styles.metaLabel}>{copy.chooseProvider}</span>
+                    <div className={styles.setupCompactSummaryValueRow}>
+                      <strong>{selectedProvider?.label ?? "-"}</strong>
+                      {selectedProvider ? (
+                        <span
+                          className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
+                        >
+                          {getProviderStatusLabel(locale, selectedProvider.status)}
                         </span>
                       ) : null}
                     </div>
+                  </div>
+
+                  <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
+                    &rarr;
+                  </span>
+
+                  <div className={styles.setupCompactSummaryItem}>
+                    <span className={styles.metaLabel}>{copy.chooseTeam}</span>
+                    <strong>{selectedTeam?.name ?? "-"}</strong>
+                    <span className={styles.setupSummaryMeta}>{selectedTeam?.lane ?? "-"}</span>
+                  </div>
+
+                  <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
+                    &rarr;
+                  </span>
+
+                  <div
+                    className={`${styles.setupCompactSummaryItem} ${styles.setupCompactSummaryItemAccent}`}
+                  >
+                    <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
+                    <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
+                    {setupFlowDigest ? (
+                      <span className={styles.setupSummaryMeta}>
+                        {formatSetupPair(selectedProvider?.label, selectedTeam?.name)}
+                      </span>
+                    ) : null}
                   </div>
                 </div>
 

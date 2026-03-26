@@ -444,6 +444,54 @@
   overflow-wrap: anywhere;
 }
 
+.setupCompactSummary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.04rem;
+  margin-top: 0.03rem;
+}
+
+.setupCompactSummaryItem {
+  display: grid;
+  gap: 0.02rem;
+  min-width: 0;
+  padding: 0.08rem 0.1rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 12px;
+  background: rgba(248, 250, 252, 0.92);
+  flex: 1 1 11rem;
+}
+
+.setupCompactSummaryItemAccent {
+  border-color: rgba(15, 23, 42, 0.14);
+  background: rgba(241, 245, 249, 0.98);
+}
+
+.setupCompactSummaryValueRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.04rem;
+}
+
+.setupCompactSummaryItem strong {
+  color: #0f172a;
+  font-size: 0.72rem;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.setupCompactSummaryDivider {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 0.76rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
 .setupScanSummary {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
@@ -501,8 +549,8 @@
 .setupActivePath {
   display: grid;
   gap: 0.08rem;
-  margin-top: 0.08rem;
-  padding: 0.12rem;
+  margin-top: 0.06rem;
+  padding: 0.1rem;
   border: 1px solid rgba(15, 23, 42, 0.18);
   border-radius: 16px;
   background:
@@ -2198,6 +2246,14 @@
   }
 
   .setupScanArrow {
+    display: none;
+  }
+
+  .setupCompactSummary {
+    align-items: stretch;
+  }
+
+  .setupCompactSummaryDivider {
     display: none;
   }
 
