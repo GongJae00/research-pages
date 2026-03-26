@@ -273,6 +273,26 @@ function getTimelineSummary(
   return `${entry.startDate} - ${entry.endDate ?? presentLabel}`;
 }
 
+function getAffiliationEditReadiness(
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+  text: (typeof copy)[Locale],
+) {
+  const missingFields = [
+    !entry.institutionName.trim() ? text.institution : null,
+    !entry.roleTitle.trim() ? text.roleTitle : null,
+    !entry.startDate ? text.startDate : null,
+  ].filter((value): value is Exclude<typeof value, null> => value !== null);
+
+  if (missingFields.length === 0) {
+    return locale === "ko" ? "\uc800\uc7a5 \uc900\ube44 \uc644\ub8cc" : "Ready to save.";
+  }
+
+  return locale === "ko"
+    ? `\uc800\uc7a5 \uc804 ${missingFields.join(", ")} \uc785\ub825 \ud544\uc694`
+    : `Add ${missingFields.join(", ")} before saving.`;
+}
+
 function getNextActionSummary(entry: AffiliationTimelineEntry, locale: Locale) {
   if (entry.active) {
     return locale === "ko"
@@ -482,6 +502,12 @@ export function AffiliationWorkspace({
                           : text.appointmentLabels[affiliation.appointmentStatus],
                       ].join(" / ")}
                     </p>
+                    <p className="card-support-text">
+                      {joinAffiliationSummary(affiliation) || text.institution}
+                    </p>
+                    <p className="card-support-text">
+                      {getAffiliationEditReadiness(affiliation, locale, text)}
+                    </p>
                   </div>
                   <button
                     type="button"
@@ -687,6 +713,13 @@ export function AffiliationWorkspace({
                   </div>
                   <div className="profile-history-body">
                     <dl className="field-list">
+                      <div className="field-row">
+                        <dt>{text.appointmentStatus}</dt>
+                        <dd>
+                          {text.appointmentLabels[affiliation.appointmentStatus]} /{" "}
+                          {affiliation.active ? text.active : text.inactive}
+                        </dd>
+                      </div>
                       <div className="field-row">
                         <dt>{text.period}</dt>
                         <dd>{getTimelineSummary(affiliation, text.present, locale)}</dd>

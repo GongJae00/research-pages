@@ -57,6 +57,10 @@ function getOptionalRuntimeString(
   return typeof entry[key] === "string" ? entry[key] : undefined;
 }
 
+function getRuntimeObjectList<T>(candidate: unknown): T[] {
+  return Array.isArray(candidate) ? (candidate.filter(isRuntimeMergeEntry) as T[]) : [];
+}
+
 function sanitizeConversationFeed(
   entries: unknown[],
 ): AgentOpsRuntimeState["conversationFeed"] {
@@ -137,48 +141,54 @@ function normalizeRuntimeState(candidate: unknown, locale: string): AgentOpsRunt
     conversationFeed: Array.isArray(value.conversationFeed)
       ? sanitizeConversationFeed(value.conversationFeed)
       : [],
-    teamUpdates: Array.isArray(value.teamUpdates) ? value.teamUpdates : [],
-    memberUpdates: Array.isArray(value.memberUpdates) ? value.memberUpdates : [],
-    providerConnections: Array.isArray(value.providerConnections) ? value.providerConnections : [],
+    teamUpdates: getRuntimeObjectList<AgentOpsRuntimeState["teamUpdates"][number]>(value.teamUpdates),
+    memberUpdates: getRuntimeObjectList<AgentOpsRuntimeState["memberUpdates"][number]>(value.memberUpdates),
+    providerConnections: getRuntimeObjectList<AgentOpsRuntimeState["providerConnections"][number]>(
+      value.providerConnections,
+    ),
     autonomy:
       value.autonomy && typeof value.autonomy === "object"
         ? {
             ...defaultAutonomy,
             ...value.autonomy,
-            queue: Array.isArray(value.autonomy.queue) ? value.autonomy.queue : [],
-            reports: Array.isArray(value.autonomy.reports) ? value.autonomy.reports : [],
+            queue: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["queue"][number]>(
+              value.autonomy.queue,
+            ),
+            reports: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["reports"][number]>(
+              value.autonomy.reports,
+            ),
             providerHealth: Array.isArray(value.autonomy.providerHealth)
-              ? value.autonomy.providerHealth
+              ? value.autonomy.providerHealth.filter(isRuntimeMergeEntry)
               : defaultAutonomy.providerHealth,
             currentTask:
               value.autonomy.currentTask && typeof value.autonomy.currentTask === "object"
                 ? value.autonomy.currentTask
                 : defaultAutonomy.currentTask,
-            taskHistory: Array.isArray(value.autonomy.taskHistory)
-              ? value.autonomy.taskHistory
-              : defaultAutonomy.taskHistory,
+            taskHistory: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["taskHistory"][number]>(
+              value.autonomy.taskHistory,
+            ),
             currentExecution:
               value.autonomy.currentExecution && typeof value.autonomy.currentExecution === "object"
                 ? value.autonomy.currentExecution
                 : defaultAutonomy.currentExecution,
-            executionHistory: Array.isArray(value.autonomy.executionHistory)
-              ? value.autonomy.executionHistory
-              : defaultAutonomy.executionHistory,
-            activeTasks: Array.isArray(value.autonomy.activeTasks)
-              ? value.autonomy.activeTasks
-              : defaultAutonomy.activeTasks,
-            activeExecutions: Array.isArray(value.autonomy.activeExecutions)
-              ? value.autonomy.activeExecutions
-              : defaultAutonomy.activeExecutions,
-            workers: Array.isArray(value.autonomy.workers)
-              ? value.autonomy.workers
-              : defaultAutonomy.workers,
-            workerHistory: Array.isArray(value.autonomy.workerHistory)
-              ? value.autonomy.workerHistory
-              : defaultAutonomy.workerHistory,
-            interactionBus: Array.isArray(value.autonomy.interactionBus)
-              ? value.autonomy.interactionBus
-              : defaultAutonomy.interactionBus,
+            executionHistory: getRuntimeObjectList<
+              AgentOpsRuntimeState["autonomy"]["executionHistory"][number]
+            >(value.autonomy.executionHistory),
+            activeTasks: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["activeTasks"][number]>(
+              value.autonomy.activeTasks,
+            ),
+            activeExecutions: getRuntimeObjectList<
+              AgentOpsRuntimeState["autonomy"]["activeExecutions"][number]
+            >(value.autonomy.activeExecutions),
+            workers: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["workers"][number]>(
+              value.autonomy.workers,
+            ),
+            workerHistory: getRuntimeObjectList<
+              AgentOpsRuntimeState["autonomy"]["workerHistory"][number]
+            >(value.autonomy.workerHistory),
+            interactionBus: getRuntimeObjectList<
+              AgentOpsRuntimeState["autonomy"]["interactionBus"][number]
+            >(value.autonomy.interactionBus),
           }
         : defaultAutonomy,
   };
