@@ -497,44 +497,31 @@ export function HomepageAgentControlSection({
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
                 {nextSetupCommand ? (
-                  <div className={`${styles.setupCompactSummary} ${styles.setupHeaderScan}`} aria-label={setupFlowLabel}>
-                    <span className={styles.setupCompactSummaryItem}>
-                      <span className={styles.setupCompactSummaryOrdinal}>01</span>
-                      <span className={styles.setupCompactSummaryContent}>
-                        <span className={styles.metaLabel}>{copy.chooseProvider}</span>
-                        <span className={styles.setupCompactSummaryValueRow}>
-                          <strong>{selectedProvider?.label ?? "-"}</strong>
-                          {selectedProvider ? (
-                            <span
-                              className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
-                            >
-                              {getProviderStatusLabel(locale, selectedProvider.status)}
-                            </span>
-                          ) : null}
+                  <div className={`${styles.setupDigestLine} ${styles.setupHeaderScan}`} aria-label={setupFlowLabel}>
+                    <span className={styles.setupDigestItem}>
+                      <span className={styles.setupDigestKey}>{`01 ${copy.chooseProvider}`}</span>
+                      <strong>{selectedProvider?.label ?? "-"}</strong>
+                      {selectedProvider ? (
+                        <span className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}>
+                          {getProviderStatusLabel(locale, selectedProvider.status)}
                         </span>
-                      </span>
+                      ) : null}
                     </span>
                     <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
                       &rarr;
                     </span>
-                    <span className={styles.setupCompactSummaryItem}>
-                      <span className={styles.setupCompactSummaryOrdinal}>02</span>
-                      <span className={styles.setupCompactSummaryContent}>
-                        <span className={styles.metaLabel}>{copy.chooseTeam}</span>
-                        <strong>{selectedTeam?.name ?? "-"}</strong>
-                        <span className={styles.setupSummaryMeta}>{selectedTeam?.lane ?? "-"}</span>
-                      </span>
+                    <span className={styles.setupDigestItem}>
+                      <span className={styles.setupDigestKey}>{`02 ${copy.chooseTeam}`}</span>
+                      <strong>{selectedTeam?.name ?? "-"}</strong>
+                      <span className={styles.setupSummaryMeta}>{selectedTeam?.lane ?? "-"}</span>
                     </span>
                     <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
                       &rarr;
                     </span>
-                    <span className={`${styles.setupCompactSummaryItem} ${styles.setupCompactSummaryItemAccent}`}>
-                      <span className={styles.setupCompactSummaryOrdinal}>{nextSetupCommand.step}</span>
-                      <span className={styles.setupCompactSummaryContent}>
-                        <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
-                        <strong>{nextSetupCommand.title}</strong>
-                        <span className={styles.setupSummaryMeta}>{setupOutputLabel}</span>
-                      </span>
+                    <span className={`${styles.setupDigestItem} ${styles.setupDigestItemAccent}`}>
+                      <span className={styles.setupDigestKey}>{`${nextSetupCommand.step} ${copy.runCommandLabel}`}</span>
+                      <strong>{nextSetupCommand.title}</strong>
+                      <span className={styles.setupSummaryMeta}>{setupOutputLabel}</span>
                     </span>
                   </div>
                 ) : (

@@ -877,6 +877,7 @@
 .setupDigestItem {
   display: inline-flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.18rem;
   min-width: 0;
   padding: 0.08rem 0.14rem;
