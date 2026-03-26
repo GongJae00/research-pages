@@ -937,7 +937,7 @@
   align-items: center;
   gap: 0.06rem;
   margin-top: 0;
-  padding: 0.08rem 0.1rem;
+  padding: 0.07rem 0.09rem;
   border: 1px solid rgba(15, 23, 42, 0.14);
   border-radius: 16px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(241, 245, 249, 0.98));
@@ -960,29 +960,6 @@
   display: grid;
   gap: 0.01rem;
   min-width: 0;
-}
-
-.nextCommandMeta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.04rem;
-}
-
-.nextCommandTag {
-  display: inline-grid;
-  gap: 0.02rem;
-  min-width: 0;
-  padding: 0.08rem 0.12rem;
-  border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 12px;
-  background: rgba(248, 250, 252, 0.92);
-}
-
-.nextCommandTag strong {
-  color: #0f172a;
-  font-size: 0.68rem;
-  line-height: 1.1;
-  overflow-wrap: anywhere;
 }
 
 .nextCommandLabelRow {

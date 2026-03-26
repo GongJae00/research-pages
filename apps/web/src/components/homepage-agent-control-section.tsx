@@ -492,19 +492,10 @@ export function HomepageAgentControlSection({
                     <div className={styles.nextCommandCopy}>
                       <div className={styles.nextCommandLabelRow}>
                         <span className={styles.setupPickerStep}>03</span>
-                        <span className={styles.metaLabel}>{setupOutputLabel}</span>
+                        <span className={styles.metaLabel}>{copy.activeSetup}</span>
                       </div>
                       <strong>{nextSetupCommand.title}</strong>
-                    </div>
-                    <div className={styles.nextCommandMeta}>
-                      <span className={styles.nextCommandTag}>
-                        <span className={styles.setupFlowLabel}>{copy.selectedCli}</span>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
-                      </span>
-                      <span className={styles.nextCommandTag}>
-                        <span className={styles.setupFlowLabel}>{copy.selectedTeamLabel}</span>
-                        <strong>{selectedTeam?.name ?? "-"}</strong>
-                      </span>
+                      <span className={styles.inlineMeta}>{setupOutputLabel}</span>
                     </div>
                   </div>
                   <div className={styles.nextCommandMain}>
