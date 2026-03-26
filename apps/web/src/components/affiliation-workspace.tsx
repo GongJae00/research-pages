@@ -501,6 +501,49 @@ function getArchivedEditSectionHint(locale: Locale, count: number) {
       : "No archived timeline items need edits right now.";
 }
 
+function getTimelinePlacementLabel(locale: Locale) {
+  return locale === "ko" ? "\ud0c0\uc784\ub77c\uc778 \uc704\uce58" : "Timeline placement";
+}
+
+function getAffiliationSectionName(
+  section: AffiliationSectionKey,
+  locale: Locale,
+) {
+  if (section === "current") {
+    return locale === "ko" ? "\ud604\uc7ac \uc18c\uc18d" : "Current affiliations";
+  }
+
+  if (section === "queued") {
+    return locale === "ko" ? "\ub2e4\uc74c \ud655\uc778" : "Needs follow-up";
+  }
+
+  return locale === "ko" ? "\ubcf4\uad00 \uc774\ub825" : "Archived timeline";
+}
+
+function getTimelinePlacementSummary(
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+) {
+  const section = getAffiliationSectionKey(entry);
+  const sectionName = getAffiliationSectionName(section, locale);
+
+  if (section === "current") {
+    return locale === "ko"
+      ? `${sectionName} \uc139\uc158\uc5d0 \ubcf4\uc785\ub2c8\ub2e4. \ud604\uc7ac \ud65c\uc131 \uc18c\uc18d\uc73c\ub85c \ucde8\uae09\ub429\ub2c8\ub2e4.`
+      : `${sectionName}. This entry stays with active roles.`;
+  }
+
+  if (section === "queued") {
+    return locale === "ko"
+      ? `${sectionName} \uc139\uc158\uc5d0 \ubcf4\uc785\ub2c8\ub2e4. \uc7ac\uac1c, \uc720\uc9c0, \uc644\ub8cc \uacb0\uc815\uc774 \ub0a8\uc544 \uc788\ub294 \ud56d\ubaa9\uc785\ub2c8\ub2e4.`
+      : `${sectionName}. Review here until the role resumes or closes.`;
+  }
+
+  return locale === "ko"
+    ? `${sectionName} \uc139\uc158\uc5d0 \ubcf4\uc785\ub2c8\ub2e4. \ub2eb\ud78c \uc774\ub825\ub85c \ubcf4\uad00\ub429\ub2c8\ub2e4.`
+    : `${sectionName}. Keep closed roles here unless the record needs correction.`;
+}
+
 function getEditActionLabel(entry: AffiliationTimelineEntry, locale: Locale) {
   if (entry.active) {
     return locale === "ko"
@@ -965,6 +1008,10 @@ export function AffiliationWorkspace({
             <strong>{getNextUpdateLabel(locale)}</strong> {getNextActionSummary(affiliation, locale)}
           </p>
           <dl className="field-list">
+            <div className="field-row">
+              <dt>{getTimelinePlacementLabel(locale)}</dt>
+              <dd>{getTimelinePlacementSummary(affiliation, locale)}</dd>
+            </div>
             <div className="field-row">
               <dt>{getEditFocusLabel(locale)}</dt>
               <dd>{getEditFocusHint(affiliation, locale)}</dd>

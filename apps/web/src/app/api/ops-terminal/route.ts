@@ -310,7 +310,7 @@ export async function POST(request: NextRequest) {
           );
         }
 
-        const session = sendOpsTerminalInput(sessionId, input);
+        const session = await sendOpsTerminalInput(sessionId, input);
         return NextResponse.json({
           ok: true,
           session,

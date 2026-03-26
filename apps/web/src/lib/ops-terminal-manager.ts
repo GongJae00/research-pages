@@ -240,6 +240,19 @@ function reconcileSessionState(record: OpsTerminalSessionRecord) {
   return record.snapshot;
 }
 
+function writeToSessionInput(record: OpsTerminalSessionRecord, input: string) {
+  return new Promise<void>((resolve, reject) => {
+    record.child.stdin.write(input, (error) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+
+      resolve();
+    });
+  });
+}
+
 function getShellSpec(shellId: OpsShellId) {
   if (process.platform === "win32") {
     switch (shellId) {
@@ -455,7 +468,7 @@ export async function createOpsTerminalSession(shellId: OpsShellId, label?: stri
   return record.snapshot;
 }
 
-export function sendOpsTerminalInput(sessionId: string, input: string) {
+export async function sendOpsTerminalInput(sessionId: string, input: string) {
   const record = getManagerStore().sessions.get(sessionId);
 
   if (!record) {
@@ -485,16 +498,28 @@ export function sendOpsTerminalInput(sessionId: string, input: string) {
   appendTranscript(record, `${os.EOL}> ${normalizedInput}${os.EOL}`);
 
   try {
-    record.child.stdin.write(`${normalizedInput}${os.EOL}`);
-  } catch {
+    await writeToSessionInput(record, `${normalizedInput}${os.EOL}`);
+  } catch (error) {
     markSessionInputUnavailable(
       record,
-      "Shell input stream closed unexpectedly while sending input. Start a new session to continue.",
+      `Shell input stream closed unexpectedly while sending input${
+        error instanceof Error && error.message ? `: ${error.message}` : "."
+      } Start a new session to continue.`,
     );
     throw new Error(`Session "${sessionId}" is not accepting input.`);
   }
 
-  return record.snapshot;
+  const currentSession = reconcileSessionState(record);
+
+  if (currentSession.status === "stopping") {
+    throw new Error(`Session "${sessionId}" is stopping.`);
+  }
+
+  if (currentSession.status !== "running") {
+    throw new Error(`Session "${sessionId}" is not accepting input.`);
+  }
+
+  return currentSession;
 }
 
 export async function stopOpsTerminalSession(sessionId: string) {
