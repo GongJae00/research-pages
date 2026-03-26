@@ -523,7 +523,12 @@ export function HomepageAgentControlSection({
             <div className={styles.setupWorkbench}>
               <div className={styles.setupSelectionPanel} aria-label={getSetupInputLabel(locale)}>
                 <div className={styles.setupSelectionLead}>
-                  <span className={styles.setupSelectionLeadLabel}>{copy.activeSetup}</span>
+                  <div className={styles.setupSelectionLeadTop}>
+                    <span className={styles.setupSelectionLeadLabel}>{copy.activeSetup}</span>
+                    <span className={styles.setupSelectionLeadPath}>
+                      {copy.chooseProvider} -&gt; {copy.chooseTeam} -&gt; {copy.runCommandLabel}
+                    </span>
+                  </div>
                   <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
                     <div className={styles.setupCompactSummaryItem}>
                       <span className={styles.setupCompactSummaryOrdinal}>01</span>
@@ -531,6 +536,10 @@ export function HomepageAgentControlSection({
                         <span className={styles.setupDigestKey}>{copy.selectedCli}</span>
                         <div className={styles.setupCompactSummaryValueRow}>
                           <strong>{selectedProvider?.label ?? "-"}</strong>
+                          <span className={styles.inlineMeta}>
+                            {copy.selectedCliStatusLabel}:{" "}
+                            {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -545,6 +554,9 @@ export function HomepageAgentControlSection({
                         <span className={styles.setupDigestKey}>{copy.selectedTeamLabel}</span>
                         <div className={styles.setupCompactSummaryValueRow}>
                           <strong>{selectedTeam?.name ?? "-"}</strong>
+                          <span className={styles.inlineMeta}>
+                            {copy.selectedLaneLabel}: {selectedTeam?.lane ?? "-"}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -562,6 +574,9 @@ export function HomepageAgentControlSection({
                             <span className={styles.setupDigestKey}>{copy.runCommandLabel}</span>
                             <div className={styles.setupCompactSummaryValueRow}>
                               <strong>{nextSetupCommand.title}</strong>
+                              <span className={styles.inlineMeta}>
+                                {(selectedProvider?.label ?? "-") + " -> " + (selectedTeam?.name ?? "-")}
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -642,19 +657,22 @@ export function HomepageAgentControlSection({
               </div>
 
               {nextSetupCommand ? (
-                <div className={styles.setupCommandInline}>
-                  <div className={styles.setupCommandInlineHead}>
+                <div className={styles.nextCommandStrip}>
+                  <div className={styles.nextCommandLead}>
                     <div className={styles.copyTitleGroup}>
                       <span className={styles.commandStep}>03</span>
-                      <div className={styles.setupCommandInlineCopy}>
-                        <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
-                        <strong>{nextSetupCommand.title}</strong>
+                      <div className={styles.nextCommandCopy}>
+                        <div className={styles.nextCommandLabelRow}>
+                          <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
+                          <span className={styles.nextCommandOutput}>{nextSetupCommand.title}</span>
+                        </div>
+                        <strong>{(selectedProvider?.label ?? "-") + " -> " + (selectedTeam?.name ?? "-")}</strong>
                         <p className={styles.setupTitleHint}>{copy.nextCommandHelp}</p>
                       </div>
                     </div>
                   </div>
 
-                  <div className={styles.setupCommandInlineMain}>
+                  <div className={styles.nextCommandMain}>
                     <code>{nextSetupCommand.command}</code>
                     <button
                       type="button"
