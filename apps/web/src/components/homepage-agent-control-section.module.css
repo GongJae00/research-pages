@@ -801,7 +801,7 @@
 .setupSelectionPanel {
   display: grid;
   gap: 0.05rem;
-  padding: 0.02rem;
+  padding: 0.01rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 16px;
   background: rgba(248, 250, 252, 0.92);
@@ -858,6 +858,16 @@
   display: grid;
   gap: 0.02rem;
   min-width: 0;
+}
+
+.nextCommandLabelRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.12rem;
+}
+
+.nextCommandLabelRow .metaLabel {
+  line-height: 1;
 }
 
 .nextCommandContext {
@@ -1038,16 +1048,38 @@
 
 .setupPicker {
   display: flex;
-  align-items: center;
-  gap: 0.18rem;
+  align-items: flex-start;
+  gap: 0.14rem;
   padding: 0.06rem 0.08rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.86);
 }
 
-.setupPickerLabel {
+.setupPickerLabelGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.12rem;
   flex: 0 0 auto;
+}
+
+.setupPickerStep {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.28rem;
+  min-height: 1.28rem;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.08);
+  color: #0f172a;
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.setupPickerLabel {
   color: #64748b;
   font-size: 0.58rem;
   font-weight: 800;

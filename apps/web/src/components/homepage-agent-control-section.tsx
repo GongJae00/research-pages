@@ -491,7 +491,10 @@ export function HomepageAgentControlSection({
               <div className={styles.setupSelectionPanel} aria-label={getSetupInputLabel(locale)}>
                 <div className={styles.setupPickerGrid}>
                   <div className={styles.setupPicker} aria-label={copy.chooseProvider}>
-                    <span className={styles.setupPickerLabel}>{copy.chooseProvider}</span>
+                    <div className={styles.setupPickerLabelGroup}>
+                      <span className={styles.setupPickerStep}>01</span>
+                      <span className={styles.setupPickerLabel}>{copy.chooseProvider}</span>
+                    </div>
                     <div className={styles.optionRow}>
                       {providerOrder.map((providerId) => {
                         const provider = snapshot.providerConnections.find((entry) => entry.providerId === providerId);
@@ -521,7 +524,10 @@ export function HomepageAgentControlSection({
                   </div>
 
                   <div className={styles.setupPicker} aria-label={copy.chooseTeam}>
-                    <span className={styles.setupPickerLabel}>{copy.chooseTeam}</span>
+                    <div className={styles.setupPickerLabelGroup}>
+                      <span className={styles.setupPickerStep}>02</span>
+                      <span className={styles.setupPickerLabel}>{copy.chooseTeam}</span>
+                    </div>
                     <div className={styles.optionRow}>
                       {snapshot.teams.map((team) => (
                         <button
@@ -543,9 +549,11 @@ export function HomepageAgentControlSection({
               {nextSetupCommand ? (
                 <div className={styles.nextCommandStrip}>
                   <div className={styles.nextCommandLead}>
-                    <span className={styles.commandStep}>{nextSetupCommand.step}</span>
                     <div className={styles.nextCommandCopy}>
-                      <span className={styles.metaLabel}>{setupOutputLabel}</span>
+                      <div className={styles.nextCommandLabelRow}>
+                        <span className={styles.setupPickerStep}>03</span>
+                        <span className={styles.metaLabel}>{setupOutputLabel}</span>
+                      </div>
                       <strong>{nextSetupCommand.title}</strong>
                       <span className={styles.nextCommandContext}>
                         {selectedProvider?.label ?? "-"} / {selectedTeam?.name ?? "-"}
