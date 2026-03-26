@@ -897,7 +897,7 @@ export function AffiliationWorkspace({
 
   const handleOpenEdit = () => {
     setDraftAffiliations(resolvedAffiliations);
-    setFocusedAffiliationId(null);
+    setFocusedAffiliationId(orderedResolvedAffiliations[0]?.id ?? null);
     setIsEditing(true);
   };
 
