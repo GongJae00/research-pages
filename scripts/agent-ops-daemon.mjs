@@ -92,15 +92,25 @@ const laneGuidance = {
   },
   "workflow-systems": {
     ownedPaths: [
+      "apps/web/src/app/[locale]/affiliations",
+      "apps/web/src/app/[locale]/funding",
       "apps/web/src/app/[locale]/profile",
       "apps/web/src/app/[locale]/documents",
       "apps/web/src/app/[locale]/lab",
+      "apps/web/src/app/[locale]/timetable",
+      "apps/web/src/app/[locale]/researcher",
+      "apps/web/src/app/[locale]/labs",
+      "apps/web/src/components/affiliation-workspace.tsx",
+      "apps/web/src/components/funding-workspace.tsx",
       "apps/web/src/components/profile-workspace.tsx",
       "apps/web/src/components/document-workspace.tsx",
       "apps/web/src/components/document-evidence-picker.tsx",
       "apps/web/src/components/document-intake-panel.tsx",
       "apps/web/src/components/compact-document-row.tsx",
       "apps/web/src/components/lab-workspace.tsx",
+      "apps/web/src/components/timetable-workspace.tsx",
+      "apps/web/src/components/public-researcher-page.tsx",
+      "apps/web/src/components/public-lab-page.tsx",
     ],
     validation: "Improve one real researcher workflow and keep the slice bounded to one surface.",
     nonGoals: "Do not widen into architecture, Supabase contracts, or unrelated UI churn.",
@@ -204,6 +214,34 @@ const workItemCatalog = {
         "One profile editing or summary section becomes clearer without changing storage, contracts, or auth.",
     },
     {
+      id: "affiliation-workspace-clarity",
+      title: "Clarify affiliation timeline scanning",
+      targetFiles: [
+        "apps/web/src/app/[locale]/affiliations/page.tsx",
+        "apps/web/src/components/affiliation-workspace.tsx",
+      ],
+      objective:
+        "Make the affiliation timeline easier to scan and edit without widening into shared contracts or unrelated views.",
+      instruction:
+        "Tighten one affiliation timeline or evidence-linking slice so the timeline, current status, or next editing action is clearer in one pass.",
+      acceptance:
+        "One affiliation workspace section becomes clearer without changing storage behavior, contracts, or auth.",
+    },
+    {
+      id: "funding-workspace-clarity",
+      title: "Clarify funding workspace priorities",
+      targetFiles: [
+        "apps/web/src/app/[locale]/funding/page.tsx",
+        "apps/web/src/components/funding-workspace.tsx",
+      ],
+      objective:
+        "Reduce friction in the funding workspace so current support, restrictions, and next actions are easier to read.",
+      instruction:
+        "Improve one funding list, editor, or evidence block so the current support status and next action are clearer without changing data contracts.",
+      acceptance:
+        "One funding workflow slice becomes denser and easier to scan without widening the scope.",
+    },
+    {
       id: "document-workspace-density",
       title: "Tighten document workspace queue and list density",
       targetFiles: [
@@ -232,6 +270,48 @@ const workItemCatalog = {
         "Clarify one lab workspace section with denser structure or clearer labels, but keep the change inside the private lab workspace only.",
       acceptance:
         "One bounded layout or copy improvement lands in the lab workspace only.",
+    },
+    {
+      id: "timetable-workspace-clarity",
+      title: "Clarify timetable board and focus workspace",
+      targetFiles: [
+        "apps/web/src/app/[locale]/timetable/page.tsx",
+        "apps/web/src/components/timetable-workspace.tsx",
+      ],
+      objective:
+        "Make the timetable board and focus workspace easier to scan without widening into storage or term logic.",
+      instruction:
+        "Improve one timetable board, schedule list, or focus panel so the current week view and next editing action are clearer.",
+      acceptance:
+        "One timetable workspace slice becomes easier to follow without touching contracts or broad interaction models.",
+    },
+    {
+      id: "public-researcher-page-clarity",
+      title: "Clarify public researcher page hierarchy",
+      targetFiles: [
+        "apps/web/src/app/[locale]/researcher/[slug]/page.tsx",
+        "apps/web/src/components/public-researcher-page.tsx",
+      ],
+      objective:
+        "Improve one public researcher page slice so the overview, experience, or paper hierarchy is easier to scan.",
+      instruction:
+        "Make one bounded public researcher page hierarchy or copy improvement without changing routing, profile data contracts, or public access behavior.",
+      acceptance:
+        "One public researcher page section becomes clearer in a visibly bounded way.",
+    },
+    {
+      id: "public-lab-page-clarity",
+      title: "Clarify public lab page hierarchy",
+      targetFiles: [
+        "apps/web/src/app/[locale]/labs/[slug]/page.tsx",
+        "apps/web/src/components/public-lab-page.tsx",
+      ],
+      objective:
+        "Improve one public lab page slice so people, research, or publication sections scan more clearly.",
+      instruction:
+        "Land one bounded hierarchy or copy improvement in the public lab page only, without changing routing or public data contracts.",
+      acceptance:
+        "One public lab page section becomes clearer without widening into unrelated flows.",
     },
   ],
   "reliability-desk": [
@@ -494,6 +574,91 @@ function getDirectiveText(directive) {
   return directive && typeof directive.body === "string" ? directive.body.toLowerCase() : "";
 }
 
+function isAllPagesDirectiveText(text) {
+  return containsKeyword(text, [
+    "all pages",
+    "all page",
+    "sitewide",
+    "site-wide",
+    "entire site",
+    "every page",
+    "모든 페이지",
+    "전 페이지",
+    "전체 페이지",
+    "전체 사이트",
+    "all surfaces",
+  ]);
+}
+
+function isHomepageDirectiveText(text) {
+  return containsKeyword(text, [
+    "?덊럹?댁?",
+    "homepage",
+    "landing",
+    "hero",
+    "onboarding",
+    "home",
+    "shell",
+    "?ㅻ퉬",
+    "navigation",
+    "header",
+    "sidebar",
+    "cli",
+  ]);
+}
+
+function isWorkflowDirectiveText(text) {
+  return containsKeyword(text, [
+    "workflow",
+    "workspace",
+    "profile",
+    "profiles",
+    "document",
+    "documents",
+    "lab",
+    "labs",
+    "affiliation",
+    "affiliations",
+    "funding",
+    "timetable",
+    "public researcher",
+    "public lab",
+    "프로필",
+    "문서",
+    "연구실",
+    "랩",
+    "소속",
+    "연구비",
+    "시간표",
+    "공개 연구자",
+    "공개 연구실",
+  ]);
+}
+
+function isReliabilityDirectiveText(text) {
+  return containsKeyword(text, [
+    "reliability",
+    "runtime",
+    "validation",
+    "lint",
+    "typecheck",
+    "?좊ː??",
+    "?덉젙??",
+  ]);
+}
+
+function isOpsDirectiveText(text) {
+  return containsKeyword(text, [
+    "ops",
+    "control plane",
+    "queue",
+    "handoff",
+    "관제",
+    "운영 모델",
+    "agent ops",
+  ]);
+}
+
 function getRecentExecutionsForTeam(state, teamId, limit = 5) {
   const recent = [];
   const currentExecution = state.autonomy?.currentExecution;
@@ -611,6 +776,36 @@ function getScopedTeamIdsForDirective(directive) {
   return null;
 }
 
+function resolveScopedTeamIdsForDirective(directive) {
+  const directiveText = getDirectiveText(directive);
+
+  if (!directiveText) {
+    return null;
+  }
+
+  if (isAllPagesDirectiveText(directiveText)) {
+    return ["shell-experience", "workflow-systems", "reliability-desk"];
+  }
+
+  if (isHomepageDirectiveText(directiveText)) {
+    return ["shell-experience"];
+  }
+
+  if (isWorkflowDirectiveText(directiveText)) {
+    return ["workflow-systems"];
+  }
+
+  if (isReliabilityDirectiveText(directiveText)) {
+    return ["reliability-desk"];
+  }
+
+  if (isOpsDirectiveText(directiveText)) {
+    return ["executive-desk"];
+  }
+
+  return getScopedTeamIdsForDirective(directive);
+}
+
 function selectWorkItem(teamId, loopCount, operatorDirective = null) {
   const items = getWorkItems(teamId);
   if (!items.length) {
@@ -672,9 +867,38 @@ function selectWorkItem(teamId, loopCount, operatorDirective = null) {
   return items[teamTurnIndex % items.length];
 }
 
+function resolveDirectiveSpecificWorkItem(teamId, directiveText, items) {
+  if (!directiveText || !items.length) {
+    return null;
+  }
+
+  if (teamId === "workflow-systems") {
+    if (containsKeyword(directiveText, ["affiliation", "affiliations", "소속"])) {
+      return items.find((item) => item.id === "affiliation-workspace-clarity") ?? null;
+    }
+    if (containsKeyword(directiveText, ["funding", "research funding", "연구비"])) {
+      return items.find((item) => item.id === "funding-workspace-clarity") ?? null;
+    }
+    if (containsKeyword(directiveText, ["timetable", "calendar", "schedule", "시간표"])) {
+      return items.find((item) => item.id === "timetable-workspace-clarity") ?? null;
+    }
+    if (containsKeyword(directiveText, ["public researcher", "researcher page", "공개 연구자"])) {
+      return items.find((item) => item.id === "public-researcher-page-clarity") ?? null;
+    }
+    if (containsKeyword(directiveText, ["public lab", "lab page", "공개 연구실"])) {
+      return items.find((item) => item.id === "public-lab-page-clarity") ?? null;
+    }
+  }
+
+  return null;
+}
+
 function selectBoundedWorkItem(teamId, loopCount, operatorDirective = null, recentExecutions = []) {
   const items = getWorkItems(teamId);
-  const preferredItem = selectWorkItem(teamId, loopCount, operatorDirective);
+  const directiveText = getDirectiveText(operatorDirective);
+  const preferredItem =
+    resolveDirectiveSpecificWorkItem(teamId, directiveText, items)
+    ?? selectWorkItem(teamId, loopCount, operatorDirective);
   return chooseAlternateWorkItem(items, preferredItem, recentExecutions) ?? preferredItem;
 }
 
@@ -1414,6 +1638,35 @@ function buildWorkerInteractionMessages({
   ];
 }
 
+function buildCrossLaneInteractionMessages(batchId, batchResults) {
+  if (!Array.isArray(batchResults) || batchResults.length < 2) {
+    return [];
+  }
+
+  return batchResults.slice(0, -1).map((entry, index) => {
+    const nextEntry = batchResults[index + 1];
+    const changedSummary = entry.executionRecord.changedFiles.length
+      ? `Changed: ${entry.executionRecord.changedFiles.join(", ")}.`
+      : entry.executionRecord.nextAction;
+
+    return {
+      id: `${batchId}-${entry.team.id}-to-${nextEntry.team.id}-handoff`,
+      time: nowIso(),
+      teamId: nextEntry.team.id,
+      workerId: nextEntry.worker.id,
+      from: entry.team.lead,
+      to: nextEntry.team.lead,
+      direction: "peer",
+      subject: "Cross-lane handoff",
+      body: `${entry.team.name} completed ${entry.taskPacket.workItemTitle}. ${changedSummary} ${nextEntry.team.name} should continue with ${nextEntry.taskPacket.workItemTitle}.`,
+      status:
+        entry.executionRecord.outcome === "blocked" || entry.executionRecord.outcome === "failed"
+          ? "blocked"
+          : "completed",
+    };
+  });
+}
+
 function isLowQualityPlan(plan) {
   const text = [
     plan.summary,
@@ -1939,30 +2192,94 @@ async function runValidationCommand(command) {
 }
 
 function getSupplementalValidationSpecs(teamId, workItem) {
-  const touchesHomepage =
-    teamId === "shell-experience" &&
-    workItem?.targetFiles?.some(
+  const targetFiles = Array.isArray(workItem?.targetFiles) ? workItem.targetFiles : [];
+  const specs = [];
+  const pushLocaleRoute = (baseLabel, route, expectedSignals = []) => {
+    specs.push({
+      label: `${baseLabel} /ko route smoke`,
+      route: `/ko${route}`,
+      expectedSignals,
+    });
+    specs.push({
+      label: `${baseLabel} /en route smoke`,
+      route: `/en${route}`,
+      expectedSignals,
+    });
+  };
+
+  if (
+    targetFiles.some(
       (entry) =>
         entry.includes("apps/web/src/app/[locale]/page.tsx") ||
         entry.includes("apps/web/src/components/homepage-agent-control-section"),
-    );
-
-  if (!touchesHomepage) {
-    return [];
+    )
+  ) {
+    pushLocaleRoute("Homepage", "", ["ResearchPages"]);
   }
 
-  return [
-    {
-      label: "Homepage /ko route smoke",
-      route: "/ko",
-      expectedSignals: ["ResearchPages", "Codex", "Gemini"],
-    },
-    {
-      label: "Homepage /en route smoke",
-      route: "/en",
-      expectedSignals: ["ResearchPages", "Codex", "Gemini"],
-    },
-  ];
+  if (
+    targetFiles.some(
+      (entry) =>
+        entry.includes("apps/web/src/app/[locale]/profile") ||
+        entry.includes("apps/web/src/components/profile-workspace.tsx"),
+    )
+  ) {
+    pushLocaleRoute("Profile workspace", "/profile");
+  }
+
+  if (
+    targetFiles.some(
+      (entry) =>
+        entry.includes("apps/web/src/app/[locale]/affiliations") ||
+        entry.includes("apps/web/src/components/affiliation-workspace.tsx"),
+    )
+  ) {
+    pushLocaleRoute("Affiliations workspace", "/affiliations");
+  }
+
+  if (
+    targetFiles.some(
+      (entry) =>
+        entry.includes("apps/web/src/app/[locale]/funding") ||
+        entry.includes("apps/web/src/components/funding-workspace.tsx"),
+    )
+  ) {
+    pushLocaleRoute("Funding workspace", "/funding");
+  }
+
+  if (
+    targetFiles.some(
+      (entry) =>
+        entry.includes("apps/web/src/app/[locale]/documents") ||
+        entry.includes("apps/web/src/components/document-workspace.tsx") ||
+        entry.includes("apps/web/src/components/document-intake-panel.tsx") ||
+        entry.includes("apps/web/src/components/compact-document-row.tsx"),
+    )
+  ) {
+    pushLocaleRoute("Document workspace", "/documents");
+  }
+
+  if (
+    targetFiles.some(
+      (entry) =>
+        entry.includes("apps/web/src/app/[locale]/lab") ||
+        entry.includes("apps/web/src/components/lab-workspace.tsx"),
+    )
+  ) {
+    pushLocaleRoute("Lab workspace", "/lab");
+  }
+
+  if (
+    targetFiles.some(
+      (entry) =>
+        entry.includes("apps/web/src/app/[locale]/timetable") ||
+        entry.includes("apps/web/src/components/timetable-workspace.tsx"),
+    )
+  ) {
+    pushLocaleRoute("Timetable workspace", "/timetable");
+  }
+
+  return specs;
 }
 
 async function fetchTextWithTimeout(url, timeoutMs = 8000) {
@@ -2610,13 +2927,37 @@ function selectPreferredTeamForCycle(state, loopCount) {
   return teamCycle[(loopCount - 1) % teamCycle.length];
 }
 
+function resolvePreferredTeamForCycle(state, loopCount) {
+  const directiveText = getDirectiveText(state.currentDirective);
+
+  if (isAllPagesDirectiveText(directiveText)) {
+    const broadCycle = ["shell-experience", "workflow-systems", "reliability-desk"];
+    const preferredTeamId = broadCycle[(Math.max(loopCount, 1) - 1) % broadCycle.length];
+    return teamCycle.find((team) => team.id === preferredTeamId) ?? teamCycle[0];
+  }
+
+  if (isHomepageDirectiveText(directiveText)) {
+    return teamCycle.find((team) => team.id === "shell-experience") ?? teamCycle[0];
+  }
+
+  if (isWorkflowDirectiveText(directiveText)) {
+    return teamCycle.find((team) => team.id === "workflow-systems") ?? teamCycle[0];
+  }
+
+  if (isReliabilityDirectiveText(directiveText)) {
+    return teamCycle.find((team) => team.id === "reliability-desk") ?? teamCycle[0];
+  }
+
+  return selectPreferredTeamForCycle(state, loopCount);
+}
+
 function orderTeamsForCycle(state, loopCount) {
-  const scopedTeamIds = getScopedTeamIdsForDirective(state.currentDirective);
+  const scopedTeamIds = resolveScopedTeamIdsForDirective(state.currentDirective);
   const scopedTeamCycle =
     scopedTeamIds && scopedTeamIds.length
       ? teamCycle.filter((team) => scopedTeamIds.includes(team.id))
       : teamCycle;
-  const preferredCandidate = selectPreferredTeamForCycle(state, loopCount);
+  const preferredCandidate = resolvePreferredTeamForCycle(state, loopCount);
   const preferredTeam =
     scopedTeamCycle.find((team) => team.id === preferredCandidate.id) ?? scopedTeamCycle[0] ?? preferredCandidate;
   const offsetBase = Math.max(loopCount, 1) - 1;
@@ -2904,7 +3245,10 @@ async function runAutonomyCycle() {
     const executionRecords = batchResults.map((entry) => entry.executionRecord);
     const reports = batchResults.map((entry) => entry.report);
     const workers = batchResults.map((entry) => entry.worker);
-    const interactionBus = batchResults.flatMap((entry) => entry.interactions);
+    const interactionBus = [
+      ...batchResults.flatMap((entry) => entry.interactions),
+      ...buildCrossLaneInteractionMessages(batchId, batchResults),
+    ];
     const firstLiveExecution = executionRecords.find((entry) => entry.providerId !== "mock");
     const firstLiveTask = taskPackets.find((entry) => entry.providerId !== "mock");
     const activeProviderId = firstLiveExecution?.providerId ?? firstLiveTask?.providerId ?? provider.activeProviderId;
@@ -3001,6 +3345,18 @@ async function runAutonomyCycle() {
         to: "Operator Liaison",
         subject: "Autonomy checkpoint",
         body: `${taskPacket.checkpoint} ${executionRecord.changedFiles.length ? `Changed: ${executionRecord.changedFiles.join(", ")}.` : executionRecord.nextAction}`,
+      });
+    }
+
+    for (const [index, entry] of batchResults.slice(0, -1).entries()) {
+      const nextEntry = batchResults[index + 1];
+      pushEvent(state, {
+        channel: "team",
+        teamId: nextEntry.team.id,
+        from: entry.team.lead,
+        to: nextEntry.team.lead,
+        subject: "Cross-lane handoff",
+        body: `${entry.team.name} finished ${entry.taskPacket.workItemTitle}. ${nextEntry.team.name} now owns ${nextEntry.taskPacket.workItemTitle}.`,
       });
     }
 

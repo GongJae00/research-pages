@@ -212,30 +212,93 @@ async function runValidationCommand(command) {
 }
 
 function getSupplementalValidationSpecs(teamId, changedFiles) {
-  const touchesHomepage =
-    teamId === "shell-experience" &&
+  const specs = [];
+  const pushLocaleRoute = (baseLabel, route, expectedSignals = []) => {
+    specs.push({
+      label: `${baseLabel} /ko route smoke`,
+      route: `/ko${route}`,
+      expectedSignals,
+    });
+    specs.push({
+      label: `${baseLabel} /en route smoke`,
+      route: `/en${route}`,
+      expectedSignals,
+    });
+  };
+
+  if (
     changedFiles.some(
       (entry) =>
         entry.includes("apps/web/src/app/[locale]/page.tsx") ||
         entry.includes("apps/web/src/components/homepage-agent-control-section"),
-    );
-
-  if (!touchesHomepage) {
-    return [];
+    )
+  ) {
+    pushLocaleRoute("Homepage", "", ["ResearchPages"]);
   }
 
-  return [
-    {
-      label: "Homepage /ko route smoke",
-      route: "/ko",
-      expectedSignals: ["ResearchPages", "Codex", "Gemini"],
-    },
-    {
-      label: "Homepage /en route smoke",
-      route: "/en",
-      expectedSignals: ["ResearchPages", "Codex", "Gemini"],
-    },
-  ];
+  if (
+    changedFiles.some(
+      (entry) =>
+        entry.includes("apps/web/src/app/[locale]/profile") ||
+        entry.includes("apps/web/src/components/profile-workspace.tsx"),
+    )
+  ) {
+    pushLocaleRoute("Profile workspace", "/profile");
+  }
+
+  if (
+    changedFiles.some(
+      (entry) =>
+        entry.includes("apps/web/src/app/[locale]/affiliations") ||
+        entry.includes("apps/web/src/components/affiliation-workspace.tsx"),
+    )
+  ) {
+    pushLocaleRoute("Affiliations workspace", "/affiliations");
+  }
+
+  if (
+    changedFiles.some(
+      (entry) =>
+        entry.includes("apps/web/src/app/[locale]/funding") ||
+        entry.includes("apps/web/src/components/funding-workspace.tsx"),
+    )
+  ) {
+    pushLocaleRoute("Funding workspace", "/funding");
+  }
+
+  if (
+    changedFiles.some(
+      (entry) =>
+        entry.includes("apps/web/src/app/[locale]/documents") ||
+        entry.includes("apps/web/src/components/document-workspace.tsx") ||
+        entry.includes("apps/web/src/components/document-intake-panel.tsx") ||
+        entry.includes("apps/web/src/components/compact-document-row.tsx"),
+    )
+  ) {
+    pushLocaleRoute("Document workspace", "/documents");
+  }
+
+  if (
+    changedFiles.some(
+      (entry) =>
+        entry.includes("apps/web/src/app/[locale]/lab") ||
+        entry.includes("apps/web/src/components/lab-workspace.tsx"),
+    )
+  ) {
+    pushLocaleRoute("Lab workspace", "/lab");
+  }
+
+  if (
+    changedFiles.some(
+      (entry) =>
+        entry.includes("apps/web/src/app/[locale]/timetable") ||
+        entry.includes("apps/web/src/components/timetable-workspace.tsx"),
+    )
+  ) {
+    pushLocaleRoute("Timetable workspace", "/timetable");
+  }
+
+  return specs;
 }
 
 async function fetchTextWithTimeout(url, timeoutMs = 8000) {
