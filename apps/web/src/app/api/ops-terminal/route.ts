@@ -21,12 +21,23 @@ function isLocalOpsTerminalEnabled() {
   return process.env.NODE_ENV !== "production";
 }
 
-function getShellId(value: unknown): OpsShellId {
-  if (value === "cmd" || value === "bash") {
-    return value;
+function getDefaultShellId(): OpsShellId {
+  return listOpsShellPresets()[0]?.id ?? "powershell";
+}
+
+function getShellId(value: unknown): OpsShellId | null {
+  if (typeof value !== "string") {
+    return null;
   }
 
-  return "powershell";
+  const normalizedValue = value.trim();
+
+  if (!normalizedValue) {
+    return null;
+  }
+
+  const supportedShell = listOpsShellPresets().find((shell) => shell.id === normalizedValue);
+  return supportedShell?.id ?? null;
 }
 
 function getOpsTerminalErrorResponse(
@@ -256,8 +267,25 @@ export async function POST(request: NextRequest) {
       }
 
       case "session.create": {
+        const requestedShellId =
+          typeof body.shellId === "string" ? body.shellId.trim() : undefined;
+        const shellId = getShellId(requestedShellId);
+
+        if (requestedShellId && !shellId) {
+          const supportedShellIds = listOpsShellPresets()
+            .map((shell) => shell.id)
+            .join(", ");
+
+          return getOpsTerminalErrorResponse(
+            `Unsupported shell "${requestedShellId}".`,
+            400,
+            "error",
+            `Use one of the available shell ids (${supportedShellIds}), refresh terminal sessions if needed, then retry session creation.`,
+          );
+        }
+
         const session = await createOpsTerminalSession(
-          getShellId(body.shellId),
+          shellId ?? getDefaultShellId(),
           typeof body.label === "string" ? body.label : undefined,
         );
 

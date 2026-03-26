@@ -172,6 +172,7 @@ const copy = {
     emailsLabel: "이메일",
     link: "홈페이지",
     linksLabel: "링크",
+    primaryItem: "기본",
     addEmail: "이메일 추가",
     addLink: "홈페이지 추가",
     nationalId: "국가연구자번호",
@@ -255,6 +256,7 @@ const copy = {
     emailsLabel: "Emails",
     link: "Homepage",
     linksLabel: "Links",
+    primaryItem: "Primary",
     addEmail: "Add email",
     addLink: "Add homepage",
     nationalId: "National researcher ID",
@@ -610,8 +612,8 @@ export function ProfileWorkspace({
   const linkUrlPlaceholder = isKo ? "예: https://github.com/..." : "e.g. https://github.com/...";
   const emailPlaceholder = isKo ? "예: name@university.ac.kr" : "e.g. name@university.edu";
   const contactSectionDescription = isKo
-    ? "첫 번째 이메일이 기본 연락처로 재사용됩니다. 공개 가능한 링크만 정리해 두면 프로필 요약과 공개 페이지 준비가 더 빨라집니다."
-    : "The first email is reused as the primary contact. Keep only public-facing links here so profile summaries and public-page prep stay compact.";
+    ? "공개 가능한 연락처와 링크만 남겨 두세요. 첫 번째 이메일과 첫 번째 링크가 프로필 요약과 공개 페이지 준비에 먼저 재사용됩니다."
+    : "Keep only public-facing contacts here. The first email and first link are reused first in summaries and public-page prep.";
   const emailCountLabel = isKo
     ? `이메일 ${draftProfile.emails.length}`
     : `${draftProfile.emails.length} email${draftProfile.emails.length === 1 ? "" : "s"}`;
@@ -1801,8 +1803,14 @@ export function ProfileWorkspace({
                       </button>
                     </div>
                     <div className="profile-array-list">
-                        {draftProfile.emails.map((email, index) => (
-                          <div className="profile-array-row" key={`email-${index}`}>
+                      {draftProfile.emails.map((email, index) => (
+                        <div key={`email-${index}`}>
+                          {index === 0 ? (
+                            <div className="profile-inline-list profile-inline-list-muted">
+                              <span className="pill pill-blue">{text.primaryItem}</span>
+                            </div>
+                          ) : null}
+                          <div className="profile-array-row">
                             <input
                               value={email}
                               placeholder={emailPlaceholder}
@@ -1816,7 +1824,8 @@ export function ProfileWorkspace({
                               aria-label={text.removeEmail}
                             >
                               <Trash2 size={14} />
-                          </button>
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -1839,41 +1848,48 @@ export function ProfileWorkspace({
                     </div>
                     <div className="profile-array-list">
                       {draftProfile.links.map((link, index) => (
-                        <div className="profile-link-edit-row" key={`link-${index}`}>
-                          <select
-                            value={link.kind}
-                            onChange={(event) =>
-                              updateLinkItem(index, {
-                                kind: event.target.value as ProfileLinkKind,
-                              })
-                            }
-                          >
-                            {Object.entries(linkKindLabels[locale]).map(([kind, label]) => (
-                              <option key={kind} value={kind}>
-                                {label}
-                              </option>
-                            ))}
-                          </select>
-                          <input
-                            value={link.label}
-                            placeholder={linkLabelPlaceholder}
-                            aria-label={linkLabelLabel}
-                            onChange={(event) => updateLinkItem(index, { label: event.target.value })}
-                          />
-                          <input
-                            value={link.url}
-                            placeholder={linkUrlPlaceholder}
-                            aria-label={linkUrlLabel}
-                            onChange={(event) => updateLinkItem(index, { url: event.target.value })}
-                          />
-                          <button
-                            type="button"
-                            className="profile-inline-icon-btn"
-                            onClick={() => removeLinkItem(index)}
-                            aria-label={removeLinkLabel}
-                          >
-                            <Trash2 size={14} />
-                          </button>
+                        <div key={`link-${index}`}>
+                          {index === 0 ? (
+                            <div className="profile-inline-list profile-inline-list-muted">
+                              <span className="pill pill-blue">{text.primaryItem}</span>
+                            </div>
+                          ) : null}
+                          <div className="profile-link-edit-row">
+                            <select
+                              value={link.kind}
+                              onChange={(event) =>
+                                updateLinkItem(index, {
+                                  kind: event.target.value as ProfileLinkKind,
+                                })
+                              }
+                            >
+                              {Object.entries(linkKindLabels[locale]).map(([kind, label]) => (
+                                <option key={kind} value={kind}>
+                                  {label}
+                                </option>
+                              ))}
+                            </select>
+                            <input
+                              value={link.label}
+                              placeholder={linkLabelPlaceholder}
+                              aria-label={linkLabelLabel}
+                              onChange={(event) => updateLinkItem(index, { label: event.target.value })}
+                            />
+                            <input
+                              value={link.url}
+                              placeholder={linkUrlPlaceholder}
+                              aria-label={linkUrlLabel}
+                              onChange={(event) => updateLinkItem(index, { url: event.target.value })}
+                            />
+                            <button
+                              type="button"
+                              className="profile-inline-icon-btn"
+                              onClick={() => removeLinkItem(index)}
+                              aria-label={removeLinkLabel}
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>
