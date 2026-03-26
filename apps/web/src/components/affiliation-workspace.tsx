@@ -232,6 +232,41 @@ function getAffiliationStatusClass(entry: AffiliationTimelineEntry) {
   return "pill-gray";
 }
 
+function getAffiliationOverview(items: AffiliationTimelineEntry[]) {
+  if (items.length === 0) {
+    return "Add an affiliation so current and past roles are easy to review in one place.";
+  }
+
+  const currentCount = items.filter((item) => item.active).length;
+  const pastCount = items.length - currentCount;
+
+  if (currentCount > 0) {
+    return `${currentCount} current affiliation and ${pastCount} past entr${
+      pastCount === 1 ? "y" : "ies"
+    } on record. Edit this list when a role changes status or dates.`;
+  }
+
+  return `${pastCount} past entr${
+    pastCount === 1 ? "y is" : "ies are"
+  } on record. Update one when a role becomes active again.`;
+}
+
+function getTimelineSummary(entry: AffiliationTimelineEntry, presentLabel: string) {
+  if (entry.active) {
+    return `Current since ${entry.startDate}`;
+  }
+
+  return `${entry.startDate} to ${entry.endDate ?? presentLabel}`;
+}
+
+function getNextActionSummary(entry: AffiliationTimelineEntry) {
+  if (entry.active) {
+    return "Add an end date and update the status when this role closes.";
+  }
+
+  return "Reopen editing if this role resumes or its linked evidence needs an update.";
+}
+
 export function AffiliationWorkspace({
   locale,
   affiliations,
@@ -248,6 +283,7 @@ export function AffiliationWorkspace({
   const [isEditing, setIsEditing] = useState(false);
   const orderedResolvedAffiliations = sortAffiliations(resolvedAffiliations);
   const orderedDraftAffiliations = sortAffiliations(draftAffiliations);
+  const affiliationOverview = getAffiliationOverview(orderedResolvedAffiliations);
 
   useEffect(() => {
     setResolvedDocuments(loadBrowserDocuments(documents));
@@ -371,6 +407,8 @@ export function AffiliationWorkspace({
           <div className="workspace-intro-top">
             <div className="workspace-intro-copy">
               <strong>{text.title}</strong>
+              <p className="card-support-text">{text.subtitle}</p>
+              <p className="card-support-text">{affiliationOverview}</p>
             </div>
             <div className="editor-actions">
               {isEditing ? (
@@ -625,6 +663,16 @@ export function AffiliationWorkspace({
                     <span>{affiliation.endDate ?? text.present}</span>
                   </div>
                   <div className="profile-history-body">
+                    <dl className="field-list">
+                      <div className="field-row">
+                        <dt>{text.period}</dt>
+                        <dd>{getTimelineSummary(affiliation, text.present)}</dd>
+                      </div>
+                      <div className="field-row">
+                        <dt>Edit</dt>
+                        <dd>{getNextActionSummary(affiliation)}</dd>
+                      </div>
+                    </dl>
                     {(affiliation.department || affiliation.labName) && (
                       <div className="profile-history-meta">
                         {affiliation.department ? (

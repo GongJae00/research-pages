@@ -50,6 +50,13 @@ function isRuntimeMergeEntry(candidate: unknown): candidate is Record<string, un
   return typeof candidate === "object" && candidate !== null;
 }
 
+function getOptionalRuntimeString(
+  entry: Record<string, unknown>,
+  key: string,
+): string | undefined {
+  return typeof entry[key] === "string" ? entry[key] : undefined;
+}
+
 function sanitizeConversationFeed(
   entries: unknown[],
 ): AgentOpsRuntimeState["conversationFeed"] {
@@ -216,6 +223,9 @@ function sanitizeRuntimeTeamUpdates(teams: TeamUnit[], runtimeState: AgentOpsRun
       {
         ...entry,
         state: entry.state && validTeamStates.has(entry.state) ? entry.state : undefined,
+        objective: getOptionalRuntimeString(entry, "objective"),
+        currentDeliverable: getOptionalRuntimeString(entry, "currentDeliverable"),
+        nextHandoff: getOptionalRuntimeString(entry, "nextHandoff"),
       },
     ];
   });
@@ -243,6 +253,8 @@ function sanitizeRuntimeTeamUpdates(teams: TeamUnit[], runtimeState: AgentOpsRun
       {
         ...entry,
         state: entry.state && validAgentStates.has(entry.state) ? entry.state : undefined,
+        currentTask: getOptionalRuntimeString(entry, "currentTask"),
+        lastUpdate: getOptionalRuntimeString(entry, "lastUpdate"),
       },
     ];
   });
