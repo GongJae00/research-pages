@@ -1094,6 +1094,10 @@ export function AffiliationWorkspace({
               <dd>{getTimelineSummary(affiliation, locale)}</dd>
             </div>
             <div className="field-row">
+              <dt>{getTimelineCheckLabel(locale)}</dt>
+              <dd>{getTimelineCheckSummary(affiliation, locale, text)}</dd>
+            </div>
+            <div className="field-row">
               <dt>{getSaveReadinessLabel(locale)}</dt>
               <dd>{getAffiliationEditReadiness(affiliation, locale, text)}</dd>
             </div>
@@ -1309,6 +1313,10 @@ export function AffiliationWorkspace({
                   <div className="field-row">
                     <dt>{getNextUpdateLabel(locale)}</dt>
                     <dd>{getNextActionSummary(focusedDraftAffiliation, locale)}</dd>
+                  </div>
+                  <div className="field-row">
+                    <dt>{getTimelineCheckLabel(locale)}</dt>
+                    <dd>{getTimelineCheckSummary(focusedDraftAffiliation, locale, text)}</dd>
                   </div>
                   <div className="field-row">
                     <dt>{getEditFocusLabel(locale)}</dt>
