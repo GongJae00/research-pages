@@ -427,16 +427,14 @@ export function HomepageAgentControlSection({
                 </div>
                 {setupFlowDigest ? (
                   <div className={styles.setupSummaryBar} aria-label={copy.setupStepsLabel}>
-                    <div className={styles.setupSummaryLead}>
+                    <div className={styles.setupSummaryLeadCompact}>
                       <span className={styles.metaLabel}>{setupFlowLabel}</span>
-                      <div className={styles.setupSummaryInline}>
-                        <span className={styles.setupSummaryTag}>
-                          {copy.activeSetup}: {nextSetupCommand?.title ?? copy.setupCommand}
-                        </span>
-                        <span className={styles.setupSummaryTag}>
-                          {formatSetupPair(selectedProvider?.label, selectedTeam?.name)}
-                        </span>
-                      </div>
+                      <strong className={styles.setupSummaryHeadline}>
+                        {formatSetupPair(selectedProvider?.label, selectedTeam?.name)}
+                      </strong>
+                      <span className={styles.setupSummaryMeta}>
+                        {copy.nextActionLabel}: {nextSetupCommand?.title ?? copy.setupCommand}
+                      </span>
                     </div>
                     <div className={styles.setupScanRowCompact}>
                       <div className={styles.setupScanCompactItem}>
