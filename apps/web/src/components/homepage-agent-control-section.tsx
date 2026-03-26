@@ -386,6 +386,28 @@ export function HomepageAgentControlSection({
     return left.step.localeCompare(right.step);
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
+  const setupHeaderFlow = (
+    <div className={styles.setupHeaderFlow} aria-label={copy.setupSequenceIntro}>
+      <div className={styles.setupHeaderFlowChip}>
+        <span className={styles.setupHeaderFlowStep}>01</span>
+        <strong>{copy.chooseProvider}</strong>
+      </div>
+      <span className={styles.setupHeaderFlowArrow} aria-hidden="true">
+        &rarr;
+      </span>
+      <div className={styles.setupHeaderFlowChip}>
+        <span className={styles.setupHeaderFlowStep}>02</span>
+        <strong>{copy.chooseTeam}</strong>
+      </div>
+      <span className={styles.setupHeaderFlowArrow} aria-hidden="true">
+        &rarr;
+      </span>
+      <div className={`${styles.setupHeaderFlowChip} ${styles.setupHeaderFlowChipAccent}`}>
+        <span className={styles.setupHeaderFlowStep}>03</span>
+        <strong>{nextSetupCommand?.title ?? copy.nextCommandLabel}</strong>
+      </div>
+    </div>
+  );
   const activeSetupSummary = (
     <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
       <div className={styles.setupCompactSummaryItem}>
@@ -574,6 +596,8 @@ export function HomepageAgentControlSection({
                   ) : null}
                 </div>
               </div>
+
+              {setupHeaderFlow}
 
               <div className={styles.setupHeaderSummaryRow}>
                 <span className={styles.setupHeaderSummaryLabel}>{copy.activeSetup}</span>

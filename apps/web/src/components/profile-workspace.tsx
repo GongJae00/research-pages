@@ -599,15 +599,26 @@ export function ProfileWorkspace({
   const linkUrlLabel = isKo ? "링크 주소" : "URL";
   const linkUrlPlaceholder = isKo ? "예: https://github.com/..." : "e.g. https://github.com/...";
   const emailPlaceholder = isKo ? "예: name@university.ac.kr" : "e.g. name@university.edu";
+  const enteredEmailCount = draftProfile.emails.filter((email) => email.trim().length > 0).length;
+  const enteredLinkCount = draftProfile.links.filter((link) => link.url.trim().length > 0).length;
+  const primaryDraftEmailIndex = draftProfile.emails.findIndex((email) => email.trim().length > 0);
+  const primaryDraftLinkIndex = draftProfile.links.findIndex((link) => link.url.trim().length > 0);
+  const primaryDraftEmail =
+    primaryDraftEmailIndex >= 0 ? draftProfile.emails[primaryDraftEmailIndex].trim() : "";
+  const primaryDraftLink = primaryDraftLinkIndex >= 0 ? draftProfile.links[primaryDraftLinkIndex] : null;
+  const primaryDraftLinkHref = primaryDraftLink ? normalizeLink(primaryDraftLink.url) : "";
+  const primaryDraftLinkDisplayUrl = primaryDraftLinkHref
+    ? getProfileLinkDisplayUrl(primaryDraftLinkHref)
+    : "";
   const contactSectionDescription = isKo
-    ? "공개 가능한 연락처와 링크만 남겨 두세요. 첫 번째 이메일과 링크가 프로필 요약과 공개 페이지 기본값으로 재사용됩니다."
-    : "Keep only public-facing contacts here. The first email and link become the primary summary and public-page defaults.";
+    ? "공개 가능한 연락처만 두고, 첫 번째로 채운 이메일과 링크가 대표 요약으로 쓰이게 맞춰두세요."
+    : "Keep only public-facing contacts here. The first filled email and link become the primary summary.";
   const emailCountLabel = isKo
-    ? `이메일 ${draftProfile.emails.length}`
-    : `${draftProfile.emails.length} email${draftProfile.emails.length === 1 ? "" : "s"}`;
+    ? `이메일 ${enteredEmailCount}`
+    : `${enteredEmailCount} email${enteredEmailCount === 1 ? "" : "s"}`;
   const linkCountLabel = isKo
-    ? `링크 ${draftProfile.links.length}`
-    : `${draftProfile.links.length} link${draftProfile.links.length === 1 ? "" : "s"}`;
+    ? `링크 ${enteredLinkCount}`
+    : `${enteredLinkCount} link${enteredLinkCount === 1 ? "" : "s"}`;
   const careerDocumentsTitle = isKo ? "커리어 문서" : "Career documents";
   const careerHubTitle = isKo ? "커리어 운영 허브" : "Career hub";
   const careerHubDescription = isKo
@@ -1801,6 +1812,55 @@ export function ProfileWorkspace({
                   <p>{contactSectionDescription}</p>
                 </div>
                 <div className="profile-form-grid">
+                  <div className="editor-field-full">
+                    {renderProfileSummaryRows(
+                      [
+                        {
+                          key: "draft-primary-email",
+                          label: text.email,
+                          badge: text.primaryItem,
+                          value: primaryDraftEmail ? (
+                            <span className="profile-inline-list profile-inline-list-muted">
+                              <a href={`mailto:${primaryDraftEmail}`} className="profile-inline-link">
+                                {primaryDraftEmail}
+                              </a>
+                            </span>
+                          ) : (
+                            <span className="profile-empty-copy">{text.emptyValue}</span>
+                          ),
+                        },
+                        {
+                          key: "draft-primary-link",
+                          label: onlineLinksLabel,
+                          badge: text.primaryItem,
+                          value:
+                            primaryDraftLink && primaryDraftLinkHref ? (
+                              <span className="profile-inline-list profile-inline-list-muted">
+                                <span className="pill pill-gray">
+                                  {getProfileLinkLabel(locale, {
+                                    kind: primaryDraftLink.kind,
+                                    label: primaryDraftLink.label,
+                                  })}
+                                </span>
+                                <a
+                                  href={primaryDraftLinkHref}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="profile-inline-link"
+                                >
+                                  <span>{primaryDraftLinkDisplayUrl}</span>
+                                  <ExternalLink size={13} />
+                                </a>
+                              </span>
+                            ) : (
+                              <span className="profile-empty-copy">{text.emptyValue}</span>
+                            ),
+                        },
+                      ],
+                      text.emptyValue,
+                    )}
+                  </div>
+
                   <div className="profile-array-section editor-field-full">
                     <div className="profile-array-header">
                       <div className="profile-inline-list profile-inline-list-muted">
@@ -1819,7 +1879,7 @@ export function ProfileWorkspace({
                     <div className="profile-array-list">
                       {draftProfile.emails.map((email, index) => (
                         <div key={`email-${index}`}>
-                          {index === 0 ? (
+                          {index === primaryDraftEmailIndex ? (
                             <div className="profile-inline-list profile-inline-list-muted">
                               <span className="pill pill-blue">{text.primaryItem}</span>
                             </div>
@@ -1863,7 +1923,7 @@ export function ProfileWorkspace({
                     <div className="profile-array-list">
                       {draftProfile.links.map((link, index) => (
                         <div key={`link-${index}`}>
-                          {index === 0 ? (
+                          {index === primaryDraftLinkIndex ? (
                             <div className="profile-inline-list profile-inline-list-muted">
                               <span className="pill pill-blue">{text.primaryItem}</span>
                             </div>
