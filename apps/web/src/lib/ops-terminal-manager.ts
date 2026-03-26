@@ -443,7 +443,7 @@ export function sendOpsTerminalInput(sessionId: string, input: string) {
 
   reconcileSessionState(record);
 
-  if (record.stopRequestedAt) {
+  if (record.snapshot.status === "stopping") {
     throw new Error(`Session "${sessionId}" is stopping.`);
   }
 
@@ -493,7 +493,7 @@ export async function stopOpsTerminalSession(sessionId: string) {
     } satisfies OpsTerminalStopResult;
   }
 
-  if (record.snapshot.status === "stopping" || record.stopRequestedAt) {
+  if (record.snapshot.status === "stopping") {
     return {
       session: record.snapshot,
       transition: "stop-requested",
