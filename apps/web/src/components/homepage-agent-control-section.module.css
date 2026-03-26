@@ -799,6 +799,30 @@
   min-width: 0;
 }
 
+.nextCommandMeta {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.08rem;
+  min-width: 0;
+}
+
+.nextCommandMetaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.12rem;
+  min-width: 0;
+  padding: 0.08rem 0.12rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 999px;
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.nextCommandMetaItem strong {
+  color: #0f172a;
+  font-size: 0.68rem;
+  line-height: 1.1;
+}
+
 .nextCommandLead strong {
   color: #0f172a;
   font-size: 0.78rem;

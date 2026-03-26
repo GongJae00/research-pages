@@ -534,10 +534,24 @@ export function HomepageAgentControlSection({
                 <div className={styles.nextCommandStrip}>
                   <div className={styles.nextCommandLead}>
                     <span className={styles.commandStep}>{nextSetupCommand.step}</span>
-                  <div className={styles.nextCommandCopy}>
-                    <span className={styles.metaLabel}>{setupOutputLabel}</span>
-                    <strong>{nextSetupCommand.title}</strong>
-                  </div>
+                    <div className={styles.nextCommandCopy}>
+                      <span className={styles.metaLabel}>{setupOutputLabel}</span>
+                      <strong>{nextSetupCommand.title}</strong>
+                    </div>
+                    <div className={styles.nextCommandMeta}>
+                      <span className={styles.nextCommandMetaItem}>
+                        <span className={styles.metaLabel}>{copy.selectedCliStatusLabel}</span>
+                        <span
+                          className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider?.status ?? "ready")}`}
+                        >
+                          {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
+                        </span>
+                      </span>
+                      <span className={styles.nextCommandMetaItem}>
+                        <span className={styles.metaLabel}>{copy.selectedLaneLabel}</span>
+                        <strong>{selectedTeam?.lane ?? "-"}</strong>
+                      </span>
+                    </div>
                   </div>
                   <div className={styles.nextCommandMain}>
                     <code>{nextSetupCommand.command}</code>
