@@ -26,7 +26,7 @@ const internalNavItems = [
 ] as const;
 
 function getOpsNavigationLabel(locale: string): string {
-  return locale === "ko" ? "내부 관제실" : "Internal control room";
+  return locale === "ko" ? "내부 옵스 보드" : "Internal ops board";
 }
 
 function getNavigationLabel(

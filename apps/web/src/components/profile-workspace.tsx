@@ -912,6 +912,28 @@ export function ProfileWorkspace({
     () => normalizeStructuredLinks(savedProfile.links),
     [savedProfile.links],
   );
+  const savedAdditionalEmailCountLabel = useMemo(() => {
+    const additionalCount = Math.max(savedEmails.length - 1, 0);
+
+    if (additionalCount === 0) {
+      return undefined;
+    }
+
+    return isKo
+      ? `추가 이메일 ${additionalCount}`
+      : `${additionalCount} more email${additionalCount === 1 ? "" : "s"}`;
+  }, [isKo, savedEmails.length]);
+  const savedAdditionalLinkCountLabel = useMemo(() => {
+    const additionalCount = Math.max(savedLinks.length - 1, 0);
+
+    if (additionalCount === 0) {
+      return undefined;
+    }
+
+    return isKo
+      ? `추가 링크 ${additionalCount}`
+      : `${additionalCount} more link${additionalCount === 1 ? "" : "s"}`;
+  }, [isKo, savedLinks.length]);
   const savedEmailCountLabel = useMemo(
     () =>
       isKo
@@ -1100,17 +1122,26 @@ export function ProfileWorkspace({
     ? getProfileLinkDisplayUrl(primarySavedLink.url)
     : "";
   const coreContactSummary = useMemo(() => {
-    const parts = [primarySavedEmail ?? undefined, primarySavedLinkDisplayUrl || undefined];
+    const parts = [
+      savedEmails.length > 0 ? savedEmailCountLabel : undefined,
+      savedLinks.length > 0 ? savedLinkCountLabel : undefined,
+    ];
 
     return joinUniqueTextParts(parts) || text.emptyValue;
-  }, [primarySavedEmail, primarySavedLinkDisplayUrl, text.emptyValue]);
+  }, [
+    savedEmailCountLabel,
+    savedEmails.length,
+    savedLinkCountLabel,
+    savedLinks.length,
+    text.emptyValue,
+  ]);
   const coreContactHighlights = useMemo(
     () =>
       [
-        savedEmails.length > 1 ? savedEmailCountLabel : undefined,
-        savedLinks.length > 1 ? savedLinkCountLabel : undefined,
+        savedAdditionalEmailCountLabel,
+        savedAdditionalLinkCountLabel,
       ].filter(isDefined),
-    [savedEmailCountLabel, savedEmails.length, savedLinkCountLabel, savedLinks.length],
+    [savedAdditionalEmailCountLabel, savedAdditionalLinkCountLabel],
   );
   const coreIdentifierSummary = useMemo(() => {
     const parts = [
@@ -2233,15 +2264,6 @@ export function ProfileWorkspace({
                   <dd>
                     {savedEmails.length > 0 || savedLinks.length > 0 ? (
                       <div className="profile-career-status-list">
-                        {coreContactHighlights.length > 0 ? (
-                          <div className="profile-inline-list profile-inline-list-muted">
-                            {coreContactHighlights.map((item) => (
-                              <span className="pill pill-gray" key={item}>
-                                {item}
-                              </span>
-                            ))}
-                          </div>
-                        ) : null}
                         {primarySavedEmail ? (
                           <div className="profile-career-status-row">
                             <div className="profile-career-status-main">
@@ -2271,6 +2293,15 @@ export function ProfileWorkspace({
                                 <ExternalLink size={13} />
                               </a>
                             </div>
+                          </div>
+                        ) : null}
+                        {coreContactHighlights.length > 0 ? (
+                          <div className="profile-inline-list profile-inline-list-muted">
+                            {coreContactHighlights.map((item) => (
+                              <span className="pill pill-gray" key={item}>
+                                {item}
+                              </span>
+                            ))}
                           </div>
                         ) : null}
                       </div>
