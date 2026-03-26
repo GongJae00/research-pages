@@ -544,6 +544,29 @@ function getTimelinePlacementSummary(
     : `${sectionName}. Keep closed roles here unless the record needs correction.`;
 }
 
+function getTimelinePlacementScanSummary(
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+) {
+  const section = getAffiliationSectionKey(entry);
+
+  if (section === "current") {
+    return locale === "ko"
+      ? "\ud604\uc7ac \uc18c\uc18d \uc139\uc158\uc5d0 \ubc30\uce58\ub418\uc5b4 \uc0c1\ud0dc \ubcc0\uacbd\uc744 \uba3c\uc800 \ud655\uc778\ud569\ub2c8\ub2e4."
+      : "Shown with current affiliations so status changes are easy to review first.";
+  }
+
+  if (section === "queued") {
+    return locale === "ko"
+      ? "\ub2e4\uc74c \ud655\uc778 \uc139\uc158\uc5d0 \ubc30\uce58\ub418\uc5b4 \uc7ac\uac1c \uc5ec\ubd80\ub97c \uacb0\uc815\ud569\ub2c8\ub2e4."
+      : "Shown in needs follow-up until you decide whether it resumes or closes.";
+  }
+
+  return locale === "ko"
+    ? "\ubcf4\uad00 \uc774\ub825 \uc139\uc158\uc5d0 \ubc30\uce58\ub418\uc5b4 \uae30\ub85d \ubcf4\uc815 \uc2dc\uc5d0\ub9cc \ub2e4\uc2dc \uc5fd\ub2c8\ub2e4."
+    : "Shown in the archived timeline and only reopened for record corrections.";
+}
+
 function getEditActionLabel(entry: AffiliationTimelineEntry, locale: Locale) {
   if (entry.active) {
     return locale === "ko"
@@ -938,8 +961,8 @@ export function AffiliationWorkspace({
                 </dd>
               </div>
               <div className="field-row">
-                <dt>{getTimelineSnapshotLabel(locale)}</dt>
-                <dd>{getTimelineSummary(affiliation, locale)}</dd>
+                <dt>{getTimelinePlacementLabel(locale)}</dt>
+                <dd>{getTimelinePlacementScanSummary(affiliation, locale)}</dd>
               </div>
             </dl>
             {(affiliation.department || affiliation.labName) && (
