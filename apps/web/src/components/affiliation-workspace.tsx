@@ -981,6 +981,15 @@ export function AffiliationWorkspace({
     archived: archivedAffiliations,
   } =
     getAffiliationSections(orderedResolvedAffiliations);
+  const currentCorrections = currentAffiliations.filter((item) =>
+    needsTimelineCorrection(item),
+  ).length;
+  const queuedCorrections = queuedAffiliations.filter((item) =>
+    needsTimelineCorrection(item),
+  ).length;
+  const archivedCorrections = archivedAffiliations.filter((item) =>
+    needsTimelineCorrection(item),
+  ).length;
   const {
     current: currentDraftAffiliations,
     queued: queuedDraftAffiliations,
@@ -1910,7 +1919,12 @@ export function AffiliationWorkspace({
                 <div>
                   <h3>{getCurrentSectionLabel(locale, currentAffiliations.length)}</h3>
                   <p className="card-support-text">
-                    {getCurrentSectionHint(locale, currentAffiliations.length)}
+                    {[
+                      getCurrentSectionHint(locale, currentAffiliations.length),
+                      getTimelineCorrectionSectionHint(locale, currentCorrections),
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
                   </p>
                 </div>
               </div>
@@ -1926,7 +1940,12 @@ export function AffiliationWorkspace({
                 <div>
                   <h3>{getQueuedSectionLabel(locale, queuedAffiliations.length)}</h3>
                   <p className="card-support-text">
-                    {getQueuedSectionHint(locale, queuedAffiliations.length)}
+                    {[
+                      getQueuedSectionHint(locale, queuedAffiliations.length),
+                      getTimelineCorrectionSectionHint(locale, queuedCorrections),
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
                   </p>
                 </div>
               </div>
@@ -1942,7 +1961,12 @@ export function AffiliationWorkspace({
                 <div>
                   <h3>{getArchivedSectionLabel(locale, archivedAffiliations.length)}</h3>
                   <p className="card-support-text">
-                    {getArchivedSectionHint(locale, archivedAffiliations.length)}
+                    {[
+                      getArchivedSectionHint(locale, archivedAffiliations.length),
+                      getTimelineCorrectionSectionHint(locale, archivedCorrections),
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
                   </p>
                 </div>
               </div>
