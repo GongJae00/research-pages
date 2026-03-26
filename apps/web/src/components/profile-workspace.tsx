@@ -425,18 +425,6 @@ function getProfileLinkDisplayUrl(url: string) {
   return url.replace(/^https?:\/\//i, "").replace(/\/$/, "");
 }
 
-function summarizePrimaryValue(values: string[], formatter?: (value: string) => string) {
-  const primaryValue = values[0];
-  if (!primaryValue) {
-    return undefined;
-  }
-
-  const displayValue = formatter ? formatter(primaryValue) : primaryValue;
-  const remainingCount = values.length - 1;
-
-  return remainingCount > 0 ? `${displayValue} +${remainingCount}` : displayValue;
-}
-
 function normalizePublicationMonth(value?: string) {
   const source = value?.trim();
   if (!source) return undefined;
@@ -924,6 +912,20 @@ export function ProfileWorkspace({
     () => normalizeStructuredLinks(savedProfile.links),
     [savedProfile.links],
   );
+  const savedEmailCountLabel = useMemo(
+    () =>
+      isKo
+        ? `이메일 ${savedEmails.length}`
+        : `${savedEmails.length} email${savedEmails.length === 1 ? "" : "s"}`,
+    [isKo, savedEmails.length],
+  );
+  const savedLinkCountLabel = useMemo(
+    () =>
+      isKo
+        ? `링크 ${savedLinks.length}`
+        : `${savedLinks.length} link${savedLinks.length === 1 ? "" : "s"}`,
+    [isKo, savedLinks.length],
+  );
   const linkedDocuments = useMemo(
     () => documents.filter((document) => linkedDocumentIds.includes(document.id)),
     [documents, linkedDocumentIds],
@@ -1093,18 +1095,14 @@ export function ProfileWorkspace({
   );
   const heroLinks = useMemo(() => savedLinks.slice(0, 3), [savedLinks]);
   const primarySavedLink = savedLinks[0] ?? null;
-  const secondarySavedLinks = savedLinks.slice(1);
   const coreContactSummary = useMemo(() => {
     const parts = [
-      summarizePrimaryValue(savedEmails),
-      summarizePrimaryValue(
-        savedLinks.map((link) => link.url),
-        getProfileLinkDisplayUrl,
-      ),
+      savedEmails.length > 0 ? savedEmailCountLabel : undefined,
+      savedLinks.length > 0 ? savedLinkCountLabel : undefined,
     ];
 
     return joinUniqueTextParts(parts) || text.emptyValue;
-  }, [savedEmails, savedLinks, text.emptyValue]);
+  }, [savedEmailCountLabel, savedEmails.length, savedLinkCountLabel, savedLinks.length, text.emptyValue]);
   const coreIdentifierSummary = useMemo(() => {
     const parts = [
       savedProfile.nationalResearcherNumber ? text.nationalId : undefined,
@@ -2242,23 +2240,12 @@ export function ProfileWorkspace({
                           <div className="profile-career-status-main">
                             <div className="profile-inline-list profile-inline-list-muted">
                               <strong>{text.emailsLabel}</strong>
-                              <span className="pill pill-blue">{text.primaryItem}</span>
+                              <span className="pill pill-gray">{savedEmailCountLabel}</span>
                             </div>
                             {savedEmails.length > 0 ? (
-                              <>
-                                <a href={`mailto:${savedEmails[0]}`} className="profile-inline-link">
-                                  {savedEmails[0]}
-                                </a>
-                                {savedEmails.length > 1 ? (
-                                  <div className="profile-inline-list profile-inline-list-muted">
-                                    {savedEmails.slice(1).map((email) => (
-                                      <a key={email} href={`mailto:${email}`} className="profile-inline-link">
-                                        {email}
-                                      </a>
-                                    ))}
-                                  </div>
-                                ) : null}
-                              </>
+                              <a href={`mailto:${savedEmails[0]}`} className="profile-inline-link">
+                                {savedEmails[0]}
+                              </a>
                             ) : (
                               <span>{text.emptyValue}</span>
                             )}
@@ -2268,46 +2255,26 @@ export function ProfileWorkspace({
                           <div className="profile-career-status-main">
                             <div className="profile-inline-list profile-inline-list-muted">
                               <strong>{text.linksLabel}</strong>
-                              <span className="pill pill-blue">{text.primaryItem}</span>
+                              <span className="pill pill-gray">{savedLinkCountLabel}</span>
                             </div>
                             {primarySavedLink ? (
-                              <>
-                                <div className="profile-link-stack">
-                                  <a
-                                    href={primarySavedLink.url}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="profile-link-row"
-                                  >
-                                    <strong>
-                                      {getProfileLinkLabel(locale, {
-                                        kind: primarySavedLink.kind,
-                                        label: primarySavedLink.label ?? "",
-                                      })}
-                                    </strong>
-                                    <span>{getProfileLinkDisplayUrl(primarySavedLink.url)}</span>
-                                    <ExternalLink size={13} />
-                                  </a>
-                                </div>
-                                {secondarySavedLinks.length > 0 ? (
-                                  <div className="profile-inline-list profile-inline-list-muted">
-                                    {secondarySavedLinks.map((link) => (
-                                      <a
-                                        key={`${link.kind}-${link.url}`}
-                                        href={link.url}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className="profile-inline-link"
-                                      >
-                                        {getProfileLinkLabel(locale, {
-                                          kind: link.kind,
-                                          label: link.label ?? "",
-                                        })}
-                                      </a>
-                                    ))}
-                                  </div>
-                                ) : null}
-                              </>
+                              <div className="profile-link-stack">
+                                <a
+                                  href={primarySavedLink.url}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="profile-link-row"
+                                >
+                                  <strong>
+                                    {getProfileLinkLabel(locale, {
+                                      kind: primarySavedLink.kind,
+                                      label: primarySavedLink.label ?? "",
+                                    })}
+                                  </strong>
+                                  <span>{getProfileLinkDisplayUrl(primarySavedLink.url)}</span>
+                                  <ExternalLink size={13} />
+                                </a>
+                              </div>
                             ) : (
                               <span>{text.emptyValue}</span>
                             )}
