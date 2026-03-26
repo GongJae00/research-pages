@@ -577,6 +577,17 @@ export function HomepageAgentControlSection({
 
             <div className={styles.setupWorkbench}>
               <div className={styles.setupSelectionPanel} aria-label={getSetupInputLabel(locale)}>
+                <div className={styles.setupSelectionLead}>
+                  <div className={styles.setupSelectionLeadTop}>
+                    <span className={styles.setupSelectionLeadLabel}>{copy.activeSetup}</span>
+                    {nextSetupCommand ? (
+                      <span className={styles.nextCommandOutput}>{nextSetupCommand.title}</span>
+                    ) : null}
+                  </div>
+                  <p className={styles.setupSelectionLeadHint}>{copy.setupSequenceIntro}</p>
+                  {activeSetupSummary}
+                </div>
+
                 <div className={styles.setupPickerGrid}>
                   <div className={`${styles.setupPicker} ${styles.setupPickerPrimary}`} aria-label={copy.chooseProvider}>
                     <div className={styles.setupPickerLabelGroup}>
@@ -648,10 +659,10 @@ export function HomepageAgentControlSection({
                 <div className={styles.nextCommandStrip}>
                   <div className={styles.nextCommandLead}>
                     <div className={styles.setupSelectionLeadTop}>
-                      <span className={styles.setupSelectionLeadLabel}>{copy.activeSetup}</span>
+                      <span className={styles.setupSelectionLeadLabel}>{copy.nextCommandLabel}</span>
                       <span className={styles.nextCommandOutput}>{nextSetupCommand.title}</span>
                     </div>
-                    {activeSetupSummary}
+                    <p className={styles.setupSelectionLeadHint}>{copy.nextCommandHelp}</p>
                   </div>
 
                   <div className={styles.nextCommandMain}>

@@ -349,10 +349,13 @@ function getAffiliationScanSummary(
   entry: AffiliationTimelineEntry,
   locale: Locale,
 ) {
-  return getLegacyAffiliationScanSummary(entry, locale).replace(
-    ` ${String.fromCharCode(51724)} `,
-    " / ",
-  );
+  return [
+    getLegacyAffiliationScanSummary(entry, locale).replace(
+      ` ${String.fromCharCode(51724)} `,
+      " / ",
+    ),
+    getAffiliationSectionName(getAffiliationSectionKey(entry), locale),
+  ].join(" / ");
 }
 
 function getAffiliationOnePassSummary(
@@ -360,8 +363,7 @@ function getAffiliationOnePassSummary(
   locale: Locale,
 ) {
   return [
-    getAffiliationStateLabel(entry, locale),
-    getTimelineSummary(entry, locale),
+    getAffiliationScanSummary(entry, locale),
     `${getNextUpdateLabel(locale)}: ${getPrimaryEditActionLabel(entry, locale)}`,
   ].join(" / ");
 }
