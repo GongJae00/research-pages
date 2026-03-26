@@ -169,7 +169,9 @@ const copy = {
     koreanName: "국문 이름",
     englishName: "영문 이름",
     email: "이메일",
+    emailsLabel: "이메일",
     link: "홈페이지",
+    linksLabel: "링크",
     addEmail: "이메일 추가",
     addLink: "홈페이지 추가",
     nationalId: "국가연구자번호",
@@ -250,7 +252,9 @@ const copy = {
     koreanName: "Korean name",
     englishName: "English name",
     email: "Email",
+    emailsLabel: "Emails",
     link: "Homepage",
+    linksLabel: "Links",
     addEmail: "Add email",
     addLink: "Add homepage",
     nationalId: "National researcher ID",
@@ -429,6 +433,14 @@ function summarizePrimaryValue(values: string[], formatter?: (value: string) => 
   const remainingCount = values.length - 1;
 
   return remainingCount > 0 ? `${displayValue} +${remainingCount}` : displayValue;
+}
+
+function formatCountLabel(locale: Locale, count: number, singularLabel: string, pluralLabel: string) {
+  if (locale === "ko") {
+    return `${pluralLabel} ${count}`;
+  }
+
+  return `${count} ${count === 1 ? singularLabel : pluralLabel}`;
 }
 
 function normalizePublicationMonth(value?: string) {
@@ -1140,6 +1152,18 @@ export function ProfileWorkspace({
         savedProfile.orcid ? text.orcid : undefined,
       ].filter(isDefined),
     [savedProfile.nationalResearcherNumber, savedProfile.orcid, text.nationalId, text.orcid],
+  );
+  const coreContactHighlights = useMemo(
+    () =>
+      [
+        savedEmails.length > 0
+          ? formatCountLabel(locale, savedEmails.length, text.email, text.emailsLabel)
+          : undefined,
+        savedLinks.length > 0
+          ? formatCountLabel(locale, savedLinks.length, text.link, text.linksLabel)
+          : undefined,
+      ].filter(isDefined),
+    [locale, savedEmails.length, savedLinks.length, text.email, text.emailsLabel, text.link, text.linksLabel],
   );
   const coreFocusHighlights = useMemo(
     () =>
@@ -2216,9 +2240,18 @@ export function ProfileWorkspace({
                   <dd>
                     {savedEmails.length > 0 || savedLinks.length > 0 ? (
                       <div className="profile-career-status-list">
+                        {coreContactHighlights.length > 0 ? (
+                          <div className="profile-inline-list profile-inline-list-muted">
+                            {coreContactHighlights.map((item) => (
+                              <span className="pill pill-gray" key={item}>
+                                {item}
+                              </span>
+                            ))}
+                          </div>
+                        ) : null}
                         <div className="profile-career-status-row">
                           <div className="profile-career-status-main">
-                            <strong>{text.contacts}</strong>
+                            <strong>{text.emailsLabel}</strong>
                             {savedEmails.length > 0 ? (
                               <div className="profile-inline-list">
                                 {savedEmails.map((email) => (
@@ -2234,7 +2267,7 @@ export function ProfileWorkspace({
                         </div>
                         <div className="profile-career-status-row">
                           <div className="profile-career-status-main">
-                            <strong>{onlineLinksLabel}</strong>
+                            <strong>{text.linksLabel}</strong>
                             {savedLinks.length > 0 ? (
                               <div className="profile-link-stack">
                                 {savedLinks.map((link) => (

@@ -31,6 +31,7 @@ function getSessionErrorResponse(error: unknown, sessionId?: string) {
   const message = error instanceof Error ? error.message : "Ops terminal request failed.";
   const sessions = listOpsTerminalSessions();
   const session = sessionId ? sessions.find((item) => item.id === sessionId) ?? null : null;
+  const availableShells = listOpsShellPresets();
 
   const buildFailureResponse = (
     status: number,
@@ -45,9 +46,18 @@ function getSessionErrorResponse(error: unknown, sessionId?: string) {
         recovery,
         session,
         sessions,
+        availableShells,
       },
       { status },
     );
+
+  if (message.startsWith("Failed to start ")) {
+    return buildFailureResponse(
+      503,
+      "error",
+      "The shell session could not start. Confirm the local shell is available, then retry session creation.",
+    );
+  }
 
   if (message.startsWith('Unknown session "')) {
     return buildFailureResponse(404, "missing", "Refresh terminal sessions and retry with an active session.");
@@ -92,6 +102,7 @@ function getSessionErrorResponse(error: unknown, sessionId?: string) {
           : undefined,
       session,
       sessions,
+      availableShells,
     },
     { status: 500 },
   );
