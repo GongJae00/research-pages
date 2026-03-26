@@ -1091,7 +1091,7 @@ export function AffiliationWorkspace({
             </div>
             <div className="field-row">
               <dt>{getTimelineSnapshotLabel(locale)}</dt>
-              <dd>{getTimelineSummary(affiliation, locale)}</dd>
+              <dd>{getAffiliationScanSummary(affiliation, locale)}</dd>
             </div>
             <div className="field-row">
               <dt>{getTimelineCheckLabel(locale)}</dt>
@@ -1308,11 +1308,15 @@ export function AffiliationWorkspace({
                   </div>
                   <div className="field-row">
                     <dt>{getTimelineSnapshotLabel(locale)}</dt>
-                    <dd>{getTimelineSummary(focusedDraftAffiliation, locale)}</dd>
+                    <dd>{getAffiliationScanSummary(focusedDraftAffiliation, locale)}</dd>
                   </div>
                   <div className="field-row">
                     <dt>{getNextUpdateLabel(locale)}</dt>
                     <dd>{getNextActionSummary(focusedDraftAffiliation, locale)}</dd>
+                  </div>
+                  <div className="field-row">
+                    <dt>{getTimelinePlacementLabel(locale)}</dt>
+                    <dd>{getTimelinePlacementSummary(focusedDraftAffiliation, locale)}</dd>
                   </div>
                   <div className="field-row">
                     <dt>{getTimelineCheckLabel(locale)}</dt>
