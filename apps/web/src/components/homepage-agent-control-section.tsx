@@ -255,6 +255,7 @@ export function HomepageAgentControlSection({
   const [copiedCommand, setCopiedCommand] = useState<"connect" | "assign" | null>(null);
   const copy = getCopy(locale, opsEnabled);
   const setupBuilderHint = getSetupBuilderHint(locale);
+  const setupFlowSteps = getSetupFlowSteps(locale);
 
   useEffect(() => {
     let mounted = true;
@@ -354,7 +355,7 @@ export function HomepageAgentControlSection({
     return left.step.localeCompare(right.step);
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
-  const setupFlowTitle = getSetupFlowSteps(locale).join(" -> ");
+  const setupFlowTitle = setupFlowSteps.join(" -> ");
   const setupFlowDigest = selectedProvider && selectedTeam && nextSetupCommand;
   const setupOutputLabel = getSetupOutputLabel(locale);
   const copyCommand = async (kind: "connect" | "assign") => {
@@ -435,6 +436,14 @@ export function HomepageAgentControlSection({
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
                 <p className={styles.setupBuilderBody}>{setupBuilderHint}</p>
+                <div className={styles.setupStepBar} aria-label={copy.setupStepsLabel}>
+                  {setupFlowSteps.map((step, index) => (
+                    <span className={styles.setupStepPill} key={step}>
+                      <span className={styles.setupStepIndex}>{String(index + 1).padStart(2, "0")}</span>
+                      <span className={styles.setupStepText}>{step}</span>
+                    </span>
+                  ))}
+                </div>
                 {setupFlowDigest ? (
                   <div
                     className={styles.setupScanLine}
