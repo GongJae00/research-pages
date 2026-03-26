@@ -435,7 +435,6 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
-                <p className={styles.setupTitleHint}>{setupBuilderHint}</p>
                 {setupFlowDigest ? (
                   <div
                     className={styles.setupFlowBar}
@@ -481,6 +480,28 @@ export function HomepageAgentControlSection({
                     <span className={styles.setupFlowSequence}>{setupFlowTitle}</span>
                   </div>
                 )}
+                {setupFlowDigest ? (
+                  <div className={styles.setupDigestLine}>
+                    <span className={styles.setupDigestItem}>
+                      <span className={styles.setupDigestKey}>{copy.selectedCli}</span>
+                      <strong>{selectedProvider?.label ?? "-"}</strong>
+                    </span>
+                    <span className={styles.setupDigestDivider} aria-hidden="true">
+                      /
+                    </span>
+                    <span className={styles.setupDigestItem}>
+                      <span className={styles.setupDigestKey}>{copy.selectedTeamLabel}</span>
+                      <strong>{selectedTeam?.name ?? "-"}</strong>
+                    </span>
+                    <span className={styles.setupDigestDivider} aria-hidden="true">
+                      /
+                    </span>
+                    <span className={`${styles.setupDigestItem} ${styles.setupDigestItemAccent}`}>
+                      <span className={styles.setupDigestKey}>{copy.runCommandLabel}</span>
+                      <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
+                    </span>
+                  </div>
+                ) : null}
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
