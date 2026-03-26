@@ -478,6 +478,7 @@ export function HomepageAgentControlSection({
                     </span>
                   ) : null}
                 </div>
+                <p className={styles.setupTitleHint}>{copy.setupSequenceIntro}</p>
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
@@ -599,6 +600,25 @@ export function HomepageAgentControlSection({
                     <div className={styles.nextCommandLabelRow}>
                       <span className={styles.metaLabel}>{copy.activeSetup}</span>
                       <span className={styles.nextCommandOutput}>{setupOutputLabel}</span>
+                    </div>
+                    <div className={styles.nextCommandMetaRow}>
+                      <span className={styles.nextCommandMetaChip}>
+                        <span className={styles.metaLabel}>{copy.selectedCli}</span>
+                        <strong>{selectedProvider?.label ?? "-"}</strong>
+                      </span>
+                      <span className={styles.nextCommandMetaChip}>
+                        <span className={styles.metaLabel}>{copy.selectedCliStatusLabel}</span>
+                        <strong>
+                          {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
+                        </strong>
+                      </span>
+                      <span className={styles.nextCommandMetaChip}>
+                        <span className={styles.metaLabel}>{copy.selectedTeamLabel}</span>
+                        <strong>{selectedTeam?.name ?? "-"}</strong>
+                        <span className={styles.setupSummaryMeta}>
+                          {`${copy.selectedLaneLabel}: ${selectedTeam?.lane ?? "-"}`}
+                        </span>
+                      </span>
                     </div>
                     <div className={styles.nextCommandCopy}>
                       <strong>{`${nextSetupCommand.step}. ${nextSetupCommand.title}`}</strong>

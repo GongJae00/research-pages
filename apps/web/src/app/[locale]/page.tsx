@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import { HomepageAgentControlSection } from "@/components/homepage-agent-control-section";
+import { RBotPanel } from "@/components/r-bot-panel";
 import { dashboardSnapshot } from "@/lib/dashboard-snapshot";
 import { isDemoPreviewRuntimeEnabled } from "@/lib/demo-preview";
 import { getLiveAgentOperationsSnapshot } from "@/lib/agent-ops-runtime";
@@ -500,6 +501,8 @@ export default async function LocaleRoot({ params }: Props) {
                   </div>
                 </article>
               </div>
+
+              <RBotPanel locale={resolvedLocale} />
             </div>
           </div>
         </article>
