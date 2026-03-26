@@ -357,15 +357,38 @@ function getAffiliationOnePassSummary(
 }
 
 function getCurrentTimelineLabel(locale: Locale) {
-  return locale === "ko" ? "\ud0c0\uc784\ub77c\uc778 \ud604\uc7ac \uc5ec\ubd80" : "Current in timeline";
+  return locale === "ko"
+    ? "\ud604\uc7ac \uc18c\uc18d \uc139\uc158 \ud45c\uc2dc"
+    : "Show with current affiliations";
 }
 
 function getCurrentTimelineValue(active: boolean, locale: Locale) {
   if (active) {
-    return locale === "ko" ? "\ud604\uc7ac" : "Current";
+    return locale === "ko" ? "\uc608" : "Yes";
   }
 
-  return locale === "ko" ? "\ud604\uc7ac \uc544\ub2d8" : "Not current";
+  return locale === "ko" ? "\uc544\ub2c8\uc624" : "No";
+}
+
+function getCurrentTimelineHint(
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+) {
+  if (entry.active) {
+    return locale === "ko"
+      ? "\uc774 \ud56d\ubaa9\uc774 \ud604\uc7ac \uc18c\uc18d \uc139\uc158\uc5d0 \ub0a8\uc544\uc57c \ud55c\ub2e4\uba74 \ucf1c \ub450\uc138\uc694."
+      : "Keep this on when the role should stay in Current affiliations.";
+  }
+
+  if (entry.appointmentStatus === "planned" || entry.appointmentStatus === "paused") {
+    return locale === "ko"
+      ? "\uc608\uc815 \ub610\ub294 \ubcf4\ub958 \uc18c\uc18d\uc740 \ub044\uace0 \ub450\uc5b4 \ub2e4\uc74c \ud655\uc778 \uc139\uc158\uc5d0 \ub0a8\uac8c \ud558\uc138\uc694."
+      : "Leave this off so planned or paused roles stay in Needs follow-up.";
+  }
+
+  return locale === "ko"
+    ? "\uc885\ub8cc\ub41c \uc5ed\ud560\uc740 \ub044\uace0 \ub450\uc5b4 \ubcf4\uad00 \uc774\ub825\uc5d0 \ub0a8\uac8c \ud558\uc138\uc694."
+    : "Leave this off so closed roles stay in Archived timeline.";
 }
 
 function getAffiliationEditReadiness(
@@ -395,13 +418,13 @@ function getPrimaryNextActionSummary(
   if (entry.active && entry.appointmentStatus !== "active") {
     return locale === "ko"
       ? "\ud604\uc7ac \uc5ec\ubd80\ub97c \uc720\uc9c0\ud560 \uac83\uc774\uba74 \uc0c1\ud0dc\ub97c \uc9c4\ud589 \uc911\uc73c\ub85c \ub9de\ucd94\uace0, \uc544\ub2c8\uba74 \ud604\uc7ac \uc5ec\ubd80\ub97c \uaebc \ud0c0\uc784\ub77c\uc778 \uc704\uce58\ub97c \uc815\ub9ac\ud558\uc138\uc694."
-      : "If this should stay current, switch the status to active. Otherwise turn off current in timeline first.";
+      : "If this should stay current, switch the status to active. Otherwise move it out of Current affiliations first.";
   }
 
   if (!entry.active && entry.appointmentStatus === "active") {
     return locale === "ko"
       ? "\ud604\uc7ac \uc5ec\ubd80\ub97c \ub2e4\uc2dc \ucf1c\uac70\ub098 \uc0c1\ud0dc\ub97c \ubc14\uafd4 \uc774 \ud56d\ubaa9\uc758 \ud0c0\uc784\ub77c\uc778 \uc704\uce58\ub97c \uba3c\uc800 \uc815\ud558\uc138\uc694."
-      : "Turn current in timeline back on, or move the status out of active before editing anything else.";
+      : "Show this with Current affiliations again, or move the status out of active before editing anything else.";
   }
 
   if (entry.active && entry.endDate) {
@@ -727,7 +750,7 @@ function getTimelineCheckSummary(
   if (!entry.active && entry.appointmentStatus === "active") {
     return locale === "ko"
       ? "\uc0c1\ud0dc\ub294 \uc9c4\ud589 \uc911\uc778\ub370 \ud604\uc7ac \uc5ec\ubd80\ub294 \uaebc\uc838 \uc788\uc2b5\ub2c8\ub2e4. \uc774 \ud56d\ubaa9\uc774 \uc5b4\ub290 \uc139\uc158\uc5d0 \uac08\uc9c0 \uba3c\uc800 \uc815\ud558\uc138\uc694."
-      : "Status says active, but current in timeline is off. Decide whether this belongs with current roles or a closed section first.";
+      : "Status says active, but this is not shown with Current affiliations. Decide whether it belongs with current roles or a closed section first.";
   }
 
   if (entry.active && entry.endDate) {
@@ -819,7 +842,7 @@ function getTimelineEditorSectionHint(
   if (entry.active) {
     return locale === "ko"
       ? "\uc774 \uc18c\uc18d\uc774 \uc5b4\ub514\uc5d0 \ub180\uc9c0 \uba3c\uc800 \uace0\uc815\ud558\uc138\uc694. \uc0c1\ud0dc, \ud0c0\uc784\ub77c\uc778 \ud604\uc7ac \uc5ec\ubd80, \uc2dc\uc791\u00b7\uc885\ub8cc \ub0a0\uc9dc\uac00 \ubcf4\uae30 \uc21c\uc11c\ub97c \uacb0\uc815\ud569\ub2c8\ub2e4."
-      : "Set the timeline placement first. Status, current-in-timeline state, and start or end dates decide where this entry appears.";
+      : "Set the timeline placement first. Status, whether it shows with Current affiliations, and start or end dates decide where this entry appears.";
   }
 
   if (entry.appointmentStatus === "planned" || entry.appointmentStatus === "paused") {
@@ -1507,6 +1530,7 @@ export function AffiliationWorkspace({
               <option value="active">{getCurrentTimelineValue(true, locale)}</option>
               <option value="inactive">{getCurrentTimelineValue(false, locale)}</option>
             </select>
+            <p className="card-support-text">{getCurrentTimelineHint(affiliation, locale)}</p>
           </label>
           <label className="editor-field">
             <span>{text.startDate}</span>

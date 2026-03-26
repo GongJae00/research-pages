@@ -37,6 +37,20 @@ const shellNavItems = [
   { key: "ops", icon: LayoutGrid, href: "/ops" },
 ] as const;
 
+const shellNavLabelStyle = {
+  display: "grid",
+  gap: "2px",
+  minWidth: 0,
+} as const;
+
+const shellNavHintStyle = {
+  fontSize: "11px",
+  fontWeight: 700,
+  letterSpacing: "0.01em",
+  lineHeight: 1.2,
+  overflowWrap: "anywhere",
+} as const;
+
 function getOpsNavigationLabel(locale: string): string {
   return locale === "ko" ? "내부 옵스 보드" : "Internal ops board";
 }
@@ -63,6 +77,23 @@ function getNavigationLabel(
   }
 
   return t(dict, `nav.${key}`);
+}
+
+function getShellNavigationHint(
+  key: (typeof shellNavItems)[number]["key"],
+  locale: string,
+  href: string,
+): string {
+  const scopeLabel =
+    key === "home"
+      ? locale === "ko"
+        ? "\uACF5\uAC1C \uACBD\uB85C"
+        : "Public route"
+      : locale === "ko"
+        ? "\uB0B4\uBD80 \uACBD\uB85C"
+        : "Internal route";
+
+  return `${scopeLabel} | ${href}`;
 }
 
 export function Sidebar({ locale, dict }: SidebarProps) {
@@ -144,11 +175,22 @@ export function Sidebar({ locale, dict }: SidebarProps) {
               item.key === "home"
                 ? getHomepageNavigationLabel(locale)
                 : getNavigationLabel(item.key, locale, dict);
+            const hint = getShellNavigationHint(item.key, locale, href);
 
             return (
               <Link key={item.key} href={href} className={`sidebar-link${active ? " sidebar-link-active" : ""}`}>
                 <Icon size={18} />
-                <span>{label}</span>
+                <span style={shellNavLabelStyle}>
+                  <span>{label}</span>
+                  <span
+                    style={{
+                      ...shellNavHintStyle,
+                      opacity: active ? 0.92 : 0.72,
+                    }}
+                  >
+                    {hint}
+                  </span>
+                </span>
               </Link>
             );
           })}
