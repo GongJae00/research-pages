@@ -44,6 +44,12 @@ export interface OpsTerminalSessionSnapshot {
   exitCode: number | null;
 }
 
+export interface OpsTerminalStopResult {
+  session: OpsTerminalSessionSnapshot;
+  transition: "stop-requested" | "already-stopped";
+  recovery: string;
+}
+
 interface OpsTerminalSessionRecord {
   child: ChildProcessWithoutNullStreams;
   snapshot: OpsTerminalSessionSnapshot;
@@ -401,7 +407,11 @@ export async function stopOpsTerminalSession(sessionId: string) {
   }
 
   if (record.snapshot.status !== "running") {
-    return record.snapshot;
+    return {
+      session: record.snapshot,
+      transition: "already-stopped",
+      recovery: "Start a new session if you still need an interactive shell.",
+    } satisfies OpsTerminalStopResult;
   }
 
   record.stopRequestedAt = new Date().toISOString();
@@ -417,5 +427,9 @@ export async function stopOpsTerminalSession(sessionId: string) {
     }
   }
 
-  return record.snapshot;
+  return {
+    session: record.snapshot,
+    transition: "stop-requested",
+    recovery: "Wait for the session to close, then refresh terminal sessions before sending more input.",
+  } satisfies OpsTerminalStopResult;
 }

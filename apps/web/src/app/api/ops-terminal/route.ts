@@ -150,10 +150,12 @@ export async function POST(request: NextRequest) {
           return NextResponse.json({ error: "Session id is required." }, { status: 400 });
         }
 
-        const session = await stopOpsTerminalSession(sessionId);
+        const result = await stopOpsTerminalSession(sessionId);
         return NextResponse.json({
           ok: true,
-          session,
+          session: result.session,
+          transition: result.transition,
+          recovery: result.recovery,
           sessions: listOpsTerminalSessions(),
         });
       }

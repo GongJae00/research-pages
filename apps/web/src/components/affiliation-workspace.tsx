@@ -172,6 +172,66 @@ function normalizeAffiliation(entry: AffiliationTimelineEntry): AffiliationTimel
   };
 }
 
+function compareDateStrings(left?: string, right?: string) {
+  if (left && right) {
+    return right.localeCompare(left);
+  }
+
+  if (left) {
+    return -1;
+  }
+
+  if (right) {
+    return 1;
+  }
+
+  return 0;
+}
+
+function sortAffiliations(items: AffiliationTimelineEntry[]) {
+  return [...items].sort((left, right) => {
+    if (left.active !== right.active) {
+      return left.active ? -1 : 1;
+    }
+
+    const endDateOrder = compareDateStrings(left.endDate, right.endDate);
+    if (endDateOrder !== 0) {
+      return endDateOrder;
+    }
+
+    const startDateOrder = compareDateStrings(left.startDate, right.startDate);
+    if (startDateOrder !== 0) {
+      return startDateOrder;
+    }
+
+    return left.institutionName.localeCompare(right.institutionName);
+  });
+}
+
+function joinAffiliationSummary(entry: AffiliationTimelineEntry) {
+  return [entry.institutionName, entry.department, entry.labName]
+    .filter((part, index, parts): part is string => {
+      if (!part) {
+        return false;
+      }
+
+      return parts.findIndex((candidate) => candidate === part) === index;
+    })
+    .join(" / ");
+}
+
+function getAffiliationStatusClass(entry: AffiliationTimelineEntry) {
+  if (entry.active) {
+    return "pill-green";
+  }
+
+  if (entry.appointmentStatus === "planned" || entry.appointmentStatus === "paused") {
+    return "pill-amber";
+  }
+
+  return "pill-gray";
+}
+
 export function AffiliationWorkspace({
   locale,
   affiliations,
@@ -186,6 +246,8 @@ export function AffiliationWorkspace({
   const [draftAffiliations, setDraftAffiliations] =
     useState<AffiliationTimelineEntry[]>(affiliations);
   const [isEditing, setIsEditing] = useState(false);
+  const orderedResolvedAffiliations = sortAffiliations(resolvedAffiliations);
+  const orderedDraftAffiliations = sortAffiliations(draftAffiliations);
 
   useEffect(() => {
     setResolvedDocuments(loadBrowserDocuments(documents));
@@ -336,7 +398,7 @@ export function AffiliationWorkspace({
       {isEditing ? (
         <>
           <div className="detail-cards">
-            {draftAffiliations.length === 0 ? (
+            {orderedDraftAffiliations.length === 0 ? (
               <section className="card profile-detail-card">
                 <div className="card-body">
                   <p className="card-support-text">{text.emptyEditing}</p>
@@ -344,7 +406,7 @@ export function AffiliationWorkspace({
               </section>
             ) : null}
 
-            {draftAffiliations.map((affiliation, index) => (
+            {orderedDraftAffiliations.map((affiliation, index) => (
               <section className="card profile-edit-card" key={affiliation.id}>
                 <div className="card-header">
                   <div>
@@ -352,7 +414,12 @@ export function AffiliationWorkspace({
                       {text.item} {index + 1}
                     </h3>
                     <p className="card-support-text">
-                      {affiliation.roleTitle || affiliation.institutionName || text.institution}
+                      {[
+                        affiliation.roleTitle || affiliation.institutionName || text.institution,
+                        affiliation.startDate || text.startDate,
+                        affiliation.endDate || text.present,
+                        text.appointmentLabels[affiliation.appointmentStatus],
+                      ].join(" / ")}
                     </p>
                   </div>
                   <button
@@ -526,7 +593,7 @@ export function AffiliationWorkspace({
         </>
       ) : (
         <div className="detail-cards">
-          {resolvedAffiliations.length === 0 ? (
+          {orderedResolvedAffiliations.length === 0 ? (
             <section className="card profile-detail-card">
               <div className="card-body">
                 <p className="card-support-text">{text.empty}</p>
@@ -534,49 +601,56 @@ export function AffiliationWorkspace({
             </section>
           ) : null}
 
-          {resolvedAffiliations.map((affiliation) => (
+          {orderedResolvedAffiliations.map((affiliation) => (
             <section className="card profile-detail-card" key={affiliation.id}>
               <div className="card-header">
                 <div>
                   <h3>{affiliation.roleTitle}</h3>
-                  <p className="card-support-text">{affiliation.institutionName}</p>
+                  <p className="card-support-text">{joinAffiliationSummary(affiliation)}</p>
                 </div>
-                <span className={`pill ${affiliation.active ? "pill-green" : "pill-gray"}`}>
-                  {affiliation.active ? text.active : text.inactive}
-                </span>
+                <div className="profile-history-side">
+                  <span className={`pill ${getAffiliationStatusClass(affiliation)}`}>
+                    {text.appointmentLabels[affiliation.appointmentStatus]}
+                  </span>
+                  <span className={`pill ${affiliation.active ? "pill-green" : "pill-gray"}`}>
+                    {affiliation.active ? text.active : text.inactive}
+                  </span>
+                </div>
               </div>
 
               <div className="card-body">
-                <dl className="field-list">
-                  <div className="field-row">
-                    <dt>{text.institution}</dt>
-                    <dd>{affiliation.institutionName}</dd>
+                <div className="profile-history-item profile-history-item-compact">
+                  <div className="profile-history-period">
+                    <strong>{affiliation.startDate}</strong>
+                    <span>{affiliation.endDate ?? text.present}</span>
                   </div>
-                  {affiliation.department ? (
-                    <div className="field-row">
-                      <dt>{text.department}</dt>
-                      <dd>{affiliation.department}</dd>
-                    </div>
-                  ) : null}
-                  {affiliation.labName ? (
-                    <div className="field-row">
-                      <dt>{text.lab}</dt>
-                      <dd>{affiliation.labName}</dd>
-                    </div>
-                  ) : null}
-                  <div className="field-row">
-                    <dt>{text.period}</dt>
-                    <dd>
-                      {affiliation.startDate} - {affiliation.endDate ?? text.present}
-                    </dd>
+                  <div className="profile-history-body">
+                    {(affiliation.department || affiliation.labName) && (
+                      <div className="profile-history-meta">
+                        {affiliation.department ? (
+                          <span>
+                            <strong>{text.department}</strong>
+                            {affiliation.department}
+                          </span>
+                        ) : null}
+                        {affiliation.labName ? (
+                          <span>
+                            <strong>{text.lab}</strong>
+                            {affiliation.labName}
+                          </span>
+                        ) : null}
+                      </div>
+                    )}
+                    {affiliation.notes ? (
+                      <dl className="field-list">
+                        <div className="field-row">
+                          <dt>{text.notes}</dt>
+                          <dd>{affiliation.notes}</dd>
+                        </div>
+                      </dl>
+                    ) : null}
                   </div>
-                  {affiliation.notes ? (
-                    <div className="field-row">
-                      <dt>{text.notes}</dt>
-                      <dd>{affiliation.notes}</dd>
-                    </div>
-                  ) : null}
-                </dl>
+                </div>
 
                 <DocumentEvidencePicker
                   evidenceKey={`affiliation:${affiliation.id}`}
