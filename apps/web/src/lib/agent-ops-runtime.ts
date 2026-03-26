@@ -222,11 +222,29 @@ function normalizeRuntimeState(candidate: unknown, locale: string): AgentOpsRunt
 }
 
 async function readRuntimeState(locale: string) {
+  const stateFilePath = await resolveStateFilePath();
+
   try {
-    const stateFilePath = await resolveStateFilePath();
     const raw = await readFile(stateFilePath, "utf8");
     return normalizeRuntimeState(JSON.parse(raw), locale);
-  } catch {
+  } catch (error) {
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "code" in error &&
+      error.code === "ENOENT"
+    ) {
+      return createDefaultAgentOpsRuntimeState(locale);
+    }
+
+    // Invalid runtime JSON should surface as a degraded route read instead of
+    // looking like a clean defaulted control-plane state.
+    if (error instanceof SyntaxError) {
+      throw new Error(`Malformed agent ops runtime state at ${stateFilePath}`, {
+        cause: error,
+      });
+    }
+
     return createDefaultAgentOpsRuntimeState(locale);
   }
 }

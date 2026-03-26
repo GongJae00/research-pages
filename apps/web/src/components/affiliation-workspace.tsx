@@ -406,8 +406,18 @@ function getHistoryEditSectionHint(locale: Locale, count: number) {
       : "No past or planned items need edits right now.";
 }
 
-function getEditItemLabel(locale: Locale) {
-  return locale === "ko" ? "\ud56d\ubaa9 \uc218\uc815" : "Edit item";
+function getEditActionLabel(entry: AffiliationTimelineEntry, locale: Locale) {
+  if (entry.active) {
+    return locale === "ko"
+      ? "\uc0c1\ud0dc\u00b7\ub0a0\uc9dc \uc218\uc815"
+      : "Edit status and dates";
+  }
+
+  if (entry.appointmentStatus === "planned" || entry.appointmentStatus === "paused") {
+    return locale === "ko" ? "\ud0c0\uc784\ub77c\uc778 \uac31\uc2e0" : "Update timeline";
+  }
+
+  return locale === "ko" ? "\uc774\ub825 \uc218\uc815" : "Edit history";
 }
 
 function getAffiliationSections(items: AffiliationTimelineEntry[]) {
@@ -627,9 +637,10 @@ export function AffiliationWorkspace({
             type="button"
             className="profile-inline-btn"
             onClick={() => handleEditAffiliation(affiliation.id)}
+            aria-label={getEditActionLabel(affiliation, locale)}
           >
             <PencilLine size={15} />
-            {getEditItemLabel(locale)}
+            {getEditActionLabel(affiliation, locale)}
           </button>
         </div>
       </div>
