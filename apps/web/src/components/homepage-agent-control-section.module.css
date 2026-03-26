@@ -622,7 +622,7 @@
   color: #0f172a;
   font-size: 0.82rem;
   line-height: 1.08;
-  max-width: 12rem;
+  max-width: 16rem;
 }
 
 .setupSummaryBar {
@@ -896,14 +896,14 @@
 
 .setupWorkbench {
   display: grid;
-  gap: 0.01rem;
-  margin-top: 0.01rem;
+  gap: 0.04rem;
+  margin-top: 0;
 }
 
 .setupSelectionPanel {
   display: grid;
   gap: 0.05rem;
-  padding: 0;
+  padding: 0.04rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 16px;
   background: rgba(248, 250, 252, 0.92);
@@ -1168,7 +1168,7 @@
   display: flex;
   align-items: flex-start;
   gap: 0.14rem;
-  padding: 0.05rem 0.07rem;
+  padding: 0.08rem 0.1rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.86);
@@ -1212,7 +1212,7 @@
   flex-wrap: wrap;
   flex: 1 1 auto;
   align-items: center;
-  gap: 0.02rem;
+  gap: 0.04rem;
   padding: 0;
 }
 
@@ -1223,8 +1223,8 @@
   justify-content: center;
   gap: 0.35rem;
   border-radius: 999px;
-  min-height: 1.08rem;
-  padding: 0.05rem 0.22rem;
+  min-height: 1.14rem;
+  padding: 0.08rem 0.3rem;
   border: 1px solid rgba(203, 213, 225, 0.9);
   background: rgba(248, 250, 252, 0.96);
   color: #334155;

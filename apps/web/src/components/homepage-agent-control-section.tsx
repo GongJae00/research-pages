@@ -255,7 +255,8 @@ export function HomepageAgentControlSection({
   const [copiedCommand, setCopiedCommand] = useState<"connect" | "assign" | null>(null);
   const copy = getCopy(locale, opsEnabled);
   const setupBuilderHint = getSetupBuilderHint(locale);
-  const setupFlowSteps = getSetupFlowSteps(locale);
+  const setupFlowLabel = getSetupFlowLabel(locale);
+  const setupFlowTitle = getSetupFlowSteps(locale).join(" -> ");
 
   useEffect(() => {
     let mounted = true;
@@ -356,7 +357,6 @@ export function HomepageAgentControlSection({
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
   const setupFlowDigest = selectedProvider && selectedTeam && nextSetupCommand;
-  const setupFlowTitle = setupFlowSteps.join(" -> ");
   const setupOutputLabel = getSetupOutputLabel(locale);
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
@@ -439,7 +439,7 @@ export function HomepageAgentControlSection({
                   <div
                     className={styles.setupSummaryBar}
                     aria-label={copy.setupStepsLabel}
-                    title={`${setupBuilderHint} ${getSetupFlowLabel(locale)}: ${setupFlowTitle}`}
+                    title={`${setupBuilderHint} ${setupFlowLabel}: ${setupFlowTitle}`}
                   >
                     <span className={styles.setupFlowChip}>
                       <span className={styles.setupPickerStep}>01</span>
