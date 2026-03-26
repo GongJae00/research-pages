@@ -528,30 +528,45 @@ function sanitizeRuntimeTeamUpdates(teams: TeamUnit[], runtimeState: AgentOpsRun
     teams.map((team) => [team.id, new Set(team.members.map((member) => member.name))]),
   );
 
-  const memberUpdates = runtimeState.memberUpdates.flatMap((entry) => {
-    if (
-      !isRuntimeMergeEntry(entry) ||
-      typeof entry.teamId !== "string" ||
-      typeof entry.memberName !== "string"
-    ) {
-      return [];
-    }
+  const memberUpdates = Array.from(
+    runtimeState.memberUpdates.reduce((updates, entry) => {
+      if (
+        !isRuntimeMergeEntry(entry) ||
+        typeof entry.teamId !== "string" ||
+        typeof entry.memberName !== "string"
+      ) {
+        return updates;
+      }
 
-    const teamMembers = memberDirectory.get(entry.teamId);
+      const teamMembers = memberDirectory.get(entry.teamId);
 
-    if (!teamMembers?.has(entry.memberName)) {
-      return [];
-    }
+      if (!teamMembers?.has(entry.memberName)) {
+        return updates;
+      }
 
-    return [
-      {
+      const updateKey = `${entry.teamId}:${entry.memberName}`;
+      const previous = updates.get(updateKey);
+
+      updates.set(updateKey, {
         ...entry,
-        state: entry.state && validAgentStates.has(entry.state) ? entry.state : undefined,
-        currentTask: getOptionalRuntimeString(entry, "currentTask"),
-        lastUpdate: getOptionalRuntimeString(entry, "lastUpdate"),
-      },
-    ];
-  });
+        ...previous,
+        state:
+          entry.state && validAgentStates.has(entry.state)
+            ? entry.state
+            : previous?.state,
+        currentTask: getOptionalRuntimeString(entry, "currentTask") ?? previous?.currentTask,
+        lastUpdate: getOptionalRuntimeString(entry, "lastUpdate") ?? previous?.lastUpdate,
+      });
+
+      return updates;
+    }, new Map<string, {
+      teamId: string;
+      memberName: string;
+      state?: TeamUnit["members"][number]["state"];
+      currentTask?: string;
+      lastUpdate?: string;
+    }>()).values(),
+  );
 
   return {
     teamUpdates,

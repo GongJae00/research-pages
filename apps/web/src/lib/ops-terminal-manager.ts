@@ -8,6 +8,7 @@ const execAsync = promisify(exec);
 const commandTimeoutMs = 20_000;
 const commandMaxBuffer = 1_024 * 1_024;
 const maxTranscriptChars = 24_000;
+const stopSettleWaitMs = 300;
 
 export type OpsShellId = "powershell" | "cmd" | "bash";
 export type OpsTerminalSessionStatus = "running" | "stopping" | "closed" | "error";
@@ -48,7 +49,7 @@ export interface OpsTerminalSessionSnapshot {
 
 export interface OpsTerminalStopResult {
   session: OpsTerminalSessionSnapshot;
-  transition: "stop-requested" | "already-stopped";
+  transition: "stop-requested" | "stopped" | "already-stopped";
   recovery: string;
 }
 
@@ -260,6 +261,31 @@ function writeToSessionInput(record: OpsTerminalSessionRecord, input: string) {
 
       resolve();
     });
+  });
+}
+
+function waitForSessionExit(record: OpsTerminalSessionRecord, timeoutMs: number) {
+  if (record.child.exitCode !== null || record.child.signalCode !== null) {
+    return Promise.resolve();
+  }
+
+  return new Promise<void>((resolve) => {
+    const handleClose = () => {
+      cleanup();
+      resolve();
+    };
+
+    const timer = setTimeout(() => {
+      cleanup();
+      resolve();
+    }, timeoutMs);
+
+    const cleanup = () => {
+      clearTimeout(timer);
+      record.child.off("close", handleClose);
+    };
+
+    record.child.once("close", handleClose);
   });
 }
 
@@ -608,8 +634,20 @@ export async function stopOpsTerminalSession(sessionId: string) {
     }
   }
 
+  await waitForSessionExit(record, stopSettleWaitMs);
+  const currentSession = reconcileSessionState(record);
+
+  if (currentSession.status === "closed") {
+    return {
+      session: currentSession,
+      transition: "stopped",
+      recovery:
+        "Session has fully stopped. Refresh terminal sessions, then start a new session if you still need an interactive shell.",
+    } satisfies OpsTerminalStopResult;
+  }
+
   return {
-    session: record.snapshot,
+    session: currentSession,
     transition: "stop-requested",
     recovery: "Wait for the session to close, then refresh terminal sessions before sending more input.",
   } satisfies OpsTerminalStopResult;
