@@ -562,8 +562,8 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.08rem;
-  margin-top: 0.03rem;
+  gap: 0.06rem;
+  margin-top: 0.02rem;
 }
 
 .setupScanItem {
@@ -571,8 +571,8 @@
   align-items: center;
   gap: 0.22rem;
   min-width: 0;
-  min-height: 1.18rem;
-  padding: 0.07rem 0.16rem;
+  min-height: 1.12rem;
+  padding: 0.06rem 0.14rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 999px;
   background: rgba(248, 250, 252, 0.92);
@@ -588,7 +588,7 @@
 
 .setupScanItemAccent {
   border-color: rgba(15, 23, 42, 0.22);
-  background: rgba(226, 232, 240, 0.92);
+  background: rgba(226, 232, 240, 0.96);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
 }
 
