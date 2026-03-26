@@ -532,6 +532,25 @@ function getArchivedEditSectionHint(locale: Locale, count: number) {
       : "No archived timeline items need edits right now.";
 }
 
+function getTimelineCorrectionSectionHint(
+  locale: Locale,
+  correctionCount: number,
+) {
+  if (correctionCount === 0) {
+    return "";
+  }
+
+  if (locale === "ko") {
+    return correctionCount === 1
+      ? "\uc774 \uc139\uc158\uc5d0 \ud0c0\uc784\ub77c\uc778\uc744 \uba3c\uc800 \ub9de\ucdb0\uc57c \ud558\ub294 \ud56d\ubaa9 1\uac74\uc774 \uc788\uc2b5\ub2c8\ub2e4."
+      : `\uc774 \uc139\uc158\uc5d0 \ud0c0\uc784\ub77c\uc778\uc744 \uba3c\uc800 \ub9de\ucdb0\uc57c \ud558\ub294 \ud56d\ubaa9 ${correctionCount}\uac74\uc774 \uc788\uc2b5\ub2c8\ub2e4.`;
+  }
+
+  return correctionCount === 1
+    ? "1 entry in this section needs timeline fixes first."
+    : `${correctionCount} entries in this section need timeline fixes first.`;
+}
+
 function getTimelinePlacementLabel(locale: Locale) {
   return locale === "ko" ? "\ud0c0\uc784\ub77c\uc778 \uc704\uce58" : "Timeline placement";
 }
@@ -857,6 +876,24 @@ function prioritizeAffiliation(
   ];
 }
 
+function prioritizeEditSectionItems(
+  items: AffiliationTimelineEntry[],
+  prioritizedId: string | null,
+) {
+  const prioritizedEntry =
+    prioritizedId === null ? null : items.find((item) => item.id === prioritizedId) ?? null;
+  const remainingItems =
+    prioritizedEntry === null
+      ? items
+      : items.filter((item) => item.id !== prioritizedEntry.id);
+
+  return [
+    ...(prioritizedEntry === null ? [] : [prioritizedEntry]),
+    ...remainingItems.filter((item) => needsTimelineCorrection(item)),
+    ...remainingItems.filter((item) => !needsTimelineCorrection(item)),
+  ];
+}
+
 export function AffiliationWorkspace({
   locale,
   affiliations,
@@ -891,7 +928,24 @@ export function AffiliationWorkspace({
     queued: queuedDraftAffiliations,
     archived: archivedDraftAffiliations,
   } =
-    getAffiliationSections(orderedDraftAffiliations);
+    (() => {
+      const sections = getAffiliationSections(orderedDraftAffiliations);
+
+      return {
+        current: prioritizeEditSectionItems(sections.current, focusedAffiliationId),
+        queued: prioritizeEditSectionItems(sections.queued, focusedAffiliationId),
+        archived: prioritizeEditSectionItems(sections.archived, focusedAffiliationId),
+      };
+    })();
+  const currentDraftCorrections = currentDraftAffiliations.filter((item) =>
+    needsTimelineCorrection(item),
+  ).length;
+  const queuedDraftCorrections = queuedDraftAffiliations.filter((item) =>
+    needsTimelineCorrection(item),
+  ).length;
+  const archivedDraftCorrections = archivedDraftAffiliations.filter((item) =>
+    needsTimelineCorrection(item),
+  ).length;
   const focusedDraftAffiliation = focusedAffiliationId
     ? orderedDraftAffiliations.find((item) => item.id === focusedAffiliationId) ?? null
     : null;
@@ -1508,7 +1562,12 @@ export function AffiliationWorkspace({
                       <div>
                         <h3>{getCurrentSectionLabel(locale, currentDraftAffiliations.length)}</h3>
                         <p className="card-support-text">
-                          {getCurrentEditSectionHint(locale, currentDraftAffiliations.length)}
+                          {[
+                            getCurrentEditSectionHint(locale, currentDraftAffiliations.length),
+                            getTimelineCorrectionSectionHint(locale, currentDraftCorrections),
+                          ]
+                            .filter(Boolean)
+                            .join(" ")}
                         </p>
                       </div>
                     </div>
@@ -1528,7 +1587,12 @@ export function AffiliationWorkspace({
                       <div>
                         <h3>{getQueuedSectionLabel(locale, queuedDraftAffiliations.length)}</h3>
                         <p className="card-support-text">
-                          {getQueuedEditSectionHint(locale, queuedDraftAffiliations.length)}
+                          {[
+                            getQueuedEditSectionHint(locale, queuedDraftAffiliations.length),
+                            getTimelineCorrectionSectionHint(locale, queuedDraftCorrections),
+                          ]
+                            .filter(Boolean)
+                            .join(" ")}
                         </p>
                       </div>
                     </div>
@@ -1551,7 +1615,12 @@ export function AffiliationWorkspace({
                       <div>
                         <h3>{getArchivedSectionLabel(locale, archivedDraftAffiliations.length)}</h3>
                         <p className="card-support-text">
-                          {getArchivedEditSectionHint(locale, archivedDraftAffiliations.length)}
+                          {[
+                            getArchivedEditSectionHint(locale, archivedDraftAffiliations.length),
+                            getTimelineCorrectionSectionHint(locale, archivedDraftCorrections),
+                          ]
+                            .filter(Boolean)
+                            .join(" ")}
                         </p>
                       </div>
                     </div>

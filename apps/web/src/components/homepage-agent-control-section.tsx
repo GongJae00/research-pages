@@ -512,6 +512,9 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
+                <p className={styles.setupTitleHint} aria-label={setupFlowLabel}>
+                  {copy.setupSequenceIntro}
+                </p>
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
@@ -528,55 +531,6 @@ export function HomepageAgentControlSection({
 
             <div className={styles.setupWorkbench}>
               <div className={styles.setupSelectionPanel} aria-label={getSetupInputLabel(locale)}>
-                {nextSetupCommand ? (
-                  <div className={styles.setupSummaryInline} aria-label={setupFlowLabel}>
-                    <span className={`${styles.summaryChip} ${styles.summaryChipAccent}`}>
-                      <span className={styles.commandStep}>01</span>
-                      <span className={styles.summaryChipCopy}>
-                        <span className={styles.metaLabel}>{copy.selectedCli}</span>
-                        <span className={styles.summaryChipValueRow}>
-                          <strong>{selectedProvider?.label ?? "-"}</strong>
-                          <span
-                            className={`${styles.inlineStatusBadge} ${getProviderStatusClass(
-                              selectedProvider?.status ?? "ready",
-                            )}`}
-                          >
-                            {selectedProvider
-                              ? getProviderStatusLabel(locale, selectedProvider.status)
-                              : "-"}
-                          </span>
-                        </span>
-                      </span>
-                    </span>
-                    <span className={styles.summaryFlowArrow} aria-hidden="true">
-                      <ArrowRight size={14} />
-                    </span>
-                    <span className={styles.summaryChip}>
-                      <span className={styles.commandStep}>02</span>
-                      <span className={styles.summaryChipCopy}>
-                        <span className={styles.metaLabel}>{copy.selectedTeamLabel}</span>
-                        <span className={styles.summaryChipValueRow}>
-                          <strong>{selectedTeam?.name ?? "-"}</strong>
-                          <span className={styles.setupSummaryTag}>{selectedTeam?.lane ?? "-"}</span>
-                        </span>
-                      </span>
-                    </span>
-                    <span className={styles.summaryFlowArrow} aria-hidden="true">
-                      <ArrowRight size={14} />
-                    </span>
-                    <span className={`${styles.summaryChip} ${styles.summaryChipAccent} ${styles.summaryChipWide}`}>
-                      <span className={styles.commandStep}>03</span>
-                      <span className={styles.summaryChipCopy}>
-                        <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
-                        <span className={styles.summaryChipValueRow}>
-                          <strong>{nextSetupCommand.title}</strong>
-                          <span className={styles.setupSummaryTag}>{selectedSetupPath}</span>
-                        </span>
-                      </span>
-                    </span>
-                  </div>
-                ) : null}
-
                 <div className={styles.setupPickerGrid}>
                   <div className={styles.setupPicker} aria-label={copy.chooseProvider}>
                     <div className={styles.setupPickerLabelGroup}>
@@ -656,11 +610,7 @@ export function HomepageAgentControlSection({
                       <strong>{`03. ${nextSetupCommand.title}`}</strong>
                     </div>
                     <div className={styles.setupCommandInlineMeta}>
-                      <span className={styles.setupCommandInlinePath}>
-                        <span>{selectedProvider?.label ?? "-"}</span>
-                        <span aria-hidden="true">&rarr;</span>
-                        <span>{selectedTeam?.name ?? "-"}</span>
-                      </span>
+                      <span className={styles.setupCommandInlinePath}>{selectedSetupPath}</span>
                       <span className={styles.nextCommandOutput}>{setupOutputLabel}</span>
                     </div>
                   </div>
