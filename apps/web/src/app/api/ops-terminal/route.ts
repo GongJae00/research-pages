@@ -13,6 +13,8 @@ import {
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
+type OpsTerminalFailureTransition = "missing" | "stopping" | "closed" | "error";
+
 function isLocalOpsTerminalEnabled() {
   return process.env.NODE_ENV !== "production";
 }
@@ -25,42 +27,47 @@ function getShellId(value: unknown): OpsShellId {
   return "powershell";
 }
 
-function getSessionErrorResponse(error: unknown) {
+function getSessionErrorResponse(error: unknown, sessionId?: string) {
   const message = error instanceof Error ? error.message : "Ops terminal request failed.";
+  const sessions = listOpsTerminalSessions();
+  const session = sessionId ? sessions.find((item) => item.id === sessionId) ?? null : null;
 
-  if (message.startsWith('Unknown session "')) {
-    return NextResponse.json(
+  const buildFailureResponse = (
+    status: number,
+    transition: OpsTerminalFailureTransition,
+    recovery: string,
+  ) =>
+    NextResponse.json(
       {
         ok: false,
         error: message,
-        recovery: "Refresh terminal sessions and retry with an active session.",
-        sessions: listOpsTerminalSessions(),
+        transition,
+        recovery,
+        session,
+        sessions,
       },
-      { status: 404 },
+      { status },
     );
+
+  if (message.startsWith('Unknown session "')) {
+    return buildFailureResponse(404, "missing", "Refresh terminal sessions and retry with an active session.");
   }
 
   if (message.includes('" is not running.')) {
-    return NextResponse.json(
-      {
-        ok: false,
-        error: message,
-        recovery: "Start a new session or stop the stale session before retrying.",
-        sessions: listOpsTerminalSessions(),
-      },
-      { status: 409 },
-    );
+    const transition = session?.status === "error" ? "error" : "closed";
+    const recovery =
+      session?.status === "error"
+        ? "Review the session transcript for the failure, then start a new session before retrying."
+        : "Start a new session or stop the stale session before retrying.";
+
+    return buildFailureResponse(409, transition, recovery);
   }
 
   if (message.includes('" is stopping.')) {
-    return NextResponse.json(
-      {
-        ok: false,
-        error: message,
-        recovery: "Wait for the stop request to settle, refresh sessions, then retry with a new active session.",
-        sessions: listOpsTerminalSessions(),
-      },
-      { status: 409 },
+    return buildFailureResponse(
+      409,
+      "stopping",
+      "Wait for the stop request to settle, refresh sessions, then retry with a new active session.",
     );
   }
 
@@ -68,7 +75,13 @@ function getSessionErrorResponse(error: unknown) {
     {
       ok: false,
       error: message,
-      sessions: listOpsTerminalSessions(),
+      transition: session?.status === "error" ? "error" : undefined,
+      recovery:
+        session?.status === "error"
+          ? "Review the session transcript for the failure, then start a new session before retrying."
+          : undefined,
+      session,
+      sessions,
     },
     { status: 500 },
   );
@@ -101,6 +114,7 @@ export async function POST(request: NextRequest) {
 
   const action = typeof body.action === "string" ? body.action : "command.run";
   const command = typeof body.command === "string" ? body.command.trim() : "";
+  const sessionId = typeof body.sessionId === "string" ? body.sessionId : undefined;
 
   try {
     switch (action) {
@@ -164,6 +178,6 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: `Unsupported action "${action}".` }, { status: 400 });
     }
   } catch (error) {
-    return getSessionErrorResponse(error);
+    return getSessionErrorResponse(error, sessionId);
   }
 }
