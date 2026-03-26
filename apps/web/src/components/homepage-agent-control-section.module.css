@@ -869,25 +869,30 @@
 }
 
 .setupPicker {
-  display: grid;
-  gap: 0.04rem;
-  padding: 0.07rem 0.08rem;
+  display: flex;
+  align-items: center;
+  gap: 0.32rem;
+  padding: 0.12rem 0.16rem;
 }
 
 .setupPickerLabel {
+  flex: 0 0 auto;
   color: #64748b;
   font-size: 0.58rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   line-height: 1;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .optionRow {
   display: flex;
   flex-wrap: wrap;
+  flex: 1 1 auto;
+  align-items: center;
   gap: 0.04rem;
-  padding: 0.03rem 0 0;
+  padding: 0;
 }
 
 .optionButton,
@@ -1379,6 +1384,15 @@
   .setupSummaryBar .setupSummaryItem {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .setupPicker {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .optionRow {
+    width: 100%;
   }
 
   .setupCommandsSummary {
