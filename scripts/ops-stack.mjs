@@ -18,6 +18,7 @@ const supervisorPidFile = path.join(runDir, "supervisor.json");
 const supervisorStateFile = path.join(stateDir, "supervisor-state.json");
 const webPidFile = path.join(runDir, "web.json");
 const autonomyPidFile = path.join(runDir, "autonomy.json");
+const autonomyLockFile = path.join(stateDir, "autonomy.lock.json");
 const supervisorOut = path.join(stateDir, "ops-supervisor.stdout.log");
 const supervisorErr = path.join(stateDir, "ops-supervisor.stderr.log");
 const webOut = path.join(stateDir, "dev-web.stdout.log");
@@ -118,6 +119,15 @@ async function removePidFile(filePath) {
   await rm(filePath, { force: true });
 }
 
+async function readLockHolderPid() {
+  try {
+    const payload = JSON.parse(await readFile(autonomyLockFile, "utf8"));
+    return typeof payload?.pid === "number" && Number.isFinite(payload.pid) ? payload.pid : null;
+  } catch {
+    return null;
+  }
+}
+
 async function openLogPair(stdoutPath, stderrPath) {
   await ensureDirs();
   const stdoutHandle = await open(stdoutPath, "a");
@@ -166,9 +176,21 @@ async function startStack() {
   const supervisorMeta = await readPidFile(supervisorPidFile);
   const webMeta = await readPidFile(webPidFile);
   const autonomyMeta = await readPidFile(autonomyPidFile);
+  const lockHolderPid = await readLockHolderPid();
   const supervisorRunning = supervisorMeta ? await isProcessAlive(supervisorMeta.pid) : false;
   const webRunning = webMeta ? await isProcessAlive(webMeta.pid) : false;
   const autonomyRunning = autonomyMeta ? await isProcessAlive(autonomyMeta.pid) : false;
+
+  if (
+    lockHolderPid
+    && lockHolderPid !== autonomyMeta?.pid
+    && !(autonomyRunning || supervisorRunning)
+    && (await isProcessAlive(lockHolderPid))
+  ) {
+    await stopPid({ pid: lockHolderPid }, autonomyPidFile);
+    await rm(autonomyLockFile, { force: true });
+  }
+
   if (!supervisorRunning) {
     await runBridgeAutonomyOn();
     const { stdoutHandle, stderrHandle } = await openLogPair(supervisorOut, supervisorErr);
@@ -220,16 +242,25 @@ async function stopStack() {
   const supervisorMeta = await readPidFile(supervisorPidFile);
   const webMeta = await readPidFile(webPidFile);
   const autonomyMeta = await readPidFile(autonomyPidFile);
+  const lockHolderPid = await readLockHolderPid();
   const supervisorStopped = await stopPid(supervisorMeta, supervisorPidFile);
   const webStopped = await stopPid(webMeta, webPidFile);
   const autonomyStopped = await stopPid(autonomyMeta, autonomyPidFile);
+  const orphanAutonomyStopped =
+    lockHolderPid
+    && lockHolderPid !== autonomyMeta?.pid
+    && lockHolderPid !== supervisorMeta?.pid
+      ? await stopPid({ pid: lockHolderPid }, autonomyPidFile)
+      : false;
   await rm(supervisorStateFile, { force: true });
+  await rm(autonomyLockFile, { force: true });
 
   return {
     stoppedAt: nowIso(),
     supervisorStopped,
     webStopped,
     autonomyStopped,
+    orphanAutonomyStopped,
   };
 }
 

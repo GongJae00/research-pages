@@ -784,7 +784,7 @@ function getRecentOutcomeCount(state, teamId, limit = 12) {
 }
 
 function isRecoverableDirtyTeam(state, teamId, dirtyPaths) {
-  const latestExecution = getLatestChangedExecutionForTeam(state, teamId);
+  const latestExecution = getRecoverySeedForTeam(state, teamId, dirtyPaths);
   if (!latestExecution) {
     return false;
   }
@@ -2204,8 +2204,45 @@ function getLatestChangedExecutionForTeam(state, teamId) {
   );
 }
 
+function findMatchingWorkItemForDirtyPaths(teamId, dirtyPaths) {
+  const normalizedDirtyPaths = getUniquePaths(dirtyPaths);
+  if (!normalizedDirtyPaths.length) {
+    return null;
+  }
+
+  return (
+    getWorkItems(teamId).find((item) => {
+      const targetFiles = getUniquePaths(item.targetFiles ?? []);
+      return normalizedDirtyPaths.every((entry) => targetFiles.includes(entry));
+    })
+    ?? null
+  );
+}
+
+function buildSyntheticRecoveryExecution(teamId, dirtyPaths) {
+  const matchedWorkItem = findMatchingWorkItemForDirtyPaths(teamId, dirtyPaths);
+  if (!matchedWorkItem) {
+    return null;
+  }
+
+  return {
+    id: `synthetic-recovery-${teamId}-${sanitizePathSegment(matchedWorkItem.id)}`,
+    teamId,
+    outcome: "changed",
+    changedFiles: getUniquePaths(dirtyPaths),
+    workItemTitle: matchedWorkItem.title,
+    workItemFiles: matchedWorkItem.targetFiles,
+    sessionId: null,
+    syntheticRecovery: true,
+  };
+}
+
+function getRecoverySeedForTeam(state, teamId, dirtyPaths) {
+  return getLatestChangedExecutionForTeam(state, teamId) ?? buildSyntheticRecoveryExecution(teamId, dirtyPaths);
+}
+
 async function recoverDirtyExecution(team, taskPacket, loopCount, state, operatorDirective, workItem, dirtyPaths) {
-  const latestExecution = getLatestChangedExecutionForTeam(state, team.id);
+  const latestExecution = getRecoverySeedForTeam(state, team.id, dirtyPaths);
   if (!latestExecution) {
     return null;
   }
@@ -3496,14 +3533,14 @@ async function runAutonomyCycle() {
       reports: [...reports, ...(state.autonomy?.reports ?? [])].slice(0, 12),
       providerHealth: provider.providerHealth,
       currentTask: primaryResult.taskPacket,
-      taskHistory: [...taskPackets, ...(state.autonomy?.taskHistory ?? [])].slice(0, 18),
+      taskHistory: [...taskPackets, ...(state.autonomy?.taskHistory ?? [])].slice(0, 36),
       currentExecution: primaryResult.executionRecord,
-      executionHistory: [...executionRecords, ...(state.autonomy?.executionHistory ?? [])].slice(0, 18),
+      executionHistory: [...executionRecords, ...(state.autonomy?.executionHistory ?? [])].slice(0, 48),
       activeTasks: taskPackets,
       activeExecutions: executionRecords,
       workers,
-      workerHistory: [...workers, ...(state.autonomy?.workerHistory ?? [])].slice(0, 24),
-      interactionBus: [...interactionBus, ...(state.autonomy?.interactionBus ?? [])].slice(0, 24),
+      workerHistory: [...workers, ...(state.autonomy?.workerHistory ?? [])].slice(0, 48),
+      interactionBus: [...interactionBus, ...(state.autonomy?.interactionBus ?? [])].slice(0, 48),
     };
 
     state.selectedTeamId = primaryResult.team.id;
