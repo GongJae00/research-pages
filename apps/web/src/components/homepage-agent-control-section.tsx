@@ -386,39 +386,49 @@ export function HomepageAgentControlSection({
     return left.step.localeCompare(right.step);
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
-  const setupHeaderFlow = (
-    <div className={styles.setupHeaderFlow} aria-label={setupFlowLabel}>
-      <div className={styles.setupHeaderFlowChip}>
-        <span className={styles.setupHeaderFlowStep}>01</span>
-        <span className={styles.setupFlowMeta}>{copy.chooseProvider}</span>
-        <div className={styles.setupHeaderFlowValueRow}>
-          <strong>{selectedProvider?.label ?? "-"}</strong>
-          {selectedProvider ? (
-            <span className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}>
-              {selectedProviderStatusLabel}
-            </span>
-          ) : null}
+  const nextSetupCommandTitle = nextSetupCommand?.title ?? copy.nextCommandLabel;
+  const setupHeaderSummary = (
+    <div className={styles.setupHeaderSummaryRow}>
+      <span className={styles.setupHeaderSummaryLabel}>{setupFlowLabel}</span>
+      <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
+        <div className={styles.setupCompactSummaryItem}>
+          <span className={styles.setupCompactSummaryOrdinal}>01</span>
+          <div className={styles.setupCompactSummaryContent}>
+            <span className={styles.setupFlowMeta}>{copy.chooseProvider}</span>
+            <div className={styles.setupCompactSummaryValueRow}>
+              <strong>{selectedProvider?.label ?? "-"}</strong>
+              {selectedProvider ? (
+                <span className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}>
+                  {selectedProviderStatusLabel}
+                </span>
+              ) : null}
+            </div>
+          </div>
         </div>
-      </div>
-      <span className={styles.setupHeaderFlowArrow} aria-hidden="true">
-        &rarr;
-      </span>
-      <div className={styles.setupHeaderFlowChip}>
-        <span className={styles.setupHeaderFlowStep}>02</span>
-        <span className={styles.setupFlowMeta}>{copy.chooseTeam}</span>
-        <div className={styles.setupHeaderFlowValueRow}>
-          <strong>{selectedTeam?.name ?? "-"}</strong>
-          {selectedTeam ? <span className={styles.setupHeaderFlowTag}>{selectedTeam.lane}</span> : null}
+        <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
+          &rarr;
+        </span>
+        <div className={styles.setupCompactSummaryItem}>
+          <span className={styles.setupCompactSummaryOrdinal}>02</span>
+          <div className={styles.setupCompactSummaryContent}>
+            <span className={styles.setupFlowMeta}>{copy.chooseTeam}</span>
+            <div className={styles.setupCompactSummaryValueRow}>
+              <strong>{selectedTeam?.name ?? "-"}</strong>
+              {selectedTeam ? <span className={styles.setupCompactSummaryMetaBadge}>{selectedTeam.lane}</span> : null}
+            </div>
+          </div>
         </div>
-      </div>
-      <span className={styles.setupHeaderFlowArrow} aria-hidden="true">
-        &rarr;
-      </span>
-      <div className={`${styles.setupHeaderFlowChip} ${styles.setupHeaderFlowChipAccent}`}>
-        <span className={styles.setupHeaderFlowStep}>03</span>
-        <span className={styles.setupFlowMeta}>{copy.nextCommandLabel}</span>
-        <div className={styles.setupHeaderFlowValueRow}>
-          <strong>{nextSetupCommand?.title ?? copy.nextCommandLabel}</strong>
+        <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
+          &rarr;
+        </span>
+        <div className={`${styles.setupCompactSummaryItem} ${styles.setupCompactSummaryItemAccent}`}>
+          <span className={styles.setupCompactSummaryOrdinal}>03</span>
+          <div className={styles.setupCompactSummaryContent}>
+            <span className={styles.setupFlowMeta}>{copy.nextCommandLabel}</span>
+            <div className={styles.setupCompactSummaryValueRow}>
+              <strong>{nextSetupCommandTitle}</strong>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -562,8 +572,7 @@ export function HomepageAgentControlSection({
                 </div>
               </div>
 
-              <p className={styles.setupTitleHint}>{copy.setupSequenceIntro}</p>
-              {setupHeaderFlow}
+              {setupHeaderSummary}
             </div>
 
             <div className={styles.setupWorkbench}>
@@ -643,21 +652,8 @@ export function HomepageAgentControlSection({
                       <div className={styles.nextCommandIntroCopy}>
                         <span className={styles.setupSelectionLeadLabel}>{copy.nextCommandLabel}</span>
                         <div className={styles.nextCommandTitleRow}>
-                          <strong>{nextSetupCommand.title}</strong>
+                          <strong>{nextSetupCommandTitle}</strong>
                         </div>
-                      </div>
-                    </div>
-                    <div className={styles.nextCommandContext} aria-label={setupFlowLabel}>
-                      <div className={styles.nextCommandContextStep}>
-                        <span className={styles.nextCommandContextLabel}>{copy.selectedCli}</span>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
-                      </div>
-                      <span className={styles.nextCommandContextArrow} aria-hidden="true">
-                        &rarr;
-                      </span>
-                      <div className={styles.nextCommandContextStep}>
-                        <span className={styles.nextCommandContextLabel}>{copy.selectedTeamLabel}</span>
-                        <strong>{selectedTeam?.name ?? "-"}</strong>
                       </div>
                     </div>
                   </div>

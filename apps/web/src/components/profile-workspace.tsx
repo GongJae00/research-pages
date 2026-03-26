@@ -1101,13 +1101,21 @@ export function ProfileWorkspace({
   const savedEmailTotalLabel = isKo ? `${savedEmails.length}개` : `${savedEmails.length} total`;
   const savedLinkTotalLabel = isKo ? `${savedLinks.length}개` : `${savedLinks.length} total`;
   const coreContactSummary = useMemo(() => {
-    const primaryContactParts = [
-      primarySavedEmail,
-      primarySavedLinkDisplayUrl || undefined,
+    const contactCountParts = [
+      savedEmails.length > 0 ? `${text.emailsLabel}: ${savedEmailTotalLabel}` : undefined,
+      savedLinks.length > 0 ? `${onlineLinksLabel}: ${savedLinkTotalLabel}` : undefined,
     ];
 
-    return joinUniqueTextParts(primaryContactParts) || text.emptyValue;
-  }, [primarySavedEmail, primarySavedLinkDisplayUrl, text.emptyValue]);
+    return joinUniqueTextParts(contactCountParts) || text.emptyValue;
+  }, [
+    onlineLinksLabel,
+    savedEmailTotalLabel,
+    savedEmails.length,
+    savedLinkTotalLabel,
+    savedLinks.length,
+    text.emailsLabel,
+    text.emptyValue,
+  ]);
   const coreIdentifierSummary = useMemo(() => {
     const parts = [
       savedProfile.nationalResearcherNumber ? text.nationalId : undefined,
@@ -2323,8 +2331,8 @@ export function ProfileWorkspace({
                         primarySavedEmail
                           ? {
                               key: "primary-email",
-                              label: text.emailsLabel,
-                              badge: savedEmailTotalLabel,
+                              label: text.email,
+                              badge: text.primaryItem,
                               value: (
                                 <span className="profile-inline-list profile-inline-list-muted">
                                   <a href={`mailto:${primarySavedEmail}`} className="profile-inline-link">
@@ -2337,8 +2345,8 @@ export function ProfileWorkspace({
                         primarySavedLink
                           ? {
                               key: "primary-link",
-                              label: text.linksLabel,
-                              badge: savedLinkTotalLabel,
+                              label: onlineLinksLabel,
+                              badge: text.primaryItem,
                               value: (
                                 <span className="profile-inline-list profile-inline-list-muted">
                                   <span className="pill pill-gray">
