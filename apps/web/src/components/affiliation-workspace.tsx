@@ -350,6 +350,10 @@ function getNextUpdateLabel(locale: Locale) {
   return locale === "ko" ? "\ub2e4\uc74c \uc218\uc815" : "Next update";
 }
 
+function getSaveReadinessLabel(locale: Locale) {
+  return locale === "ko" ? "\uc800\uc7a5 \uc900\ube44" : "Save readiness";
+}
+
 function getCurrentSectionLabel(locale: Locale, count: number) {
   return locale === "ko"
     ? `\ud604\uc7ac \uc18c\uc18d ${count}\uac74`
@@ -720,9 +724,20 @@ export function AffiliationWorkspace({
           <p className="card-support-text">
             {joinAffiliationSummary(affiliation) || text.institution}
           </p>
-          <p className="card-support-text">
-            {getAffiliationEditReadiness(affiliation, locale, text)}
-          </p>
+          <dl className="field-list">
+            <div className="field-row">
+              <dt>{getTimelineSnapshotLabel(locale)}</dt>
+              <dd>{getTimelineSummary(affiliation, text.present, locale)}</dd>
+            </div>
+            <div className="field-row">
+              <dt>{getNextUpdateLabel(locale)}</dt>
+              <dd>{getNextActionSummary(affiliation, locale)}</dd>
+            </div>
+            <div className="field-row">
+              <dt>{getSaveReadinessLabel(locale)}</dt>
+              <dd>{getAffiliationEditReadiness(affiliation, locale, text)}</dd>
+            </div>
+          </dl>
         </div>
         <button
           type="button"

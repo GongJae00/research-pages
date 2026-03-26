@@ -54,7 +54,7 @@ function isDirectiveStatus(
 }
 
 function isRuntimeMergeEntry(candidate: unknown): candidate is Record<string, unknown> {
-  return typeof candidate === "object" && candidate !== null;
+  return typeof candidate === "object" && candidate !== null && !Array.isArray(candidate);
 }
 
 function getOptionalRuntimeString(
