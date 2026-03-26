@@ -345,6 +345,18 @@ function getAffiliationScanSummary(
   )}`;
 }
 
+function getCurrentTimelineLabel(locale: Locale) {
+  return locale === "ko" ? "\ud0c0\uc784\ub77c\uc778 \ud604\uc7ac \uc5ec\ubd80" : "Current in timeline";
+}
+
+function getCurrentTimelineValue(active: boolean, locale: Locale) {
+  if (active) {
+    return locale === "ko" ? "\ud604\uc7ac" : "Current";
+  }
+
+  return locale === "ko" ? "\ud604\uc7ac \uc544\ub2d8" : "Not current";
+}
+
 function getAffiliationEditReadiness(
   entry: AffiliationTimelineEntry,
   locale: Locale,
@@ -591,7 +603,7 @@ function getTimelineCheckSummary(
   if (!entry.active && entry.appointmentStatus === "active") {
     return locale === "ko"
       ? "\uc0c1\ud0dc\ub294 \uc9c4\ud589 \uc911\uc778\ub370 \ud604\uc7ac \uc5ec\ubd80\ub294 \uaebc\uc838 \uc788\uc2b5\ub2c8\ub2e4. \uc774 \ud56d\ubaa9\uc774 \uc5b4\ub290 \uc139\uc158\uc5d0 \uac08\uc9c0 \uba3c\uc800 \uc815\ud558\uc138\uc694."
-      : "Status says active, but the current toggle is off. Decide whether this belongs with current roles or a closed section first.";
+      : "Status says active, but current in timeline is off. Decide whether this belongs with current roles or a closed section first.";
   }
 
   if (entry.active && entry.endDate) {
@@ -641,8 +653,8 @@ function getTimelineEditorSectionHint(
 ) {
   if (entry.active) {
     return locale === "ko"
-      ? "\uc774 \uc18c\uc18d\uc774 \uc5b4\ub514\uc5d0 \ub180\uc9c0 \uba3c\uc800 \uace0\uc815\ud558\uc138\uc694. \uc0c1\ud0dc, \ud604\uc7ac \uc5ec\ubd80, \uc2dc\uc791\u00b7\uc885\ub8cc \ub0a0\uc9dc\uac00 \ubcf4\uae30 \uc21c\uc11c\ub97c \uacb0\uc815\ud569\ub2c8\ub2e4."
-      : "Set the timeline placement first. Status, active state, and start or end dates decide where this entry appears.";
+      ? "\uc774 \uc18c\uc18d\uc774 \uc5b4\ub514\uc5d0 \ub180\uc9c0 \uba3c\uc800 \uace0\uc815\ud558\uc138\uc694. \uc0c1\ud0dc, \ud0c0\uc784\ub77c\uc778 \ud604\uc7ac \uc5ec\ubd80, \uc2dc\uc791\u00b7\uc885\ub8cc \ub0a0\uc9dc\uac00 \ubcf4\uae30 \uc21c\uc11c\ub97c \uacb0\uc815\ud569\ub2c8\ub2e4."
+      : "Set the timeline placement first. Status, current-in-timeline state, and start or end dates decide where this entry appears.";
   }
 
   if (entry.appointmentStatus === "planned" || entry.appointmentStatus === "paused") {
@@ -1025,10 +1037,11 @@ export function AffiliationWorkspace({
             <dl className="field-list">
               <div className="field-row">
                 <dt>{text.appointmentStatus}</dt>
-                <dd>
-                  {text.appointmentLabels[affiliation.appointmentStatus]} /{" "}
-                  {affiliation.active ? text.active : text.inactive}
-                </dd>
+                <dd>{text.appointmentLabels[affiliation.appointmentStatus]}</dd>
+              </div>
+              <div className="field-row">
+                <dt>{getCurrentTimelineLabel(locale)}</dt>
+                <dd>{getCurrentTimelineValue(affiliation.active, locale)}</dd>
               </div>
               <div className="field-row">
                 <dt>{getTimelinePlacementLabel(locale)}</dt>
@@ -1126,8 +1139,8 @@ export function AffiliationWorkspace({
               <dd>{getEditFocusHint(affiliation, locale)}</dd>
             </div>
             <div className="field-row">
-              <dt>{getTimelineSnapshotLabel(locale)}</dt>
-              <dd>{getAffiliationScanSummary(affiliation, locale)}</dd>
+              <dt>{getCurrentTimelineLabel(locale)}</dt>
+              <dd>{getCurrentTimelineValue(affiliation.active, locale)}</dd>
             </div>
             <div className="field-row">
               <dt>{getTimelineCheckLabel(locale)}</dt>
@@ -1183,7 +1196,7 @@ export function AffiliationWorkspace({
             </select>
           </label>
           <label className="editor-field">
-            <span>{text.active}</span>
+            <span>{getCurrentTimelineLabel(locale)}</span>
             <select
               value={affiliation.active ? "active" : "inactive"}
               onChange={(event) =>
@@ -1192,8 +1205,8 @@ export function AffiliationWorkspace({
                 })
               }
             >
-              <option value="active">{text.active}</option>
-              <option value="inactive">{text.inactive}</option>
+              <option value="active">{getCurrentTimelineValue(true, locale)}</option>
+              <option value="inactive">{getCurrentTimelineValue(false, locale)}</option>
             </select>
           </label>
           <label className="editor-field">

@@ -511,46 +511,6 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
-                {nextSetupCommand ? (
-                  <div className={`${styles.setupScanSummary} ${styles.setupHeaderScan}`} aria-label={setupFlowLabel}>
-                    <span className={styles.setupScanSummaryItem}>
-                      <span className={styles.setupScanSummaryCopy}>
-                        <span className={styles.setupDigestKey}>{`01 ${copy.chooseProvider}`}</span>
-                        <span className={styles.setupScanSummaryValueRow}>
-                          <strong>{selectedProvider?.label ?? "-"}</strong>
-                          {selectedProvider ? (
-                            <span
-                              className={`${styles.inlineStatusBadge} ${getProviderStatusClass(
-                                selectedProvider.status,
-                              )}`}
-                            >
-                              {getProviderStatusLabel(locale, selectedProvider.status)}
-                            </span>
-                          ) : null}
-                        </span>
-                      </span>
-                    </span>
-                    <span className={styles.setupScanArrow} aria-hidden="true">
-                      &rarr;
-                    </span>
-                    <span className={styles.setupScanSummaryItem}>
-                      <span className={styles.setupScanSummaryCopy}>
-                        <span className={styles.setupDigestKey}>{`02 ${copy.chooseTeam}`}</span>
-                        <strong>{selectedTeam?.name ?? "-"}</strong>
-                        <span className={styles.setupSummaryMeta}>{selectedTeam?.lane ?? "-"}</span>
-                      </span>
-                    </span>
-                    <span className={styles.setupScanArrow} aria-hidden="true">
-                      &rarr;
-                    </span>
-                    <span className={`${styles.setupScanSummaryItem} ${styles.setupScanSummaryItemAccent}`}>
-                      <span className={styles.setupScanSummaryCopy}>
-                        <span className={styles.setupDigestKey}>{`03 ${copy.runCommandLabel}`}</span>
-                        <strong>{nextSetupCommand.title}</strong>
-                      </span>
-                    </span>
-                  </div>
-                ) : null}
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
