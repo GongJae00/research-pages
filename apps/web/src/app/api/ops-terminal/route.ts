@@ -17,6 +17,16 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 type OpsTerminalFailureTransition = "missing" | "stopping" | "closed" | "error";
+type OpsTerminalRecoveryAction = "retry" | "wait" | "restart";
+
+interface OpsTerminalSessionContext {
+  requestedSessionId: string | null;
+  sessionId: string | null;
+  sessionStatus: OpsTerminalSessionSnapshot["status"] | "missing";
+  runningSessionId: string | null;
+  recommendedAction: OpsTerminalRecoveryAction;
+  recommendedSessionId: string | null;
+}
 
 function isLocalOpsTerminalEnabled() {
   return process.env.NODE_ENV !== "production";
@@ -130,6 +140,49 @@ function getSessionFailureState(
   }
 }
 
+function getSessionContext(
+  transition: OpsTerminalFailureTransition,
+  sessions: OpsTerminalSessionSnapshot[],
+  session: OpsTerminalSessionSnapshot | null,
+  sessionId?: string,
+): OpsTerminalSessionContext {
+  const runningSession =
+    sessions.find((item) => item.status === "running" && item.id !== session?.id) ??
+    sessions.find((item) => item.status === "running") ??
+    null;
+
+  switch (transition) {
+    case "missing":
+      return {
+        requestedSessionId: sessionId ?? null,
+        sessionId: null,
+        sessionStatus: "missing",
+        runningSessionId: runningSession?.id ?? null,
+        recommendedAction: runningSession ? "retry" : "restart",
+        recommendedSessionId: runningSession?.id ?? null,
+      };
+    case "stopping":
+      return {
+        requestedSessionId: sessionId ?? session?.id ?? null,
+        sessionId: session?.id ?? null,
+        sessionStatus: session?.status ?? "stopping",
+        runningSessionId: runningSession?.id ?? null,
+        recommendedAction: runningSession ? "retry" : "wait",
+        recommendedSessionId: runningSession?.id ?? null,
+      };
+    case "closed":
+    case "error":
+      return {
+        requestedSessionId: sessionId ?? session?.id ?? null,
+        sessionId: session?.id ?? null,
+        sessionStatus: session?.status ?? transition,
+        runningSessionId: runningSession?.id ?? null,
+        recommendedAction: runningSession ? "retry" : "restart",
+        recommendedSessionId: runningSession?.id ?? null,
+      };
+  }
+}
+
 function getSessionErrorResponse(error: unknown, sessionId?: string) {
   const message = error instanceof Error ? error.message : "Ops terminal request failed.";
   const resolvedSessionId =
@@ -154,6 +207,7 @@ function getSessionErrorResponse(error: unknown, sessionId?: string) {
         transition,
         recovery,
         session,
+        sessionContext: getSessionContext(transition, sessions, session, resolvedSessionId),
         sessions,
         availableShells,
       },
