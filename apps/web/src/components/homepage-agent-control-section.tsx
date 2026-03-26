@@ -437,23 +437,38 @@ export function HomepageAgentControlSection({
                 </div>
                 {setupFlowDigest ? (
                   <div
-                    className={styles.setupScanGrid}
+                    className={styles.setupFlowBar}
                     aria-label={copy.setupStepsLabel}
                     title={`${setupBuilderHint} ${getSetupFlowLabel(locale)}: ${setupFlowTitle}`}
                   >
-                    <span className={styles.setupScanCell}>
-                      <span className={styles.setupFlowLabel}>{copy.selectedCli}</span>
-                      <strong>{selectedProvider?.label ?? "-"}</strong>
+                    <span className={styles.setupFlowChip}>
+                      <span className={styles.setupPickerStep}>01</span>
+                      <span className={styles.setupFlowChipCopy}>
+                        <span className={styles.setupFlowLabel}>{copy.selectedCli}</span>
+                        <strong>{selectedProvider?.label ?? "-"}</strong>
+                      </span>
                     </span>
-                    <span className={styles.setupScanCell}>
-                      <span className={styles.setupFlowLabel}>{copy.selectedTeamLabel}</span>
-                      <strong>
-                        {selectedTeam ? `${selectedTeam.name} / ${selectedTeam.lane}` : "-"}
-                      </strong>
+                    <span className={styles.setupFlowArrow} aria-hidden="true">
+                      →
                     </span>
-                    <span className={`${styles.setupScanCell} ${styles.setupScanCellAccent}`}>
-                      <span className={styles.setupFlowLabel}>{copy.runCommandLabel}</span>
-                      <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
+                    <span className={styles.setupFlowChip}>
+                      <span className={styles.setupPickerStep}>02</span>
+                      <span className={styles.setupFlowChipCopy}>
+                        <span className={styles.setupFlowLabel}>{copy.selectedTeamLabel}</span>
+                        <strong>
+                          {selectedTeam ? `${selectedTeam.name} / ${selectedTeam.lane}` : "-"}
+                        </strong>
+                      </span>
+                    </span>
+                    <span className={styles.setupFlowArrow} aria-hidden="true">
+                      →
+                    </span>
+                    <span className={`${styles.setupFlowChip} ${styles.setupFlowChipAccent}`}>
+                      <span className={styles.setupPickerStep}>03</span>
+                      <span className={styles.setupFlowChipCopy}>
+                        <span className={styles.setupFlowLabel}>{copy.runCommandLabel}</span>
+                        <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
+                      </span>
                     </span>
                   </div>
                 ) : (

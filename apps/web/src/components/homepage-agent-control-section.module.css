@@ -305,6 +305,43 @@
   gap: 0.03rem;
 }
 
+.setupFlowBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.06rem;
+  margin-top: 0.01rem;
+}
+
+.setupFlowChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.12rem;
+  min-width: 0;
+  padding: 0.1rem 0.12rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 14px;
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.setupFlowChipCopy {
+  display: grid;
+  gap: 0.03rem;
+  min-width: 0;
+}
+
+.setupFlowChip strong {
+  color: #0f172a;
+  font-size: 0.72rem;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.setupFlowChipAccent {
+  border-color: rgba(15, 23, 42, 0.12);
+  background: rgba(241, 245, 249, 0.98);
+}
+
 .setupScanGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1603,6 +1640,10 @@
 
   .setupScanGrid {
     grid-template-columns: 1fr;
+  }
+
+  .setupFlowBar {
+    align-items: flex-start;
   }
 
   .setupFlowDigest {
