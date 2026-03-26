@@ -109,10 +109,12 @@ function getSurfaceEntryCopy(locale: string, opsEnabled: boolean) {
     return {
       ariaLabel: "\uC250 \uC9C4\uC785 \uAD6C\uBD84",
       publicLabel: "\uACF5\uAC1C \uC250",
+      publicRoute: "\uACF5\uAC1C \uACBD\uB85C",
       publicTitle: "\uD648\uD398\uC774\uC9C0 \uBBF8\uB9AC\uBCF4\uAE30",
       publicHint: "\uD604\uC7AC \uD648\uD398\uC774\uC9C0\uC5D0\uC11C \uBCF4\uB294 \uACF5\uAC1C \uC11C\uD398\uC774\uC2A4",
       currentSurface: "\uD604\uC7AC \uD45C\uC2DC",
       internalLabel: "\uB0B4\uBD80 \uC635\uC2A4",
+      internalRoute: "\uB0B4\uBD80 \uACBD\uB85C",
       internalTitle: "\uC81C\uC5B4\uC2E4 \uBCF4\uB4DC",
       internalHint: opsEnabled
         ? "\uB85C\uCEEC \uAC1C\uBC1C \uB610\uB294 \uB370\uBAA8 \uBBF8\uB9AC\uBCF4\uAE30\uC5D0\uC11C \uC0C1\uC138 \uD050\uC640 \uD578\uB4DC\uC624\uD504 \uD750\uB984 \uD655\uC778"
@@ -124,10 +126,12 @@ function getSurfaceEntryCopy(locale: string, opsEnabled: boolean) {
   return {
     ariaLabel: "Surface split",
     publicLabel: "Public shell",
+    publicRoute: "Public route",
     publicTitle: "Homepage preview",
     publicHint: "Current public-facing surface on the homepage",
     currentSurface: "Current surface",
     internalLabel: "Internal ops",
+    internalRoute: "Internal route",
     internalTitle: "Control room board",
     internalHint: opsEnabled
       ? "Open the detailed queue and handoff board in local or demo preview."
@@ -441,7 +445,10 @@ export function HomepageAgentControlSection({
                 <span className={styles.surfaceEntryState}>{surfaceEntryCopy.currentSurface}</span>
               </div>
               <strong>{surfaceEntryCopy.publicTitle}</strong>
-              <span className={styles.surfaceEntryRoute}>{`/${locale}`}</span>
+              <div className={styles.surfaceEntryRouteRow}>
+                <span className={styles.surfaceEntryRouteBadge}>{surfaceEntryCopy.publicRoute}</span>
+                <span className={styles.surfaceEntryRoute}>{`/${locale}`}</span>
+              </div>
               <span className={styles.surfaceEntryHint}>{surfaceEntryCopy.publicHint}</span>
             </div>
 
@@ -458,7 +465,12 @@ export function HomepageAgentControlSection({
                 )}
               </div>
               <strong>{surfaceEntryCopy.internalTitle}</strong>
-              <span className={styles.surfaceEntryRoute}>{`/${locale}/ops`}</span>
+              <div className={styles.surfaceEntryRouteRow}>
+                <span className={`${styles.surfaceEntryRouteBadge} ${styles.surfaceEntryRouteBadgeAccent}`}>
+                  {surfaceEntryCopy.internalRoute}
+                </span>
+                <span className={styles.surfaceEntryRoute}>{`/${locale}/ops`}</span>
+              </div>
               <span className={styles.surfaceEntryHint}>{surfaceEntryCopy.internalHint}</span>
             </div>
           </div>
