@@ -651,6 +651,37 @@
   padding: 0.04rem 0;
 }
 
+.setupDigestInline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.04rem;
+  margin-top: 0.01rem;
+}
+
+.setupDigestPill {
+  display: inline-grid;
+  gap: 0.01rem;
+  min-width: 0;
+  padding: 0.08rem 0.1rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 14px;
+  background: rgba(248, 250, 252, 0.92);
+  flex: 1 1 11rem;
+}
+
+.setupDigestPill strong {
+  color: #0f172a;
+  font-size: 0.74rem;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.setupDigestPillAccent {
+  border-color: rgba(15, 23, 42, 0.12);
+  background: rgba(241, 245, 249, 0.98);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
 .setupSequenceIntro {
   margin: 0;
   color: #475569;
@@ -1937,12 +1968,16 @@
     align-items: stretch;
   }
 
-  .setupCompactArrow {
-    display: none;
-  }
-
   .setupSummaryLead {
     align-items: flex-start;
+  }
+
+  .setupDigestInline {
+    align-items: stretch;
+  }
+
+  .setupDigestPill {
+    width: 100%;
   }
 
   .setupSummaryInline {

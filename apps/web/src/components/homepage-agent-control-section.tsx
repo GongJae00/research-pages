@@ -436,40 +436,29 @@ export function HomepageAgentControlSection({
                         {copy.nextActionLabel}: {nextSetupCommand?.title ?? copy.setupCommand}
                       </span>
                     </div>
-                    <div className={styles.setupScanRowCompact}>
-                      <div className={styles.setupScanCompactItem}>
-                        <span className={styles.setupPickerStep}>01</span>
-                        <div className={styles.setupScanCompactCopy}>
-                          <span className={styles.setupFlowLabel}>{copy.chooseProvider}</span>
-                          <strong>{selectedProvider?.label ?? "-"}</strong>
-                          <span className={styles.setupSequenceMeta}>
-                            {copy.selectedCliStatusLabel}:{" "}
-                            {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
-                          </span>
-                        </div>
-                      </div>
+                    <div className={styles.setupDigestInline}>
+                      <span className={styles.setupDigestPill}>
+                        <span className={styles.setupFlowLabel}>{copy.chooseProvider}</span>
+                        <strong>{selectedProvider?.label ?? "-"}</strong>
+                        <span className={styles.setupSequenceMeta}>
+                          {copy.selectedCliStatusLabel}:{" "}
+                          {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
+                        </span>
+                      </span>
 
-                      <div className={styles.setupScanCompactItem}>
-                        <span className={styles.setupPickerStep}>02</span>
-                        <div className={styles.setupScanCompactCopy}>
-                          <span className={styles.setupFlowLabel}>{copy.chooseTeam}</span>
-                          <strong>{selectedTeam?.name ?? "-"}</strong>
-                          <span className={styles.setupSequenceMeta}>
-                            {copy.selectedLaneLabel}: {selectedTeam?.lane ?? "-"}
-                          </span>
-                        </div>
-                      </div>
+                      <span className={styles.setupDigestPill}>
+                        <span className={styles.setupFlowLabel}>{copy.chooseTeam}</span>
+                        <strong>{selectedTeam?.name ?? "-"}</strong>
+                        <span className={styles.setupSequenceMeta}>
+                          {copy.selectedLaneLabel}: {selectedTeam?.lane ?? "-"}
+                        </span>
+                      </span>
 
-                      <div
-                        className={`${styles.setupScanCompactItem} ${styles.setupScanCompactItemAccent}`}
-                      >
-                        <span className={styles.setupPickerStep}>03</span>
-                        <div className={styles.setupScanCompactCopy}>
-                          <span className={styles.setupFlowLabel}>{copy.runCommandLabel}</span>
-                          <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
-                          <span className={styles.setupSequenceMeta}>{setupOutputLabel}</span>
-                        </div>
-                      </div>
+                      <span className={`${styles.setupDigestPill} ${styles.setupDigestPillAccent}`}>
+                        <span className={styles.setupFlowLabel}>{copy.runCommandLabel}</span>
+                        <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
+                        <span className={styles.setupSequenceMeta}>{setupOutputLabel}</span>
+                      </span>
                     </div>
                   </div>
                 ) : null}
