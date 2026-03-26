@@ -848,13 +848,20 @@ export function AffiliationWorkspace({
       <div className="card-header">
         <div>
           <h3>{affiliation.roleTitle}</h3>
-          <p className="card-support-text">{joinAffiliationSummary(affiliation)}</p>
-          <p className="card-support-text">
-            {getAffiliationScanSummary(affiliation, locale)}
-          </p>
-          <p className="card-support-text">
-            <strong>{getNextUpdateLabel(locale)}</strong> {getNextActionSummary(affiliation, locale)}
-          </p>
+          <dl className="field-list">
+            <div className="field-row">
+              <dt>{text.institution}</dt>
+              <dd>{joinAffiliationSummary(affiliation) || text.institution}</dd>
+            </div>
+            <div className="field-row">
+              <dt>{getTimelineSnapshotLabel(locale)}</dt>
+              <dd>{getAffiliationScanSummary(affiliation, locale)}</dd>
+            </div>
+            <div className="field-row">
+              <dt>{getNextUpdateLabel(locale)}</dt>
+              <dd>{getNextActionSummary(affiliation, locale)}</dd>
+            </div>
+          </dl>
         </div>
         <div className="profile-history-side">
           <span className={`pill ${getAffiliationStatusClass(affiliation)}`}>

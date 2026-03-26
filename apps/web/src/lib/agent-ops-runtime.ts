@@ -270,7 +270,7 @@ function normalizeRuntimeState(candidate: unknown, locale: string): AgentOpsRunt
               value.autonomy.taskHistory,
             ),
             currentExecution:
-              value.autonomy.currentExecution && typeof value.autonomy.currentExecution === "object"
+              isRuntimeMergeEntry(value.autonomy.currentExecution)
                 ? value.autonomy.currentExecution
                 : defaultAutonomy.currentExecution,
             executionHistory: getRuntimeObjectList<
