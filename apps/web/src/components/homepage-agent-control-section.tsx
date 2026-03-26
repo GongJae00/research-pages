@@ -438,18 +438,11 @@ export function HomepageAgentControlSection({
                     </div>
                     <div className={styles.setupDigestInline}>
                       <span className={styles.setupDigestPill}>
-                        <span className={styles.setupFlowLabel}>{copy.chooseProvider}</span>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
+                        <span className={styles.setupFlowLabel}>{setupFlowLabel}</span>
+                        <strong>{formatSetupPair(selectedProvider?.label, selectedTeam?.name)}</strong>
                         <span className={styles.setupSequenceMeta}>
                           {copy.selectedCliStatusLabel}:{" "}
-                          {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
-                        </span>
-                      </span>
-
-                      <span className={styles.setupDigestPill}>
-                        <span className={styles.setupFlowLabel}>{copy.chooseTeam}</span>
-                        <strong>{selectedTeam?.name ?? "-"}</strong>
-                        <span className={styles.setupSequenceMeta}>
+                          {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"} ·{" "}
                           {copy.selectedLaneLabel}: {selectedTeam?.lane ?? "-"}
                         </span>
                       </span>
