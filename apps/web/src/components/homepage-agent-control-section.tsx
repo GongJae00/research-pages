@@ -602,11 +602,7 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupSelectionLead}>
                   <div className={styles.setupSelectionLeadTop}>
                     <span className={styles.setupSelectionLeadLabel}>{copy.activeSetup}</span>
-                    {nextSetupCommand ? (
-                      <span className={styles.nextCommandOutput}>{nextSetupCommand.title}</span>
-                    ) : null}
                   </div>
-                  <p className={styles.setupSelectionLeadHint}>{copy.setupSequenceIntro}</p>
                   {activeSetupSummary}
                 </div>
 

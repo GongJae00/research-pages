@@ -1399,21 +1399,26 @@ export function AffiliationWorkspace({
 
   const renderReadOnlyAffiliationCard = (affiliation: AffiliationTimelineEntry) => {
     const actionBadge = getAffiliationActionBadge(affiliation, locale);
+    const timelineSnapshot = getAffiliationScanSummary(affiliation, locale);
+    const nextEdit = getNextEditSummary(affiliation, locale);
 
     return (
       <section className="card profile-detail-card" key={affiliation.id}>
         <div className="card-header">
           <div>
             <h3>{affiliation.roleTitle}</h3>
-            <p className="card-support-text">{getAffiliationScanSummary(affiliation, locale)}</p>
-            <p className="card-support-text">
-              {getTimelinePlacementScanSummary(affiliation, locale)}
-            </p>
-            <p className="card-support-text">{getNextEditSummary(affiliation, locale)}</p>
             <dl className="field-list">
               <div className="field-row">
                 <dt>{text.institution}</dt>
                 <dd>{joinAffiliationSummary(affiliation) || text.institution}</dd>
+              </div>
+              <div className="field-row">
+                <dt>{getTimelineSnapshotLabel(locale)}</dt>
+                <dd>{timelineSnapshot}</dd>
+              </div>
+              <div className="field-row">
+                <dt>{getNextUpdateLabel(locale)}</dt>
+                <dd>{nextEdit}</dd>
               </div>
               <div className="field-row">
                 <dt>{getTimelinePlacementLabel(locale)}</dt>

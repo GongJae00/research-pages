@@ -1691,8 +1691,8 @@
 
 .setupSelectionLead {
   display: grid;
-  gap: 0.02rem;
-  padding: 0.03rem 0.05rem 0.05rem;
+  gap: 0.01rem;
+  padding: 0.02rem 0.05rem 0.04rem;
   border-bottom: 1px solid rgba(203, 213, 225, 0.72);
 }
 
@@ -1700,7 +1700,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 0.06rem;
 }
 
@@ -1724,6 +1724,7 @@
 
 .setupSelectionLead .setupCompactSummary {
   display: flex;
+  margin-top: 0.01rem;
 }
 
 .setupSectionHead {
@@ -1800,9 +1801,9 @@
   display: grid;
   grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
   align-items: start;
-  gap: 0.03rem;
+  gap: 0.02rem;
   margin-top: 0;
-  padding: 0.02rem 0.04rem;
+  padding: 0.02rem 0.03rem;
   border: 1px solid rgba(15, 23, 42, 0.24);
   border-radius: 16px;
   background:
@@ -1822,7 +1823,7 @@
 .nextCommandLead {
   flex-direction: column;
   justify-content: space-between;
-  gap: 0.01rem;
+  gap: 0.02rem;
 }
 
 .nextCommandLead .setupCompactSummary {
@@ -1950,7 +1951,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.6rem;
-  padding: 0.03rem 0.08rem;
+  padding: 0.02rem 0.08rem;
   cursor: pointer;
   list-style: none;
 }
@@ -1992,7 +1993,7 @@
 }
 
 .setupCommandsDisclosure .setupCommands {
-  padding: 0 0.06rem 0.06rem;
+  padding: 0 0.06rem 0.04rem;
 }
 
 .setupPickerGrid {
