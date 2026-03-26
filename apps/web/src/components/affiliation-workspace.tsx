@@ -382,6 +382,26 @@ function getHistorySectionHint(locale: Locale, count: number) {
       : "No past or planned timeline entries are on record yet.";
 }
 
+function getCurrentEditSectionHint(locale: Locale, count: number) {
+  return locale === "ko"
+    ? count > 0
+      ? "\ud604\uc7ac \uc9c4\ud589 \uc911\uc778 \uc18c\uc18d\ubd80\ud130 \ub0a0\uc9dc, \uc0c1\ud0dc, \uae30\uad00 \uc815\ubcf4\ub97c \uac31\uc2e0\ud558\uc138\uc694."
+      : "\uc218\uc815\ud560 \ud604\uc7ac \uc18c\uc18d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4."
+    : count > 0
+      ? "Start here when an active role changes dates, status, or institution details."
+      : "No active affiliation items need edits right now.";
+}
+
+function getHistoryEditSectionHint(locale: Locale, count: number) {
+  return locale === "ko"
+    ? count > 0
+      ? "\uc885\ub8cc\ub41c \ud56d\ubaa9\uacfc \uc608\uc815 \ub610\ub294 \ubcf4\ub958 \uc0c1\ud0dc\ub97c \ud568\uaed8 \uc815\ub9ac\ud558\uc138\uc694."
+      : "\uc218\uc815\ud560 \uc774\uc804 \ub610\ub294 \uc608\uc815 \uc18c\uc18d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4."
+    : count > 0
+      ? "Use this section for completed, paused, or planned entries that need cleanup."
+      : "No past or planned items need edits right now.";
+}
+
 function getEditItemLabel(locale: Locale) {
   return locale === "ko" ? "\ud56d\ubaa9 \uc218\uc815" : "Edit item";
 }
@@ -450,6 +470,8 @@ export function AffiliationWorkspace({
   const affiliationStats = getAffiliationStats(orderedResolvedAffiliations, locale);
   const { current: currentAffiliations, history: historicalAffiliations } =
     getAffiliationSections(orderedResolvedAffiliations);
+  const { current: currentDraftAffiliations, history: historicalDraftAffiliations } =
+    getAffiliationSections(orderedDraftAffiliations);
 
   useEffect(() => {
     setResolvedDocuments(loadBrowserDocuments(documents));
@@ -672,6 +694,197 @@ export function AffiliationWorkspace({
     </section>
   );
 
+  const renderEditableAffiliationCard = (
+    affiliation: AffiliationTimelineEntry,
+    index: number,
+  ) => (
+    <section className="card profile-edit-card" key={affiliation.id}>
+      <div className="card-header">
+        <div>
+          <h3>
+            {text.item} {index + 1}
+          </h3>
+          <p className="card-support-text">
+            {[
+              affiliation.roleTitle || affiliation.institutionName || text.institution,
+              affiliation.startDate
+                ? getTimelineSummary(affiliation, text.present, locale)
+                : text.startDate,
+              affiliation.active
+                ? locale === "ko"
+                  ? "?꾩옱 吏꾪뻾 以?"
+                  : "Current role"
+                : text.appointmentLabels[affiliation.appointmentStatus],
+            ].join(" / ")}
+          </p>
+          <p className="card-support-text">
+            {joinAffiliationSummary(affiliation) || text.institution}
+          </p>
+          <p className="card-support-text">
+            {getAffiliationEditReadiness(affiliation, locale, text)}
+          </p>
+        </div>
+        <button
+          type="button"
+          className="profile-inline-btn"
+          onClick={() => handleRemoveAffiliation(affiliation.id)}
+        >
+          <Trash2 size={15} />
+          {text.remove}
+        </button>
+      </div>
+      <div className="card-body">
+        <div className="profile-form-grid">
+          <label className="editor-field">
+            <span>{text.institution}</span>
+            <input
+              value={affiliation.institutionName}
+              onChange={(event) =>
+                handleUpdateAffiliation(affiliation.id, {
+                  institutionName: event.target.value,
+                })
+              }
+            />
+          </label>
+          <label className="editor-field">
+            <span>{text.roleTitle}</span>
+            <input
+              value={affiliation.roleTitle}
+              onChange={(event) =>
+                handleUpdateAffiliation(affiliation.id, {
+                  roleTitle: event.target.value,
+                })
+              }
+            />
+          </label>
+          <label className="editor-field">
+            <span>{text.department}</span>
+            <input
+              value={affiliation.department ?? ""}
+              onChange={(event) =>
+                handleUpdateAffiliation(affiliation.id, {
+                  department: event.target.value,
+                })
+              }
+            />
+          </label>
+          <label className="editor-field">
+            <span>{text.lab}</span>
+            <input
+              value={affiliation.labName ?? ""}
+              onChange={(event) =>
+                handleUpdateAffiliation(affiliation.id, {
+                  labName: event.target.value,
+                })
+              }
+            />
+          </label>
+          <label className="editor-field">
+            <span>{text.organizationType}</span>
+            <select
+              value={affiliation.organizationType}
+              onChange={(event) =>
+                handleUpdateAffiliation(affiliation.id, {
+                  organizationType: event.target.value as AffiliationTimelineEntry["organizationType"],
+                })
+              }
+            >
+              {organizationTypes.map((value) => (
+                <option key={value} value={value}>
+                  {text.organizationLabels[value]}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="editor-field">
+            <span>{text.roleTrack}</span>
+            <select
+              value={affiliation.roleTrack}
+              onChange={(event) =>
+                handleUpdateAffiliation(affiliation.id, {
+                  roleTrack: event.target.value as AffiliationTimelineEntry["roleTrack"],
+                })
+              }
+            >
+              {roleTracks.map((value) => (
+                <option key={value} value={value}>
+                  {text.roleTrackLabels[value]}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="editor-field">
+            <span>{text.appointmentStatus}</span>
+            <select
+              value={affiliation.appointmentStatus}
+              onChange={(event) =>
+                handleUpdateAffiliation(affiliation.id, {
+                  appointmentStatus:
+                    event.target.value as AffiliationTimelineEntry["appointmentStatus"],
+                })
+              }
+            >
+              {appointmentStatuses.map((value) => (
+                <option key={value} value={value}>
+                  {text.appointmentLabels[value]}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="editor-field">
+            <span>{text.startDate}</span>
+            <input
+              type="date"
+              value={affiliation.startDate}
+              onChange={(event) =>
+                handleUpdateAffiliation(affiliation.id, {
+                  startDate: event.target.value,
+                })
+              }
+            />
+          </label>
+          <label className="editor-field">
+            <span>{text.endDate}</span>
+            <input
+              type="date"
+              value={affiliation.endDate ?? ""}
+              onChange={(event) =>
+                handleUpdateAffiliation(affiliation.id, {
+                  endDate: event.target.value,
+                })
+              }
+            />
+          </label>
+          <label className="editor-field">
+            <span>{text.active}</span>
+            <select
+              value={affiliation.active ? "active" : "inactive"}
+              onChange={(event) =>
+                handleUpdateAffiliation(affiliation.id, {
+                  active: event.target.value === "active",
+                })
+              }
+            >
+              <option value="active">{text.active}</option>
+              <option value="inactive">{text.inactive}</option>
+            </select>
+          </label>
+          <label className="editor-field editor-field-full">
+            <span>{text.notes}</span>
+            <textarea
+              value={affiliation.notes ?? ""}
+              onChange={(event) =>
+                handleUpdateAffiliation(affiliation.id, {
+                  notes: event.target.value,
+                })
+              }
+            />
+          </label>
+        </div>
+      </div>
+    </section>
+  );
+
   return (
     <div className="page-standard workspace-page-shell affiliation-workspace">
       {embedded ? null : (
@@ -725,7 +938,46 @@ export function AffiliationWorkspace({
               </section>
             ) : null}
 
-            {orderedDraftAffiliations.map((affiliation, index) => (
+            {currentDraftAffiliations.length > 0 ? (
+              <section className="card profile-detail-card">
+                <div className="card-header">
+                  <div>
+                    <h3>{getCurrentSectionLabel(locale, currentDraftAffiliations.length)}</h3>
+                    <p className="card-support-text">
+                      {getCurrentEditSectionHint(locale, currentDraftAffiliations.length)}
+                    </p>
+                  </div>
+                </div>
+                <div className="card-body detail-cards">
+                  {currentDraftAffiliations.map((affiliation, index) =>
+                    renderEditableAffiliationCard(affiliation, index),
+                  )}
+                </div>
+              </section>
+            ) : null}
+
+            {historicalDraftAffiliations.length > 0 ? (
+              <section className="card profile-detail-card">
+                <div className="card-header">
+                  <div>
+                    <h3>{getHistorySectionLabel(locale, historicalDraftAffiliations.length)}</h3>
+                    <p className="card-support-text">
+                      {getHistoryEditSectionHint(locale, historicalDraftAffiliations.length)}
+                    </p>
+                  </div>
+                </div>
+                <div className="card-body detail-cards">
+                  {historicalDraftAffiliations.map((affiliation, index) =>
+                    renderEditableAffiliationCard(
+                      affiliation,
+                      currentDraftAffiliations.length + index,
+                    ),
+                  )}
+                </div>
+              </section>
+            ) : null}
+
+            {false ? orderedDraftAffiliations.map((affiliation, index) => (
               <section className="card profile-edit-card" key={affiliation.id}>
                 <div className="card-header">
                   <div>
@@ -911,7 +1163,7 @@ export function AffiliationWorkspace({
                   </div>
                 </div>
               </section>
-            ))}
+            )) : null}
           </div>
 
           <div className="editor-actions">

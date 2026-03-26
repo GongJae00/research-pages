@@ -64,8 +64,15 @@ function getOptionalRuntimeString(
   return typeof entry[key] === "string" ? entry[key] : undefined;
 }
 
+function hasNonEmptyRuntimeString(
+  entry: Record<string, unknown>,
+  key: string,
+): boolean {
+  return typeof entry[key] === "string" && entry[key].trim().length > 0;
+}
+
 function getRuntimeObjectList<T>(candidate: unknown): T[] {
-  return Array.isArray(candidate) ? (candidate.filter(isRuntimeMergeEntry) as T[]) : [];
+  return Array.isArray(candidate) ? (candidate.filter(isRuntimeMergeEntry) as unknown as T[]) : [];
 }
 
 function sanitizeConversationFeed(
@@ -116,10 +123,10 @@ function sanitizeCurrentDirective(
   }
 
   if (
-    typeof candidate.title !== "string" ||
-    typeof candidate.body !== "string" ||
-    typeof candidate.issuedAt !== "string" ||
-    typeof candidate.source !== "string"
+    !hasNonEmptyRuntimeString(candidate, "title") ||
+    !hasNonEmptyRuntimeString(candidate, "body") ||
+    !hasNonEmptyRuntimeString(candidate, "issuedAt") ||
+    !hasNonEmptyRuntimeString(candidate, "source")
   ) {
     return fallback;
   }
