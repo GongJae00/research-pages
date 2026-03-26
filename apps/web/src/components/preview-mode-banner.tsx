@@ -14,9 +14,88 @@ function getPreviewRoutePath(href: string) {
   return pathname || href;
 }
 
-function formatPreviewLinkLabel(scopeLabel: string, label: string, href: string) {
-  return `${scopeLabel} | ${label} | ${getPreviewRoutePath(href)}`;
-}
+const previewLinkGroupStyle = {
+  display: "grid",
+  gap: "8px",
+  flex: "1 1 260px",
+  minWidth: "min(100%, 260px)",
+  padding: "10px 12px",
+  borderRadius: "16px",
+  border: "1px solid rgba(19, 57, 48, 0.08)",
+  background: "rgba(255, 255, 255, 0.52)",
+} as const;
+
+const previewLinkGroupHeaderStyle = {
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "center",
+  gap: "6px",
+} as const;
+
+const previewLinkGroupLabelStyle = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  minHeight: "22px",
+  padding: "0 8px",
+  borderRadius: "999px",
+  background: "rgba(15, 71, 57, 0.08)",
+  color: "#0f4739",
+  fontSize: "11px",
+  fontWeight: 800,
+  letterSpacing: "0.06em",
+  lineHeight: 1,
+  textTransform: "uppercase",
+} as const;
+
+const previewLinkGroupHintStyle = {
+  color: "#53645d",
+  fontSize: "11px",
+  fontWeight: 700,
+  lineHeight: 1.2,
+} as const;
+
+const previewLinkGroupItemsStyle = {
+  display: "flex",
+  flexWrap: "wrap",
+  gap: "8px",
+} as const;
+
+const previewLinkStyle = {
+  justifyContent: "flex-start",
+  gap: "10px",
+  minWidth: 0,
+  padding: "8px 12px",
+  flex: "1 1 180px",
+} as const;
+
+const previewLinkCopyStyle = {
+  display: "grid",
+  gap: "2px",
+  minWidth: 0,
+} as const;
+
+const previewLinkTitleStyle = {
+  color: "#143930",
+  fontSize: "13px",
+  fontWeight: 700,
+  lineHeight: 1.15,
+} as const;
+
+const previewLinkRouteStyle = {
+  color: "#53645d",
+  fontSize: "11px",
+  fontWeight: 700,
+  lineHeight: 1.1,
+  fontFamily:
+    'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+  overflowWrap: "anywhere",
+} as const;
+
+const previewHealthLinkStyle = {
+  ...previewLinkStyle,
+  flex: "1 1 220px",
+} as const;
 
 export function PreviewModeBanner({ locale }: PreviewModeBannerProps) {
   if (!isDemoPreviewRuntimeEnabled()) {
@@ -82,6 +161,20 @@ export function PreviewModeBanner({ locale }: PreviewModeBannerProps) {
       label: copy.lab,
     },
   ];
+  const routeGroups = [
+    {
+      id: "internal",
+      label: copy.internalRoutes,
+      hint: copy.internalScopeHint,
+      links: internalLinks,
+    },
+    {
+      id: "public",
+      label: copy.publicRoutes,
+      hint: copy.publicScopeHint,
+      links: publicLinks,
+    },
+  ] as const;
 
   return (
     <div className="preview-mode-banner-shell">
@@ -91,18 +184,36 @@ export function PreviewModeBanner({ locale }: PreviewModeBannerProps) {
           <p>{copy.body}</p>
         </div>
         <div className="preview-mode-banner-links">
-          {internalLinks.map((link) => (
-            <Link key={link.href} href={link.href} className="preview-mode-banner-link">
-              {formatPreviewLinkLabel(copy.internalRoutes, link.label, link.href)}
-            </Link>
+          {routeGroups.map((group) => (
+            <div key={group.id} style={previewLinkGroupStyle}>
+              <div style={previewLinkGroupHeaderStyle}>
+                <span style={previewLinkGroupLabelStyle}>{group.label}</span>
+                <span style={previewLinkGroupHintStyle}>{group.hint}</span>
+              </div>
+              <div style={previewLinkGroupItemsStyle}>
+                {group.links.map((link) => (
+                  <Link key={link.href} href={link.href} className="preview-mode-banner-link" style={previewLinkStyle}>
+                    <span style={previewLinkCopyStyle}>
+                      <span style={previewLinkTitleStyle}>{link.label}</span>
+                      <span style={previewLinkRouteStyle}>{getPreviewRoutePath(link.href)}</span>
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
           ))}
-          {publicLinks.map((link) => (
-            <Link key={link.href} href={link.href} className="preview-mode-banner-link">
-              {formatPreviewLinkLabel(copy.publicRoutes, link.label, link.href)}
-            </Link>
-          ))}
-          <Link href="/api/health" className="preview-mode-banner-link preview-mode-banner-link-subtle">
-            {formatPreviewLinkLabel(copy.apiTag, copy.health, "/api/health")}
+          <Link
+            href="/api/health"
+            className="preview-mode-banner-link preview-mode-banner-link-subtle"
+            style={previewHealthLinkStyle}
+          >
+            <span style={previewLinkCopyStyle}>
+              <span style={previewLinkTitleStyle}>{copy.health}</span>
+              <span style={previewLinkRouteStyle}>{getPreviewRoutePath("/api/health")}</span>
+            </span>
+            <span style={{ ...previewLinkGroupLabelStyle, background: "rgba(91, 103, 95, 0.08)", color: "#5b675f" }}>
+              {copy.apiTag}
+            </span>
           </Link>
         </div>
       </div>

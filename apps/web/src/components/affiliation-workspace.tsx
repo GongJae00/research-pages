@@ -1423,12 +1423,16 @@ export function AffiliationWorkspace({
                 <dd>{getAffiliationScanSummary(affiliation, locale)}</dd>
               </div>
               <div className="field-row">
-                <dt>{getTimelineCheckLabel(locale)}</dt>
-                <dd>{getTimelineCheckSummary(affiliation, locale, text)}</dd>
-              </div>
-              <div className="field-row">
                 <dt>{getNextUpdateLabel(locale)}</dt>
                 <dd>{getPrimaryNextActionSummary(affiliation, locale)}</dd>
+              </div>
+              <div className="field-row">
+                <dt>{getEditFocusLabel(locale)}</dt>
+                <dd>{getEditFocusHint(affiliation, locale)}</dd>
+              </div>
+              <div className="field-row">
+                <dt>{getTimelineCheckLabel(locale)}</dt>
+                <dd>{getTimelineCheckSummary(affiliation, locale, text)}</dd>
               </div>
             </dl>
           </div>
