@@ -298,6 +298,19 @@ function sanitizeAutonomyCurrentExecution(
   };
 }
 
+function sanitizeAutonomyExecutionHistory(
+  candidate: unknown,
+): AgentOpsRuntimeState["autonomy"]["executionHistory"] {
+  if (!Array.isArray(candidate)) {
+    return [];
+  }
+
+  return candidate.flatMap((entry) => {
+    const sanitizedEntry = sanitizeAutonomyCurrentExecution(entry);
+    return sanitizedEntry ? [sanitizedEntry] : [];
+  });
+}
+
 function sanitizeAutonomyRuntime(
   candidate: unknown,
   fallback: AgentOpsRuntimeState["autonomy"],
@@ -346,9 +359,7 @@ function sanitizeAutonomyRuntime(
       candidate.taskHistory,
     ),
     currentExecution: sanitizeAutonomyCurrentExecution(candidate.currentExecution),
-    executionHistory: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["executionHistory"][number]>(
-      candidate.executionHistory,
-    ),
+    executionHistory: sanitizeAutonomyExecutionHistory(candidate.executionHistory),
     activeTasks: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["activeTasks"][number]>(
       candidate.activeTasks,
     ),
