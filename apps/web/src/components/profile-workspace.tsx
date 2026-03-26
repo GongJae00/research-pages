@@ -1135,14 +1135,6 @@ export function ProfileWorkspace({
     savedLinks.length,
     text.emptyValue,
   ]);
-  const coreContactHighlights = useMemo(
-    () =>
-      [
-        savedAdditionalEmailCountLabel,
-        savedAdditionalLinkCountLabel,
-      ].filter(isDefined),
-    [savedAdditionalEmailCountLabel, savedAdditionalLinkCountLabel],
-  );
   const coreIdentifierSummary = useMemo(() => {
     const parts = [
       savedProfile.nationalResearcherNumber ? text.nationalId : undefined,
@@ -2278,19 +2270,32 @@ export function ProfileWorkspace({
                     </div>
                   </dt>
                   <dd>
-                    {savedEmails.length > 0 || savedLinks.length > 0 ? (
-                      <div className="profile-career-status-list">
-                        {primarySavedEmail || primarySavedLink ? (
-                          <div className="profile-career-status-row">
-                            <div className="profile-career-status-main">
-                              <strong>{text.primaryItem}</strong>
-                              <span className="profile-inline-list profile-inline-list-muted">
-                                {primarySavedEmail ? (
+                    {renderProfileSummaryRows(
+                      [
+                        primarySavedEmail
+                          ? {
+                              key: "primary-email",
+                              label: text.email,
+                              value: (
+                                <span className="profile-inline-list profile-inline-list-muted">
                                   <a href={`mailto:${primarySavedEmail}`} className="profile-inline-link">
                                     {primarySavedEmail}
                                   </a>
-                                ) : null}
-                                {primarySavedLink ? (
+                                  {savedAdditionalEmailCountLabel ? (
+                                    <span className="pill pill-gray">
+                                      {savedAdditionalEmailCountLabel}
+                                    </span>
+                                  ) : null}
+                                </span>
+                              ),
+                            }
+                          : null,
+                        primarySavedLink
+                          ? {
+                              key: "primary-link",
+                              label: onlineLinksLabel,
+                              value: (
+                                <span className="profile-inline-list profile-inline-list-muted">
                                   <a
                                     href={primarySavedLink.url}
                                     target="_blank"
@@ -2305,23 +2310,17 @@ export function ProfileWorkspace({
                                     </span>
                                     <ExternalLink size={13} />
                                   </a>
-                                ) : null}
-                              </span>
-                            </div>
-                          </div>
-                        ) : null}
-                        {coreContactHighlights.length > 0 ? (
-                          <div className="profile-inline-list profile-inline-list-muted">
-                            {coreContactHighlights.map((item) => (
-                              <span className="pill pill-gray" key={item}>
-                                {item}
-                              </span>
-                            ))}
-                          </div>
-                        ) : null}
-                      </div>
-                    ) : (
-                      text.emptyValue
+                                  {savedAdditionalLinkCountLabel ? (
+                                    <span className="pill pill-gray">
+                                      {savedAdditionalLinkCountLabel}
+                                    </span>
+                                  ) : null}
+                                </span>
+                              ),
+                            }
+                          : null,
+                      ].filter(isDefined),
+                      text.emptyValue,
                     )}
                   </dd>
                 </div>

@@ -1690,7 +1690,8 @@
 }
 
 .setupSelectionLead {
-  display: none;
+  display: grid;
+  gap: 0.03rem;
 }
 
 .setupSelectionLeadTop {
