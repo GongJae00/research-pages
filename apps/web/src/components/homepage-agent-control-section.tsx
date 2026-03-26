@@ -505,6 +505,7 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
+                <p className={styles.setupTitleHint}>{copy.setupSequenceIntro}</p>
                 <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
                   <div className={styles.setupCompactSummaryItem}>
                     <span className={styles.setupCompactSummaryOrdinal}>01</span>
@@ -670,6 +671,25 @@ export function HomepageAgentControlSection({
                       <div className={styles.setupCommandInlineCopy}>
                         <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
                         <strong>{nextSetupCommand.title}</strong>
+                        <div className={styles.setupCommandInlineMeta} aria-label={setupFlowLabel}>
+                          <span className={styles.setupCommandInlinePath}>
+                            {copy.selectedCli}: {selectedProvider?.label ?? "-"}
+                          </span>
+                          <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
+                            -&gt;
+                          </span>
+                          <span className={styles.setupCommandInlinePath}>
+                            {copy.selectedTeamLabel}: {selectedTeam?.name ?? "-"}
+                          </span>
+                          <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
+                            -&gt;
+                          </span>
+                          <span
+                            className={`${styles.setupCommandInlinePath} ${styles.setupCommandInlinePathAccent}`}
+                          >
+                            {copy.nextActionLabel}: {nextSetupCommand.title}
+                          </span>
+                        </div>
                         <p className={styles.setupTitleHint}>{copy.nextCommandHelp}</p>
                       </div>
                     </div>

@@ -936,8 +936,9 @@
   display: inline-flex;
   align-items: center;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 0.04rem;
+  margin-top: 0.02rem;
 }
 
 .setupCommandInlinePath {
@@ -955,6 +956,12 @@
   font-size: 0.62rem;
   font-weight: 800;
   line-height: 1;
+  overflow-wrap: anywhere;
+}
+
+.setupCommandInlinePathAccent {
+  border-color: rgba(15, 23, 42, 0.18);
+  background: rgba(15, 23, 42, 0.08);
 }
 
 .setupCommandInlineMain {

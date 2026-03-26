@@ -1389,12 +1389,6 @@ export function AffiliationWorkspace({
             </p>
           ) : null}
           <p className="card-support-text">
-            {getAffiliationOnePassSummary(affiliation, locale)}
-          </p>
-          <p className="card-support-text">
-            {getAffiliationScanSummary(affiliation, locale)}
-          </p>
-          <p className="card-support-text">
             {[
               affiliation.roleTitle || affiliation.institutionName || text.institution,
               affiliation.startDate ? getTimelineSummary(affiliation, locale) : text.startDate,
@@ -1405,14 +1399,19 @@ export function AffiliationWorkspace({
                 : text.appointmentLabels[affiliation.appointmentStatus],
             ].join(" / ")}
           </p>
-          <p className="card-support-text">
-            {joinAffiliationSummary(affiliation) || text.institution}
-          </p>
-          <p className="card-support-text">
-            <strong>{getNextUpdateLabel(locale)}</strong>{" "}
-            {getPrimaryNextActionSummary(affiliation, locale)}
-          </p>
           <dl className="field-list">
+            <div className="field-row">
+              <dt>{text.institution}</dt>
+              <dd>{joinAffiliationSummary(affiliation) || text.institution}</dd>
+            </div>
+            <div className="field-row">
+              <dt>{getTimelineSnapshotLabel(locale)}</dt>
+              <dd>{getAffiliationScanSummary(affiliation, locale)}</dd>
+            </div>
+            <div className="field-row">
+              <dt>{getNextUpdateLabel(locale)}</dt>
+              <dd>{getPrimaryNextActionSummary(affiliation, locale)}</dd>
+            </div>
             <div className="field-row">
               <dt>{getTimelinePlacementLabel(locale)}</dt>
               <dd>{getTimelinePlacementSummary(affiliation, locale)}</dd>
