@@ -673,6 +673,10 @@
   align-items: center;
 }
 
+.setupHeaderScan {
+  margin-top: 0.03rem;
+}
+
 .setupScanSummaryItem {
   display: flex;
   align-items: flex-start;
@@ -722,9 +726,9 @@
 
 .setupActivePath {
   display: grid;
-  gap: 0.06rem;
-  margin-top: 0.05rem;
-  padding: 0.08rem;
+  gap: 0.04rem;
+  margin-top: 0.03rem;
+  padding: 0.07rem;
   border: 1px solid rgba(15, 23, 42, 0.18);
   border-radius: 16px;
   background:
@@ -738,7 +742,7 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.08rem;
+  gap: 0.06rem;
 }
 
 .setupActivePathLead {
@@ -782,7 +786,7 @@
 .setupActiveCommandRow {
   display: flex;
   align-items: center;
-  gap: 0.06rem;
+  gap: 0.05rem;
   min-width: 0;
 }
 
@@ -790,7 +794,7 @@
   display: block;
   flex: 1 1 auto;
   min-width: 0;
-  padding: 0.08rem 0.1rem;
+  padding: 0.07rem 0.09rem;
   border: 1px solid rgba(148, 163, 184, 0.52);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.94);
