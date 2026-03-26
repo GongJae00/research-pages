@@ -420,37 +420,37 @@ export function HomepageAgentControlSection({
                 {setupFlowDigest ? (
                   <div className={styles.setupSummaryBar} aria-label={copy.setupStepsLabel}>
                     <span className={styles.metaLabel}>{setupFlowLabel}</span>
-                    <div className={styles.setupSequenceGrid}>
-                      <div className={styles.setupSequenceCard}>
-                        <div className={styles.setupSequenceHead}>
-                          <span className={styles.setupPickerStep}>01</span>
+                    <div className={styles.setupSequenceInline}>
+                      <div className={styles.setupSequencePill}>
+                        <span className={styles.setupPickerStep}>01</span>
+                        <div className={styles.setupSequencePillCopy}>
                           <span className={styles.setupFlowLabel}>{copy.chooseProvider}</span>
+                          <strong>{selectedProvider?.label ?? "-"}</strong>
+                          <span className={styles.setupSequenceMeta}>
+                            {copy.selectedCliStatusLabel}:{" "}
+                            {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
+                          </span>
                         </div>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
-                        <span className={styles.setupSequenceMeta}>
-                          {copy.selectedCliStatusLabel}:{" "}
-                          {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
-                        </span>
                       </div>
 
-                      <div className={styles.setupSequenceCard}>
-                        <div className={styles.setupSequenceHead}>
-                          <span className={styles.setupPickerStep}>02</span>
+                      <div className={styles.setupSequencePill}>
+                        <span className={styles.setupPickerStep}>02</span>
+                        <div className={styles.setupSequencePillCopy}>
                           <span className={styles.setupFlowLabel}>{copy.chooseTeam}</span>
+                          <strong>{selectedTeam?.name ?? "-"}</strong>
+                          <span className={styles.setupSequenceMeta}>
+                            {copy.selectedLaneLabel}: {selectedTeam?.lane ?? "-"}
+                          </span>
                         </div>
-                        <strong>{selectedTeam?.name ?? "-"}</strong>
-                        <span className={styles.setupSequenceMeta}>
-                          {copy.selectedLaneLabel}: {selectedTeam?.lane ?? "-"}
-                        </span>
                       </div>
 
-                      <div className={`${styles.setupSequenceCard} ${styles.setupSequenceCardAccent}`}>
-                        <div className={styles.setupSequenceHead}>
-                          <span className={styles.setupPickerStep}>03</span>
+                      <div className={`${styles.setupSequencePill} ${styles.setupSequencePillAccent}`}>
+                        <span className={styles.setupPickerStep}>03</span>
+                        <div className={styles.setupSequencePillCopy}>
                           <span className={styles.setupFlowLabel}>{copy.runCommandLabel}</span>
+                          <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
+                          <span className={styles.setupSequenceMeta}>{setupOutputLabel}</span>
                         </div>
-                        <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
-                        <span className={styles.setupSequenceMeta}>{setupOutputLabel}</span>
                       </div>
                     </div>
                   </div>

@@ -658,30 +658,38 @@
   margin-top: 0.02rem;
 }
 
-.setupSequenceGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.06rem;
+.setupSequenceInline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.05rem;
 }
 
-.setupSequenceCard {
-  display: grid;
-  gap: 0.04rem;
+.setupSequencePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.12rem;
   min-width: 0;
-  padding: 0.12rem 0.14rem;
+  padding: 0.1rem 0.12rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 14px;
   background: rgba(248, 250, 252, 0.92);
+  flex: 1 1 10.5rem;
 }
 
-.setupSequenceCard strong {
+.setupSequencePillCopy {
+  display: grid;
+  gap: 0.01rem;
+  min-width: 0;
+}
+
+.setupSequencePill strong {
   color: #0f172a;
-  font-size: 0.76rem;
-  line-height: 1.12;
+  font-size: 0.74rem;
+  line-height: 1.08;
   overflow-wrap: anywhere;
 }
 
-.setupSequenceCardAccent {
+.setupSequencePillAccent {
   border-color: rgba(15, 23, 42, 0.16);
   background: rgba(241, 245, 249, 0.98);
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
@@ -1859,10 +1867,6 @@
 
   .setupSummaryBar {
     align-items: stretch;
-  }
-
-  .setupSequenceGrid {
-    grid-template-columns: 1fr;
   }
 
   .setupCompactArrow {
