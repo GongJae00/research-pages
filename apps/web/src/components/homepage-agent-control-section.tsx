@@ -490,7 +490,49 @@ export function HomepageAgentControlSection({
                     </span>
                   ) : null}
                 </div>
-                <p className={styles.setupTitleHint}>{copy.setupSequenceIntro}</p>
+                {nextSetupCommand ? (
+                  <div className={`${styles.setupCompactSummary} ${styles.setupHeaderScan}`} aria-label={setupFlowLabel}>
+                    <span className={styles.setupCompactSummaryItem}>
+                      <span className={styles.setupCompactSummaryOrdinal}>01</span>
+                      <span className={styles.setupCompactSummaryContent}>
+                        <span className={styles.metaLabel}>{copy.chooseProvider}</span>
+                        <span className={styles.setupCompactSummaryValueRow}>
+                          <strong>{selectedProvider?.label ?? "-"}</strong>
+                          {selectedProvider ? (
+                            <span
+                              className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
+                            >
+                              {getProviderStatusLabel(locale, selectedProvider.status)}
+                            </span>
+                          ) : null}
+                        </span>
+                      </span>
+                    </span>
+                    <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
+                      &rarr;
+                    </span>
+                    <span className={styles.setupCompactSummaryItem}>
+                      <span className={styles.setupCompactSummaryOrdinal}>02</span>
+                      <span className={styles.setupCompactSummaryContent}>
+                        <span className={styles.metaLabel}>{copy.chooseTeam}</span>
+                        <strong>{selectedTeam?.name ?? "-"}</strong>
+                        <span className={styles.setupSummaryMeta}>{selectedTeam?.lane ?? "-"}</span>
+                      </span>
+                    </span>
+                    <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
+                      &rarr;
+                    </span>
+                    <span className={`${styles.setupCompactSummaryItem} ${styles.setupCompactSummaryItemAccent}`}>
+                      <span className={styles.setupCompactSummaryOrdinal}>03</span>
+                      <span className={styles.setupCompactSummaryContent}>
+                        <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
+                        <strong>{nextSetupCommand.title}</strong>
+                      </span>
+                    </span>
+                  </div>
+                ) : (
+                  <p className={styles.setupTitleHint}>{copy.setupSequenceIntro}</p>
+                )}
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
@@ -504,48 +546,6 @@ export function HomepageAgentControlSection({
                 ) : null}
               </div>
             </div>
-
-            {nextSetupCommand ? (
-              <div className={`${styles.setupScanSummary} ${styles.setupHeaderScan}`} aria-label={setupFlowLabel}>
-                <span className={styles.setupScanSummaryItem}>
-                  <span className={styles.commandStep}>01</span>
-                  <span className={styles.setupScanSummaryCopy}>
-                    <span className={styles.metaLabel}>{copy.chooseProvider}</span>
-                    <span className={styles.setupScanSummaryValueRow}>
-                      <strong>{selectedProvider?.label ?? "-"}</strong>
-                      {selectedProvider ? (
-                        <span
-                          className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
-                        >
-                          {getProviderStatusLabel(locale, selectedProvider.status)}
-                        </span>
-                      ) : null}
-                    </span>
-                  </span>
-                </span>
-                <span className={styles.setupScanArrow} aria-hidden="true">
-                  &rarr;
-                </span>
-                <span className={styles.setupScanSummaryItem}>
-                  <span className={styles.commandStep}>02</span>
-                  <span className={styles.setupScanSummaryCopy}>
-                    <span className={styles.metaLabel}>{copy.chooseTeam}</span>
-                    <strong>{selectedTeam?.name ?? "-"}</strong>
-                    <span className={styles.setupSummaryMeta}>{selectedTeam?.lane ?? "-"}</span>
-                  </span>
-                </span>
-                <span className={styles.setupScanArrow} aria-hidden="true">
-                  &rarr;
-                </span>
-                <span className={`${styles.setupScanSummaryItem} ${styles.setupScanSummaryItemAccent}`}>
-                  <span className={styles.commandStep}>03</span>
-                  <span className={styles.setupScanSummaryCopy}>
-                    <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
-                    <strong>{nextSetupCommand.title}</strong>
-                  </span>
-                </span>
-              </div>
-            ) : null}
 
             <div className={styles.setupWorkbench}>
               <div className={styles.setupSelectionPanel} aria-label={getSetupInputLabel(locale)}>
@@ -613,28 +613,30 @@ export function HomepageAgentControlSection({
                       <span className={styles.metaLabel}>{copy.activeSetup}</span>
                       <span className={styles.nextCommandOutput}>{setupOutputLabel}</span>
                     </div>
-                    <div className={styles.nextCommandMetaRow}>
-                      <span className={styles.nextCommandMetaChip}>
-                        <span className={styles.metaLabel}>{copy.selectedCli}</span>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
-                      </span>
-                      <span className={styles.nextCommandMetaChip}>
-                        <span className={styles.metaLabel}>{copy.selectedCliStatusLabel}</span>
-                        <strong>
-                          {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
-                        </strong>
-                      </span>
-                      <span className={styles.nextCommandMetaChip}>
-                        <span className={styles.metaLabel}>{copy.selectedTeamLabel}</span>
-                        <strong>{selectedTeam?.name ?? "-"}</strong>
-                        <span className={styles.setupSummaryMeta}>
-                          {`${copy.selectedLaneLabel}: ${selectedTeam?.lane ?? "-"}`}
-                        </span>
-                      </span>
-                    </div>
                     <div className={styles.nextCommandCopy}>
                       <strong>{`${nextSetupCommand.step}. ${nextSetupCommand.title}`}</strong>
-                      <span className={styles.nextCommandContext}>{copy.nextCommandHelp}</span>
+                      <div className={styles.nextCommandMetaRow}>
+                        <span className={styles.nextCommandMetaChip}>
+                          <span className={styles.metaLabel}>{copy.selectedCli}</span>
+                          <span className={styles.setupScanSummaryValueRow}>
+                            <strong>{selectedProvider?.label ?? "-"}</strong>
+                            {selectedProvider ? (
+                              <span
+                                className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
+                              >
+                                {getProviderStatusLabel(locale, selectedProvider.status)}
+                              </span>
+                            ) : null}
+                          </span>
+                        </span>
+                        <span className={styles.nextCommandMetaChip}>
+                          <span className={styles.metaLabel}>{copy.selectedTeamLabel}</span>
+                          <strong>{selectedTeam?.name ?? "-"}</strong>
+                          <span className={styles.setupSummaryMeta}>
+                            {`${copy.selectedLaneLabel}: ${selectedTeam?.lane ?? "-"}`}
+                          </span>
+                        </span>
+                      </div>
                     </div>
                   </div>
 

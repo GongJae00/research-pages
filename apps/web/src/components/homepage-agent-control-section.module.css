@@ -421,7 +421,7 @@
 .setupTitleBlock {
   margin: 0;
   display: grid;
-  gap: 0.02rem;
+  gap: 0.03rem;
 }
 
 .setupFlowBar {
@@ -631,8 +631,8 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.03rem;
-  margin-top: 0.02rem;
+  gap: 0.04rem;
+  margin-top: 0.01rem;
 }
 
 .setupCompactSummaryItem {
@@ -640,11 +640,11 @@
   align-items: flex-start;
   gap: 0.08rem;
   min-width: 0;
-  padding: 0.07rem 0.09rem;
+  padding: 0.06rem 0.08rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 12px;
   background: rgba(248, 250, 252, 0.92);
-  flex: 1 1 11rem;
+  flex: 1 1 9.5rem;
 }
 
 .setupCompactSummaryItemAccent {
@@ -699,7 +699,7 @@
   align-items: center;
   justify-content: center;
   color: #94a3b8;
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   font-weight: 800;
   line-height: 1;
 }
@@ -713,10 +713,10 @@
 }
 
 .setupHeaderScan {
-  margin-top: 0.03rem;
-  padding: 0.06rem;
-  border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 16px;
+  margin-top: 0.01rem;
+  padding: 0.05rem;
+  border: 1px solid rgba(203, 213, 225, 0.64);
+  border-radius: 14px;
   background: rgba(248, 250, 252, 0.82);
 }
 
@@ -1638,11 +1638,11 @@
 
 .nextCommandStrip {
   display: grid;
-  grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
   align-items: start;
-  gap: 0.05rem;
+  gap: 0.04rem;
   margin-top: 0;
-  padding: 0.04rem 0.06rem;
+  padding: 0.05rem;
   border: 1px solid rgba(15, 23, 42, 0.24);
   border-radius: 16px;
   background:
@@ -1662,29 +1662,31 @@
 .nextCommandLead {
   flex-direction: column;
   justify-content: space-between;
+  gap: 0.05rem;
 }
 
 .nextCommandCopy {
   display: grid;
-  gap: 0.01rem;
+  gap: 0.03rem;
   min-width: 0;
 }
 
 .nextCommandMetaRow {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.04rem;
+  gap: 0.03rem;
+  margin-top: 0.01rem;
 }
 
 .nextCommandMetaChip {
   display: inline-grid;
   gap: 0.01rem;
   min-width: 0;
-  padding: 0.07rem 0.09rem;
+  padding: 0.06rem 0.08rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.88);
-  flex: 1 1 7.5rem;
+  flex: 1 1 9rem;
 }
 
 .nextCommandMetaChip strong {
@@ -1705,7 +1707,7 @@
 .nextCommandLabelRow {
   display: inline-flex;
   align-items: center;
-  gap: 0.12rem;
+  gap: 0.08rem;
   flex-wrap: wrap;
 }
 
@@ -1717,7 +1719,7 @@
   display: inline-flex;
   align-items: center;
   min-height: 1rem;
-  padding: 0.06rem 0.12rem;
+  padding: 0.05rem 0.1rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.9);
@@ -1739,7 +1741,7 @@
   display: block;
   flex: 1 1 auto;
   min-width: 0;
-  padding: 0.05rem 0.08rem;
+  padding: 0.06rem 0.08rem;
   border: 1px solid rgba(148, 163, 184, 0.52);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.94);
