@@ -647,6 +647,19 @@ export function HomepageAgentControlSection({
                         </div>
                       </div>
                     </div>
+                    <div className={styles.nextCommandContext} aria-label={setupFlowLabel}>
+                      <div className={styles.nextCommandContextStep}>
+                        <span className={styles.nextCommandContextLabel}>{copy.selectedCli}</span>
+                        <strong>{selectedProvider?.label ?? "-"}</strong>
+                      </div>
+                      <span className={styles.nextCommandContextArrow} aria-hidden="true">
+                        &rarr;
+                      </span>
+                      <div className={styles.nextCommandContextStep}>
+                        <span className={styles.nextCommandContextLabel}>{copy.selectedTeamLabel}</span>
+                        <strong>{selectedTeam?.name ?? "-"}</strong>
+                      </div>
+                    </div>
                   </div>
 
                   <div className={styles.nextCommandMain}>

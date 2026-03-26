@@ -1478,24 +1478,19 @@ export function AffiliationWorkspace({
     const sectionBadge = getAffiliationSectionBadge(affiliation, locale);
     const timelineSnapshot = getAffiliationScanSummary(affiliation, locale);
     const nextEdit = getNextEditSummary(affiliation, locale);
+    const institutionSummary = joinAffiliationSummary(affiliation) || text.institution;
 
     return (
       <section className="card profile-detail-card" key={affiliation.id}>
         <div className="card-header">
           <div>
             <h3>{affiliation.roleTitle}</h3>
+            <p className="card-support-text">{timelineSnapshot}</p>
+            <p className="card-support-text">{nextEdit}</p>
             <dl className="field-list">
               <div className="field-row">
                 <dt>{text.institution}</dt>
-                <dd>{joinAffiliationSummary(affiliation) || text.institution}</dd>
-              </div>
-              <div className="field-row">
-                <dt>{getTimelineSnapshotLabel(locale)}</dt>
-                <dd>{timelineSnapshot}</dd>
-              </div>
-              <div className="field-row">
-                <dt>{getNextUpdateLabel(locale)}</dt>
-                <dd>{nextEdit}</dd>
+                <dd>{institutionSummary}</dd>
               </div>
               <div className="field-row">
                 <dt>{getTimelinePlacementLabel(locale)}</dt>
