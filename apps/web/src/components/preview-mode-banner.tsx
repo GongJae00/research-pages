@@ -28,28 +28,30 @@ export function PreviewModeBanner({ locale }: PreviewModeBannerProps) {
     locale === "ko"
       ? {
           label: "\uB0B4\uBD80 \uB370\uBAA8 \uBBF8\uB9AC\uBCF4\uAE30",
-          body: "\uC774 \uBC30\uD3EC\uC5D0\uC11C\uB294 \uB370\uBAA8 \uC6CC\uD06C\uC2A4\uD398\uC774\uC2A4, \uACF5\uAC1C \uD398\uC774\uC9C0, \uB0B4\uBD80 \uC5D0\uC774\uC804\uD2B8 \uC635\uC2A4 \uD654\uBA74\uC744 \uD55C \uBC88\uC5D0 \uAC80\uD1A0\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
+          body: "\uC774 \uBC30\uD3EC\uC5D0\uC11C\uB294 \uB0B4\uBD80 \uBBF8\uB9AC\uBCF4\uAE30 \uACBD\uB85C\uC640 \uACF5\uAC1C \uC250 \uACBD\uB85C\uB97C \uB098\uB220\uC11C \uBCF4\uB4DC\uC640 \uACF5\uAC1C \uC9C4\uC785\uC810\uC744 \uD55C \uBC88\uC5D0 \uBE44\uAD50\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
+          homepage: "\uD648\uD398\uC774\uC9C0 \uC250",
           workspace: "\uC6CC\uD06C\uC2A4\uD398\uC774\uC2A4 \uC250",
           ops: "\uC5D0\uC774\uC804\uD2B8 \uC635\uC2A4 \uBCF4\uB4DC",
           researcher: "\uC5F0\uAD6C\uC790 \uD398\uC774\uC9C0",
           lab: "\uC5F0\uAD6C\uC2E4 \uD398\uC774\uC9C0",
           health: "\uB7F0\uD0C0\uC784 \uD5EC\uC2A4",
-          internalRoutes: "\uB0B4\uBD80 \uC250 \uACBD\uB85C",
-          publicRoutes: "\uACF5\uAC1C \uD398\uC774\uC9C0 \uACBD\uB85C",
+          internalRoutes: "\uB0B4\uBD80 \uBBF8\uB9AC\uBCF4\uAE30 \uACBD\uB85C",
+          publicRoutes: "\uACF5\uAC1C \uC250 \uACBD\uB85C",
           internalTag: "\uB0B4\uBD80",
           publicTag: "\uACF5\uAC1C",
           apiTag: "API",
         }
       : {
           label: "Internal demo preview",
-          body: "This deployment exposes the demo workspace, public pages, and internal agent ops surfaces for review.",
+          body: "This deployment separates internal preview routes from public shell routes so the control room and shareable entry points scan apart faster.",
+          homepage: "Homepage shell",
           workspace: "Workspace shell",
           ops: "Agent ops board",
           researcher: "Researcher page",
           lab: "Lab page",
           health: "Runtime health",
-          internalRoutes: "Internal shell routes",
-          publicRoutes: "Public page routes",
+          internalRoutes: "Internal preview routes",
+          publicRoutes: "Public shell routes",
           internalTag: "Internal",
           publicTag: "Public",
           apiTag: "API",
@@ -67,6 +69,10 @@ export function PreviewModeBanner({ locale }: PreviewModeBannerProps) {
   ];
 
   const publicLinks = [
+    {
+      href: `/${locale}`,
+      label: copy.homepage,
+    },
     {
       href: links.researcher[locale],
       label: copy.researcher,
