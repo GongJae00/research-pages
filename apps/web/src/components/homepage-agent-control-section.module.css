@@ -988,6 +988,14 @@
   line-height: 1.1;
 }
 
+.nextCommandRoute {
+  color: #475569;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
 .nextCommandMain code {
   display: block;
   flex: 1 1 auto;
@@ -1499,6 +1507,10 @@
   }
 
   .nextCommandMeta {
+    width: 100%;
+  }
+
+  .nextCommandLead .inlineMeta {
     width: 100%;
   }
 

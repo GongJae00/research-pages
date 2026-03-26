@@ -557,15 +557,6 @@ export function HomepageAgentControlSection({
 
               {nextSetupCommand ? (
                 <div className={styles.nextCommandStrip}>
-                  <div className={styles.setupSectionHead}>
-                    <div className={styles.setupSectionCopy}>
-                    <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
-                    <strong className={styles.setupSectionSummary}>{nextSetupCommand.title}</strong>
-                  </div>
-                  <span className={styles.setupSectionHint}>
-                    {selectedProvider?.label ?? "-"} {"->"} {selectedTeam?.name ?? "-"}
-                  </span>
-                </div>
                   <div className={styles.nextCommandLead}>
                     <div className={styles.nextCommandCopy}>
                       <div className={styles.nextCommandLabelRow}>
@@ -573,8 +564,11 @@ export function HomepageAgentControlSection({
                         <span className={styles.metaLabel}>{copy.activeSetup}</span>
                       </div>
                       <strong>{nextSetupCommand.title}</strong>
-                      <span className={styles.inlineMeta}>{setupOutputLabel}</span>
+                      <span className={styles.nextCommandRoute}>
+                        {selectedProvider?.label ?? "-"} {"->"} {selectedTeam?.name ?? "-"}
+                      </span>
                     </div>
+                    <span className={styles.inlineMeta}>{setupOutputLabel}</span>
                   </div>
                   <div className={styles.nextCommandMain}>
                     <code>{nextSetupCommand.command}</code>
