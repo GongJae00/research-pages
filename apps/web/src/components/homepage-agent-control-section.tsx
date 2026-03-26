@@ -106,6 +106,23 @@ function getSetupOutputLabel(locale: string) {
   return "Command output";
 }
 
+function getNextCommandGuide(
+  locale: string,
+  kind: "connect" | "assign",
+  providerLabel: string,
+  teamName: string,
+) {
+  if (isKoreanLocale(locale)) {
+    return kind === "connect"
+      ? `${providerLabel} CLI\uB97C \uBA3C\uC800 \uC5F0\uACB0\uD558\uBA74 ${teamName} \uD300 \uBC30\uC815\uC744 \uBC14\uB85C \uC774\uC5B4\uC11C \uC2E4\uD589\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4.`
+      : `${providerLabel} CLI\uAC00 \uC774\uBBF8 \uC5F0\uACB0\uB418\uC5C8\uC73C\uBBC0\uB85C \uC774\uC81C ${teamName} \uD300 \uBC30\uC815 \uBA85\uB839\uC744 \uC2E4\uD589\uD558\uBA74 \uB429\uB2C8\uB2E4.`;
+  }
+
+  return kind === "connect"
+    ? `Connect ${providerLabel} first. ${teamName} stays queued so you can assign it right after the bridge comes online.`
+    : `${providerLabel} is already connected. Run the team assignment for ${teamName} now.`;
+}
+
 function getSurfaceEntryCopy(locale: string, opsEnabled: boolean) {
   if (isKoreanLocale(locale)) {
     return {
@@ -382,6 +399,10 @@ export function HomepageAgentControlSection({
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
   const setupOutputLabel = getSetupOutputLabel(locale);
+  const nextCommandGuide =
+    selectedProvider && selectedTeam
+      ? getNextCommandGuide(locale, nextCommandKind, selectedProvider.label, selectedTeam.name)
+      : copy.nextCommandHelp;
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
       kind === "connect" ? setupManifest?.commands.connect ?? "" : setupManifest?.commands.assign ?? "";
@@ -496,6 +517,7 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
+                <p className={styles.setupTitleHint}>{copy.setupSequenceIntro}</p>
                 {nextSetupCommand ? (
                   <div className={`${styles.setupDigestLine} ${styles.setupHeaderScan}`} aria-label={setupFlowLabel}>
                     <span className={styles.setupDigestItem}>
@@ -519,14 +541,12 @@ export function HomepageAgentControlSection({
                       &rarr;
                     </span>
                     <span className={`${styles.setupDigestItem} ${styles.setupDigestItemAccent}`}>
-                      <span className={styles.setupDigestKey}>{`${nextSetupCommand.step} ${copy.runCommandLabel}`}</span>
+                      <span className={styles.setupDigestKey}>{`03 ${copy.runCommandLabel}`}</span>
                       <strong>{nextSetupCommand.title}</strong>
                       <span className={styles.setupSummaryMeta}>{setupOutputLabel}</span>
                     </span>
                   </div>
-                ) : (
-                  <p className={styles.setupTitleHint}>{copy.setupSequenceIntro}</p>
-                )}
+                ) : null}
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
@@ -622,10 +642,11 @@ export function HomepageAgentControlSection({
                       <span className={styles.nextCommandOutput}>{setupOutputLabel}</span>
                     </div>
                     <div className={styles.nextCommandCopy}>
-                      <strong>{`${nextSetupCommand.step}. ${nextSetupCommand.title}`}</strong>
+                      <strong>{`03. ${nextSetupCommand.title}`}</strong>
                       <span className={styles.setupSummaryMeta}>
                         {selectedProvider?.label ?? "-"} &rarr; {selectedTeam?.name ?? "-"}
                       </span>
+                      <p className={styles.nextCommandHint}>{nextCommandGuide}</p>
                     </div>
                   </div>
 
