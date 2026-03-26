@@ -629,28 +629,11 @@ export function HomepageAgentControlSection({
                     </div>
                     <div className={styles.nextCommandCopy}>
                       <strong>{`${nextSetupCommand.step}. ${nextSetupCommand.title}`}</strong>
-                      <div className={styles.nextCommandMetaRow}>
-                        <span className={styles.nextCommandMetaChip}>
-                          <span className={styles.metaLabel}>{copy.selectedCli}</span>
-                          <span className={styles.setupScanSummaryValueRow}>
-                            <strong>{selectedProvider?.label ?? "-"}</strong>
-                            {selectedProvider ? (
-                              <span
-                                className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
-                              >
-                                {getProviderStatusLabel(locale, selectedProvider.status)}
-                              </span>
-                            ) : null}
-                          </span>
-                        </span>
-                        <span className={styles.nextCommandMetaChip}>
-                          <span className={styles.metaLabel}>{copy.selectedTeamLabel}</span>
-                          <strong>{selectedTeam?.name ?? "-"}</strong>
-                          <span className={styles.setupSummaryMeta}>
-                            {`${copy.selectedLaneLabel}: ${selectedTeam?.lane ?? "-"}`}
-                          </span>
-                        </span>
-                      </div>
+                      <span className={styles.nextCommandContext}>
+                        {`${copy.selectedCli}: ${selectedProvider?.label ?? "-"} -> ${copy.selectedTeamLabel}: ${
+                          selectedTeam?.name ?? "-"
+                        }`}
+                      </span>
                     </div>
                   </div>
 
