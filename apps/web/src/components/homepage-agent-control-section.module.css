@@ -558,6 +558,49 @@
   margin-top: 0.04rem;
 }
 
+.setupScanLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.12rem;
+  margin-top: 0.04rem;
+}
+
+.setupScanItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.22rem;
+  min-width: 0;
+  min-height: 1.18rem;
+  padding: 0.08rem 0.18rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 999px;
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.setupScanItem strong {
+  min-width: 0;
+  color: #0f172a;
+  font-size: 0.7rem;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.setupScanItemAccent {
+  border-color: rgba(15, 23, 42, 0.14);
+  background: rgba(241, 245, 249, 0.98);
+}
+
+.setupScanKey {
+  color: #64748b;
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 .setupDigestLead {
   color: #64748b;
   font-size: 0.58rem;
@@ -697,7 +740,7 @@
 .setupSelectionPanel {
   display: grid;
   gap: 0.08rem;
-  padding: 0.08rem;
+  padding: 0.07rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 16px;
   background: rgba(248, 250, 252, 0.92);
@@ -731,7 +774,7 @@
   align-items: center;
   gap: 0.12rem;
   margin-top: 0;
-  padding: 0.04rem 0.06rem;
+  padding: 0.04rem;
   border: 1px solid rgba(15, 23, 42, 0.14);
   border-radius: 16px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(241, 245, 249, 0.98));
@@ -760,20 +803,6 @@
   color: #0f172a;
   font-size: 0.78rem;
   line-height: 1.1;
-}
-
-.nextCommandRoute {
-  display: inline-flex;
-  align-items: center;
-  min-width: 0;
-  padding: 0.08rem 0.3rem;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.08);
-  color: #0f172a;
-  font-size: 0.66rem;
-  font-weight: 700;
-  line-height: 1.1;
-  overflow-wrap: anywhere;
 }
 
 .nextCommandMain code {
@@ -1477,6 +1506,10 @@
   }
 
   .setupFlowDigest {
+    align-items: flex-start;
+  }
+
+  .setupScanLine {
     align-items: flex-start;
   }
 

@@ -346,8 +346,6 @@ export function HomepageAgentControlSection({
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
   const setupFlowTitle = getSetupFlowSteps(locale).join(" -> ");
-  const setupSelectionSummary =
-    selectedProvider && selectedTeam ? `${selectedProvider.label} -> ${selectedTeam.name}` : null;
   const setupFlowDigest =
     selectedProvider && selectedTeam && nextSetupCommand
       ? [
@@ -437,33 +435,27 @@ export function HomepageAgentControlSection({
                 </div>
                 {setupFlowDigest ? (
                   <div
-                    className={styles.setupCompactBar}
+                    className={styles.setupScanLine}
                     aria-label={copy.setupStepsLabel}
                     title={`${getSetupFlowLabel(locale)}: ${setupFlowTitle}`}
                   >
-                    <span className={styles.setupDigestLead}>{copy.activeSetup}</span>
-                    <span className={styles.setupDigestChip}>
-                      <span className={styles.setupDigestOrdinal}>01</span>
-                      <span className={styles.setupDigestLabel}>{copy.selectedCli}</span>
-                      <strong className={styles.setupDigestValue}>{selectedProvider?.label ?? "-"}</strong>
+                    <span className={styles.setupScanItem}>
+                      <span className={styles.setupScanKey}>{copy.chooseProvider}</span>
+                      <strong>{selectedProvider?.label ?? "-"}</strong>
                     </span>
                     <span className={styles.sequenceArrow} aria-hidden="true">
                       <ArrowRight size={12} />
                     </span>
-                    <span className={styles.setupDigestChip}>
-                      <span className={styles.setupDigestOrdinal}>02</span>
-                      <span className={styles.setupDigestLabel}>{copy.selectedTeamLabel}</span>
-                      <strong className={styles.setupDigestValue}>{selectedTeam?.name ?? "-"}</strong>
+                    <span className={styles.setupScanItem}>
+                      <span className={styles.setupScanKey}>{copy.chooseTeam}</span>
+                      <strong>{selectedTeam?.name ?? "-"}</strong>
                     </span>
                     <span className={styles.sequenceArrow} aria-hidden="true">
                       <ArrowRight size={12} />
                     </span>
-                    <span className={`${styles.setupDigestChip} ${styles.setupDigestChipAccent}`}>
-                      <span className={styles.setupDigestOrdinal}>03</span>
-                      <span className={styles.setupDigestLabel}>{copy.runCommandLabel}</span>
-                      <strong className={styles.setupDigestValue}>
-                        {nextSetupCommand?.title ?? copy.setupCommand}
-                      </strong>
+                    <span className={`${styles.setupScanItem} ${styles.setupScanItemAccent}`}>
+                      <span className={styles.setupScanKey}>{copy.runCommandLabel}</span>
+                      <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
                     </span>
                   </div>
                 ) : null}
@@ -485,9 +477,6 @@ export function HomepageAgentControlSection({
               <div className={styles.setupSelectionPanel}>
                 <div className={styles.setupSectionHead}>
                   <span className={styles.metaLabel}>{setupInputLabel}</span>
-                  {setupSelectionSummary ? (
-                    <span className={styles.setupSectionSummary}>{setupSelectionSummary}</span>
-                  ) : null}
                 </div>
 
                 <div className={styles.setupPickerGrid}>
@@ -545,13 +534,10 @@ export function HomepageAgentControlSection({
                 <div className={styles.nextCommandStrip}>
                   <div className={styles.nextCommandLead}>
                     <span className={styles.commandStep}>{nextSetupCommand.step}</span>
-                    <div className={styles.nextCommandCopy}>
-                      <span className={styles.metaLabel}>{setupOutputLabel}</span>
-                      <strong>{nextSetupCommand.title}</strong>
-                    </div>
-                    {setupSelectionSummary ? (
-                      <span className={styles.nextCommandRoute}>{setupSelectionSummary}</span>
-                    ) : null}
+                  <div className={styles.nextCommandCopy}>
+                    <span className={styles.metaLabel}>{setupOutputLabel}</span>
+                    <strong>{nextSetupCommand.title}</strong>
+                  </div>
                   </div>
                   <div className={styles.nextCommandMain}>
                     <code>{nextSetupCommand.command}</code>
