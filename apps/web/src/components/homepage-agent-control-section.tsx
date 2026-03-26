@@ -348,6 +348,14 @@ export function HomepageAgentControlSection({
   const setupFlowSteps = getSetupFlowSteps(locale);
   const setupSelectionSummary =
     selectedProvider && selectedTeam ? `${selectedProvider.label} -> ${selectedTeam.name}` : null;
+  const setupFlowDigest =
+    selectedProvider && selectedTeam && nextSetupCommand
+      ? [
+          `${selectedProvider.label}`,
+          `${selectedTeam.name}`,
+          `${nextSetupCommand.step}. ${nextSetupCommand.title}`,
+        ].join(" -> ")
+      : null;
   const setupInputLabel = getSetupInputLabel(locale);
   const setupOutputLabel = getSetupOutputLabel(locale);
   const copyCommand = async (kind: "connect" | "assign") => {
@@ -452,9 +460,12 @@ export function HomepageAgentControlSection({
                     <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
                   </span>
                 </div>
-                <p className={styles.setupFlowSummary} title={getSetupFlowLabel(locale)}>
-                  {setupFlowSteps.join(" -> ")}
-                </p>
+                {setupFlowDigest ? (
+                  <div className={styles.setupFlowDigest} title={getSetupFlowLabel(locale)}>
+                    <span className={styles.setupFlowDigestLabel}>{copy.activeSetup}</span>
+                    <strong>{setupFlowDigest}</strong>
+                  </div>
+                ) : null}
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
@@ -473,8 +484,8 @@ export function HomepageAgentControlSection({
               <div className={styles.setupSelectionPanel}>
                 <div className={styles.setupSectionHead}>
                   <span className={styles.metaLabel}>{setupInputLabel}</span>
-                  {setupSelectionSummary ? (
-                    <strong className={styles.setupSectionSummary}>{setupSelectionSummary}</strong>
+                  {setupFlowSteps.length ? (
+                    <span className={styles.setupSectionHint}>{setupFlowSteps.join(" -> ")}</span>
                   ) : null}
                 </div>
 
