@@ -49,6 +49,7 @@ export interface OpsTerminalSessionSnapshot {
 
 export interface OpsTerminalStopResult {
   session: OpsTerminalSessionSnapshot;
+  sessionState: OpsTerminalSessionStatus;
   transition: "stop-requested" | "stopped" | "already-stopped";
   recovery: string;
 }
@@ -594,6 +595,7 @@ export async function stopOpsTerminalSession(sessionId: string) {
   if (record.snapshot.status === "error") {
     return {
       session: record.snapshot,
+      sessionState: record.snapshot.status,
       transition: "already-stopped",
       recovery:
         "Session already failed and is no longer running. Review the session transcript for the failure details, then start a new session before retrying.",
@@ -603,6 +605,7 @@ export async function stopOpsTerminalSession(sessionId: string) {
   if (record.snapshot.status === "closed") {
     return {
       session: record.snapshot,
+      sessionState: record.snapshot.status,
       transition: "already-stopped",
       recovery: record.snapshot.stopRequestedAt
         ? "Session stop has already completed. Refresh terminal sessions, then start a new session if you still need an interactive shell."
@@ -613,6 +616,7 @@ export async function stopOpsTerminalSession(sessionId: string) {
   if (record.snapshot.status === "stopping") {
     return {
       session: record.snapshot,
+      sessionState: record.snapshot.status,
       transition: "stop-requested",
       recovery: "Stop already requested. Wait for the session to close, refresh terminal sessions, then start a new session if needed.",
     } satisfies OpsTerminalStopResult;
@@ -640,6 +644,7 @@ export async function stopOpsTerminalSession(sessionId: string) {
   if (currentSession.status === "closed") {
     return {
       session: currentSession,
+      sessionState: currentSession.status,
       transition: "stopped",
       recovery:
         "Session has fully stopped. Refresh terminal sessions, then start a new session if you still need an interactive shell.",
@@ -648,6 +653,7 @@ export async function stopOpsTerminalSession(sessionId: string) {
 
   return {
     session: currentSession,
+    sessionState: currentSession.status,
     transition: "stop-requested",
     recovery: "Wait for the session to close, then refresh terminal sessions before sending more input.",
   } satisfies OpsTerminalStopResult;

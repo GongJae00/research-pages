@@ -183,6 +183,24 @@ function getSessionContext(
   }
 }
 
+function getSessionContextForSnapshot(
+  session: OpsTerminalSessionSnapshot | null,
+  sessions: OpsTerminalSessionSnapshot[],
+) {
+  if (!session) {
+    return null;
+  }
+
+  switch (session.status) {
+    case "stopping":
+    case "closed":
+    case "error":
+      return getSessionContext(session.status, sessions, session, session.id);
+    default:
+      return null;
+  }
+}
+
 function getSessionErrorResponse(error: unknown, sessionId?: string) {
   const message = error instanceof Error ? error.message : "Ops terminal request failed.";
   const resolvedSessionId =
@@ -406,12 +424,17 @@ export async function POST(request: NextRequest) {
         }
 
         const result = await stopOpsTerminalSession(sessionId);
+        const sessions = listOpsTerminalSessions();
+        const session = sessions.find((item) => item.id === result.session.id) ?? result.session;
+
         return NextResponse.json({
           ok: true,
-          session: result.session,
+          session,
           transition: result.transition,
+          sessionState: result.sessionState,
           recovery: result.recovery,
-          sessions: listOpsTerminalSessions(),
+          sessionContext: getSessionContextForSnapshot(session, sessions),
+          sessions,
         });
       }
 

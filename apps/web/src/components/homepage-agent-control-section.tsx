@@ -431,18 +431,22 @@ export function HomepageAgentControlSection({
                     </span>
                   ) : null}
                 </div>
+                <p className={styles.setupSequenceIntro}>{copy.setupSequenceIntro}</p>
                 <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
                   <div className={styles.setupCompactSummaryItem}>
-                    <span className={styles.metaLabel}>{copy.chooseProvider}</span>
-                    <div className={styles.setupCompactSummaryValueRow}>
-                      <strong>{selectedProvider?.label ?? "-"}</strong>
-                      {selectedProvider ? (
-                        <span
-                          className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
-                        >
-                          {getProviderStatusLabel(locale, selectedProvider.status)}
-                        </span>
-                      ) : null}
+                    <span className={styles.setupCompactSummaryOrdinal}>01</span>
+                    <div className={styles.setupCompactSummaryContent}>
+                      <span className={styles.metaLabel}>{copy.chooseProvider}</span>
+                      <div className={styles.setupCompactSummaryValueRow}>
+                        <strong>{selectedProvider?.label ?? "-"}</strong>
+                        {selectedProvider ? (
+                          <span
+                            className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
+                          >
+                            {getProviderStatusLabel(locale, selectedProvider.status)}
+                          </span>
+                        ) : null}
+                      </div>
                     </div>
                   </div>
 
@@ -451,9 +455,12 @@ export function HomepageAgentControlSection({
                   </span>
 
                   <div className={styles.setupCompactSummaryItem}>
-                    <span className={styles.metaLabel}>{copy.chooseTeam}</span>
-                    <strong>{selectedTeam?.name ?? "-"}</strong>
-                    <span className={styles.setupSummaryMeta}>{selectedTeam?.lane ?? "-"}</span>
+                    <span className={styles.setupCompactSummaryOrdinal}>02</span>
+                    <div className={styles.setupCompactSummaryContent}>
+                      <span className={styles.metaLabel}>{copy.chooseTeam}</span>
+                      <strong>{selectedTeam?.name ?? "-"}</strong>
+                      <span className={styles.setupSummaryMeta}>{selectedTeam?.lane ?? "-"}</span>
+                    </div>
                   </div>
 
                   <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
@@ -463,13 +470,16 @@ export function HomepageAgentControlSection({
                   <div
                     className={`${styles.setupCompactSummaryItem} ${styles.setupCompactSummaryItemAccent}`}
                   >
-                    <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
-                    <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
-                    {setupFlowDigest ? (
-                      <span className={styles.setupSummaryMeta}>
-                        {formatSetupPair(selectedProvider?.label, selectedTeam?.name)}
-                      </span>
-                    ) : null}
+                    <span className={styles.setupCompactSummaryOrdinal}>03</span>
+                    <div className={styles.setupCompactSummaryContent}>
+                      <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
+                      <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
+                      {setupFlowDigest ? (
+                        <span className={styles.setupSummaryMeta}>
+                          {formatSetupPair(selectedProvider?.label, selectedTeam?.name)}
+                        </span>
+                      ) : null}
+                    </div>
                   </div>
                 </div>
 
@@ -482,9 +492,16 @@ export function HomepageAgentControlSection({
 
                     <div className={styles.setupActivePathGrid}>
                       <div className={styles.setupActivePathStory}>
-                        <strong>
-                          {`${selectedProvider?.label ?? "-"} -> ${selectedTeam?.name ?? "-"} -> ${nextSetupCommand.title}`}
-                        </strong>
+                        <div className={styles.setupActiveSelectionRow}>
+                          <span className={styles.setupActiveSelectionChip}>
+                            <span className={styles.metaLabel}>{copy.selectedCli}</span>
+                            <strong>{selectedProvider?.label ?? "-"}</strong>
+                          </span>
+                          <span className={styles.setupActiveSelectionChip}>
+                            <span className={styles.metaLabel}>{copy.selectedTeamLabel}</span>
+                            <strong>{selectedTeam?.name ?? "-"}</strong>
+                          </span>
+                        </div>
                         <div className={styles.nextCommandMetaRow}>
                           <span className={styles.nextCommandMetaChip}>
                             <span className={styles.metaLabel}>{copy.selectedCliStatusLabel}</span>
@@ -501,6 +518,10 @@ export function HomepageAgentControlSection({
                       </div>
 
                       <div className={styles.setupActiveCommand}>
+                        <div className={styles.setupActiveCommandHeader}>
+                          <span className={styles.setupCompactSummaryOrdinal}>03</span>
+                          <strong>{nextSetupCommand.title}</strong>
+                        </div>
                         <code>{nextSetupCommand.command}</code>
                         <button
                           type="button"

@@ -453,8 +453,9 @@
 }
 
 .setupCompactSummaryItem {
-  display: grid;
-  gap: 0.02rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.08rem;
   min-width: 0;
   padding: 0.08rem 0.1rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
@@ -466,6 +467,34 @@
 .setupCompactSummaryItemAccent {
   border-color: rgba(15, 23, 42, 0.14);
   background: rgba(241, 245, 249, 0.98);
+}
+
+.setupCompactSummaryContent {
+  display: grid;
+  gap: 0.02rem;
+  min-width: 0;
+}
+
+.setupCompactSummaryOrdinal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.02rem;
+  height: 1.02rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.08);
+  color: #0f172a;
+  font-size: 0.54rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  flex: 0 0 1.02rem;
+}
+
+.setupCompactSummaryItemAccent .setupCompactSummaryOrdinal,
+.setupActiveCommandHeader .setupCompactSummaryOrdinal {
+  background: #0f766e;
+  color: #f8fafc;
 }
 
 .setupCompactSummaryValueRow {
@@ -580,11 +609,29 @@
   min-width: 0;
 }
 
-.setupActivePathStory strong {
+.setupActivePathStory strong,
+.setupActiveCommandHeader strong {
   color: #0f172a;
   font-size: 0.8rem;
   line-height: 1.14;
   overflow-wrap: anywhere;
+}
+
+.setupActiveSelectionRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.04rem;
+}
+
+.setupActiveSelectionChip {
+  display: grid;
+  gap: 0.02rem;
+  min-width: 0;
+  padding: 0.08rem 0.1rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.88);
+  flex: 1 1 7.5rem;
 }
 
 .setupActivePathHelp {
@@ -596,6 +643,13 @@
 
 .setupActiveCommand {
   display: grid;
+  gap: 0.08rem;
+  min-width: 0;
+}
+
+.setupActiveCommandHeader {
+  display: flex;
+  align-items: center;
   gap: 0.08rem;
   min-width: 0;
 }
