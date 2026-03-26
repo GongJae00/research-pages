@@ -618,7 +618,6 @@ export function HomepageAgentControlSection({
                     <div className={styles.setupCommandInlineCopy}>
                       <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
                       <strong>{`03. ${nextSetupCommand.title}`}</strong>
-                      <p className={styles.setupCommandInlineHelp}>{copy.nextCommandHelp}</p>
                     </div>
                     <div className={styles.setupCommandInlineMeta}>
                       <span className={styles.setupCommandInlinePath}>
