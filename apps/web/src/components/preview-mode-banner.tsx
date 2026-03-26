@@ -14,12 +14,8 @@ function getPreviewRoutePath(href: string) {
   return pathname || href;
 }
 
-function formatPreviewGroupLabel(groupLabel: string, scopeHint: string) {
-  return `${groupLabel} | ${scopeHint}`;
-}
-
-function formatPreviewLinkLabel(label: string, href: string) {
-  return `${label} | ${getPreviewRoutePath(href)}`;
+function formatPreviewLinkLabel(scopeLabel: string, label: string, href: string) {
+  return `${scopeLabel} | ${label} | ${getPreviewRoutePath(href)}`;
 }
 
 export function PreviewModeBanner({ locale }: PreviewModeBannerProps) {
@@ -95,24 +91,18 @@ export function PreviewModeBanner({ locale }: PreviewModeBannerProps) {
           <p>{copy.body}</p>
         </div>
         <div className="preview-mode-banner-links">
-          <span className="preview-mode-banner-link preview-mode-banner-link-subtle">
-            {formatPreviewGroupLabel(copy.internalRoutes, copy.internalScopeHint)}
-          </span>
           {internalLinks.map((link) => (
             <Link key={link.href} href={link.href} className="preview-mode-banner-link">
-              {formatPreviewLinkLabel(link.label, link.href)}
+              {formatPreviewLinkLabel(copy.internalRoutes, link.label, link.href)}
             </Link>
           ))}
-          <span className="preview-mode-banner-link preview-mode-banner-link-subtle">
-            {formatPreviewGroupLabel(copy.publicRoutes, copy.publicScopeHint)}
-          </span>
           {publicLinks.map((link) => (
             <Link key={link.href} href={link.href} className="preview-mode-banner-link">
-              {formatPreviewLinkLabel(link.label, link.href)}
+              {formatPreviewLinkLabel(copy.publicRoutes, link.label, link.href)}
             </Link>
           ))}
           <Link href="/api/health" className="preview-mode-banner-link preview-mode-banner-link-subtle">
-            {formatPreviewLinkLabel(copy.apiTag, "/api/health")}
+            {formatPreviewLinkLabel(copy.apiTag, copy.health, "/api/health")}
           </Link>
         </div>
       </div>

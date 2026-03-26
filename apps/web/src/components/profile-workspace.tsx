@@ -142,7 +142,7 @@ const copy = {
     identity: "기본 이름",
     identityHint: "논문 저자 표기와 홈페이지 표기에 직접 쓰일 이름입니다.",
     basicProfile: "기본 프로필",
-    basicProfileDescription: "연락 채널, 홈페이지, 연구자 식별 정보를 압축해서 보여줍니다.",
+    basicProfileDescription: "연락처, 식별 정보, 연구 분야, 학력을 한 번에 훑어볼 수 있게 정리합니다.",
     contactPanel: "연락 및 홈페이지",
     idPanel: "연구자 식별 정보",
     focusPanel: "연구 분야",
@@ -226,7 +226,7 @@ const copy = {
     identity: "Name",
     identityHint: "Used directly in author bios, profile pages, and publication outputs.",
     basicProfile: "Core profile",
-    basicProfileDescription: "Compress core contact channels, homepages, and researcher identifiers.",
+    basicProfileDescription: "Scan contact, identifiers, research focus, and education in one place.",
     contactPanel: "Contact & homepages",
     idPanel: "Research identifiers",
     focusPanel: "Research focus",
@@ -1107,8 +1107,8 @@ export function ProfileWorkspace({
   const coreContactHighlights = useMemo(
     () =>
       [
-        savedEmails.length > 0 ? savedEmailCountLabel : undefined,
-        savedLinks.length > 0 ? savedLinkCountLabel : undefined,
+        savedEmails.length > 1 ? savedEmailCountLabel : undefined,
+        savedLinks.length > 1 ? savedLinkCountLabel : undefined,
       ].filter(isDefined),
     [savedEmailCountLabel, savedEmails.length, savedLinkCountLabel, savedLinks.length],
   );
@@ -1148,25 +1148,13 @@ export function ProfileWorkspace({
     savedProfile.primaryInstitution,
     text.emptyValue,
   ]);
-  const coreIdentifierHighlights = useMemo(
-    () =>
-      [
-        savedProfile.nationalResearcherNumber ? text.nationalId : undefined,
-        savedProfile.orcid ? text.orcid : undefined,
-      ].filter(isDefined),
-    [savedProfile.nationalResearcherNumber, savedProfile.orcid, text.nationalId, text.orcid],
-  );
   const coreFocusHighlights = useMemo(
     () =>
       [
-        savedProfile.primaryInstitution,
-        savedProfile.primaryDiscipline,
         savedKeywordList.length > 0 ? `${text.keywords} ${savedKeywordList.length}` : undefined,
       ].filter(isDefined),
     [
       savedKeywordList.length,
-      savedProfile.primaryDiscipline,
-      savedProfile.primaryInstitution,
       text.keywords,
     ],
   );
@@ -2301,15 +2289,6 @@ export function ProfileWorkspace({
                   <dd>
                     {savedProfile.nationalResearcherNumber || savedProfile.orcid ? (
                       <div className="profile-career-status-list">
-                        {coreIdentifierHighlights.length > 0 ? (
-                          <div className="profile-inline-list profile-inline-list-muted">
-                            {coreIdentifierHighlights.map((item) => (
-                              <span className="pill pill-gray" key={item}>
-                                {item}
-                              </span>
-                            ))}
-                          </div>
-                        ) : null}
                         <div className="profile-career-status-row">
                           <div className="profile-career-status-main">
                             <strong>{text.nationalId}</strong>
