@@ -484,9 +484,23 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupSectionHead}>
                   <div className={styles.setupSectionCopy}>
                     <span className={styles.metaLabel}>{getSetupInputLabel(locale)}</span>
-                    <strong className={styles.setupSectionSummary}>
-                      {copy.chooseProvider} {"->"} {copy.chooseTeam}
-                    </strong>
+                    <div className={styles.selectionDigestRow}>
+                      <span className={styles.selectionDigestChip}>
+                        <span className={styles.setupFlowMeta}>{copy.chooseProvider}</span>
+                        <strong>{selectedProvider?.label ?? "-"}</strong>
+                        <span className={styles.selectionDigestMeta}>
+                          {copy.selectedCliStatusLabel}:{" "}
+                          {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
+                        </span>
+                      </span>
+                      <span className={styles.selectionDigestChip}>
+                        <span className={styles.setupFlowMeta}>{copy.chooseTeam}</span>
+                        <strong>{selectedTeam?.name ?? "-"}</strong>
+                        <span className={styles.selectionDigestMeta}>
+                          {copy.selectedLaneLabel}: {selectedTeam?.lane ?? "-"}
+                        </span>
+                      </span>
+                    </div>
                   </div>
                 </div>
                 <div className={styles.setupPickerGrid}>

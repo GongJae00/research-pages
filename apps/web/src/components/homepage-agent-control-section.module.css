@@ -958,7 +958,7 @@
 .setupSelectionPanel {
   display: grid;
   gap: 0.05rem;
-  padding: 0.04rem;
+  padding: 0.02rem 0.04rem 0.04rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 16px;
   background: rgba(248, 250, 252, 0.92);
@@ -978,11 +978,36 @@
   min-width: 0;
 }
 
-.setupSectionSummary {
+.selectionDigestRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.05rem;
+}
+
+.selectionDigestChip {
+  display: inline-grid;
+  gap: 0.01rem;
+  min-width: 0;
+  padding: 0.08rem 0.12rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.82);
+  flex: 1 1 10rem;
+}
+
+.selectionDigestChip strong {
   color: #0f172a;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.selectionDigestMeta {
+  color: #475569;
+  font-size: 0.64rem;
   font-weight: 700;
   line-height: 1.1;
+  overflow-wrap: anywhere;
 }
 
 .nextCommandStrip {
