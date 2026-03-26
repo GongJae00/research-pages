@@ -352,7 +352,7 @@ function getAffiliationOnePassSummary(
   return [
     getAffiliationStateLabel(entry, locale),
     getTimelineSummary(entry, locale),
-    getEditActionLabel(entry, locale),
+    getPrimaryEditActionLabel(entry, locale),
   ].join(" / ");
 }
 
@@ -386,6 +386,54 @@ function getAffiliationEditReadiness(
   return locale === "ko"
     ? `\uc800\uc7a5 \uc804 ${missingFields.join(", ")} \uc785\ub825 \ud544\uc694`
     : `Add ${missingFields.join(", ")} before saving.`;
+}
+
+function getPrimaryNextActionSummary(
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+) {
+  if (entry.active && entry.appointmentStatus !== "active") {
+    return locale === "ko"
+      ? "\ud604\uc7ac \uc5ec\ubd80\ub97c \uc720\uc9c0\ud560 \uac83\uc774\uba74 \uc0c1\ud0dc\ub97c \uc9c4\ud589 \uc911\uc73c\ub85c \ub9de\ucd94\uace0, \uc544\ub2c8\uba74 \ud604\uc7ac \uc5ec\ubd80\ub97c \uaebc \ud0c0\uc784\ub77c\uc778 \uc704\uce58\ub97c \uc815\ub9ac\ud558\uc138\uc694."
+      : "If this should stay current, switch the status to active. Otherwise turn off current in timeline first.";
+  }
+
+  if (!entry.active && entry.appointmentStatus === "active") {
+    return locale === "ko"
+      ? "\ud604\uc7ac \uc5ec\ubd80\ub97c \ub2e4\uc2dc \ucf1c\uac70\ub098 \uc0c1\ud0dc\ub97c \ubc14\uafd4 \uc774 \ud56d\ubaa9\uc758 \ud0c0\uc784\ub77c\uc778 \uc704\uce58\ub97c \uba3c\uc800 \uc815\ud558\uc138\uc694."
+      : "Turn current in timeline back on, or move the status out of active before editing anything else.";
+  }
+
+  if (entry.active && entry.endDate) {
+    return locale === "ko"
+      ? "\ud604\uc7ac \uc18c\uc18d\uc774\uba74 \uc885\ub8cc \ub0a0\uc9dc\ub97c \ube44\uc6b0\uace0, \ub05d\ub09c \uc5ed\ud560\uc774\uba74 \uc644\ub8cc \uc0c1\ud0dc\ub85c \ubc14\uafc0\uc138\uc694."
+      : "Clear the end date for a current role, or mark it completed if the role has already closed.";
+  }
+
+  if (!entry.active && entry.appointmentStatus === "completed" && !entry.endDate) {
+    return locale === "ko"
+      ? "\uc644\ub8cc\ub41c \uc18c\uc18d\uc774\uba74 \ub9c8\uc9c0\ub9c9 \ub0a0\uc9dc\ub97c \ucd94\uac00\ud574 \ud0c0\uc784\ub77c\uc778\uc744 \ub2eb\uc544\uc8fc\uc138\uc694."
+      : "Add the final end date so this completed role closes cleanly in the timeline.";
+  }
+
+  if (entry.appointmentStatus === "planned" && entry.endDate) {
+    return locale === "ko"
+      ? "\uc608\uc815 \uc18c\uc18d\uc5d0 \uc885\ub8cc \ub0a0\uc9dc\uac00 \uc788\uc73c\uba74 \ud63c\ub3d9\uc744 \uc8fc\ubbc0\ub85c, \uc2e4\uc81c\ub85c \ub2eb\ud78c \uac83\uc774 \uc544\ub2c8\uba74 \ub0a0\uc9dc\ub97c \ube44\uc6b0\uc138\uc694."
+      : "Remove the end date unless this planned role has actually closed.";
+  }
+
+  return getNextActionSummary(entry, locale);
+}
+
+function getPrimaryEditActionLabel(
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+) {
+  if (needsTimelineCorrection(entry)) {
+    return locale === "ko" ? "\ud0c0\uc784\ub77c\uc778 \uba3c\uc800 \uc815\ub9ac" : "Fix timeline first";
+  }
+
+  return getEditActionLabel(entry, locale);
 }
 
 function getNextActionSummary(entry: AffiliationTimelineEntry, locale: Locale) {
@@ -1120,7 +1168,7 @@ export function AffiliationWorkspace({
               </div>
               <div className="field-row">
                 <dt>{getNextUpdateLabel(locale)}</dt>
-                <dd>{getNextActionSummary(affiliation, locale)}</dd>
+                <dd>{getPrimaryNextActionSummary(affiliation, locale)}</dd>
               </div>
             </dl>
           </div>
@@ -1133,10 +1181,10 @@ export function AffiliationWorkspace({
               type="button"
               className="profile-inline-btn"
               onClick={() => handleEditAffiliation(affiliation.id)}
-              aria-label={getEditActionLabel(affiliation, locale)}
+              aria-label={getPrimaryEditActionLabel(affiliation, locale)}
             >
               <PencilLine size={15} />
-              {getEditActionLabel(affiliation, locale)}
+              {getPrimaryEditActionLabel(affiliation, locale)}
             </button>
           </div>
         </div>
@@ -1246,7 +1294,8 @@ export function AffiliationWorkspace({
             {joinAffiliationSummary(affiliation) || text.institution}
           </p>
           <p className="card-support-text">
-            <strong>{getNextUpdateLabel(locale)}</strong> {getNextActionSummary(affiliation, locale)}
+            <strong>{getNextUpdateLabel(locale)}</strong>{" "}
+            {getPrimaryNextActionSummary(affiliation, locale)}
           </p>
           <dl className="field-list">
             <div className="field-row">
@@ -1281,7 +1330,7 @@ export function AffiliationWorkspace({
               onClick={() => setActiveAffiliation(affiliation.id)}
             >
               <PencilLine size={15} />
-              {getEditActionLabel(affiliation, locale)}
+              {getPrimaryEditActionLabel(affiliation, locale)}
             </button>
           )}
           <span className={`pill ${getAffiliationStatusClass(affiliation)}`}>
@@ -1494,7 +1543,7 @@ export function AffiliationWorkspace({
                   </div>
                   <div className="field-row">
                     <dt>{getNextUpdateLabel(locale)}</dt>
-                    <dd>{getNextActionSummary(activeDraftAffiliation, locale)}</dd>
+                    <dd>{getPrimaryNextActionSummary(activeDraftAffiliation, locale)}</dd>
                   </div>
                   <div className="field-row">
                     <dt>{getTimelinePlacementLabel(locale)}</dt>
