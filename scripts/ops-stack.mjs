@@ -240,6 +240,13 @@ async function statusStack() {
     heartbeatAgeMs > supervisorTickMs * 3
   ) {
     effectiveHealthStatus = "recovering";
+  } else if (
+    requestedHealthStatus === "degraded" &&
+    supervisorTickMs &&
+    Number.isFinite(heartbeatAgeMs) &&
+    heartbeatAgeMs <= supervisorTickMs * 2
+  ) {
+    effectiveHealthStatus = "recovering";
   }
 
   return {
