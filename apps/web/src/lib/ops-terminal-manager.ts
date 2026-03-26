@@ -506,11 +506,22 @@ export async function stopOpsTerminalSession(sessionId: string) {
 
   reconcileSessionState(record);
 
-  if (record.snapshot.status !== "running" && record.snapshot.status !== "stopping") {
+  if (record.snapshot.status === "error") {
     return {
       session: record.snapshot,
       transition: "already-stopped",
-      recovery: "Session is already closed. Start a new session if you still need an interactive shell.",
+      recovery:
+        "Session already failed and is no longer running. Review the session transcript for the failure details, then start a new session before retrying.",
+    } satisfies OpsTerminalStopResult;
+  }
+
+  if (record.snapshot.status === "closed") {
+    return {
+      session: record.snapshot,
+      transition: "already-stopped",
+      recovery: record.snapshot.stopRequestedAt
+        ? "Session stop has already completed. Refresh terminal sessions, then start a new session if you still need an interactive shell."
+        : "Session is already closed. Start a new session if you still need an interactive shell.",
     } satisfies OpsTerminalStopResult;
   }
 

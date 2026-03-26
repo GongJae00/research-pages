@@ -1105,14 +1105,6 @@ export function ProfileWorkspace({
 
     return joinUniqueTextParts(parts) || text.emptyValue;
   }, [savedEmails, savedLinks, text.emptyValue]);
-  const coreContactHighlights = useMemo(
-    () =>
-      [
-        savedEmails.length > 0 ? `${text.emailsLabel} ${savedEmails.length}` : undefined,
-        savedLinks.length > 0 ? `${text.linksLabel} ${savedLinks.length}` : undefined,
-      ].filter(isDefined),
-    [savedEmails.length, savedLinks.length, text.emailsLabel, text.linksLabel],
-  );
   const coreIdentifierSummary = useMemo(() => {
     const parts = [
       savedProfile.nationalResearcherNumber ? text.nationalId : undefined,
@@ -2246,18 +2238,12 @@ export function ProfileWorkspace({
                   <dd>
                     {savedEmails.length > 0 || savedLinks.length > 0 ? (
                       <div className="profile-career-status-list">
-                        {coreContactHighlights.length > 0 ? (
-                          <div className="profile-inline-list profile-inline-list-muted">
-                            {coreContactHighlights.map((item) => (
-                              <span className="pill pill-gray" key={item}>
-                                {item}
-                              </span>
-                            ))}
-                          </div>
-                        ) : null}
                         <div className="profile-career-status-row">
                           <div className="profile-career-status-main">
-                            <strong>{text.email}</strong>
+                            <div className="profile-inline-list profile-inline-list-muted">
+                              <strong>{text.emailsLabel}</strong>
+                              <span className="pill pill-blue">{text.primaryItem}</span>
+                            </div>
                             {savedEmails.length > 0 ? (
                               <>
                                 <a href={`mailto:${savedEmails[0]}`} className="profile-inline-link">
@@ -2280,7 +2266,10 @@ export function ProfileWorkspace({
                         </div>
                         <div className="profile-career-status-row">
                           <div className="profile-career-status-main">
-                            <strong>{text.link}</strong>
+                            <div className="profile-inline-list profile-inline-list-muted">
+                              <strong>{text.linksLabel}</strong>
+                              <span className="pill pill-blue">{text.primaryItem}</span>
+                            </div>
                             {primarySavedLink ? (
                               <>
                                 <div className="profile-link-stack">
