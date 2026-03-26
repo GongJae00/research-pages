@@ -26,6 +26,10 @@ function getDefaultShellId(): OpsShellId {
   return listOpsShellPresets()[0]?.id ?? "powershell";
 }
 
+function isRequestBodyRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 function getShellId(value: unknown): OpsShellId | null {
   if (typeof value !== "string") {
     return null;
@@ -232,7 +236,18 @@ export async function POST(request: NextRequest) {
   let body: Record<string, unknown> = {};
 
   try {
-    body = (await request.json()) as Record<string, unknown>;
+    const payload = await request.json();
+
+    if (!isRequestBodyRecord(payload)) {
+      return getOpsTerminalErrorResponse(
+        "Invalid request body.",
+        400,
+        "error",
+        "Send a JSON object payload for the terminal action, then retry the request.",
+      );
+    }
+
+    body = payload;
   } catch {
     return getOpsTerminalErrorResponse(
       "Invalid request body.",
