@@ -629,32 +629,6 @@
   line-height: 1;
 }
 
-.setupNextActionBadge {
-  display: inline-grid;
-  gap: 0.01rem;
-  min-width: 0;
-  padding: 0.08rem 0.12rem;
-  border: 1px solid rgba(15, 23, 42, 0.14);
-  border-radius: 12px;
-  background: rgba(241, 245, 249, 0.98);
-}
-
-.setupNextActionLabel {
-  color: #64748b;
-  font-size: 0.56rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.setupNextActionBadge strong {
-  color: #0f172a;
-  font-size: 0.68rem;
-  line-height: 1.1;
-  overflow-wrap: anywhere;
-}
-
 .setupCompactSummary {
   display: flex;
   flex-wrap: wrap;
@@ -1714,6 +1688,41 @@
   flex-wrap: wrap;
 }
 
+.nextCommandMetaRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.04rem;
+}
+
+.nextCommandMeta {
+  display: inline-grid;
+  gap: 0.01rem;
+  min-width: 0;
+  padding: 0.07rem 0.1rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  flex: 1 1 8rem;
+}
+
+.nextCommandMeta strong {
+  color: #0f172a;
+  font-size: 0.72rem;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.nextCommandMetaArrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
 .nextCommandLabelRow .metaLabel {
   line-height: 1;
 }
@@ -2648,6 +2657,14 @@
 
   .setupSectionHead {
     align-items: flex-start;
+  }
+
+  .nextCommandMetaRow {
+    align-items: stretch;
+  }
+
+  .nextCommandMetaArrow {
+    display: none;
   }
 
   .setupFlowLine {

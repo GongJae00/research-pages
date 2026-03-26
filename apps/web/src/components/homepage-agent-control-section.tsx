@@ -495,12 +495,6 @@ export function HomepageAgentControlSection({
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
-                  {nextSetupCommand ? (
-                    <span className={styles.setupNextActionBadge}>
-                      <span className={styles.setupNextActionLabel}>{copy.nextActionLabel}</span>
-                      <strong>{`${nextSetupCommand.step}. ${nextSetupCommand.title}`}</strong>
-                    </span>
-                  ) : null}
                 </div>
                 {nextSetupCommand ? (
                   <div className={`${styles.setupCompactSummary} ${styles.setupHeaderScan}`} aria-label={setupFlowLabel}>
@@ -533,13 +527,6 @@ export function HomepageAgentControlSection({
                     </span>
                     <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
                       &rarr;
-                    </span>
-                    <span className={`${styles.setupCompactSummaryItem} ${styles.setupCompactSummaryItemAccent}`}>
-                      <span className={styles.setupCompactSummaryOrdinal}>03</span>
-                      <span className={styles.setupCompactSummaryContent}>
-                        <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
-                        <strong>{nextSetupCommand.title}</strong>
-                      </span>
                     </span>
                   </div>
                 ) : (
@@ -635,6 +622,20 @@ export function HomepageAgentControlSection({
               {nextSetupCommand ? (
                 <div className={styles.nextCommandStrip}>
                   <div className={styles.nextCommandLead}>
+                    <div className={styles.nextCommandMetaRow} aria-label={setupFlowLabel}>
+                      <span className={styles.nextCommandMeta}>
+                        <span className={styles.metaLabel}>{copy.chooseProvider}</span>
+                        <strong>{selectedProvider?.label ?? "-"}</strong>
+                      </span>
+                      <span className={styles.nextCommandMetaArrow} aria-hidden="true">
+                        &rarr;
+                      </span>
+                      <span className={styles.nextCommandMeta}>
+                        <span className={styles.metaLabel}>{copy.chooseTeam}</span>
+                        <strong>{selectedTeam?.name ?? "-"}</strong>
+                        <span className={styles.setupSummaryMeta}>{selectedTeam?.lane ?? "-"}</span>
+                      </span>
+                    </div>
                     <div className={styles.nextCommandLabelRow}>
                       <span className={styles.metaLabel}>{copy.activeSetup}</span>
                       <span className={styles.nextCommandOutput}>{setupOutputLabel}</span>
