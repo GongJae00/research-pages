@@ -731,9 +731,7 @@ export function AffiliationWorkspace({
     <section className="card profile-edit-card" key={affiliation.id}>
       <div className="card-header">
         <div>
-          <h3>
-            {text.item} {index + 1}
-          </h3>
+          <h3>{getEditableAffiliationHeading(affiliation, index, locale, text)}</h3>
           <p className="card-support-text">
             {[
               affiliation.roleTitle || affiliation.institutionName || text.institution,
@@ -765,14 +763,19 @@ export function AffiliationWorkspace({
             </div>
           </dl>
         </div>
-        <button
-          type="button"
-          className="profile-inline-btn"
-          onClick={() => handleRemoveAffiliation(affiliation.id)}
-        >
-          <Trash2 size={15} />
-          {text.remove}
-        </button>
+        <div className="profile-history-side">
+          <span className={`pill ${getAffiliationStatusClass(affiliation)}`}>
+            {getAffiliationStateLabel(affiliation, locale)}
+          </span>
+          <button
+            type="button"
+            className="profile-inline-btn"
+            onClick={() => handleRemoveAffiliation(affiliation.id)}
+          >
+            <Trash2 size={15} />
+            {text.remove}
+          </button>
+        </div>
       </div>
       <div className="card-body">
         <div className="profile-form-grid">

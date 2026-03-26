@@ -464,21 +464,21 @@ export async function stopOpsTerminalSession(sessionId: string) {
     throw new Error(`Unknown session "${sessionId}".`);
   }
 
-  if (record.snapshot.status === "stopping" || record.stopRequestedAt) {
-    reconcileSessionState(record);
+  reconcileSessionState(record);
 
+  if (record.snapshot.status !== "running" && record.snapshot.status !== "stopping") {
+    return {
+      session: record.snapshot,
+      transition: "already-stopped",
+      recovery: "Session is already closed. Start a new session if you still need an interactive shell.",
+    } satisfies OpsTerminalStopResult;
+  }
+
+  if (record.snapshot.status === "stopping" || record.stopRequestedAt) {
     return {
       session: record.snapshot,
       transition: "stop-requested",
       recovery: "Stop already requested. Wait for the session to close, refresh terminal sessions, then start a new session if needed.",
-    } satisfies OpsTerminalStopResult;
-  }
-
-  if (record.snapshot.status !== "running") {
-    return {
-      session: record.snapshot,
-      transition: "already-stopped",
-      recovery: "Start a new session if you still need an interactive shell.",
     } satisfies OpsTerminalStopResult;
   }
 
