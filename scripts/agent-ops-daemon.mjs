@@ -14,6 +14,7 @@ const autonomyLockPath = path.join(researchOsStateDir, "autonomy.lock.json");
 const autonomyRunFilePath = path.join(researchOsStateDir, "run", "autonomy.json");
 const autonomySchemaPath = path.join(researchOsStateDir, "autonomy-plan-schema.json");
 const executionSchemaPath = path.join(researchOsStateDir, "autonomy-execution-schema.json");
+const localWebPorts = [3000, 3001, 3002, 3003];
 
 const teamCycle = [
   {
@@ -155,6 +156,21 @@ const workItemCatalog = {
         "Compress the homepage agent-control section above the fold. Reduce repeated copy, tighten card spacing, and make the CLI setup flow easier to scan without touching unrelated routes.",
       acceptance:
         "One visible density or hierarchy improvement lands in the homepage control section without expanding scope beyond the public shell.",
+    },
+    {
+      id: "homepage-onboarding-scan",
+      title: "Clarify homepage onboarding scan",
+      targetFiles: [
+        "apps/web/src/app/[locale]/page.tsx",
+        "apps/web/src/components/homepage-agent-control-section.tsx",
+        "apps/web/src/components/homepage-agent-control-section.module.css",
+      ],
+      objective:
+        "Make the homepage onboarding story easier to follow so the next CLI setup action is clear without reading long support text.",
+      instruction:
+        "Keep the slice inside the homepage agent-control section, but focus on scan order instead of raw density. Strengthen the sequencing between CLI choice, team assignment, and next command without widening into other routes.",
+      acceptance:
+        "The homepage setup story reads more clearly in one pass across /ko and /en without touching unrelated shell surfaces.",
     },
     {
       id: "shell-navigation-clarity",
@@ -478,6 +494,82 @@ function getDirectiveText(directive) {
   return directive && typeof directive.body === "string" ? directive.body.toLowerCase() : "";
 }
 
+function getRecentExecutionsForTeam(state, teamId, limit = 5) {
+  const recent = [];
+  const currentExecution = state.autonomy?.currentExecution;
+  if (currentExecution?.teamId === teamId) {
+    recent.push(currentExecution);
+  }
+
+  for (const entry of state.autonomy?.executionHistory ?? []) {
+    if (entry?.teamId !== teamId) {
+      continue;
+    }
+    if (!recent.some((candidate) => candidate?.id === entry?.id)) {
+      recent.push(entry);
+    }
+    if (recent.length >= limit) {
+      break;
+    }
+  }
+
+  return recent;
+}
+
+function getExecutionWorkSignature(entry) {
+  if (!entry || typeof entry !== "object") {
+    return "";
+  }
+
+  const source =
+    Array.isArray(entry.changedFiles) && entry.changedFiles.length > 0
+      ? entry.changedFiles
+      : Array.isArray(entry.workItemFiles)
+        ? entry.workItemFiles
+        : [];
+
+  return getUniquePaths(source).sort().join("|");
+}
+
+function isWorkItemOverused(workItem, recentExecutions) {
+  const recentWindow = recentExecutions
+    .filter(
+      (entry) =>
+        entry &&
+        typeof entry === "object" &&
+        (entry.outcome === "changed" || entry.outcome === "blocked") &&
+        (typeof entry.workItemTitle === "string" || Array.isArray(entry.workItemFiles)),
+    )
+    .slice(0, 3);
+
+  if (recentWindow.length < 3) {
+    return false;
+  }
+
+  if (recentWindow.every((entry) => entry.workItemTitle === workItem.title)) {
+    return true;
+  }
+
+  const signature = getUniquePaths(workItem.targetFiles).sort().join("|");
+  return Boolean(signature) && recentWindow.every((entry) => getExecutionWorkSignature(entry) === signature);
+}
+
+function chooseAlternateWorkItem(items, preferredItem, recentExecutions) {
+  if (!preferredItem) {
+    return items[0] ?? null;
+  }
+
+  if (!isWorkItemOverused(preferredItem, recentExecutions)) {
+    return preferredItem;
+  }
+
+  const alternate = items.find(
+    (entry) => entry.id !== preferredItem.id && !isWorkItemOverused(entry, recentExecutions.slice(0, 2)),
+  );
+
+  return alternate ?? items.find((entry) => entry.id !== preferredItem.id) ?? preferredItem;
+}
+
 function getScopedTeamIdsForDirective(directive) {
   const directiveText = getDirectiveText(directive);
 
@@ -580,6 +672,12 @@ function selectWorkItem(teamId, loopCount, operatorDirective = null) {
   return items[teamTurnIndex % items.length];
 }
 
+function selectBoundedWorkItem(teamId, loopCount, operatorDirective = null, recentExecutions = []) {
+  const items = getWorkItems(teamId);
+  const preferredItem = selectWorkItem(teamId, loopCount, operatorDirective);
+  return chooseAlternateWorkItem(items, preferredItem, recentExecutions) ?? preferredItem;
+}
+
 function buildFallbackPlan(team, providerLabel, workItem) {
   return {
     summary: `${team.name} is advancing ${workItem.title} within the ${team.lane}, with ${providerLabel} keeping the slice bounded.`,
@@ -608,6 +706,22 @@ function buildPlannerPrompt(team, context = {}, workItem) {
     context.lastReport && typeof context.lastReport.summary === "string"
       ? `Latest report summary: ${context.lastReport.summary}`
       : "Latest report summary: none";
+  const recentExecutionHistory =
+    Array.isArray(context.recentExecutions) && context.recentExecutions.length > 0
+      ? `Recent execution history: ${context.recentExecutions
+          .slice(0, 3)
+          .map((entry) => {
+            const title = typeof entry.workItemTitle === "string" ? entry.workItemTitle : "bounded slice";
+            const files =
+              Array.isArray(entry.changedFiles) && entry.changedFiles.length > 0
+                ? entry.changedFiles.join(", ")
+                : Array.isArray(entry.workItemFiles)
+                  ? entry.workItemFiles.join(", ")
+                  : "no files recorded";
+            return `${title} -> ${files}`;
+          })
+          .join(" | ")}`
+      : "Recent execution history: none";
 
   return [
     "You are the local autonomy planner for the ResearchOS internal agent ops board.",
@@ -637,6 +751,7 @@ function buildPlannerPrompt(team, context = {}, workItem) {
     operatorDirective,
     lastExecution,
     lastReport,
+    recentExecutionHistory,
     "Owned paths:",
     ownedPaths,
     `Validation target: ${guidance.validation}`,
@@ -1655,8 +1770,7 @@ async function recoverDirtyExecution(team, taskPacket, loopCount, state, operato
     return null;
   }
 
-  const guidance = getLaneGuidance(team.id);
-  const validation = await Promise.all(guidance.validationCommands.map((command) => runValidationCommand(command)));
+  const validation = await runValidationSuite(team.id, workItem);
   const validationFailed = validation.some((entry) => entry.status === "failed");
 
   if (validationFailed) {
@@ -1824,6 +1938,117 @@ async function runValidationCommand(command) {
   }
 }
 
+function getSupplementalValidationSpecs(teamId, workItem) {
+  const touchesHomepage =
+    teamId === "shell-experience" &&
+    workItem?.targetFiles?.some(
+      (entry) =>
+        entry.includes("apps/web/src/app/[locale]/page.tsx") ||
+        entry.includes("apps/web/src/components/homepage-agent-control-section"),
+    );
+
+  if (!touchesHomepage) {
+    return [];
+  }
+
+  return [
+    {
+      label: "Homepage /ko route smoke",
+      route: "/ko",
+      expectedSignals: ["ResearchPages", "Codex", "Gemini"],
+    },
+    {
+      label: "Homepage /en route smoke",
+      route: "/en",
+      expectedSignals: ["ResearchPages", "Codex", "Gemini"],
+    },
+  ];
+}
+
+async function fetchTextWithTimeout(url, timeoutMs = 8000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    const response = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        accept: "text/html,application/xhtml+xml",
+      },
+    });
+    const text = await response.text();
+    return { response, text };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function runRouteSmokeValidation(spec) {
+  let sawResponse = false;
+  let lastFailure = "No local homepage server responded.";
+
+  for (const port of localWebPorts) {
+    const url = `http://localhost:${port}${spec.route}`;
+
+    try {
+      const { response, text } = await fetchTextWithTimeout(url);
+      sawResponse = true;
+
+      if (!response.ok) {
+        lastFailure = `${url} returned HTTP ${response.status}.`;
+        continue;
+      }
+
+      const missingSignals = spec.expectedSignals.filter((signal) => !text.includes(signal));
+      if (missingSignals.length) {
+        lastFailure = `${url} loaded, but missing signals: ${missingSignals.join(", ")}.`;
+        continue;
+      }
+
+      return {
+        label: spec.label,
+        status: "passed",
+        detail: `${url} returned ${response.status} and included ${spec.expectedSignals.join(", ")}.`,
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      lastFailure = `${url} failed: ${trimTerminalBlock(message, 160)}`;
+    }
+  }
+
+  return {
+    label: spec.label,
+    status: sawResponse ? "failed" : "not-run",
+    detail: lastFailure,
+  };
+}
+
+function buildSkippedValidationEntries(teamId, workItem, detail) {
+  const guidance = getLaneGuidance(teamId);
+  const commandEntries = guidance.validationCommands.map((command) => ({
+    label: command,
+    status: "not-run",
+    detail,
+  }));
+  const supplementalEntries = getSupplementalValidationSpecs(teamId, workItem).map((spec) => ({
+    label: spec.label,
+    status: "not-run",
+    detail,
+  }));
+
+  return [...commandEntries, ...supplementalEntries];
+}
+
+async function runValidationSuite(teamId, workItem) {
+  const guidance = getLaneGuidance(teamId);
+  const commandResults = await Promise.all(guidance.validationCommands.map((command) => runValidationCommand(command)));
+  const supplementalResults = await Promise.all(
+    getSupplementalValidationSpecs(teamId, workItem).map((spec) => runRouteSmokeValidation(spec)),
+  );
+
+  return [...commandResults, ...supplementalResults];
+}
+
 function buildExecutionPrompt(team, taskPacket, operatorDirective, workItem) {
   const guidance = getLaneGuidance(team.id);
   const ownedPaths =
@@ -1955,11 +2180,11 @@ async function runCodexExecutor(team, taskPacket, loopCount, state, operatorDire
       nextAction: "Wait for the owned paths to become clean, then rerun the bounded slice.",
       outcome: "blocked",
     };
-    const validation = guidance.validationCommands.map((command) => ({
-      label: command,
-      status: "not-run",
-      detail: "Skipped because the owned paths were already dirty.",
-    }));
+    const validation = buildSkippedValidationEntries(
+      team.id,
+      workItem,
+      "Skipped because the owned paths were already dirty.",
+    );
     const artifactPath = await writeExecutionArtifact({
       loopCount,
       providerId: "codex",
@@ -2019,12 +2244,8 @@ async function runCodexExecutor(team, taskPacket, loopCount, state, operatorDire
     }
     const changedFiles = await listDirtyOwnedPaths(guidance.ownedPaths);
     const validation = changedFiles.length
-      ? await Promise.all(guidance.validationCommands.map((command) => runValidationCommand(command)))
-      : guidance.validationCommands.map((command) => ({
-          label: command,
-          status: "not-run",
-          detail: "Skipped because no owned files changed.",
-        }));
+      ? await runValidationSuite(team.id, workItem)
+      : buildSkippedValidationEntries(team.id, workItem, "Skipped because no owned files changed.");
     const outcome =
       validation.some((entry) => entry.status === "failed")
         ? "failed"
@@ -2067,12 +2288,8 @@ async function runCodexExecutor(team, taskPacket, loopCount, state, operatorDire
     const message = error instanceof Error ? error.message : String(error);
     const changedFiles = await listDirtyOwnedPaths(guidance.ownedPaths);
     const validation = changedFiles.length
-      ? await Promise.all(guidance.validationCommands.map((command) => runValidationCommand(command)))
-      : guidance.validationCommands.map((command) => ({
-          label: command,
-          status: "not-run",
-          detail: "Skipped because execution failed before validation.",
-        }));
+      ? await runValidationSuite(team.id, workItem)
+      : buildSkippedValidationEntries(team.id, workItem, "Skipped because execution failed before validation.");
     const salvaged = changedFiles.length > 0;
     const result = salvaged
       ? {
@@ -2230,7 +2447,12 @@ async function runGeminiPlanner(team, loopCount, context, workItem) {
 }
 
 async function runPlannerWithFallback(team, loopCount, provider, context) {
-  const workItem = selectWorkItem(team.id, loopCount, context.operatorDirective);
+  const workItem = selectBoundedWorkItem(
+    team.id,
+    loopCount,
+    context.operatorDirective,
+    context.recentExecutions ?? [],
+  );
   const availableProviders = new Set(
     provider.providerHealth.filter((entry) => entry.available).map((entry) => entry.providerId),
   );
@@ -2491,14 +2713,14 @@ function buildBatchOperatorBrief(executionRecords) {
 
 function buildPlannerContext(state, teamId) {
   const lastReport = [...(state.autonomy?.reports ?? [])].find((entry) => entry.teamId === teamId);
-  const lastExecution = [...(state.autonomy?.executionHistory ?? [])].find(
-    (entry) => entry.teamId === teamId,
-  );
+  const recentExecutions = getRecentExecutionsForTeam(state, teamId);
+  const lastExecution = recentExecutions[0] ?? null;
 
   return {
     operatorDirective: state.currentDirective,
     lastReport,
     lastExecution,
+    recentExecutions,
   };
 }
 
@@ -2556,7 +2778,12 @@ function buildExecutionMemberUpdates(team, executionRecord, taskPacket) {
 }
 
 async function runExecutionStep(team, loopCount, taskPacket, state, provider) {
-  const workItem = selectWorkItem(team.id, loopCount, state.currentDirective);
+  const workItem = selectBoundedWorkItem(
+    team.id,
+    loopCount,
+    state.currentDirective,
+    getRecentExecutionsForTeam(state, team.id),
+  );
   if (taskPacket.status === "failed") {
     return {
       id: `exec-${loopCount}-${team.id}`,
@@ -2573,11 +2800,11 @@ async function runExecutionStep(team, loopCount, taskPacket, state, provider) {
       workItemFiles: workItem.targetFiles,
       artifactPath: taskPacket.artifactPath,
       outcome: "blocked",
-      validation: getLaneGuidance(team.id).validationCommands.map((command) => ({
-        label: command,
-        status: "not-run",
-        detail: "Skipped because planning failed before execution could start.",
-      })),
+      validation: buildSkippedValidationEntries(
+        team.id,
+        workItem,
+        "Skipped because planning failed before execution could start.",
+      ),
     };
   }
 
@@ -2598,11 +2825,11 @@ async function runExecutionStep(team, loopCount, taskPacket, state, provider) {
       workItemFiles: workItem.targetFiles,
       artifactPath: null,
       outcome: "blocked",
-      validation: getLaneGuidance(team.id).validationCommands.map((command) => ({
-        label: command,
-        status: "not-run",
-        detail: "Skipped because the execution provider was unavailable.",
-      })),
+      validation: buildSkippedValidationEntries(
+        team.id,
+        workItem,
+        "Skipped because the execution provider was unavailable.",
+      ),
     };
   }
 
