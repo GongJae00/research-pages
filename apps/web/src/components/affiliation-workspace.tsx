@@ -232,18 +232,28 @@ function getAffiliationStatusClass(entry: AffiliationTimelineEntry) {
   return "pill-gray";
 }
 
-function getAffiliationOverview(items: AffiliationTimelineEntry[]) {
+function getAffiliationOverview(items: AffiliationTimelineEntry[], locale: Locale) {
   if (items.length === 0) {
-    return "Add an affiliation so current and past roles are easy to review in one place.";
+    return locale === "ko"
+      ? "소속을 추가하면 현재 역할과 지난 역할을 한 화면에서 바로 확인할 수 있습니다."
+      : "Add an affiliation so current and past roles are easy to review in one place.";
   }
 
   const currentCount = items.filter((item) => item.active).length;
   const pastCount = items.length - currentCount;
 
   if (currentCount > 0) {
+    if (locale === "ko") {
+      return `현재 소속 ${currentCount}건과 종료된 소속 ${pastCount}건이 정리되어 있습니다. 상태나 날짜가 바뀌면 이 목록에서 바로 수정하세요.`;
+    }
+
     return `${currentCount} current affiliation and ${pastCount} past entr${
       pastCount === 1 ? "y" : "ies"
     } on record. Edit this list when a role changes status or dates.`;
+  }
+
+  if (locale === "ko") {
+    return `종료된 소속 ${pastCount}건이 정리되어 있습니다. 다시 활성화되는 역할이 있으면 이 목록에서 갱신하세요.`;
   }
 
   return `${pastCount} past entr${
@@ -251,20 +261,28 @@ function getAffiliationOverview(items: AffiliationTimelineEntry[]) {
   } on record. Update one when a role becomes active again.`;
 }
 
-function getTimelineSummary(entry: AffiliationTimelineEntry, presentLabel: string) {
+function getTimelineSummary(
+  entry: AffiliationTimelineEntry,
+  presentLabel: string,
+  locale: Locale,
+) {
   if (entry.active) {
-    return `Current since ${entry.startDate}`;
+    return locale === "ko" ? `${entry.startDate}부터 현재까지` : `Current since ${entry.startDate}`;
   }
 
-  return `${entry.startDate} to ${entry.endDate ?? presentLabel}`;
+  return `${entry.startDate} - ${entry.endDate ?? presentLabel}`;
 }
 
-function getNextActionSummary(entry: AffiliationTimelineEntry) {
+function getNextActionSummary(entry: AffiliationTimelineEntry, locale: Locale) {
   if (entry.active) {
-    return "Add an end date and update the status when this role closes.";
+    return locale === "ko"
+      ? "역할이 끝나면 종료일과 상태를 함께 업데이트하세요."
+      : "Add an end date and update the status when this role closes.";
   }
 
-  return "Reopen editing if this role resumes or its linked evidence needs an update.";
+  return locale === "ko"
+    ? "역할이 다시 시작되거나 연결 문서를 갱신해야 하면 편집을 다시 여세요."
+    : "Reopen editing if this role resumes or its linked evidence needs an update.";
 }
 
 export function AffiliationWorkspace({
@@ -283,7 +301,7 @@ export function AffiliationWorkspace({
   const [isEditing, setIsEditing] = useState(false);
   const orderedResolvedAffiliations = sortAffiliations(resolvedAffiliations);
   const orderedDraftAffiliations = sortAffiliations(draftAffiliations);
-  const affiliationOverview = getAffiliationOverview(orderedResolvedAffiliations);
+  const affiliationOverview = getAffiliationOverview(orderedResolvedAffiliations, locale);
 
   useEffect(() => {
     setResolvedDocuments(loadBrowserDocuments(documents));
@@ -454,9 +472,14 @@ export function AffiliationWorkspace({
                     <p className="card-support-text">
                       {[
                         affiliation.roleTitle || affiliation.institutionName || text.institution,
-                        affiliation.startDate || text.startDate,
-                        affiliation.endDate || text.present,
-                        text.appointmentLabels[affiliation.appointmentStatus],
+                        affiliation.startDate
+                          ? getTimelineSummary(affiliation, text.present, locale)
+                          : text.startDate,
+                        affiliation.active
+                          ? locale === "ko"
+                            ? "현재 진행 중"
+                            : "Current role"
+                          : text.appointmentLabels[affiliation.appointmentStatus],
                       ].join(" / ")}
                     </p>
                   </div>
@@ -666,11 +689,11 @@ export function AffiliationWorkspace({
                     <dl className="field-list">
                       <div className="field-row">
                         <dt>{text.period}</dt>
-                        <dd>{getTimelineSummary(affiliation, text.present)}</dd>
+                        <dd>{getTimelineSummary(affiliation, text.present, locale)}</dd>
                       </div>
                       <div className="field-row">
-                        <dt>Edit</dt>
-                        <dd>{getNextActionSummary(affiliation)}</dd>
+                        <dt>{text.edit}</dt>
+                        <dd>{getNextActionSummary(affiliation, locale)}</dd>
                       </div>
                     </dl>
                     {(affiliation.department || affiliation.labName) && (
