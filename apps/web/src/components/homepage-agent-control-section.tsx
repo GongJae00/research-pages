@@ -124,6 +124,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
         "브라우저가 로컬 터미널을 직접 제어하지는 않지만, 각 개발자는 CLI 세션을 로컬 브리지에 등록하고 이 페이지에서 연결 상태를 확인할 수 있습니다.",
       setupBuilderLabel: "홈페이지 셋업 빌더",
       setupBuilderTitle: "CLI 설정 한눈에 보기",
+      setupSequenceIntro: "CLI를 고르고 팀을 붙인 다음 바로 실행할 명령까지 같은 순서로 확인합니다.",
       selectedCliStatusLabel: "CLI 상태",
       selectedLaneLabel: "팀 lane",
       connectCommand: "연결 명령 복사",
@@ -137,6 +138,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
       statusLabel: "상태",
       nextActionLabel: "다음",
       runCommandLabel: "명령 실행",
+      nextCommandHelp: "위에서 CLI와 팀을 고른 뒤 이 명령을 터미널에서 바로 실행합니다.",
       chooseProvider: "CLI 선택",
       chooseTeam: "팀 선택",
       setupCommand: "셋업 명령",
@@ -185,6 +187,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
       "Each developer registers a local CLI session with the bridge, and this page keeps connection state and team ownership visible.",
     setupBuilderLabel: "Homepage setup builder",
     setupBuilderTitle: "CLI setup at a glance",
+    setupSequenceIntro: "Pick the CLI, confirm the team, then run the next command in that same order.",
     selectedCliStatusLabel: "CLI status",
     selectedLaneLabel: "Team lane",
     connectCommand: "Copy connect command",
@@ -198,6 +201,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
     statusLabel: "Status",
     nextActionLabel: "Next",
     runCommandLabel: "Run command",
+    nextCommandHelp: "After choosing the CLI and team above, run this command in the terminal next.",
     chooseProvider: "CLI",
     chooseTeam: "Team",
     setupCommand: "Setup command",
@@ -421,6 +425,7 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
+                <p className={styles.setupBuilderBody}>{copy.setupSequenceIntro}</p>
                 {setupFlowDigest ? (
                   <div className={styles.setupSummaryBar} aria-label={copy.setupStepsLabel}>
                     <span className={styles.metaLabel}>{setupFlowLabel}</span>
@@ -437,6 +442,10 @@ export function HomepageAgentControlSection({
                         </div>
                       </div>
 
+                      <span className={styles.setupSequenceArrow} aria-hidden="true">
+                        <ArrowRight size={14} />
+                      </span>
+
                       <div className={styles.setupSequencePill}>
                         <span className={styles.setupPickerStep}>02</span>
                         <div className={styles.setupSequencePillCopy}>
@@ -447,6 +456,10 @@ export function HomepageAgentControlSection({
                           </span>
                         </div>
                       </div>
+
+                      <span className={styles.setupSequenceArrow} aria-hidden="true">
+                        <ArrowRight size={14} />
+                      </span>
 
                       <div className={`${styles.setupSequencePill} ${styles.setupSequencePillAccent}`}>
                         <span className={styles.setupPickerStep}>03</span>
@@ -546,7 +559,7 @@ export function HomepageAgentControlSection({
                         <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
                       </div>
                       <strong>{nextSetupCommand.title}</strong>
-                      <span className={styles.inlineMeta}>{copy.activeSetup}</span>
+                      <span className={styles.inlineMeta}>{copy.nextCommandHelp}</span>
                       <span className={styles.nextCommandContext}>
                         {formatSetupPair(selectedProvider?.label, selectedTeam?.name)}
                       </span>
