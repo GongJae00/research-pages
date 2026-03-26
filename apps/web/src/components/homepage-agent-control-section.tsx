@@ -580,6 +580,7 @@ export function HomepageAgentControlSection({
                   <div className={styles.setupSelectionLeadTop}>
                     <span className={styles.setupSelectionLeadLabel}>{copy.activeSetup}</span>
                   </div>
+                  <p className={styles.setupSelectionLeadHint}>{copy.setupSequenceIntro}</p>
                   {activeSetupSummary}
                 </div>
 
@@ -653,9 +654,15 @@ export function HomepageAgentControlSection({
               {nextSetupCommand ? (
                 <div className={styles.nextCommandStrip}>
                   <div className={styles.nextCommandLead}>
-                    <div className={styles.setupSelectionLeadTop}>
-                      <span className={styles.setupSelectionLeadLabel}>{copy.nextCommandLabel}</span>
-                      <span className={styles.nextCommandOutput}>{nextSetupCommand.title}</span>
+                    <div className={styles.nextCommandIntro}>
+                      <span className={`${styles.setupPickerStep} ${styles.nextCommandStep}`}>03</span>
+                      <div className={styles.nextCommandIntroCopy}>
+                        <div className={styles.setupSelectionLeadTop}>
+                          <span className={styles.setupSelectionLeadLabel}>{copy.runCommandLabel}</span>
+                          <span className={styles.nextCommandOutput}>{nextSetupCommand.title}</span>
+                        </div>
+                        <p className={styles.setupSelectionLeadHint}>{copy.nextCommandHelp}</p>
+                      </div>
                     </div>
                     <div className={styles.nextCommandContext} aria-label={setupFlowLabel}>
                       <div className={styles.nextCommandContextStep}>

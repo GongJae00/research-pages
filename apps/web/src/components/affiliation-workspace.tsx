@@ -360,16 +360,32 @@ function getAffiliationScanSummary(
 
 function getCurrentTimelineLabel(locale: Locale) {
   return locale === "ko"
-    ? "\ud604\uc7ac \uc18c\uc18d \uc139\uc158 \ud45c\uc2dc"
-    : "Show with current affiliations";
+    ? "\ud604\uc7ac \uc18c\uc18d \ubc30\uce58"
+    : "Current section";
 }
 
 function getCurrentTimelineValue(active: boolean, locale: Locale) {
   if (active) {
-    return locale === "ko" ? "\uc608" : "Yes";
+    return locale === "ko"
+      ? "\ud604\uc7ac \uc18c\uc18d\uc5d0 \ud45c\uc2dc"
+      : "Shown in Current affiliations";
   }
 
-  return locale === "ko" ? "\uc544\ub2c8\uc624" : "No";
+  return locale === "ko"
+    ? "\ud604\uc7ac \uc18c\uc18d\uc5d0\uc11c \uc81c\uc678"
+    : "Moved out of Current affiliations";
+}
+
+function getCurrentTimelineOptionLabel(active: boolean, locale: Locale) {
+  if (active) {
+    return locale === "ko"
+      ? "\ud604\uc7ac \uc18c\uc18d\uc5d0 \ud45c\uc2dc"
+      : "Show in Current affiliations";
+  }
+
+  return locale === "ko"
+    ? "\ud604\uc7ac \uc18c\uc18d\uc5d0\uc11c \uc81c\uc678"
+    : "Move out of Current affiliations";
 }
 
 function getCurrentTimelineHint(
@@ -1646,8 +1662,8 @@ export function AffiliationWorkspace({
                 })
               }
             >
-              <option value="active">{getCurrentTimelineValue(true, locale)}</option>
-              <option value="inactive">{getCurrentTimelineValue(false, locale)}</option>
+              <option value="active">{getCurrentTimelineOptionLabel(true, locale)}</option>
+              <option value="inactive">{getCurrentTimelineOptionLabel(false, locale)}</option>
             </select>
             <p className="card-support-text">{getCurrentTimelineHint(affiliation, locale)}</p>
           </label>

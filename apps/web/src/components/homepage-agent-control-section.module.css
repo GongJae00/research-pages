@@ -1844,6 +1844,24 @@
   gap: 0.02rem;
 }
 
+.nextCommandIntro {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.08rem;
+  width: 100%;
+}
+
+.nextCommandIntroCopy {
+  display: grid;
+  gap: 0.03rem;
+  min-width: 0;
+}
+
+.nextCommandStep {
+  background: #0f766e;
+  color: #f8fafc;
+}
+
 .nextCommandLead .setupCompactSummary {
   width: 100%;
 }
