@@ -257,6 +257,17 @@ function getOpsCopy(locale: string) {
     missionStackLabel: t(locale, "로컬 런타임", "Local runtime"),
     missionSwarmLabel: t(locale, "활성 swarm", "Active swarm"),
     missionReportLabel: t(locale, "최신 보고", "Latest report"),
+    previewLabel: t(locale, "라이브 프리뷰", "Live preview"),
+    previewTitle: t(locale, "작업 끝날 때마다 홈페이지를 바로 확인", "Watch the homepage after each completed task"),
+    previewBody: t(
+      locale,
+      "loop나 execution 시간이 바뀌면 아래 프리뷰가 자동으로 다시 열려서 /ko와 /en의 실제 결과를 수동 새로고침 없이 확인할 수 있습니다.",
+      "When the loop or execution timestamp changes, these previews reload automatically so you can inspect the real /ko and /en result without manual refresh.",
+    ),
+    previewRefreshMeta: t(locale, "자동 갱신 기준", "Auto-refresh trigger"),
+    previewLastRefresh: t(locale, "최근 프리뷰 갱신", "Latest preview refresh"),
+    previewKorean: "KO /ko",
+    previewEnglish: "EN /en",
     webProcessLabel: t(locale, "웹", "Web"),
     autonomyProcessLabel: t(locale, "오토노미", "Autonomy"),
     processRunning: t(locale, "실행 중", "Running"),
@@ -727,6 +738,36 @@ export function AgentOperationsControlRoom({
     snapshot.autonomy.latestSummary,
     stackStatus,
   ]);
+  const previewRefreshToken = useMemo(() => {
+    const baseToken =
+      latestExecution?.time ??
+      latestReport?.time ??
+      snapshot.autonomy.lastRunAt ??
+      snapshot.generatedAt;
+
+    return encodeURIComponent(`${baseToken}-${snapshot.autonomy.loopCount}`);
+  }, [
+    latestExecution?.time,
+    latestReport?.time,
+    snapshot.autonomy.lastRunAt,
+    snapshot.autonomy.loopCount,
+    snapshot.generatedAt,
+  ]);
+  const homepagePreviewFrames = useMemo(
+    () => [
+      {
+        id: "ko",
+        label: copy.previewKorean,
+        src: `/ko?opsPreview=${previewRefreshToken}`,
+      },
+      {
+        id: "en",
+        label: copy.previewEnglish,
+        src: `/en?opsPreview=${previewRefreshToken}`,
+      },
+    ],
+    [copy.previewEnglish, copy.previewKorean, previewRefreshToken],
+  );
   const terminalPresetCommands = [
     "corepack pnpm ops -- status",
     `corepack pnpm ops -- directive "${t(locale, "홈페이지 품질 개선 계속", "Continue improving homepage quality")}"`,
@@ -1213,6 +1254,51 @@ export function AgentOperationsControlRoom({
             </div>
           </article>
         </div>
+
+        <article className={`${styles.panel} ${styles.sectionPanel} ${styles.previewPanel}`}>
+          <div className={styles.previewPanelHead}>
+            <div>
+              <span className={styles.sectionLabel}>{copy.previewLabel}</span>
+              <h2 className={styles.sectionTitle}>{copy.previewTitle}</h2>
+              <p className={styles.sectionBody}>{copy.previewBody}</p>
+            </div>
+            <div className={styles.primeHeaderMeta}>
+              <span className={styles.commandTowerChip}>
+                {copy.previewRefreshMeta}: {copy.loopCount} {snapshot.autonomy.loopCount}
+              </span>
+              <span className={styles.commandTowerChip}>
+                {copy.previewLastRefresh}:{" "}
+                {formatBoardTimestamp(locale, latestExecution?.time ?? snapshot.generatedAt)}
+              </span>
+            </div>
+          </div>
+
+          <div className={styles.previewGrid}>
+            {homepagePreviewFrames.map((frame) => (
+              <article className={styles.previewCard} key={frame.id}>
+                <div className={styles.previewCardHead}>
+                  <strong>{frame.label}</strong>
+                  <span className={`${styles.statusBadge} ${styles.statusActive}`}>
+                    {latestExecution?.outcome ?? "live"}
+                  </span>
+                </div>
+                <div className={styles.previewMeta}>
+                  <span className={styles.commandTowerChip}>{selectedTeam.name}</span>
+                  <span className={styles.commandTowerChip}>{copy.activeProvider}: {snapshot.autonomy.activeProviderLabel}</span>
+                </div>
+                <div className={styles.previewFrameWrap}>
+                  <iframe
+                    key={`${frame.id}-${previewRefreshToken}`}
+                    className={styles.previewFrame}
+                    src={frame.src}
+                    title={frame.label}
+                    loading="eager"
+                  />
+                </div>
+              </article>
+            ))}
+          </div>
+        </article>
       </section>
 
       <section className={styles.operationsWorkbench}>
