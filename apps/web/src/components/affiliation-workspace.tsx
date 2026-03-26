@@ -843,15 +843,28 @@ function getDetailsEditorSectionHint(locale: Locale) {
     : "Once the timeline is correct, verify institution, role, department, lab, and notes together.";
 }
 
+function getPriorityEntryLabel(locale: Locale) {
+  return locale === "ko" ? "\uc6b0\uc120 \ud655\uc778 \ud56d\ubaa9" : "Priority entry";
+}
+
+function getAffiliationDisplayLabel(
+  entry: AffiliationTimelineEntry,
+  text: (typeof copy)[Locale],
+) {
+  const primaryLabel = entry.roleTitle.trim() || entry.institutionName.trim();
+
+  return primaryLabel.length > 0 ? primaryLabel : text.item;
+}
+
 function getEditableAffiliationHeading(
   entry: AffiliationTimelineEntry,
   index: number,
   locale: Locale,
   text: (typeof copy)[Locale],
 ) {
-  const primaryLabel = entry.roleTitle.trim() || entry.institutionName.trim();
+  const primaryLabel = getAffiliationDisplayLabel(entry, text);
 
-  if (primaryLabel.length > 0) {
+  if (primaryLabel !== text.item) {
     return primaryLabel;
   }
 
@@ -1206,6 +1219,28 @@ export function AffiliationWorkspace({
     } catch {
       // Keep the editor open so the user can retry.
     }
+  };
+
+  const renderSectionPrioritySummary = (affiliation: AffiliationTimelineEntry | undefined) => {
+    if (!affiliation) {
+      return null;
+    }
+
+    return (
+      <dl className="field-list">
+        <div className="field-row">
+          <dt>{getPriorityEntryLabel(locale)}</dt>
+          <dd>
+            {getAffiliationDisplayLabel(affiliation, text)} /{" "}
+            {joinAffiliationSummary(affiliation) || text.institution}
+          </dd>
+        </div>
+        <div className="field-row">
+          <dt>{getNextUpdateLabel(locale)}</dt>
+          <dd>{getPrimaryNextActionSummary(affiliation, locale)}</dd>
+        </div>
+      </dl>
+    );
   };
 
   const renderReadOnlyAffiliationCard = (affiliation: AffiliationTimelineEntry) => {
@@ -1707,6 +1742,7 @@ export function AffiliationWorkspace({
                             .filter(Boolean)
                             .join(" ")}
                         </p>
+                        {renderSectionPrioritySummary(queuedDraftAffiliations[0])}
                       </div>
                     </div>
                     <div className="card-body detail-cards">
@@ -1992,6 +2028,7 @@ export function AffiliationWorkspace({
                       .filter(Boolean)
                       .join(" ")}
                   </p>
+                  {renderSectionPrioritySummary(queuedAffiliations[0])}
                 </div>
               </div>
               <div className="card-body detail-cards">

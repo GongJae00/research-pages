@@ -110,7 +110,7 @@ function getSurfaceEntryCopy(locale: string, opsEnabled: boolean) {
       publicRoute: "\uACF5\uAC1C \uACBD\uB85C",
       publicTitle: "\uD648\uD398\uC774\uC9C0 \uC250",
       publicHint: "\uACF5\uAC1C \uD648\uD398\uC774\uC9C0\uC5D0\uC11C \uBCF4\uC774\uB294 \uAE30\uBCF8 \uC9C4\uC785 \uACBD\uB85C",
-      publicState: "\uACF5\uAC1C \uC9C4\uC785\uC810",
+      openPublic: "\uACF5\uAC1C \uC250 \uC5F4\uAE30",
       internalLabel: "\uB0B4\uBD80 \uC635\uC2A4",
       internalRoute: "\uB0B4\uBD80 \uACBD\uB85C",
       internalTitle: "\uB0B4\uBD80 \uC635\uC2A4 \uBCF4\uB4DC",
@@ -131,7 +131,7 @@ function getSurfaceEntryCopy(locale: string, opsEnabled: boolean) {
     publicRoute: "Public route",
     publicTitle: "Homepage shell",
     publicHint: "Default shareable entry for the public-facing product shell.",
-    publicState: "Shareable entry",
+    openPublic: "Open public shell",
     internalLabel: "Internal ops",
     internalRoute: "Internal route",
     internalTitle: "Internal ops board",
@@ -453,7 +453,10 @@ export function HomepageAgentControlSection({
                     <Globe2 size={12} />
                     {surfaceEntryCopy.publicLabel}
                   </span>
-                  <span className={styles.surfaceEntryState}>{surfaceEntryCopy.publicState}</span>
+                  <Link href={`/${locale}#overview`} className={styles.surfaceEntryLink}>
+                    {surfaceEntryCopy.openPublic}
+                    <ArrowRight size={14} />
+                  </Link>
                 </div>
                 <div className={styles.surfaceEntryRouteRow}>
                   <span className={styles.surfaceEntryRouteBadge}>{surfaceEntryCopy.publicRoute}</span>
