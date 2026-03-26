@@ -23,6 +23,12 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.missionDigestGrid {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .missionBarCard {
   display: grid;
   gap: 0.45rem;
@@ -32,6 +38,24 @@
   background:
     radial-gradient(circle at top right, rgba(45, 212, 191, 0.08), transparent 42%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(248, 250, 252, 0.96));
+}
+
+.missionDigestCard {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.82rem 0.88rem;
+  border-radius: 18px;
+  border: 1px solid rgba(226, 232, 240, 0.88);
+  background:
+    radial-gradient(circle at top right, rgba(59, 130, 246, 0.08), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(248, 250, 252, 0.96));
+}
+
+.missionDigestChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: flex-start;
 }
 
 .missionBarValue {
@@ -2153,6 +2177,7 @@
   .teamLeadGrid,
   .runtimeGrid,
   .missionBarGrid,
+  .missionDigestGrid,
   .assistantControlGrid,
   .assistantConsoleGrid,
   .teamSwitchboard,

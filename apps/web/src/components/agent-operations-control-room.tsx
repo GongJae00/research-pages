@@ -562,7 +562,7 @@ export function AgentOperationsControlRoom({
 
   const visibleTerminalRuns = terminalRuns.slice(0, 1);
   const recentHandoffs = snapshot.handoffs.slice(0, 4);
-  const recentExecutions = useMemo(() => {
+  const mergedExecutions = useMemo(() => {
     const merged = snapshot.autonomy.currentExecution
       ? [snapshot.autonomy.currentExecution, ...snapshot.autonomy.executionHistory]
       : snapshot.autonomy.executionHistory;
@@ -574,8 +574,9 @@ export function AgentOperationsControlRoom({
       }
       seen.add(execution.id);
       return true;
-    }).slice(0, 3);
+    });
   }, [snapshot.autonomy.currentExecution, snapshot.autonomy.executionHistory]);
+  const recentExecutions = useMemo(() => mergedExecutions.slice(0, 3), [mergedExecutions]);
   const swarmWorkers = useMemo(
     () =>
       snapshot.autonomy.workers.length
@@ -681,6 +682,51 @@ export function AgentOperationsControlRoom({
     snapshot.currentDirective.title,
   ]);
   const latestExecution = snapshot.autonomy.currentExecution ?? recentExecutions[0] ?? null;
+  const executionsSinceDirective = useMemo(() => {
+    const issuedAt = Date.parse(snapshot.currentDirective.issuedAt);
+    if (!Number.isFinite(issuedAt)) {
+      return recentExecutions;
+    }
+
+    const filtered = mergedExecutions.filter((execution) => Date.parse(execution.time) >= issuedAt);
+    return filtered.length ? filtered : recentExecutions;
+  }, [mergedExecutions, recentExecutions, snapshot.currentDirective.issuedAt]);
+  const landedExecutions = useMemo(
+    () => executionsSinceDirective.filter((execution) => execution.outcome === "changed"),
+    [executionsSinceDirective],
+  );
+  const changedFilesSinceDirective = useMemo(
+    () =>
+      [...new Set(landedExecutions.flatMap((execution) => execution.changedFiles).filter(Boolean))].slice(0, 6),
+    [landedExecutions],
+  );
+  const latestReport = snapshot.autonomy.reports[0] ?? null;
+  const currentBlocker = useMemo(() => {
+    if (
+      stackStatus &&
+      (!stackStatus.supervisor?.running || !stackStatus.web?.running || !stackStatus.autonomy?.running)
+    ) {
+      return t(
+        locale,
+        "로컬 supervisor, web, autonomy 중 하나가 내려가 있어 다음 사이클이 멈출 수 있습니다.",
+        "One of the local supervisor, web, or autonomy processes is down, so the next cycle can stall.",
+      );
+    }
+
+    if (latestExecution?.outcome === "blocked" || latestExecution?.outcome === "failed") {
+      return latestExecution.nextAction || latestExecution.summary;
+    }
+
+    return snapshot.autonomy.currentTask?.nextAction ?? snapshot.autonomy.latestSummary;
+  }, [
+    latestExecution?.nextAction,
+    latestExecution?.outcome,
+    latestExecution?.summary,
+    locale,
+    snapshot.autonomy.currentTask?.nextAction,
+    snapshot.autonomy.latestSummary,
+    stackStatus,
+  ]);
   const terminalPresetCommands = [
     "corepack pnpm ops -- status",
     `corepack pnpm ops -- directive "${t(locale, "홈페이지 품질 개선 계속", "Continue improving homepage quality")}"`,
@@ -1089,6 +1135,81 @@ export function AgentOperationsControlRoom({
               <span>
                 {formatBoardTimestamp(locale, latestExecution?.time ?? snapshot.autonomy.lastRunAt)}
               </span>
+            </div>
+          </article>
+        </div>
+
+        <div className={styles.missionDigestGrid}>
+          <article className={styles.missionDigestCard}>
+            <span className={styles.agentLabel}>
+              {t(locale, "지시 이후 실제 진전", "Progress after your directive")}
+            </span>
+            <strong className={styles.missionBarValue}>
+              {landedExecutions.length > 0
+                ? t(
+                    locale,
+                    `${landedExecutions.length}개 실행이 실제로 착지되었습니다.`,
+                    `${landedExecutions.length} executions landed successfully.`,
+                  )
+                : t(locale, "아직 새 착지 실행은 없습니다.", "No landed execution yet.")}
+            </strong>
+            <p className={styles.missionBarBody}>
+              {latestReport?.summary ??
+                (latestExecution?.summary ??
+                  t(
+                    locale,
+                    "최근 루프가 아직 보고 패킷을 만들지 못했습니다.",
+                    "The latest loop has not produced a report packet yet.",
+                  ))}
+            </p>
+            <div className={styles.missionBarMeta}>
+              <span className={`${styles.statusBadge} ${landedExecutions.length ? styles.statusActive : styles.statusQueued}`}>
+                {t(locale, "변경 파일", "Changed files")} {changedFilesSinceDirective.length}
+              </span>
+              <span>
+                {copy.loopCount} {snapshot.autonomy.loopCount}
+              </span>
+            </div>
+          </article>
+
+          <article className={styles.missionDigestCard}>
+            <span className={styles.agentLabel}>{t(locale, "최근 만진 파일", "Recently touched files")}</span>
+            <strong className={styles.missionBarValue}>
+              {changedFilesSinceDirective.length
+                ? t(locale, "지금 확인할 파일", "Files worth checking now")
+                : t(locale, "새 파일 변경이 아직 집계되지 않았습니다.", "No new file changes have been collected yet.")}
+            </strong>
+            <div className={styles.missionDigestChips}>
+              {(changedFilesSinceDirective.length
+                ? changedFilesSinceDirective
+                : latestExecution?.changedFiles?.slice(0, 4) ?? []
+              ).map((filePath) => (
+                <span className={styles.commandTowerChip} key={`mission-digest-${filePath}`}>
+                  {filePath}
+                </span>
+              ))}
+            </div>
+          </article>
+
+          <article className={styles.missionDigestCard}>
+            <span className={styles.agentLabel}>{t(locale, "현재 막힌 이유 / 다음 액션", "Current blocker / next action")}</span>
+            <strong className={styles.missionBarValue}>
+              {latestExecution?.outcome === "blocked" || latestExecution?.outcome === "failed"
+                ? t(locale, "지금은 정체 구간입니다.", "The swarm is currently stalled.")
+                : t(locale, "다음 사이클이 바로 이어질 예정입니다.", "The next cycle is ready to continue.")}
+            </strong>
+            <p className={styles.missionBarBody}>{currentBlocker}</p>
+            <div className={styles.missionBarMeta}>
+              <span
+                className={`${styles.statusBadge} ${
+                  latestExecution?.outcome === "blocked" || latestExecution?.outcome === "failed"
+                    ? styles.statusReview
+                    : styles.statusDone
+                }`}
+              >
+                {latestExecution?.outcome ?? "ready"}
+              </span>
+              <span>{formatBoardTimestamp(locale, snapshot.autonomy.lastRunAt)}</span>
             </div>
           </article>
         </div>

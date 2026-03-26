@@ -218,23 +218,45 @@ async function statusStack() {
   const supervisorState = await readPidFile(supervisorStateFile);
   const webMeta = await readPidFile(webPidFile);
   const autonomyMeta = await readPidFile(autonomyPidFile);
+  const supervisorRunning = supervisorMeta ? await isProcessAlive(supervisorMeta.pid) : false;
+  const webRunning = webMeta ? await isProcessAlive(webMeta.pid) : false;
+  const autonomyRunning = autonomyMeta ? await isProcessAlive(autonomyMeta.pid) : false;
+  const heartbeatAt =
+    supervisorState && typeof supervisorState.lastHeartbeatAt === "string"
+      ? Date.parse(supervisorState.lastHeartbeatAt)
+      : Number.NaN;
+  const heartbeatAgeMs = Number.isFinite(heartbeatAt) ? Date.now() - heartbeatAt : Number.POSITIVE_INFINITY;
+  const supervisorTickMs =
+    supervisorState && typeof supervisorState.tickMs === "number" ? supervisorState.tickMs : null;
+  const requestedHealthStatus =
+    supervisorState && typeof supervisorState.status === "string" ? supervisorState.status : "healthy";
+  let effectiveHealthStatus = requestedHealthStatus;
+
+  if (!supervisorRunning || !webRunning || !autonomyRunning) {
+    effectiveHealthStatus = "degraded";
+  } else if (
+    supervisorTickMs &&
+    Number.isFinite(heartbeatAgeMs) &&
+    heartbeatAgeMs > supervisorTickMs * 3
+  ) {
+    effectiveHealthStatus = "recovering";
+  }
 
   return {
     checkedAt: nowIso(),
     supervisor: supervisorMeta
-      ? { ...supervisorMeta, running: await isProcessAlive(supervisorMeta.pid) }
+      ? { ...supervisorMeta, running: supervisorRunning }
       : null,
     web: webMeta
-      ? { ...webMeta, running: await isProcessAlive(webMeta.pid) }
+      ? { ...webMeta, running: webRunning }
       : null,
     autonomy: autonomyMeta
-      ? { ...autonomyMeta, running: await isProcessAlive(autonomyMeta.pid) }
+      ? { ...autonomyMeta, running: autonomyRunning }
       : null,
     health:
       supervisorState && typeof supervisorState === "object"
         ? {
-            status:
-              typeof supervisorState.status === "string" ? supervisorState.status : "healthy",
+            status: effectiveHealthStatus,
             tickMs: typeof supervisorState.tickMs === "number" ? supervisorState.tickMs : null,
             lastHeartbeatAt:
               typeof supervisorState.lastHeartbeatAt === "string"
