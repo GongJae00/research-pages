@@ -418,6 +418,49 @@
   margin-top: 0;
 }
 
+.setupScanSummary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.04rem;
+  margin-top: 0.02rem;
+}
+
+.setupScanSummaryItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.12rem;
+  min-width: 0;
+  padding: 0.08rem 0.1rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 14px;
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.setupScanSummaryItemAccent {
+  border-color: rgba(15, 23, 42, 0.14);
+  background: rgba(241, 245, 249, 0.98);
+}
+
+.setupScanSummaryCopy {
+  display: grid;
+  gap: 0.02rem;
+  min-width: 0;
+}
+
+.setupScanSummaryCopy strong {
+  color: #0f172a;
+  font-size: 0.72rem;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.setupScanSummaryValueRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.04rem;
+}
+
 .setupTitleHint {
   margin: 0;
   color: #64748b;
@@ -2015,6 +2058,10 @@
 
   .setupFlowBar {
     align-items: flex-start;
+  }
+
+  .setupScanSummary {
+    grid-template-columns: 1fr;
   }
 
   .setupDigestLine {

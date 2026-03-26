@@ -425,7 +425,7 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
-                <div className={styles.setupScanSummary} aria-label={copy.setupStepsLabel}>
+                <div className={styles.setupScanSummary} aria-label={setupFlowLabel}>
                   <div className={styles.setupScanSummaryItem}>
                     <span className={styles.setupPickerStep}>01</span>
                     <div className={styles.setupScanSummaryCopy}>
