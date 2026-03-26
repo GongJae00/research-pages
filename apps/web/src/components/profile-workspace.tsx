@@ -600,8 +600,8 @@ export function ProfileWorkspace({
   const linkUrlPlaceholder = isKo ? "예: https://github.com/..." : "e.g. https://github.com/...";
   const emailPlaceholder = isKo ? "예: name@university.ac.kr" : "e.g. name@university.edu";
   const contactSectionDescription = isKo
-    ? "공개 가능한 연락처와 링크만 남겨 두세요. 첫 번째 이메일과 첫 번째 링크가 프로필 요약과 공개 페이지 준비에 먼저 재사용됩니다."
-    : "Keep only public-facing contacts here. The first email and first link are reused first in summaries and public-page prep.";
+    ? "공개 가능한 연락처와 링크만 남겨 두세요. 첫 번째 이메일과 링크가 프로필 요약과 공개 페이지 기본값으로 재사용됩니다."
+    : "Keep only public-facing contacts here. The first email and link become the primary summary and public-page defaults.";
   const emailCountLabel = isKo
     ? `이메일 ${draftProfile.emails.length}`
     : `${draftProfile.emails.length} email${draftProfile.emails.length === 1 ? "" : "s"}`;
@@ -1121,6 +1121,8 @@ export function ProfileWorkspace({
   const primarySavedLinkDisplayUrl = primarySavedLink
     ? getProfileLinkDisplayUrl(primarySavedLink.url)
     : "";
+  const primaryEmailLabel = isKo ? `${text.primaryItem} ${text.email}` : "Primary email";
+  const primaryLinkLabel = isKo ? `${text.primaryItem} 링크` : "Primary link";
   const coreContactSummary = useMemo(() => {
     const countParts = [
       savedEmails.length > 0 ? savedEmailCountLabel : undefined,
@@ -2293,7 +2295,7 @@ export function ProfileWorkspace({
                         primarySavedEmail
                           ? {
                               key: "primary-email",
-                              label: text.email,
+                              label: primaryEmailLabel,
                               value: (
                                 <span className="profile-inline-list profile-inline-list-muted">
                                   <a href={`mailto:${primarySavedEmail}`} className="profile-inline-link">
@@ -2311,21 +2313,22 @@ export function ProfileWorkspace({
                         primarySavedLink
                           ? {
                               key: "primary-link",
-                              label: onlineLinksLabel,
+                              label: primaryLinkLabel,
                               value: (
                                 <span className="profile-inline-list profile-inline-list-muted">
+                                  <span className="pill pill-gray">
+                                    {getProfileLinkLabel(locale, {
+                                      kind: primarySavedLink.kind,
+                                      label: primarySavedLink.label ?? "",
+                                    })}
+                                  </span>
                                   <a
                                     href={primarySavedLink.url}
                                     target="_blank"
                                     rel="noreferrer"
                                     className="profile-inline-link"
                                   >
-                                    <span>
-                                      {`${getProfileLinkLabel(locale, {
-                                        kind: primarySavedLink.kind,
-                                        label: primarySavedLink.label ?? "",
-                                      })}: ${primarySavedLinkDisplayUrl}`}
-                                    </span>
+                                    <span>{primarySavedLinkDisplayUrl}</span>
                                     <ExternalLink size={13} />
                                   </a>
                                   {savedAdditionalLinkCountLabel ? (

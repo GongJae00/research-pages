@@ -561,26 +561,6 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
-                <div className={styles.setupHeaderFlow} aria-label={setupFlowLabel}>
-                  <div className={styles.setupHeaderFlowChip}>
-                    <span className={styles.setupHeaderFlowStep}>01</span>
-                    <strong>{copy.chooseProvider}</strong>
-                  </div>
-                  <span className={styles.setupHeaderFlowArrow} aria-hidden="true">
-                    &rarr;
-                  </span>
-                  <div className={styles.setupHeaderFlowChip}>
-                    <span className={styles.setupHeaderFlowStep}>02</span>
-                    <strong>{copy.chooseTeam}</strong>
-                  </div>
-                  <span className={styles.setupHeaderFlowArrow} aria-hidden="true">
-                    &rarr;
-                  </span>
-                  <div className={`${styles.setupHeaderFlowChip} ${styles.setupHeaderFlowChipAccent}`}>
-                    <span className={styles.setupHeaderFlowStep}>03</span>
-                    <strong>{copy.runCommandLabel}</strong>
-                  </div>
-                </div>
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
@@ -597,13 +577,6 @@ export function HomepageAgentControlSection({
 
             <div className={styles.setupWorkbench}>
               <div className={styles.setupSelectionPanel} aria-label={getSetupInputLabel(locale)}>
-                <div className={styles.setupSelectionLead}>
-                  <div className={styles.setupSelectionLeadTop}>
-                    <span className={styles.setupSelectionLeadLabel}>{copy.activeSetup}</span>
-                  </div>
-                  <p className={styles.setupSelectionLeadHint}>{copy.setupSequenceIntro}</p>
-                </div>
-
                 <div className={styles.setupPickerGrid}>
                   <div className={styles.setupPicker} aria-label={copy.chooseProvider}>
                     <div className={styles.setupPickerLabelGroup}>
@@ -678,18 +651,11 @@ export function HomepageAgentControlSection({
               {nextSetupCommand ? (
                 <div className={styles.nextCommandStrip}>
                   <div className={styles.nextCommandLead}>
-                    {activeSetupSummary}
-                    <div className={styles.copyTitleGroup}>
-                      <span className={styles.commandStep}>03</span>
-                      <div className={styles.nextCommandCopy}>
-                        <div className={styles.nextCommandLabelRow}>
-                          <span className={styles.metaLabel}>{copy.nextCommandLabel}</span>
-                          <span className={styles.nextCommandOutput}>{nextSetupCommand.title}</span>
-                        </div>
-                        <strong>{(selectedProvider?.label ?? "-") + " -> " + (selectedTeam?.name ?? "-")}</strong>
-                        <p className={styles.setupTitleHint}>{copy.nextCommandHelp}</p>
-                      </div>
+                    <div className={styles.setupSelectionLeadTop}>
+                      <span className={styles.setupSelectionLeadLabel}>{copy.activeSetup}</span>
+                      <span className={styles.nextCommandOutput}>{nextSetupCommand.title}</span>
                     </div>
+                    {activeSetupSummary}
                   </div>
 
                   <div className={styles.nextCommandMain}>
