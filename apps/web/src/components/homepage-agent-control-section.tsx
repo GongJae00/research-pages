@@ -383,6 +383,28 @@ export function HomepageAgentControlSection({
     return left.step.localeCompare(right.step);
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
+  const nextCommandPath = nextSetupCommand ? (
+    <div className={styles.nextCommandPath} aria-label={setupFlowLabel}>
+      <div className={styles.nextCommandPathSegment}>
+        <span className={styles.nextCommandPathMeta}>{copy.selectedCli}</span>
+        <strong>{selectedProvider?.label ?? "-"}</strong>
+      </div>
+      <span className={styles.nextCommandPathArrow} aria-hidden="true">
+        &rarr;
+      </span>
+      <div className={styles.nextCommandPathSegment}>
+        <span className={styles.nextCommandPathMeta}>{copy.selectedTeamLabel}</span>
+        <strong>{selectedTeam?.name ?? "-"}</strong>
+      </div>
+      <span className={styles.nextCommandPathArrow} aria-hidden="true">
+        &rarr;
+      </span>
+      <div className={`${styles.nextCommandPathSegment} ${styles.nextCommandPathSegmentActive}`}>
+        <span className={styles.nextCommandPathMeta}>{copy.runCommandLabel}</span>
+        <strong>{nextSetupCommand.title}</strong>
+      </div>
+    </div>
+  ) : null;
   const activeSetupSummary = (
     <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
       <div className={styles.setupCompactSummaryItem}>
@@ -584,7 +606,6 @@ export function HomepageAgentControlSection({
                       <span className={styles.nextCommandOutput}>{nextSetupCommand.title}</span>
                     ) : null}
                   </div>
-                  <p className={styles.setupSelectionLeadHint}>{copy.setupSequenceIntro}</p>
                   {activeSetupSummary}
                 </div>
 
@@ -662,7 +683,7 @@ export function HomepageAgentControlSection({
                       <span className={styles.setupSelectionLeadLabel}>{copy.nextCommandLabel}</span>
                       <span className={styles.nextCommandOutput}>{nextSetupCommand.title}</span>
                     </div>
-                    <p className={styles.setupSelectionLeadHint}>{copy.nextCommandHelp}</p>
+                    {nextCommandPath}
                   </div>
 
                   <div className={styles.nextCommandMain}>

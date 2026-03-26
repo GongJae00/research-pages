@@ -358,16 +358,6 @@ function getAffiliationScanSummary(
   ].join(" / ");
 }
 
-function getAffiliationOnePassSummary(
-  entry: AffiliationTimelineEntry,
-  locale: Locale,
-) {
-  return [
-    getAffiliationScanSummary(entry, locale),
-    `${getNextUpdateLabel(locale)}: ${getPrimaryEditActionLabel(entry, locale)}`,
-  ].join(" / ");
-}
-
 function getCurrentTimelineLabel(locale: Locale) {
   return locale === "ko"
     ? "\ud604\uc7ac \uc18c\uc18d \uc139\uc158 \ud45c\uc2dc"
@@ -516,17 +506,6 @@ function getPrimaryNextActionSummary(
   return getNextActionSummary(entry, locale);
 }
 
-function getPrimaryEditActionLabel(
-  entry: AffiliationTimelineEntry,
-  locale: Locale,
-) {
-  if (needsTimelineCorrection(entry)) {
-    return getTimelineCorrectionActionLabel(entry, locale);
-  }
-
-  return getEditActionLabel(entry, locale);
-}
-
 function getPrimaryEditButtonLabel(
   entry: AffiliationTimelineEntry,
   locale: Locale,
@@ -566,27 +545,14 @@ function getPrimaryEditButtonLabel(
   return locale === "ko" ? "\ubcf4\uad00 \uae30\ub85d \uc218\uc815" : "Edit archived record";
 }
 
-function getTimelineCorrectionActionLabel(
+function getNextEditSummary(
   entry: AffiliationTimelineEntry,
   locale: Locale,
 ) {
-  if (entry.active && entry.appointmentStatus !== "active") {
-    return locale === "ko" ? "\uc0c1\ud0dc \ub9de\ucd94\uae30" : "Match status";
-  }
-
-  if (!entry.active && entry.appointmentStatus === "active") {
-    return locale === "ko" ? "\ud604\uc7ac \uc5ec\ubd80 \uc815\ud558\uae30" : "Set current or close";
-  }
-
-  if (entry.active && entry.endDate) {
-    return locale === "ko" ? "\uc885\ub8cc\uc77c \ube44\uc6b0\uae30" : "Clear end date";
-  }
-
-  if (!entry.active && entry.appointmentStatus === "completed" && !entry.endDate) {
-    return locale === "ko" ? "\uc885\ub8cc\uc77c \ucd94\uac00" : "Add end date";
-  }
-
-  return locale === "ko" ? "\ub0a0\uc9dc \ub2e4\uc2dc \ud655\uc778" : "Recheck dates";
+  return [
+    getPrimaryEditButtonLabel(entry, locale),
+    getPrimaryNextActionSummary(entry, locale),
+  ].join(" / ");
 }
 
 function getTimelineCorrectionBadgeLabel(
@@ -922,20 +888,6 @@ function getAffiliationActionBadge(
     className: "pill-gray",
     label: locale === "ko" ? "\ud544\uc694 \uc2dc\ub9cc \ubcf4\uc815" : "Reference only",
   };
-}
-
-function getEditActionLabel(entry: AffiliationTimelineEntry, locale: Locale) {
-  if (entry.active) {
-    return locale === "ko"
-      ? "\uc0c1\ud0dc\u00b7\ub0a0\uc9dc \uc218\uc815"
-      : "Update status and dates";
-  }
-
-  if (entry.appointmentStatus === "planned" || entry.appointmentStatus === "paused") {
-    return locale === "ko" ? "\ub2e4\uc74c \uc0c1\ud0dc \uacb0\uc815" : "Decide next status";
-  }
-
-  return locale === "ko" ? "\ubcf4\uad00 \uae30\ub85d \ubcf4\uc815" : "Correct archived record";
 }
 
 function getTimelineEditorSectionLabel(locale: Locale) {
@@ -1426,7 +1378,7 @@ export function AffiliationWorkspace({
           </div>
           <div className="field-row">
             <dt>{getNextUpdateLabel(locale)}</dt>
-            <dd>{getPrimaryNextActionSummary(affiliation, locale)}</dd>
+            <dd>{getNextEditSummary(affiliation, locale)}</dd>
           </div>
         </dl>
         {enableDirectEdit ? (
@@ -1453,7 +1405,8 @@ export function AffiliationWorkspace({
         <div className="card-header">
           <div>
             <h3>{affiliation.roleTitle}</h3>
-            <p className="card-support-text">{getAffiliationOnePassSummary(affiliation, locale)}</p>
+            <p className="card-support-text">{getAffiliationScanSummary(affiliation, locale)}</p>
+            <p className="card-support-text">{getNextEditSummary(affiliation, locale)}</p>
             <dl className="field-list">
               <div className="field-row">
                 <dt>{text.institution}</dt>
@@ -1465,7 +1418,7 @@ export function AffiliationWorkspace({
               </div>
               <div className="field-row">
                 <dt>{getNextUpdateLabel(locale)}</dt>
-                <dd>{getPrimaryNextActionSummary(affiliation, locale)}</dd>
+                <dd>{getNextEditSummary(affiliation, locale)}</dd>
               </div>
               <div className="field-row">
                 <dt>{getEditFocusLabel(locale)}</dt>
@@ -1575,88 +1528,89 @@ export function AffiliationWorkspace({
           }
         }}
       >
-      <div className="card-header">
-        <div>
-          <h3>{getEditableAffiliationHeading(affiliation, index, locale, text)}</h3>
-          {isEditingNow ? (
+        <div className="card-header">
+          <div>
+            <h3>{getEditableAffiliationHeading(affiliation, index, locale, text)}</h3>
+            {isEditingNow ? (
+              <p className="card-support-text">
+                <strong>{getEditingNowLabel(locale)}</strong>
+              </p>
+            ) : null}
+            <p className="card-support-text">{getAffiliationScanSummary(affiliation, locale)}</p>
+            <p className="card-support-text">{getNextEditSummary(affiliation, locale)}</p>
             <p className="card-support-text">
-              <strong>{getEditingNowLabel(locale)}</strong>
+              {joinAffiliationSummary(affiliation) || text.institution}
             </p>
-          ) : null}
-          <p className="card-support-text">{getAffiliationOnePassSummary(affiliation, locale)}</p>
-          <p className="card-support-text">
-            {joinAffiliationSummary(affiliation) || text.institution}
-          </p>
-          <dl className="field-list">
-            <div className="field-row">
-              <dt>{text.institution}</dt>
-              <dd>{joinAffiliationSummary(affiliation) || text.institution}</dd>
-            </div>
-            <div className="field-row">
-              <dt>{getTimelineSnapshotLabel(locale)}</dt>
-              <dd>{getAffiliationScanSummary(affiliation, locale)}</dd>
-            </div>
-            <div className="field-row">
-              <dt>{getNextUpdateLabel(locale)}</dt>
-              <dd>{getPrimaryNextActionSummary(affiliation, locale)}</dd>
-            </div>
-            <div className="field-row">
-              <dt>{getTimelinePlacementLabel(locale)}</dt>
-              <dd>{getTimelinePlacementSummary(affiliation, locale)}</dd>
-            </div>
-            <div className="field-row">
-              <dt>{getEditFocusLabel(locale)}</dt>
-              <dd>{getEditFocusHint(affiliation, locale)}</dd>
-            </div>
-            <div className="field-row">
-              <dt>{getCurrentTimelineLabel(locale)}</dt>
-              <dd>{getCurrentTimelineValue(affiliation.active, locale)}</dd>
-            </div>
-            <div className="field-row">
-              <dt>{getTimelineCheckLabel(locale)}</dt>
-              <dd>{getTimelineCheckSummary(affiliation, locale, text)}</dd>
-            </div>
-            <div className="field-row">
-              <dt>{getSaveReadinessLabel(locale)}</dt>
-              <dd>{getAffiliationEditReadiness(affiliation, locale, text)}</dd>
-            </div>
-          </dl>
-        </div>
-        <div className="profile-history-side">
-          {isEditingNow ? (
-            <span className="pill pill-blue">{getEditingNowLabel(locale)}</span>
-          ) : (
+            <dl className="field-list">
+              <div className="field-row">
+                <dt>{text.institution}</dt>
+                <dd>{joinAffiliationSummary(affiliation) || text.institution}</dd>
+              </div>
+              <div className="field-row">
+                <dt>{getTimelineSnapshotLabel(locale)}</dt>
+                <dd>{getAffiliationScanSummary(affiliation, locale)}</dd>
+              </div>
+              <div className="field-row">
+                <dt>{getNextUpdateLabel(locale)}</dt>
+                <dd>{getNextEditSummary(affiliation, locale)}</dd>
+              </div>
+              <div className="field-row">
+                <dt>{getTimelinePlacementLabel(locale)}</dt>
+                <dd>{getTimelinePlacementSummary(affiliation, locale)}</dd>
+              </div>
+              <div className="field-row">
+                <dt>{getEditFocusLabel(locale)}</dt>
+                <dd>{getEditFocusHint(affiliation, locale)}</dd>
+              </div>
+              <div className="field-row">
+                <dt>{getCurrentTimelineLabel(locale)}</dt>
+                <dd>{getCurrentTimelineValue(affiliation.active, locale)}</dd>
+              </div>
+              <div className="field-row">
+                <dt>{getTimelineCheckLabel(locale)}</dt>
+                <dd>{getTimelineCheckSummary(affiliation, locale, text)}</dd>
+              </div>
+              <div className="field-row">
+                <dt>{getSaveReadinessLabel(locale)}</dt>
+                <dd>{getAffiliationEditReadiness(affiliation, locale, text)}</dd>
+              </div>
+            </dl>
+          </div>
+          <div className="profile-history-side">
+            {isEditingNow ? (
+              <span className="pill pill-blue">{getEditingNowLabel(locale)}</span>
+            ) : (
+              <button
+                type="button"
+                className="secondary-cta profile-inline-btn"
+                onClick={() => setActiveAffiliation(affiliation.id)}
+              >
+                <PencilLine size={15} />
+                {getPrimaryEditButtonLabel(affiliation, locale)}
+              </button>
+            )}
+            <span className={`pill ${getAffiliationStatusClass(affiliation)}`}>
+              {getAffiliationStateLabel(affiliation, locale)}
+            </span>
+            <span className={`pill ${actionBadge.className}`}>{actionBadge.label}</span>
             <button
               type="button"
-              className="secondary-cta profile-inline-btn"
-              onClick={() => setActiveAffiliation(affiliation.id)}
+              className="profile-inline-btn"
+              onClick={() => handleRemoveAffiliation(affiliation.id)}
             >
-              <PencilLine size={15} />
-              {getPrimaryEditButtonLabel(affiliation, locale)}
+              <Trash2 size={15} />
+              {text.remove}
             </button>
-          )}
-          <span className={`pill ${getAffiliationStatusClass(affiliation)}`}>
-            {getAffiliationStateLabel(affiliation, locale)}
-          </span>
-          <span className={`pill ${actionBadge.className}`}>{actionBadge.label}</span>
-          <button
-            type="button"
-            className="profile-inline-btn"
-            onClick={() => handleRemoveAffiliation(affiliation.id)}
-          >
-            <Trash2 size={15} />
-            {text.remove}
-          </button>
+          </div>
         </div>
-      </div>
-      <div className="card-body">
-        <div>
-          <h4>{getTimelineEditorSectionLabel(locale)}</h4>
-          <p className="card-support-text">
-            {getTimelineEditorSectionHint(affiliation, locale)}
-          </p>
-        </div>
-        <div className="profile-form-grid">
+        <div className="card-body">
+          <div>
+            <h4>{getTimelineEditorSectionLabel(locale)}</h4>
+            <p className="card-support-text">
+              {getTimelineEditorSectionHint(affiliation, locale)}
+            </p>
+          </div>
+          <div className="profile-form-grid">
           <label className="editor-field">
             <span>{text.appointmentStatus}</span>
             <select
@@ -1850,7 +1804,7 @@ export function AffiliationWorkspace({
                   </div>
                   <div className="field-row">
                     <dt>{getNextUpdateLabel(locale)}</dt>
-                    <dd>{getPrimaryNextActionSummary(activeDraftAffiliation, locale)}</dd>
+                    <dd>{getNextEditSummary(activeDraftAffiliation, locale)}</dd>
                   </div>
                   <div className="field-row">
                     <dt>{getTimelinePlacementLabel(locale)}</dt>
