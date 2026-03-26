@@ -565,6 +565,43 @@ function getEditableAffiliationHeading(
   return locale === "ko" ? `${text.item} ${index + 1}` : `${text.item} ${index + 1}`;
 }
 
+type AffiliationSectionKey = "current" | "queued" | "archived";
+
+const defaultAffiliationSectionOrder: AffiliationSectionKey[] = [
+  "current",
+  "queued",
+  "archived",
+];
+
+function getAffiliationSectionKey(
+  entry: AffiliationTimelineEntry,
+): AffiliationSectionKey {
+  if (entry.active) {
+    return "current";
+  }
+
+  if (entry.appointmentStatus === "planned" || entry.appointmentStatus === "paused") {
+    return "queued";
+  }
+
+  return "archived";
+}
+
+function getAffiliationSectionOrder(
+  entry: AffiliationTimelineEntry | null,
+) {
+  if (!entry) {
+    return defaultAffiliationSectionOrder;
+  }
+
+  const prioritizedSection = getAffiliationSectionKey(entry);
+
+  return [
+    prioritizedSection,
+    ...defaultAffiliationSectionOrder.filter((section) => section !== prioritizedSection),
+  ];
+}
+
 function getAffiliationSections(items: AffiliationTimelineEntry[]) {
   return {
     current: items.filter((item) => item.active),
@@ -673,6 +710,10 @@ export function AffiliationWorkspace({
     archived: archivedDraftAffiliations,
   } =
     getAffiliationSections(orderedDraftAffiliations);
+  const focusedDraftAffiliation = focusedAffiliationId
+    ? orderedDraftAffiliations.find((item) => item.id === focusedAffiliationId) ?? null
+    : null;
+  const editSectionOrder = getAffiliationSectionOrder(focusedDraftAffiliation);
 
   useEffect(() => {
     setResolvedDocuments(loadBrowserDocuments(documents));
@@ -1122,6 +1163,31 @@ export function AffiliationWorkspace({
               <strong>{text.title}</strong>
               <p className="card-support-text">{text.subtitle}</p>
               <p className="card-support-text">{affiliationOverview}</p>
+              {isEditing && focusedDraftAffiliation ? (
+                <dl className="field-list">
+                  <div className="field-row">
+                    <dt>{getEditFocusLabel(locale)}</dt>
+                    <dd>
+                      {getEditableAffiliationHeading(
+                        focusedDraftAffiliation,
+                        0,
+                        locale,
+                        text,
+                      )}{" "}
+                      /{" "}
+                      {joinAffiliationSummary(focusedDraftAffiliation) || text.institution}
+                    </dd>
+                  </div>
+                  <div className="field-row">
+                    <dt>{getTimelineSnapshotLabel(locale)}</dt>
+                    <dd>{getTimelineSummary(focusedDraftAffiliation, locale)}</dd>
+                  </div>
+                  <div className="field-row">
+                    <dt>{getNextUpdateLabel(locale)}</dt>
+                    <dd>{getNextActionSummary(focusedDraftAffiliation, locale)}</dd>
+                  </div>
+                </dl>
+              ) : null}
             </div>
             <div className="editor-actions">
               {isEditing ? (
@@ -1166,65 +1232,75 @@ export function AffiliationWorkspace({
               </section>
             ) : null}
 
-            {currentDraftAffiliations.length > 0 ? (
-              <section className="card profile-detail-card">
-                <div className="card-header">
-                  <div>
-                    <h3>{getCurrentSectionLabel(locale, currentDraftAffiliations.length)}</h3>
-                    <p className="card-support-text">
-                      {getCurrentEditSectionHint(locale, currentDraftAffiliations.length)}
-                    </p>
-                  </div>
-                </div>
-                <div className="card-body detail-cards">
-                  {currentDraftAffiliations.map((affiliation, index) =>
-                    renderEditableAffiliationCard(affiliation, index),
-                  )}
-                </div>
-              </section>
-            ) : null}
+            {editSectionOrder.map((section) => {
+              if (section === "current" && currentDraftAffiliations.length > 0) {
+                return (
+                  <section className="card profile-detail-card" key={section}>
+                    <div className="card-header">
+                      <div>
+                        <h3>{getCurrentSectionLabel(locale, currentDraftAffiliations.length)}</h3>
+                        <p className="card-support-text">
+                          {getCurrentEditSectionHint(locale, currentDraftAffiliations.length)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="card-body detail-cards">
+                      {currentDraftAffiliations.map((affiliation, index) =>
+                        renderEditableAffiliationCard(affiliation, index),
+                      )}
+                    </div>
+                  </section>
+                );
+              }
 
-            {queuedDraftAffiliations.length > 0 ? (
-              <section className="card profile-detail-card">
-                <div className="card-header">
-                  <div>
-                    <h3>{getQueuedSectionLabel(locale, queuedDraftAffiliations.length)}</h3>
-                    <p className="card-support-text">
-                      {getQueuedEditSectionHint(locale, queuedDraftAffiliations.length)}
-                    </p>
-                  </div>
-                </div>
-                <div className="card-body detail-cards">
-                  {queuedDraftAffiliations.map((affiliation, index) =>
-                    renderEditableAffiliationCard(
-                      affiliation,
-                      currentDraftAffiliations.length + index,
-                    ),
-                  )}
-                </div>
-              </section>
-            ) : null}
+              if (section === "queued" && queuedDraftAffiliations.length > 0) {
+                return (
+                  <section className="card profile-detail-card" key={section}>
+                    <div className="card-header">
+                      <div>
+                        <h3>{getQueuedSectionLabel(locale, queuedDraftAffiliations.length)}</h3>
+                        <p className="card-support-text">
+                          {getQueuedEditSectionHint(locale, queuedDraftAffiliations.length)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="card-body detail-cards">
+                      {queuedDraftAffiliations.map((affiliation, index) =>
+                        renderEditableAffiliationCard(
+                          affiliation,
+                          currentDraftAffiliations.length + index,
+                        ),
+                      )}
+                    </div>
+                  </section>
+                );
+              }
 
-            {archivedDraftAffiliations.length > 0 ? (
-              <section className="card profile-detail-card">
-                <div className="card-header">
-                  <div>
-                    <h3>{getArchivedSectionLabel(locale, archivedDraftAffiliations.length)}</h3>
-                    <p className="card-support-text">
-                      {getArchivedEditSectionHint(locale, archivedDraftAffiliations.length)}
-                    </p>
-                  </div>
-                </div>
-                <div className="card-body detail-cards">
-                  {archivedDraftAffiliations.map((affiliation, index) =>
-                    renderEditableAffiliationCard(
-                      affiliation,
-                      currentDraftAffiliations.length + queuedDraftAffiliations.length + index,
-                    ),
-                  )}
-                </div>
-              </section>
-            ) : null}
+              if (section === "archived" && archivedDraftAffiliations.length > 0) {
+                return (
+                  <section className="card profile-detail-card" key={section}>
+                    <div className="card-header">
+                      <div>
+                        <h3>{getArchivedSectionLabel(locale, archivedDraftAffiliations.length)}</h3>
+                        <p className="card-support-text">
+                          {getArchivedEditSectionHint(locale, archivedDraftAffiliations.length)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="card-body detail-cards">
+                      {archivedDraftAffiliations.map((affiliation, index) =>
+                        renderEditableAffiliationCard(
+                          affiliation,
+                          currentDraftAffiliations.length + queuedDraftAffiliations.length + index,
+                        ),
+                      )}
+                    </div>
+                  </section>
+                );
+              }
+
+              return null;
+            })}
 
             {false ? orderedDraftAffiliations.map((affiliation, index) => (
               <section className="card profile-edit-card" key={affiliation.id}>

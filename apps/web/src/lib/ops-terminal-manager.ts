@@ -169,7 +169,17 @@ function markSessionInputUnavailable(record: OpsTerminalSessionRecord, reason: s
     return record.snapshot;
   }
 
-  record.snapshot.status = record.stopRequestedAt ? "closed" : "error";
+  if (record.stopRequestedAt) {
+    record.snapshot.status = "stopping";
+    record.snapshot.statusDetail = `Stop requested at ${record.stopRequestedAt}. Shell input is closed while waiting for the process to exit.`;
+    appendTranscript(
+      record,
+      `${os.EOL}[ops] shell input closed while stop request is settling; wait for the session to close before retrying.${os.EOL}`,
+    );
+    return record.snapshot;
+  }
+
+  record.snapshot.status = "error";
   record.snapshot.pid = null;
   record.snapshot.statusDetail = reason;
   appendTranscript(record, `${os.EOL}[ops] input stream unavailable: ${reason}${os.EOL}`);
@@ -189,13 +199,24 @@ function reconcileSessionState(record: OpsTerminalSessionRecord) {
   const exitCode = record.child.exitCode;
   const signalCode = record.child.signalCode;
 
-  if (exitCode === null && signalCode === null && !record.child.stdin.destroyed) {
+  if (exitCode === null && signalCode === null) {
     if (record.stopRequestedAt) {
       record.snapshot.status = "stopping";
-      record.snapshot.statusDetail = `Stop requested at ${record.stopRequestedAt}. Waiting for the shell process to exit.`;
+      record.snapshot.statusDetail =
+        record.child.stdin.destroyed || record.child.stdin.writableEnded
+          ? `Stop requested at ${record.stopRequestedAt}. Shell input is closed while waiting for the process to exit.`
+          : `Stop requested at ${record.stopRequestedAt}. Waiting for the shell process to exit.`;
+      return record.snapshot;
     }
 
-    return record.snapshot;
+    if (!record.child.stdin.destroyed && !record.child.stdin.writableEnded) {
+      return record.snapshot;
+    }
+
+    return markSessionInputUnavailable(
+      record,
+      "Shell input stream closed unexpectedly. Start a new session to continue.",
+    );
   }
 
   record.snapshot.status = record.stopRequestedAt || exitCode === 0 ? "closed" : "error";
