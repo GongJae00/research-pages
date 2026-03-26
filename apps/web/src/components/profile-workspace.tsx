@@ -13,7 +13,7 @@ import type {
 } from "@research-os/types";
 import { journalClasses } from "@research-os/types";
 import { Camera, Download, ExternalLink, Eye, FileText, PencilLine, Plus, Save, Trash2, X } from "lucide-react";
-import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type ChangeEvent, type ReactNode } from "react";
 
 import { useAuth } from "@/components/auth-provider";
 import { CompactDocumentRow } from "@/components/compact-document-row";
@@ -348,8 +348,8 @@ function normalizeRows(values: string[]) {
   return [...new Set(values.map((value) => value.trim()).filter(Boolean))];
 }
 
-function isDefined<T>(value: T | undefined): value is T {
-  return value !== undefined;
+function isDefined<T>(value: T | null | undefined): value is T {
+  return value !== undefined && value !== null;
 }
 
 function normalizeEditableLinks(value: unknown): EditableProfileLink[] {
@@ -1179,16 +1179,6 @@ export function ProfileWorkspace({
     savedProfile.primaryInstitution,
     text.emptyValue,
   ]);
-  const coreFocusHighlights = useMemo(
-    () =>
-      [
-        savedKeywordList.length > 0 ? `${text.keywords} ${savedKeywordList.length}` : undefined,
-      ].filter(isDefined),
-    [
-      savedKeywordList.length,
-      text.keywords,
-    ],
-  );
   const publicProfileHref = useMemo(() => {
     if (!savedProfile.publicProfileEnabled) {
       return null;
@@ -1675,6 +1665,32 @@ export function ProfileWorkspace({
                 `${affiliation.startDate} - ${affiliation.endDate ?? text.present}`,
               ])}
             </span>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const renderProfileSummaryRows = (
+    items: Array<{
+      key: string;
+      label: string;
+      value: ReactNode;
+    }>,
+    emptyLabel: string,
+  ) => {
+    if (items.length === 0) {
+      return <span className="profile-empty-copy">{emptyLabel}</span>;
+    }
+
+    return (
+      <div className="profile-career-status-list">
+        {items.map((item) => (
+          <div className="profile-career-status-row" key={item.key}>
+            <div className="profile-career-status-main">
+              <strong>{item.label}</strong>
+              {item.value}
+            </div>
           </div>
         ))}
       </div>
@@ -2317,23 +2333,24 @@ export function ProfileWorkspace({
                     </div>
                   </dt>
                   <dd>
-                    {savedProfile.nationalResearcherNumber || savedProfile.orcid ? (
-                      <div className="profile-career-status-list">
-                        <div className="profile-career-status-row">
-                          <div className="profile-career-status-main">
-                            <strong>{text.nationalId}</strong>
-                            <span>{savedProfile.nationalResearcherNumber || text.emptyValue}</span>
-                          </div>
-                        </div>
-                        <div className="profile-career-status-row">
-                          <div className="profile-career-status-main">
-                            <strong>{text.orcid}</strong>
-                            <span>{savedProfile.orcid || text.emptyValue}</span>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      text.emptyValue
+                    {renderProfileSummaryRows(
+                      [
+                        savedProfile.nationalResearcherNumber
+                          ? {
+                              key: "national-id",
+                              label: text.nationalId,
+                              value: <span>{savedProfile.nationalResearcherNumber}</span>,
+                            }
+                          : null,
+                        savedProfile.orcid
+                          ? {
+                              key: "orcid",
+                              label: text.orcid,
+                              value: <span>{savedProfile.orcid}</span>,
+                            }
+                          : null,
+                      ].filter(isDefined),
+                      text.emptyValue,
                     )}
                   </dd>
                 </div>
@@ -2345,48 +2362,39 @@ export function ProfileWorkspace({
                     </div>
                   </dt>
                   <dd>
-                    {savedProfile.primaryInstitution || savedProfile.primaryDiscipline || savedKeywordList.length > 0 ? (
-                      <div className="profile-career-status-list">
-                        {coreFocusHighlights.length > 0 ? (
-                          <div className="profile-inline-list profile-inline-list-muted">
-                            {coreFocusHighlights.map((item) => (
-                              <span className="pill pill-gray" key={item}>
-                                {item}
-                              </span>
-                            ))}
-                          </div>
-                        ) : null}
-                        <div className="profile-career-status-row">
-                          <div className="profile-career-status-main">
-                            <strong>{text.institution}</strong>
-                            <span>{savedProfile.primaryInstitution || text.emptyValue}</span>
-                          </div>
-                        </div>
-                        <div className="profile-career-status-row">
-                          <div className="profile-career-status-main">
-                            <strong>{text.discipline}</strong>
-                            <span>{savedProfile.primaryDiscipline || text.emptyValue}</span>
-                          </div>
-                        </div>
-                        <div className="profile-career-status-row">
-                          <div className="profile-career-status-main">
-                            <strong>{text.keywords}</strong>
-                            {savedKeywordList.length > 0 ? (
-                              <div className="profile-inline-list profile-inline-list-muted">
-                                {savedKeywordList.map((keyword) => (
-                                  <span className="profile-inline-text" key={keyword}>
-                                    {keyword}
-                                  </span>
-                                ))}
-                              </div>
-                            ) : (
-                              <span>{text.emptyValue}</span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      text.emptyValue
+                    {renderProfileSummaryRows(
+                      [
+                        savedProfile.primaryInstitution
+                          ? {
+                              key: "institution",
+                              label: text.institution,
+                              value: <span>{savedProfile.primaryInstitution}</span>,
+                            }
+                          : null,
+                        savedProfile.primaryDiscipline
+                          ? {
+                              key: "discipline",
+                              label: text.discipline,
+                              value: <span>{savedProfile.primaryDiscipline}</span>,
+                            }
+                          : null,
+                        savedKeywordList.length > 0
+                          ? {
+                              key: "keywords",
+                              label: text.keywords,
+                              value: (
+                                <div className="profile-inline-list profile-inline-list-muted">
+                                  {savedKeywordList.map((keyword) => (
+                                    <span className="profile-inline-text" key={keyword}>
+                                      {keyword}
+                                    </span>
+                                  ))}
+                                </div>
+                              ),
+                            }
+                          : null,
+                      ].filter(isDefined),
+                      text.emptyValue,
                     )}
                   </dd>
                 </div>

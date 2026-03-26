@@ -505,7 +505,6 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
-                <p className={styles.setupTitleHint}>{copy.setupSequenceIntro}</p>
                 <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
                   <div className={styles.setupCompactSummaryItem}>
                     <span className={styles.setupCompactSummaryOrdinal}>01</span>
