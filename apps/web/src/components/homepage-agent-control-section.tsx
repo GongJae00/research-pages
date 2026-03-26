@@ -434,6 +434,9 @@ export function HomepageAgentControlSection({
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
+                  {setupFlowSteps.length ? (
+                    <span className={styles.setupTitleHint}>{setupFlowSteps.join(" -> ")}</span>
+                  ) : null}
                 </div>
                 <div className={styles.setupScanGrid} aria-label={copy.setupStepsLabel}>
                   <span className={styles.setupScanCell}>
@@ -484,8 +487,8 @@ export function HomepageAgentControlSection({
               <div className={styles.setupSelectionPanel}>
                 <div className={styles.setupSectionHead}>
                   <span className={styles.metaLabel}>{setupInputLabel}</span>
-                  {setupFlowSteps.length ? (
-                    <span className={styles.setupSectionHint}>{setupFlowSteps.join(" -> ")}</span>
+                  {setupSelectionSummary ? (
+                    <span className={styles.setupSectionSummary}>{setupSelectionSummary}</span>
                   ) : null}
                 </div>
 
