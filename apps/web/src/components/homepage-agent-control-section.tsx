@@ -431,7 +431,6 @@ export function HomepageAgentControlSection({
                     </span>
                   ) : null}
                 </div>
-                <p className={styles.setupSequenceIntro}>{copy.setupSequenceIntro}</p>
                 <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
                   <div className={styles.setupCompactSummaryItem}>
                     <span className={styles.setupCompactSummaryOrdinal}>01</span>
@@ -514,7 +513,6 @@ export function HomepageAgentControlSection({
                             <strong>{selectedTeam?.lane ?? "-"}</strong>
                           </span>
                         </div>
-                        <span className={styles.setupActivePathHelp}>{copy.nextCommandHelp}</span>
                       </div>
 
                       <div className={styles.setupActiveCommand}>

@@ -28,6 +28,8 @@ interface OpsTerminalSessionContext {
   recommendedSessionId: string | null;
 }
 
+type OpsTerminalSessionState = OpsTerminalSessionSnapshot["status"] | "missing" | null;
+
 function isLocalOpsTerminalEnabled() {
   return process.env.NODE_ENV !== "production";
 }
@@ -201,6 +203,21 @@ function getSessionContextForSnapshot(
   }
 }
 
+function getSessionStateForResponse(
+  session: OpsTerminalSessionSnapshot | null,
+  transition?: OpsTerminalFailureTransition,
+): OpsTerminalSessionState {
+  if (session) {
+    return session.status;
+  }
+
+  if (transition === "missing") {
+    return "missing";
+  }
+
+  return null;
+}
+
 function getSessionErrorResponse(error: unknown, sessionId?: string) {
   const message = error instanceof Error ? error.message : "Ops terminal request failed.";
   const resolvedSessionId =
@@ -223,6 +240,7 @@ function getSessionErrorResponse(error: unknown, sessionId?: string) {
         ok: false,
         error: message,
         transition,
+        sessionState: getSessionStateForResponse(session, transition),
         recovery,
         session,
         sessionContext: getSessionContext(transition, sessions, session, resolvedSessionId),
@@ -276,11 +294,16 @@ function getSessionErrorResponse(error: unknown, sessionId?: string) {
       ok: false,
       error: message,
       transition: session?.status === "error" ? "error" : undefined,
+      sessionState: getSessionStateForResponse(
+        session,
+        session?.status === "error" ? "error" : undefined,
+      ),
       recovery:
         session?.status === "error"
           ? "Review the session transcript for the failure, then start a new session before retrying."
           : undefined,
       session,
+      sessionContext: getSessionContextForSnapshot(session, sessions),
       sessions,
       availableShells,
     },
