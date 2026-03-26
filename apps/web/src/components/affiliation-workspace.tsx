@@ -629,6 +629,48 @@ function getTimelineCheckSummary(
     : "Timeline aligned. Edit this only when the status or dates change.";
 }
 
+function needsTimelineCorrection(entry: AffiliationTimelineEntry) {
+  return (
+    (entry.active && entry.appointmentStatus !== "active") ||
+    (!entry.active && entry.appointmentStatus === "active") ||
+    (entry.active && Boolean(entry.endDate)) ||
+    (!entry.active && entry.appointmentStatus === "completed" && !entry.endDate) ||
+    (entry.appointmentStatus === "planned" && Boolean(entry.endDate))
+  );
+}
+
+function getAffiliationActionBadge(
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+) {
+  if (needsTimelineCorrection(entry)) {
+    return {
+      className: "pill-amber",
+      label:
+        locale === "ko" ? "\ud0c0\uc784\ub77c\uc778 \uc218\uc815 \ud544\uc694" : "Fix timeline first",
+    };
+  }
+
+  if (entry.active) {
+    return {
+      className: "pill-green",
+      label: locale === "ko" ? "\ubcc0\uacbd \uc2dc \uac31\uc2e0" : "Update on role change",
+    };
+  }
+
+  if (entry.appointmentStatus === "planned" || entry.appointmentStatus === "paused") {
+    return {
+      className: "pill-amber",
+      label: locale === "ko" ? "\ub2e4\uc74c \uc0c1\ud0dc \uacb0\uc815" : "Decide next status",
+    };
+  }
+
+  return {
+    className: "pill-gray",
+    label: locale === "ko" ? "\ud544\uc694 \uc2dc\ub9cc \ubcf4\uc815" : "Reference only",
+  };
+}
+
 function getEditActionLabel(entry: AffiliationTimelineEntry, locale: Locale) {
   if (entry.active) {
     return locale === "ko"
@@ -989,109 +1031,115 @@ export function AffiliationWorkspace({
     }
   };
 
-  const renderReadOnlyAffiliationCard = (affiliation: AffiliationTimelineEntry) => (
-    <section className="card profile-detail-card" key={affiliation.id}>
-      <div className="card-header">
-        <div>
-          <h3>{affiliation.roleTitle}</h3>
-          <dl className="field-list">
-            <div className="field-row">
-              <dt>{text.institution}</dt>
-              <dd>{joinAffiliationSummary(affiliation) || text.institution}</dd>
-            </div>
-            <div className="field-row">
-              <dt>{getTimelineSnapshotLabel(locale)}</dt>
-              <dd>{getAffiliationScanSummary(affiliation, locale)}</dd>
-            </div>
-            <div className="field-row">
-              <dt>{getTimelineCheckLabel(locale)}</dt>
-              <dd>{getTimelineCheckSummary(affiliation, locale, text)}</dd>
-            </div>
-            <div className="field-row">
-              <dt>{getNextUpdateLabel(locale)}</dt>
-              <dd>{getNextActionSummary(affiliation, locale)}</dd>
-            </div>
-          </dl>
-        </div>
-        <div className="profile-history-side">
-          <span className={`pill ${getAffiliationStatusClass(affiliation)}`}>
-            {getAffiliationStateLabel(affiliation, locale)}
-          </span>
-          <button
-            type="button"
-            className="profile-inline-btn"
-            onClick={() => handleEditAffiliation(affiliation.id)}
-            aria-label={getEditActionLabel(affiliation, locale)}
-          >
-            <PencilLine size={15} />
-            {getEditActionLabel(affiliation, locale)}
-          </button>
-        </div>
-      </div>
+  const renderReadOnlyAffiliationCard = (affiliation: AffiliationTimelineEntry) => {
+    const actionBadge = getAffiliationActionBadge(affiliation, locale);
 
-      <div className="card-body">
-        <div className="profile-history-item profile-history-item-compact">
-          <div className="profile-history-period">
-            <strong>{affiliation.startDate}</strong>
-            <span>{getTimelineEndLabel(affiliation, locale, text)}</span>
-          </div>
-          <div className="profile-history-body">
+    return (
+      <section className="card profile-detail-card" key={affiliation.id}>
+        <div className="card-header">
+          <div>
+            <h3>{affiliation.roleTitle}</h3>
             <dl className="field-list">
               <div className="field-row">
-                <dt>{text.appointmentStatus}</dt>
-                <dd>{text.appointmentLabels[affiliation.appointmentStatus]}</dd>
+                <dt>{text.institution}</dt>
+                <dd>{joinAffiliationSummary(affiliation) || text.institution}</dd>
               </div>
               <div className="field-row">
-                <dt>{getCurrentTimelineLabel(locale)}</dt>
-                <dd>{getCurrentTimelineValue(affiliation.active, locale)}</dd>
+                <dt>{getTimelineSnapshotLabel(locale)}</dt>
+                <dd>{getAffiliationScanSummary(affiliation, locale)}</dd>
               </div>
               <div className="field-row">
-                <dt>{getTimelinePlacementLabel(locale)}</dt>
-                <dd>{getTimelinePlacementScanSummary(affiliation, locale)}</dd>
+                <dt>{getTimelineCheckLabel(locale)}</dt>
+                <dd>{getTimelineCheckSummary(affiliation, locale, text)}</dd>
+              </div>
+              <div className="field-row">
+                <dt>{getNextUpdateLabel(locale)}</dt>
+                <dd>{getNextActionSummary(affiliation, locale)}</dd>
               </div>
             </dl>
-            {(affiliation.department || affiliation.labName) && (
-              <div className="profile-history-meta">
-                {affiliation.department ? (
-                  <span>
-                    <strong>{text.department}</strong>
-                    {affiliation.department}
-                  </span>
-                ) : null}
-                {affiliation.labName ? (
-                  <span>
-                    <strong>{text.lab}</strong>
-                    {affiliation.labName}
-                  </span>
-                ) : null}
-              </div>
-            )}
-            {affiliation.notes ? (
-              <dl className="field-list">
-                <div className="field-row">
-                  <dt>{text.notes}</dt>
-                  <dd>{affiliation.notes}</dd>
-                </div>
-              </dl>
-            ) : null}
+          </div>
+          <div className="profile-history-side">
+            <span className={`pill ${getAffiliationStatusClass(affiliation)}`}>
+              {getAffiliationStateLabel(affiliation, locale)}
+            </span>
+            <span className={`pill ${actionBadge.className}`}>{actionBadge.label}</span>
+            <button
+              type="button"
+              className="profile-inline-btn"
+              onClick={() => handleEditAffiliation(affiliation.id)}
+              aria-label={getEditActionLabel(affiliation, locale)}
+            >
+              <PencilLine size={15} />
+              {getEditActionLabel(affiliation, locale)}
+            </button>
           </div>
         </div>
 
-        <DocumentEvidencePicker
-          evidenceKey={`affiliation:${affiliation.id}`}
-          documents={resolvedDocuments}
-          locale={locale}
-          title={text.evidence}
-        />
-      </div>
-    </section>
-  );
+        <div className="card-body">
+          <div className="profile-history-item profile-history-item-compact">
+            <div className="profile-history-period">
+              <strong>{affiliation.startDate}</strong>
+              <span>{getTimelineEndLabel(affiliation, locale, text)}</span>
+            </div>
+            <div className="profile-history-body">
+              <dl className="field-list">
+                <div className="field-row">
+                  <dt>{text.appointmentStatus}</dt>
+                  <dd>{text.appointmentLabels[affiliation.appointmentStatus]}</dd>
+                </div>
+                <div className="field-row">
+                  <dt>{getCurrentTimelineLabel(locale)}</dt>
+                  <dd>{getCurrentTimelineValue(affiliation.active, locale)}</dd>
+                </div>
+                <div className="field-row">
+                  <dt>{getTimelinePlacementLabel(locale)}</dt>
+                  <dd>{getTimelinePlacementScanSummary(affiliation, locale)}</dd>
+                </div>
+              </dl>
+              {(affiliation.department || affiliation.labName) && (
+                <div className="profile-history-meta">
+                  {affiliation.department ? (
+                    <span>
+                      <strong>{text.department}</strong>
+                      {affiliation.department}
+                    </span>
+                  ) : null}
+                  {affiliation.labName ? (
+                    <span>
+                      <strong>{text.lab}</strong>
+                      {affiliation.labName}
+                    </span>
+                  ) : null}
+                </div>
+              )}
+              {affiliation.notes ? (
+                <dl className="field-list">
+                  <div className="field-row">
+                    <dt>{text.notes}</dt>
+                    <dd>{affiliation.notes}</dd>
+                  </div>
+                </dl>
+              ) : null}
+            </div>
+          </div>
+
+          <DocumentEvidencePicker
+            evidenceKey={`affiliation:${affiliation.id}`}
+            documents={resolvedDocuments}
+            locale={locale}
+            title={text.evidence}
+          />
+        </div>
+      </section>
+    );
+  };
 
   const renderEditableAffiliationCard = (
     affiliation: AffiliationTimelineEntry,
     index: number,
   ) => {
     const isEditingNow = activeDraftAffiliationId === affiliation.id;
+    const actionBadge = getAffiliationActionBadge(affiliation, locale);
 
     return (
       <section
@@ -1170,6 +1218,7 @@ export function AffiliationWorkspace({
           <span className={`pill ${getAffiliationStatusClass(affiliation)}`}>
             {getAffiliationStateLabel(affiliation, locale)}
           </span>
+          <span className={`pill ${actionBadge.className}`}>{actionBadge.label}</span>
           <button
             type="button"
             className="profile-inline-btn"

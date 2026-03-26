@@ -530,7 +530,10 @@ export function HomepageAgentControlSection({
               <div className={styles.setupSelectionPanel} aria-label={getSetupInputLabel(locale)}>
                 {nextSetupCommand ? (
                   <div className={styles.setupSelectionLead}>
-                    <p className={styles.setupSequenceIntro}>{copy.setupSequenceIntro}</p>
+                    <div className={styles.setupSelectionLeadTop}>
+                      <span className={styles.setupSelectionLeadLabel}>{setupFlowLabel}</span>
+                      <span className={styles.setupSelectionLeadPath}>{selectedSetupPath}</span>
+                    </div>
                     <div className={styles.selectionDigestRow} aria-label={setupFlowLabel}>
                       <span className={styles.selectionDigestChip}>
                         <span className={styles.setupDigestKey}>{`01 ${copy.selectedCli}`}</span>
@@ -642,7 +645,6 @@ export function HomepageAgentControlSection({
                     <div className={styles.setupCommandInlineCopy}>
                       <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
                       <strong>{`03. ${nextSetupCommand.title}`}</strong>
-                      <p className={styles.nextCommandHint}>{copy.nextCommandHelp}</p>
                     </div>
                     <div className={styles.setupCommandInlineMeta}>
                       <span className={styles.setupCommandInlinePath}>

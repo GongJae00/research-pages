@@ -508,7 +508,7 @@ export default async function LocaleRoot({ params }: Props) {
         </article>
       </section>
 
-      <section className="rp-section" id="agent-control" style={{ gap: "2px" }}>
+      <section className="rp-section" id="agent-control" style={{ gap: "0px" }}>
         <HomepageAgentControlSection
           initialSnapshot={opsSnapshot}
           locale={resolvedLocale}
