@@ -570,15 +570,15 @@ function getTimelinePlacementScanSummary(
 function getEditActionLabel(entry: AffiliationTimelineEntry, locale: Locale) {
   if (entry.active) {
     return locale === "ko"
-      ? "\uc885\ub8cc \uc815\ubcf4 \ud655\uc778"
-      : "Review close details";
+      ? "\uc0c1\ud0dc\u00b7\ub0a0\uc9dc \uc218\uc815"
+      : "Update status and dates";
   }
 
   if (entry.appointmentStatus === "planned" || entry.appointmentStatus === "paused") {
-    return locale === "ko" ? "\ud0c0\uc784\ub77c\uc778 \uacb0\uc815" : "Resolve timeline";
+    return locale === "ko" ? "\ub2e4\uc74c \uc0c1\ud0dc \uacb0\uc815" : "Decide next status";
   }
 
-  return locale === "ko" ? "\uc885\ub8cc \uae30\ub85d \ubcf4\uc815" : "Correct record";
+  return locale === "ko" ? "\ubcf4\uad00 \uae30\ub85d \ubcf4\uc815" : "Correct archived record";
 }
 
 function getTimelineEditorSectionLabel(locale: Locale) {

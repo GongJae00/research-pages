@@ -46,6 +46,8 @@ const validConversationChannels = new Set<AgentOperationsSnapshot["conversationF
   "review",
 ]);
 const validDirectiveStatuses = new Set<string>(["idle", "active", "paused", "completed"]);
+const validAutonomyStatuses = new Set<string>(["stopped", "running", "paused"]);
+const validAutonomyProviderIds = new Set<string>(["codex", "claude", "gemini", "mock"]);
 const validAutonomyTaskStatuses = new Set<string>(["planned", "fallback", "failed"]);
 const validAutonomyExecutionOutcomes = new Set<string>(["changed", "noop", "blocked", "failed"]);
 
@@ -55,6 +57,16 @@ function isDirectiveStatus(
   candidate: unknown,
 ): candidate is AgentOpsRuntimeState["currentDirective"]["status"] {
   return typeof candidate === "string" && validDirectiveStatuses.has(candidate);
+}
+
+function isAutonomyStatus(candidate: unknown): candidate is AgentOpsRuntimeState["autonomy"]["status"] {
+  return typeof candidate === "string" && validAutonomyStatuses.has(candidate);
+}
+
+function isAutonomyProviderId(
+  candidate: unknown,
+): candidate is AgentOpsRuntimeState["autonomy"]["activeProviderId"] {
+  return typeof candidate === "string" && validAutonomyProviderIds.has(candidate);
 }
 
 function isRuntimeMergeEntry(candidate: unknown): candidate is Record<string, unknown> {
@@ -286,6 +298,73 @@ function sanitizeAutonomyCurrentExecution(
   };
 }
 
+function sanitizeAutonomyRuntime(
+  candidate: unknown,
+  fallback: AgentOpsRuntimeState["autonomy"],
+): AgentOpsRuntimeState["autonomy"] {
+  if (!isRuntimeMergeEntry(candidate)) {
+    return fallback;
+  }
+
+  return {
+    ...fallback,
+    enabled: typeof candidate.enabled === "boolean" ? candidate.enabled : fallback.enabled,
+    status: isAutonomyStatus(candidate.status) ? candidate.status : fallback.status,
+    activeProviderId: isAutonomyProviderId(candidate.activeProviderId)
+      ? candidate.activeProviderId
+      : fallback.activeProviderId,
+    activeProviderLabel: getOptionalRuntimeString(candidate, "activeProviderLabel") ?? fallback.activeProviderLabel,
+    parallelLimit:
+      typeof candidate.parallelLimit === "number" &&
+      Number.isFinite(candidate.parallelLimit) &&
+      candidate.parallelLimit > 0
+        ? Math.floor(candidate.parallelLimit)
+        : fallback.parallelLimit,
+    currentBatchId:
+      candidate.currentBatchId === null || typeof candidate.currentBatchId === "string"
+        ? candidate.currentBatchId
+        : fallback.currentBatchId,
+    loopCount:
+      typeof candidate.loopCount === "number" &&
+      Number.isFinite(candidate.loopCount) &&
+      candidate.loopCount >= 0
+        ? Math.floor(candidate.loopCount)
+        : fallback.loopCount,
+    currentTeamId: getOptionalRuntimeString(candidate, "currentTeamId") ?? fallback.currentTeamId,
+    currentLane: getOptionalRuntimeString(candidate, "currentLane") ?? fallback.currentLane,
+    lastRunAt: getOptionalRuntimeString(candidate, "lastRunAt") ?? fallback.lastRunAt,
+    nextRunAt: getOptionalRuntimeString(candidate, "nextRunAt") ?? fallback.nextRunAt,
+    latestSummary: getOptionalRuntimeString(candidate, "latestSummary") ?? fallback.latestSummary,
+    operatorBrief: getOptionalRuntimeString(candidate, "operatorBrief") ?? fallback.operatorBrief,
+    queue: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["queue"][number]>(candidate.queue),
+    reports: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["reports"][number]>(candidate.reports),
+    providerHealth: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["providerHealth"][number]>(
+      candidate.providerHealth,
+    ),
+    currentTask: sanitizeAutonomyCurrentTask(candidate.currentTask),
+    taskHistory: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["taskHistory"][number]>(
+      candidate.taskHistory,
+    ),
+    currentExecution: sanitizeAutonomyCurrentExecution(candidate.currentExecution),
+    executionHistory: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["executionHistory"][number]>(
+      candidate.executionHistory,
+    ),
+    activeTasks: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["activeTasks"][number]>(
+      candidate.activeTasks,
+    ),
+    activeExecutions: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["activeExecutions"][number]>(
+      candidate.activeExecutions,
+    ),
+    workers: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["workers"][number]>(candidate.workers),
+    workerHistory: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["workerHistory"][number]>(
+      candidate.workerHistory,
+    ),
+    interactionBus: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["interactionBus"][number]>(
+      candidate.interactionBus,
+    ),
+  };
+}
+
 function normalizeRuntimeState(candidate: unknown, locale: string): AgentOpsRuntimeState {
   const fallback = createDefaultAgentOpsRuntimeState(locale);
   const defaultAutonomy = createDefaultAutonomyRuntime(locale, fallback.updatedAt);
@@ -327,45 +406,7 @@ function normalizeRuntimeState(candidate: unknown, locale: string): AgentOpsRunt
     providerConnections: getRuntimeObjectList<AgentOpsRuntimeState["providerConnections"][number]>(
       value.providerConnections,
     ),
-    autonomy:
-      isRuntimeMergeEntry(value.autonomy)
-        ? {
-            ...defaultAutonomy,
-            ...value.autonomy,
-            queue: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["queue"][number]>(
-              value.autonomy.queue,
-            ),
-            reports: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["reports"][number]>(
-              value.autonomy.reports,
-            ),
-            providerHealth: Array.isArray(value.autonomy.providerHealth)
-              ? value.autonomy.providerHealth.filter(isRuntimeMergeEntry)
-              : defaultAutonomy.providerHealth,
-            currentTask: sanitizeAutonomyCurrentTask(value.autonomy.currentTask),
-            taskHistory: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["taskHistory"][number]>(
-              value.autonomy.taskHistory,
-            ),
-            currentExecution: sanitizeAutonomyCurrentExecution(value.autonomy.currentExecution),
-            executionHistory: getRuntimeObjectList<
-              AgentOpsRuntimeState["autonomy"]["executionHistory"][number]
-            >(value.autonomy.executionHistory),
-            activeTasks: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["activeTasks"][number]>(
-              value.autonomy.activeTasks,
-            ),
-            activeExecutions: getRuntimeObjectList<
-              AgentOpsRuntimeState["autonomy"]["activeExecutions"][number]
-            >(value.autonomy.activeExecutions),
-            workers: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["workers"][number]>(
-              value.autonomy.workers,
-            ),
-            workerHistory: getRuntimeObjectList<
-              AgentOpsRuntimeState["autonomy"]["workerHistory"][number]
-            >(value.autonomy.workerHistory),
-            interactionBus: getRuntimeObjectList<
-              AgentOpsRuntimeState["autonomy"]["interactionBus"][number]
-            >(value.autonomy.interactionBus),
-          }
-        : defaultAutonomy,
+    autonomy: sanitizeAutonomyRuntime(value.autonomy, defaultAutonomy),
   };
 }
 

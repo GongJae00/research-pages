@@ -425,32 +425,46 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
-                <div className={styles.setupActionOrder} aria-label={copy.setupSequenceIntro}>
-                  <span className={styles.setupActionStep}>01 {copy.chooseProvider}</span>
-                  <span className={styles.setupActionArrow} aria-hidden="true">
-                    <ArrowRight size={12} />
-                  </span>
-                  <span className={styles.setupActionStep}>02 {copy.chooseTeam}</span>
-                  <span className={styles.setupActionArrow} aria-hidden="true">
-                    <ArrowRight size={12} />
-                  </span>
-                  <span className={`${styles.setupActionStep} ${styles.setupActionStepActive}`}>
-                    03 {nextSetupCommand?.title ?? copy.runCommandLabel}
-                  </span>
-                </div>
-                {setupFlowDigest ? (
-                  <div className={styles.setupSummaryBar} aria-label={copy.setupStepsLabel}>
-                    <div className={styles.setupSummaryLeadCompact}>
-                      <span className={styles.metaLabel}>{setupFlowLabel}</span>
-                      <strong className={styles.setupSummaryHeadline}>
-                        {formatSetupPair(selectedProvider?.label, selectedTeam?.name)}
-                      </strong>
-                      <span className={styles.setupSummaryMeta}>
-                        {copy.nextActionLabel}: {nextSetupCommand?.title ?? copy.setupCommand}
-                      </span>
+                <div className={styles.setupScanSummary} aria-label={copy.setupStepsLabel}>
+                  <div className={styles.setupScanSummaryItem}>
+                    <span className={styles.setupPickerStep}>01</span>
+                    <div className={styles.setupScanSummaryCopy}>
+                      <span className={styles.metaLabel}>{copy.chooseProvider}</span>
+                      <div className={styles.setupScanSummaryValueRow}>
+                        <strong>{selectedProvider?.label ?? "-"}</strong>
+                        {selectedProvider ? (
+                          <span
+                            className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
+                          >
+                            {getProviderStatusLabel(locale, selectedProvider.status)}
+                          </span>
+                        ) : null}
+                      </div>
                     </div>
                   </div>
-                ) : null}
+
+                  <div className={styles.setupScanSummaryItem}>
+                    <span className={styles.setupPickerStep}>02</span>
+                    <div className={styles.setupScanSummaryCopy}>
+                      <span className={styles.metaLabel}>{copy.chooseTeam}</span>
+                      <strong>{selectedTeam?.name ?? "-"}</strong>
+                      <span className={styles.setupSummaryMeta}>{selectedTeam?.lane ?? "-"}</span>
+                    </div>
+                  </div>
+
+                  <div className={`${styles.setupScanSummaryItem} ${styles.setupScanSummaryItemAccent}`}>
+                    <span className={styles.setupPickerStep}>03</span>
+                    <div className={styles.setupScanSummaryCopy}>
+                      <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
+                      <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
+                      {setupFlowDigest ? (
+                        <span className={styles.setupSummaryMeta}>
+                          {formatSetupPair(selectedProvider?.label, selectedTeam?.name)}
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
