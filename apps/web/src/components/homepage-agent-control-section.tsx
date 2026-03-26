@@ -425,7 +425,6 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
-                <p className={styles.setupSequenceIntro}>{copy.setupSequenceIntro}</p>
                 {setupFlowDigest ? (
                   <div className={styles.setupSummaryBar} aria-label={copy.setupStepsLabel}>
                     <div className={styles.setupSummaryLeadCompact}>
@@ -552,9 +551,7 @@ export function HomepageAgentControlSection({
                     <div className={styles.nextCommandCopy}>
                       <div className={styles.nextCommandLabelRow}>
                         <span className={styles.setupPickerStep}>03</span>
-                        <span className={styles.metaLabel}>
-                          {copy.nextActionLabel}: {copy.runCommandLabel}
-                        </span>
+                        <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
                       </div>
                       <strong>{nextSetupCommand.title}</strong>
                       <span className={styles.nextCommandContext}>
