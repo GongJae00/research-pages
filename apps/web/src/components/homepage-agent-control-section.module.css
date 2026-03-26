@@ -1690,7 +1690,10 @@
 }
 
 .setupSelectionLead {
-  display: none;
+  display: grid;
+  gap: 0.04rem;
+  padding: 0.02rem 0.02rem 0.04rem;
+  border-bottom: 1px solid rgba(203, 213, 225, 0.72);
 }
 
 .setupSelectionLeadTop {

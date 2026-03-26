@@ -982,7 +982,7 @@ function prioritizeAffiliation(
   ];
 }
 
-function prioritizeEditSectionItems(
+function prioritizeSectionItems(
   items: AffiliationTimelineEntry[],
   prioritizedId: string | null,
 ) {
@@ -1037,8 +1037,15 @@ export function AffiliationWorkspace({
     current: currentAffiliations,
     queued: queuedAffiliations,
     archived: archivedAffiliations,
-  } =
-    getAffiliationSections(orderedResolvedAffiliations);
+  } = (() => {
+    const sections = getAffiliationSections(orderedResolvedAffiliations);
+
+    return {
+      current: prioritizeSectionItems(sections.current, null),
+      queued: prioritizeSectionItems(sections.queued, null),
+      archived: prioritizeSectionItems(sections.archived, null),
+    };
+  })();
   const currentCorrections = currentAffiliations.filter((item) =>
     needsTimelineCorrection(item),
   ).length;
@@ -1064,9 +1071,9 @@ export function AffiliationWorkspace({
       const sections = getAffiliationSections(orderedDraftAffiliations);
 
       return {
-        current: prioritizeEditSectionItems(sections.current, focusedAffiliationId),
-        queued: prioritizeEditSectionItems(sections.queued, focusedAffiliationId),
-        archived: prioritizeEditSectionItems(sections.archived, focusedAffiliationId),
+        current: prioritizeSectionItems(sections.current, focusedAffiliationId),
+        queued: prioritizeSectionItems(sections.queued, focusedAffiliationId),
+        archived: prioritizeSectionItems(sections.archived, focusedAffiliationId),
       };
     })();
   const currentDraftCorrections = currentDraftAffiliations.filter((item) =>

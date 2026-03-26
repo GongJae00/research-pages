@@ -505,50 +505,7 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
-                <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
-                  <div className={styles.setupCompactSummaryItem}>
-                    <span className={styles.setupCompactSummaryOrdinal}>01</span>
-                    <div className={styles.setupCompactSummaryContent}>
-                      <span className={styles.setupDigestKey}>{copy.selectedCli}</span>
-                      <div className={styles.setupCompactSummaryValueRow}>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
-                      </div>
-                    </div>
-                  </div>
-
-                  <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
-                    →
-                  </span>
-
-                  <div className={styles.setupCompactSummaryItem}>
-                    <span className={styles.setupCompactSummaryOrdinal}>02</span>
-                    <div className={styles.setupCompactSummaryContent}>
-                      <span className={styles.setupDigestKey}>{copy.selectedTeamLabel}</span>
-                      <div className={styles.setupCompactSummaryValueRow}>
-                        <strong>{selectedTeam?.name ?? "-"}</strong>
-                      </div>
-                    </div>
-                  </div>
-
-                  {nextSetupCommand ? (
-                    <>
-                      <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
-                        →
-                      </span>
-                      <div
-                        className={`${styles.setupCompactSummaryItem} ${styles.setupCompactSummaryItemAccent}`}
-                      >
-                        <span className={styles.setupCompactSummaryOrdinal}>03</span>
-                        <div className={styles.setupCompactSummaryContent}>
-                          <span className={styles.setupDigestKey}>{copy.runCommandLabel}</span>
-                          <div className={styles.setupCompactSummaryValueRow}>
-                            <strong>{nextSetupCommand.title}</strong>
-                          </div>
-                        </div>
-                      </div>
-                    </>
-                  ) : null}
-                </div>
+                <p className={styles.setupTitleHint}>{copy.setupSequenceIntro}</p>
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
@@ -567,27 +524,49 @@ export function HomepageAgentControlSection({
               <div className={styles.setupSelectionPanel} aria-label={getSetupInputLabel(locale)}>
                 <div className={styles.setupSelectionLead}>
                   <span className={styles.setupSelectionLeadLabel}>{copy.activeSetup}</span>
-                  <div className={styles.selectionDigestRow} aria-label={setupFlowLabel}>
-                    <div className={`${styles.selectionDigestChip} ${styles.selectionDigestChipActive}`}>
-                      <span className={styles.setupDigestKey}>{copy.selectedCli}</span>
-                      <strong>{selectedProvider?.label ?? "-"}</strong>
-                      <span className={styles.selectionDigestMeta}>
-                        {copy.selectedCliStatusLabel}:{" "}
-                        {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
-                      </span>
+                  <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
+                    <div className={styles.setupCompactSummaryItem}>
+                      <span className={styles.setupCompactSummaryOrdinal}>01</span>
+                      <div className={styles.setupCompactSummaryContent}>
+                        <span className={styles.setupDigestKey}>{copy.selectedCli}</span>
+                        <div className={styles.setupCompactSummaryValueRow}>
+                          <strong>{selectedProvider?.label ?? "-"}</strong>
+                        </div>
+                      </div>
                     </div>
 
-                    <span className={styles.selectionDigestArrow} aria-hidden="true">
+                    <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
                       →
                     </span>
 
-                    <div className={`${styles.selectionDigestChip} ${styles.selectionDigestChipActive}`}>
-                      <span className={styles.setupDigestKey}>{copy.selectedTeamLabel}</span>
-                      <strong>{selectedTeam?.name ?? "-"}</strong>
-                      <span className={styles.selectionDigestMeta}>
-                        {copy.selectedLaneLabel}: {selectedTeam?.lane ?? "-"}
-                      </span>
+                    <div className={styles.setupCompactSummaryItem}>
+                      <span className={styles.setupCompactSummaryOrdinal}>02</span>
+                      <div className={styles.setupCompactSummaryContent}>
+                        <span className={styles.setupDigestKey}>{copy.selectedTeamLabel}</span>
+                        <div className={styles.setupCompactSummaryValueRow}>
+                          <strong>{selectedTeam?.name ?? "-"}</strong>
+                        </div>
+                      </div>
                     </div>
+
+                    {nextSetupCommand ? (
+                      <>
+                        <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
+                          →
+                        </span>
+                        <div
+                          className={`${styles.setupCompactSummaryItem} ${styles.setupCompactSummaryItemAccent}`}
+                        >
+                          <span className={styles.setupCompactSummaryOrdinal}>03</span>
+                          <div className={styles.setupCompactSummaryContent}>
+                            <span className={styles.setupDigestKey}>{copy.runCommandLabel}</span>
+                            <div className={styles.setupCompactSummaryValueRow}>
+                              <strong>{nextSetupCommand.title}</strong>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    ) : null}
                   </div>
                 </div>
 
@@ -670,25 +649,6 @@ export function HomepageAgentControlSection({
                       <div className={styles.setupCommandInlineCopy}>
                         <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
                         <strong>{nextSetupCommand.title}</strong>
-                        <div className={styles.setupCommandInlineMeta} aria-label={setupFlowLabel}>
-                          <span className={styles.setupCommandInlinePath}>
-                            {copy.selectedCli}: {selectedProvider?.label ?? "-"}
-                          </span>
-                          <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
-                            -&gt;
-                          </span>
-                          <span className={styles.setupCommandInlinePath}>
-                            {copy.selectedTeamLabel}: {selectedTeam?.name ?? "-"}
-                          </span>
-                          <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
-                            -&gt;
-                          </span>
-                          <span
-                            className={`${styles.setupCommandInlinePath} ${styles.setupCommandInlinePathAccent}`}
-                          >
-                            {copy.nextActionLabel}: {nextSetupCommand.title}
-                          </span>
-                        </div>
                         <p className={styles.setupTitleHint}>{copy.nextCommandHelp}</p>
                       </div>
                     </div>
