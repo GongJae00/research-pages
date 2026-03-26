@@ -478,11 +478,6 @@ export function HomepageAgentControlSection({
 
             <div className={styles.setupWorkbench}>
               <div className={styles.setupSelectionPanel} aria-label={getSetupInputLabel(locale)}>
-                <div className={styles.setupSectionHead}>
-                  <div className={styles.setupSectionCopy}>
-                    <span className={styles.metaLabel}>{getSetupInputLabel(locale)}</span>
-                  </div>
-                </div>
                 <div className={styles.setupPickerGrid}>
                   <div className={styles.setupPicker} aria-label={copy.chooseProvider}>
                     <div className={styles.setupPickerLabelGroup}>
@@ -554,7 +549,6 @@ export function HomepageAgentControlSection({
                       <span className={styles.nextCommandContext}>
                         {selectedProvider?.label ?? "-"} {"->"} {selectedTeam?.name ?? "-"}
                       </span>
-                      <p className={styles.nextCommandHelp}>{copy.nextCommandHelp}</p>
                     </div>
                     <span className={styles.inlineMeta}>{setupOutputLabel}</span>
                   </div>
