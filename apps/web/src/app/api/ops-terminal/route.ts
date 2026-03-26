@@ -4,6 +4,7 @@ import {
   createOpsTerminalSession,
   listOpsShellPresets,
   listOpsTerminalSessions,
+  OpsTerminalSessionStartError,
   type OpsTerminalCommandResult,
   type OpsTerminalSessionSnapshot,
   runOpsTerminalCommand,
@@ -127,10 +128,15 @@ function getSessionFailureState(
 
 function getSessionErrorResponse(error: unknown, sessionId?: string) {
   const message = error instanceof Error ? error.message : "Ops terminal request failed.";
+  const resolvedSessionId =
+    sessionId ||
+    (error instanceof OpsTerminalSessionStartError ? error.sessionId : undefined);
   const sessions = listOpsTerminalSessions();
-  const session = sessionId ? sessions.find((item) => item.id === sessionId) ?? null : null;
+  const session = resolvedSessionId
+    ? sessions.find((item) => item.id === resolvedSessionId) ?? null
+    : null;
   const availableShells = listOpsShellPresets();
-  const sessionFailure = getSessionFailureState(session, sessionId);
+  const sessionFailure = getSessionFailureState(session, resolvedSessionId);
 
   const buildFailureResponse = (
     status: number,

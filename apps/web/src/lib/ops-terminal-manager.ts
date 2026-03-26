@@ -52,6 +52,16 @@ export interface OpsTerminalStopResult {
   recovery: string;
 }
 
+export class OpsTerminalSessionStartError extends Error {
+  sessionId: string;
+
+  constructor(message: string, sessionId: string) {
+    super(message);
+    this.name = "OpsTerminalSessionStartError";
+    this.sessionId = sessionId;
+  }
+}
+
 interface OpsTerminalSessionRecord {
   child: ChildProcessWithoutNullStreams;
   snapshot: OpsTerminalSessionSnapshot;
@@ -384,6 +394,8 @@ export async function runOpsTerminalCommand(command: string) {
 export async function createOpsTerminalSession(shellId: OpsShellId, label?: string) {
   const cwd = await resolveWorkspaceRoot();
   const shellSpec = getShellSpec(shellId);
+  const sessionId = `session-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const createdAt = new Date().toISOString();
   const child = spawn(shellSpec.command, shellSpec.args, {
     cwd,
     env: process.env,
@@ -391,8 +403,6 @@ export async function createOpsTerminalSession(shellId: OpsShellId, label?: stri
     windowsHide: true,
   });
 
-  const sessionId = `session-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-  const createdAt = new Date().toISOString();
   const record: OpsTerminalSessionRecord = {
     child,
     snapshot: {
@@ -413,6 +423,7 @@ export async function createOpsTerminalSession(shellId: OpsShellId, label?: stri
     },
     stopRequestedAt: null,
   };
+  getManagerStore().sessions.set(sessionId, record);
 
   child.stdout.on("data", (chunk: Buffer | string) => {
     appendTranscript(record, chunk.toString());
@@ -456,15 +467,19 @@ export async function createOpsTerminalSession(shellId: OpsShellId, label?: stri
   try {
     await waitForSessionSpawn(child);
   } catch (error) {
-    child.stdout.removeAllListeners("data");
-    child.stderr.removeAllListeners("data");
-    throw new Error(
-      `Failed to start ${shellSpec.label} session: ${error instanceof Error ? error.message : "Unknown spawn error."}`,
-    );
+    const message = `Failed to start ${shellSpec.label} session: ${
+      error instanceof Error ? error.message : "Unknown spawn error."
+    }`;
+    record.snapshot.status = "error";
+    record.snapshot.exitCode = child.exitCode;
+    record.snapshot.pid = child.pid ?? null;
+    record.snapshot.statusDetail = message;
+    record.snapshot.updatedAt = new Date().toISOString();
+    appendTranscript(record, `${os.EOL}[ops] ${message}${os.EOL}`);
+    throw new OpsTerminalSessionStartError(message, sessionId);
   }
 
   appendTranscript(record, `[ops] session opened: ${record.snapshot.label}${os.EOL}`);
-  getManagerStore().sessions.set(sessionId, record);
   return record.snapshot;
 }
 
