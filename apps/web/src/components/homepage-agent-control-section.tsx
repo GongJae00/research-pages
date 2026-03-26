@@ -495,76 +495,35 @@ export function HomepageAgentControlSection({
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
-                  {nextSetupCommand ? (
-                    <span className={styles.setupTitleBadge}>
-                      <span className={styles.setupTitleBadgeStep}>03</span>
+                </div>
+                <p className={styles.setupSequenceIntro}>{copy.setupSequenceIntro}</p>
+                {nextSetupCommand ? (
+                  <div className={`${styles.setupDigestLine} ${styles.setupHeaderScan}`} aria-label={setupFlowLabel}>
+                    <span className={styles.setupDigestItem}>
+                      <span className={styles.setupDigestKey}>{`01 ${copy.chooseProvider}`}</span>
+                      <strong>{selectedProvider?.label ?? "-"}</strong>
+                      {selectedProvider ? (
+                        <span className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}>
+                          {getProviderStatusLabel(locale, selectedProvider.status)}
+                        </span>
+                      ) : null}
+                    </span>
+                    <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
+                      &rarr;
+                    </span>
+                    <span className={styles.setupDigestItem}>
+                      <span className={styles.setupDigestKey}>{`02 ${copy.chooseTeam}`}</span>
+                      <strong>{selectedTeam?.name ?? "-"}</strong>
+                      <span className={styles.setupSummaryMeta}>{selectedTeam?.lane ?? "-"}</span>
+                    </span>
+                    <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
+                      &rarr;
+                    </span>
+                    <span className={`${styles.setupDigestItem} ${styles.setupDigestItemAccent}`}>
+                      <span className={styles.setupDigestKey}>{`03 ${copy.runCommandLabel}`}</span>
                       <strong>{nextSetupCommand.title}</strong>
                     </span>
-                  ) : null}
-                </div>
-                {!nextSetupCommand ? <p className={styles.setupSequenceIntro}>{copy.setupSequenceIntro}</p> : null}
-                {nextSetupCommand ? (
-                  <>
-                    <div className={`${styles.setupDigestLine} ${styles.setupHeaderScan}`} aria-label={setupFlowLabel}>
-                      <span className={styles.setupDigestItem}>
-                        <span className={styles.setupDigestKey}>{`01 ${copy.chooseProvider}`}</span>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
-                        {selectedProvider ? (
-                          <span className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}>
-                            {getProviderStatusLabel(locale, selectedProvider.status)}
-                          </span>
-                        ) : null}
-                      </span>
-                      <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
-                        &rarr;
-                      </span>
-                      <span className={styles.setupDigestItem}>
-                        <span className={styles.setupDigestKey}>{`02 ${copy.chooseTeam}`}</span>
-                        <strong>{selectedTeam?.name ?? "-"}</strong>
-                        <span className={styles.setupSummaryMeta}>{selectedTeam?.lane ?? "-"}</span>
-                      </span>
-                      <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
-                        &rarr;
-                      </span>
-                      <span className={`${styles.setupDigestItem} ${styles.setupDigestItemAccent}`}>
-                        <span className={styles.setupDigestKey}>{`03 ${copy.runCommandLabel}`}</span>
-                        <strong>{nextSetupCommand.title}</strong>
-                      </span>
-                    </div>
-
-                    <div className={styles.setupCommandInline}>
-                      <div className={styles.setupCommandInlineHead}>
-                        <div className={styles.setupCommandInlineCopy}>
-                          <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
-                          <strong>{`03. ${nextSetupCommand.title}`}</strong>
-                        </div>
-                        <div className={styles.setupCommandInlineMeta}>
-                          <span className={styles.setupCommandInlinePath}>
-                            <span>{selectedProvider?.label ?? "-"}</span>
-                            <span aria-hidden="true">&rarr;</span>
-                            <span>{selectedTeam?.name ?? "-"}</span>
-                          </span>
-                          <span className={styles.nextCommandOutput}>{setupOutputLabel}</span>
-                        </div>
-                      </div>
-
-                      <div className={styles.setupCommandInlineMain}>
-                        <code>{nextSetupCommand.command}</code>
-                        <button
-                          type="button"
-                          className={`${styles.copyButton} ${styles.copyIconButton}`}
-                          onClick={() => void copyCommand(nextSetupCommand.kind)}
-                          aria-label={nextSetupCommand.buttonLabel}
-                          title={nextSetupCommand.buttonLabel}
-                        >
-                          {copiedCommand === nextSetupCommand.kind ? <Check size={14} /> : <Copy size={14} />}
-                          <span className={styles.copyButtonText}>
-                            {copiedCommand === nextSetupCommand.kind ? copy.copied : nextSetupCommand.buttonLabel}
-                          </span>
-                        </button>
-                      </div>
-                    </div>
-                  </>
+                  </div>
                 ) : null}
               </div>
               <div className={styles.setupHeaderActions}>
@@ -652,6 +611,42 @@ export function HomepageAgentControlSection({
                   </div>
                 </div>
               </div>
+
+              {nextSetupCommand ? (
+                <div className={styles.setupCommandInline}>
+                  <div className={styles.setupCommandInlineHead}>
+                    <div className={styles.setupCommandInlineCopy}>
+                      <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
+                      <strong>{`03. ${nextSetupCommand.title}`}</strong>
+                      <p className={styles.setupCommandInlineHelp}>{copy.nextCommandHelp}</p>
+                    </div>
+                    <div className={styles.setupCommandInlineMeta}>
+                      <span className={styles.setupCommandInlinePath}>
+                        <span>{selectedProvider?.label ?? "-"}</span>
+                        <span aria-hidden="true">&rarr;</span>
+                        <span>{selectedTeam?.name ?? "-"}</span>
+                      </span>
+                      <span className={styles.nextCommandOutput}>{setupOutputLabel}</span>
+                    </div>
+                  </div>
+
+                  <div className={styles.setupCommandInlineMain}>
+                    <code>{nextSetupCommand.command}</code>
+                    <button
+                      type="button"
+                      className={`${styles.copyButton} ${styles.copyIconButton}`}
+                      onClick={() => void copyCommand(nextSetupCommand.kind)}
+                      aria-label={nextSetupCommand.buttonLabel}
+                      title={nextSetupCommand.buttonLabel}
+                    >
+                      {copiedCommand === nextSetupCommand.kind ? <Check size={14} /> : <Copy size={14} />}
+                      <span className={styles.copyButtonText}>
+                        {copiedCommand === nextSetupCommand.kind ? copy.copied : nextSetupCommand.buttonLabel}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              ) : null}
             </div>
 
             <details className={styles.setupCommandsDisclosure}>

@@ -943,6 +943,15 @@
   line-height: 1.08;
 }
 
+.setupCommandInlineHelp {
+  margin: 0;
+  max-width: 34rem;
+  color: #475569;
+  font-size: 0.64rem;
+  font-weight: 700;
+  line-height: 1.28;
+}
+
 .setupCommandInlineMeta {
   display: inline-flex;
   align-items: center;
