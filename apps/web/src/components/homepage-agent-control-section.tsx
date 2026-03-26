@@ -486,37 +486,18 @@ export function HomepageAgentControlSection({
             </div>
 
             <div className={styles.setupWorkbench}>
-              {nextSetupCommand ? (
-                <div className={styles.nextCommandStrip}>
-                  <div className={styles.nextCommandLead}>
-                    <div className={styles.nextCommandCopy}>
-                      <div className={styles.nextCommandLabelRow}>
-                        <span className={styles.setupPickerStep}>03</span>
-                        <span className={styles.metaLabel}>{copy.activeSetup}</span>
-                      </div>
-                      <strong>{nextSetupCommand.title}</strong>
-                      <span className={styles.inlineMeta}>{setupOutputLabel}</span>
-                    </div>
-                  </div>
-                  <div className={styles.nextCommandMain}>
-                    <code>{nextSetupCommand.command}</code>
-                    <button
-                      type="button"
-                      className={`${styles.copyButton} ${styles.copyIconButton}`}
-                      onClick={() => void copyCommand(nextSetupCommand.kind)}
-                      aria-label={nextSetupCommand.buttonLabel}
-                      title={nextSetupCommand.buttonLabel}
-                    >
-                      {copiedCommand === nextSetupCommand.kind ? <Check size={14} /> : <Copy size={14} />}
-                      <span className={styles.copyButtonText}>
-                        {copiedCommand === nextSetupCommand.kind ? copy.copied : nextSetupCommand.buttonLabel}
-                      </span>
-                    </button>
-                  </div>
-                </div>
-              ) : null}
-
               <div className={styles.setupSelectionPanel} aria-label={getSetupInputLabel(locale)}>
+                <div className={styles.setupSectionHead}>
+                  <div className={styles.setupSectionCopy}>
+                    <span className={styles.metaLabel}>{getSetupInputLabel(locale)}</span>
+                    <strong className={styles.setupSectionSummary}>
+                      {copy.chooseProvider} {"->"} {copy.chooseTeam}
+                    </strong>
+                  </div>
+                  <span className={styles.setupSectionHint}>
+                    {selectedProvider?.label ?? "-"} {"->"} {selectedTeam?.name ?? "-"}
+                  </span>
+                </div>
                 <div className={styles.setupPickerGrid}>
                   <div className={styles.setupPicker} aria-label={copy.chooseProvider}>
                     <div className={styles.setupPickerLabelGroup}>
@@ -573,6 +554,45 @@ export function HomepageAgentControlSection({
                   </div>
                 </div>
               </div>
+
+              {nextSetupCommand ? (
+                <div className={styles.nextCommandStrip}>
+                  <div className={styles.setupSectionHead}>
+                    <div className={styles.setupSectionCopy}>
+                    <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
+                    <strong className={styles.setupSectionSummary}>{nextSetupCommand.title}</strong>
+                  </div>
+                  <span className={styles.setupSectionHint}>
+                    {selectedProvider?.label ?? "-"} {"->"} {selectedTeam?.name ?? "-"}
+                  </span>
+                </div>
+                  <div className={styles.nextCommandLead}>
+                    <div className={styles.nextCommandCopy}>
+                      <div className={styles.nextCommandLabelRow}>
+                        <span className={styles.setupPickerStep}>03</span>
+                        <span className={styles.metaLabel}>{copy.activeSetup}</span>
+                      </div>
+                      <strong>{nextSetupCommand.title}</strong>
+                      <span className={styles.inlineMeta}>{setupOutputLabel}</span>
+                    </div>
+                  </div>
+                  <div className={styles.nextCommandMain}>
+                    <code>{nextSetupCommand.command}</code>
+                    <button
+                      type="button"
+                      className={`${styles.copyButton} ${styles.copyIconButton}`}
+                      onClick={() => void copyCommand(nextSetupCommand.kind)}
+                      aria-label={nextSetupCommand.buttonLabel}
+                      title={nextSetupCommand.buttonLabel}
+                    >
+                      {copiedCommand === nextSetupCommand.kind ? <Check size={14} /> : <Copy size={14} />}
+                      <span className={styles.copyButtonText}>
+                        {copiedCommand === nextSetupCommand.kind ? copy.copied : nextSetupCommand.buttonLabel}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              ) : null}
             </div>
 
             <details className={styles.setupCommandsDisclosure}>
