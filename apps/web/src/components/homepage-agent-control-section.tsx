@@ -88,14 +88,6 @@ function getSetupFlowLabel(locale: string) {
   return "Setup flow";
 }
 
-function getSetupBuilderHint(locale: string) {
-  if (isKoreanLocale(locale)) {
-    return "CLI와 lane을 고른 뒤 강조된 명령을 실행하세요.";
-  }
-
-  return "Select a CLI, select a team, then run the highlighted command.";
-}
-
 function getSetupInputLabel(locale: string) {
   if (isKoreanLocale(locale)) {
     return "?좏깮 ?낅젰";
@@ -110,14 +102,6 @@ function getSetupOutputLabel(locale: string) {
   }
 
   return "Command output";
-}
-
-function getSetupFlowSteps(locale: string) {
-  if (isKoreanLocale(locale)) {
-    return ["CLI ?좏깮", "? ?좏깮", "?ㅼ쓬 紐낅졊 ?ㅽ뻾"];
-  }
-
-  return ["Pick CLI", "Pick team", "Run next command"];
 }
 
 function getCopy(locale: string, opsEnabled: boolean) {
@@ -254,9 +238,7 @@ export function HomepageAgentControlSection({
   const [selectedTeamId, setSelectedTeamId] = useState(initialSnapshot.selectedTeamId);
   const [copiedCommand, setCopiedCommand] = useState<"connect" | "assign" | null>(null);
   const copy = getCopy(locale, opsEnabled);
-  const setupBuilderHint = getSetupBuilderHint(locale);
   const setupFlowLabel = getSetupFlowLabel(locale);
-  const setupFlowTitle = getSetupFlowSteps(locale).join(" -> ");
 
   useEffect(() => {
     let mounted = true;
@@ -436,32 +418,14 @@ export function HomepageAgentControlSection({
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
                 {setupFlowDigest ? (
-                  <div
-                    className={styles.setupSummaryBar}
-                    aria-label={copy.setupStepsLabel}
-                    title={`${setupBuilderHint} ${setupFlowLabel}: ${setupFlowTitle}`}
-                  >
-                    <span className={styles.setupFlowChip}>
-                      <span className={styles.setupPickerStep}>01</span>
-                      <span className={styles.setupFlowChipCopy}>
-                        <span className={styles.setupFlowLabel}>{copy.selectedCli}</span>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
-                      </span>
-                    </span>
-                    <span className={styles.setupFlowArrow} aria-hidden="true">
-                      →
-                    </span>
-                    <span className={styles.setupFlowChip}>
-                      <span className={styles.setupPickerStep}>02</span>
-                      <span className={styles.setupFlowChipCopy}>
-                        <span className={styles.setupFlowLabel}>{copy.selectedTeamLabel}</span>
-                        <strong>{selectedTeam?.name ?? "-"}</strong>
-                        <span className={styles.setupFlowMeta}>{selectedTeam?.lane ?? "-"}</span>
-                      </span>
-                    </span>
-                    <span className={styles.setupFlowArrow} aria-hidden="true">
-                      →
-                    </span>
+                  <div className={styles.setupSummaryBar} aria-label={copy.setupStepsLabel}>
+                    <div className={styles.setupSummaryCompact}>
+                      <span className={styles.setupFlowLabel}>{setupFlowLabel}</span>
+                      <strong>
+                        {selectedProvider?.label ?? "-"} {"->"} {selectedTeam?.name ?? "-"}
+                      </strong>
+                      <span className={styles.setupFlowMeta}>{selectedTeam?.lane ?? "-"}</span>
+                    </div>
                     <span className={`${styles.setupFlowChip} ${styles.setupFlowChipAccent}`}>
                       <span className={styles.setupPickerStep}>03</span>
                       <span className={styles.setupFlowChipCopy}>
