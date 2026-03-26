@@ -418,11 +418,38 @@
   margin-top: 0;
 }
 
+.setupNextActionBadge {
+  display: inline-grid;
+  gap: 0.01rem;
+  min-width: 0;
+  padding: 0.08rem 0.12rem;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  border-radius: 12px;
+  background: rgba(241, 245, 249, 0.98);
+}
+
+.setupNextActionLabel {
+  color: #64748b;
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.setupNextActionBadge strong {
+  color: #0f172a;
+  font-size: 0.68rem;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
 .setupScanSummary {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
   gap: 0.04rem;
   margin-top: 0.02rem;
+  align-items: center;
 }
 
 .setupScanSummaryItem {
@@ -439,6 +466,16 @@
 .setupScanSummaryItemAccent {
   border-color: rgba(15, 23, 42, 0.14);
   background: rgba(241, 245, 249, 0.98);
+}
+
+.setupScanArrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 0.76rem;
+  font-weight: 800;
+  line-height: 1;
 }
 
 .setupScanSummaryCopy {
@@ -1284,6 +1321,13 @@
   overflow-wrap: anywhere;
 }
 
+.nextCommandHelp {
+  color: #334155;
+  font-size: 0.66rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
 .nextCommandLabelRow {
   display: inline-flex;
   align-items: center;
@@ -2062,6 +2106,10 @@
 
   .setupScanSummary {
     grid-template-columns: 1fr;
+  }
+
+  .setupScanArrow {
+    display: none;
   }
 
   .setupDigestLine {

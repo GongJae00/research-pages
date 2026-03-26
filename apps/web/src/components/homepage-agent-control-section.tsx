@@ -424,7 +424,14 @@ export function HomepageAgentControlSection({
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
+                  {nextSetupCommand ? (
+                    <span className={styles.setupNextActionBadge}>
+                      <span className={styles.setupNextActionLabel}>{copy.nextActionLabel}</span>
+                      <strong>{`${nextSetupCommand.step}. ${nextSetupCommand.title}`}</strong>
+                    </span>
+                  ) : null}
                 </div>
+                <p className={styles.setupSequenceIntro}>{copy.setupSequenceIntro}</p>
                 <div className={styles.setupScanSummary} aria-label={setupFlowLabel}>
                   <div className={styles.setupScanSummaryItem}>
                     <span className={styles.setupPickerStep}>01</span>
@@ -443,6 +450,10 @@ export function HomepageAgentControlSection({
                     </div>
                   </div>
 
+                  <span className={styles.setupScanArrow} aria-hidden="true">
+                    &rarr;
+                  </span>
+
                   <div className={styles.setupScanSummaryItem}>
                     <span className={styles.setupPickerStep}>02</span>
                     <div className={styles.setupScanSummaryCopy}>
@@ -451,6 +462,10 @@ export function HomepageAgentControlSection({
                       <span className={styles.setupSummaryMeta}>{selectedTeam?.lane ?? "-"}</span>
                     </div>
                   </div>
+
+                  <span className={styles.setupScanArrow} aria-hidden="true">
+                    &rarr;
+                  </span>
 
                   <div className={`${styles.setupScanSummaryItem} ${styles.setupScanSummaryItemAccent}`}>
                     <span className={styles.setupPickerStep}>03</span>
@@ -552,6 +567,7 @@ export function HomepageAgentControlSection({
                         {selectedProvider?.label ?? "-"} {"->"} {selectedTeam?.name ?? "-"} {"·"}{" "}
                         {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
                       </span>
+                      <span className={styles.nextCommandHelp}>{copy.nextCommandHelp}</span>
                     </div>
                   </div>
                   <div className={styles.nextCommandMain}>

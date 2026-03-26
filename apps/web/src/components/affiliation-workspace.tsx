@@ -405,6 +405,10 @@ function getEditFocusLabel(locale: Locale) {
   return locale === "ko" ? "\uc774\ubc88 \uc218\uc815 \ud3ec\uc778\ud2b8" : "Edit focus";
 }
 
+function getEditingNowLabel(locale: Locale) {
+  return locale === "ko" ? "\uc9c0\uae08 \uc218\uc815 \uc911" : "Editing now";
+}
+
 function getEditFocusHint(entry: AffiliationTimelineEntry, locale: Locale) {
   if (entry.active) {
     return locale === "ko"
@@ -1240,7 +1244,7 @@ export function AffiliationWorkspace({
               {isEditing && focusedDraftAffiliation ? (
                 <dl className="field-list">
                   <div className="field-row">
-                    <dt>{getEditFocusLabel(locale)}</dt>
+                    <dt>{getEditingNowLabel(locale)}</dt>
                     <dd>
                       {getEditableAffiliationHeading(
                         focusedDraftAffiliation,
@@ -1259,6 +1263,10 @@ export function AffiliationWorkspace({
                   <div className="field-row">
                     <dt>{getNextUpdateLabel(locale)}</dt>
                     <dd>{getNextActionSummary(focusedDraftAffiliation, locale)}</dd>
+                  </div>
+                  <div className="field-row">
+                    <dt>{getEditFocusLabel(locale)}</dt>
+                    <dd>{getEditFocusHint(focusedDraftAffiliation, locale)}</dd>
                   </div>
                 </dl>
               ) : null}

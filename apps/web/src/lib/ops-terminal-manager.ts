@@ -441,26 +441,45 @@ export async function createOpsTerminalSession(shellId: OpsShellId, label?: stri
   });
 
   child.on("error", (error) => {
+    const stopRequestedAt = record.stopRequestedAt;
     record.snapshot.status = "error";
     record.snapshot.exitCode = 1;
-    record.snapshot.statusDetail = `Shell process error: ${error.message}`;
-    appendTranscript(record, `${os.EOL}[ops] session error: ${error.message}${os.EOL}`);
+    record.snapshot.pid = null;
+    record.snapshot.stopRequestedAt = stopRequestedAt;
+    record.snapshot.statusDetail = stopRequestedAt
+      ? `Shell process error after stop request at ${stopRequestedAt}: ${error.message}`
+      : `Shell process error: ${error.message}. Start a new session to continue.`;
+    appendTranscript(
+      record,
+      `${os.EOL}[ops] session error${
+        stopRequestedAt ? ` after stop request at ${stopRequestedAt}` : ""
+      }: ${error.message}${os.EOL}`,
+    );
   });
 
   child.on("close", (code, signal) => {
     const stopRequestedAt = record.stopRequestedAt;
-    record.snapshot.status = stopRequestedAt || code === 0 ? "closed" : "error";
+    const preserveFailureState = record.snapshot.status === "error" && !stopRequestedAt;
+    record.snapshot.status = stopRequestedAt
+      ? "closed"
+      : preserveFailureState || code !== 0
+        ? "error"
+        : "closed";
     record.snapshot.exitCode = code;
     record.snapshot.pid = null;
     record.snapshot.stopRequestedAt = stopRequestedAt;
     record.snapshot.statusDetail = stopRequestedAt
       ? `Session stopped after the operator requested a stop at ${stopRequestedAt}.`
-      : `Session closed with ${describeSessionTermination(code, signal)}. Start a new session to continue.`;
+      : preserveFailureState
+        ? `${record.snapshot.statusDetail ?? "Session became unavailable before the shell exited."} Shell later closed with ${describeSessionTermination(code, signal)}.`
+        : `Session closed with ${describeSessionTermination(code, signal)}. Start a new session to continue.`;
     appendTranscript(
       record,
       stopRequestedAt
         ? `${os.EOL}[ops] session stopped by operator at ${stopRequestedAt}${os.EOL}`
-        : `${os.EOL}[ops] session closed with ${describeSessionTermination(code, signal)}${os.EOL}`,
+        : preserveFailureState
+          ? `${os.EOL}[ops] session remained in an error state before closing with ${describeSessionTermination(code, signal)}${os.EOL}`
+          : `${os.EOL}[ops] session closed with ${describeSessionTermination(code, signal)}${os.EOL}`,
     );
   });
 
