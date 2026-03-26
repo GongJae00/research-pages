@@ -354,6 +354,28 @@ function getSaveReadinessLabel(locale: Locale) {
   return locale === "ko" ? "\uc800\uc7a5 \uc900\ube44" : "Save readiness";
 }
 
+function getEditFocusLabel(locale: Locale) {
+  return locale === "ko" ? "\uc774\ubc88 \uc218\uc815 \ud3ec\uc778\ud2b8" : "Edit focus";
+}
+
+function getEditFocusHint(entry: AffiliationTimelineEntry, locale: Locale) {
+  if (entry.active) {
+    return locale === "ko"
+      ? "\uba3c\uc800 \uc0c1\ud0dc\uc640 \ub0a0\uc9dc\ub97c \uac31\uc2e0\ud558\uace0, \uae30\uad00 \uc815\ubcf4\ub294 \ubc14\ub010 \uacbd\uc6b0\uc5d0\ub9cc \uc870\uc815\ud558\uc138\uc694."
+      : "Update status and dates first, then adjust institution details only if this role changed.";
+  }
+
+  if (entry.appointmentStatus === "planned" || entry.appointmentStatus === "paused") {
+    return locale === "ko"
+      ? "\uc7ac\uac1c \uc5ec\ubd80\uc640 \uc608\uc815 \ub0a0\uc9dc\ub97c \uba3c\uc800 \ud655\uc778\ud558\uace0 \ud0c0\uc784\ub77c\uc778\uc744 \uac31\uc2e0\ud558\uc138\uc694."
+      : "Confirm whether this role should resume, stay queued, or move to completed before editing details.";
+  }
+
+  return locale === "ko"
+    ? "\uc885\ub8cc \ub0a0\uc9dc\uc640 \uae30\ub85d \uc815\ud655\uc131\uc744 \uba3c\uc800 \ud655\uc778\ud558\uace0 \ud544\uc694\ud55c \uba54\ubaa8\ub9cc \ubcf4\uc644\ud558\uc138\uc694."
+    : "Check the closed timeline first, then clean up institution details or notes only if the record is inaccurate.";
+}
+
 function getCurrentSectionLabel(locale: Locale, count: number) {
   return locale === "ko"
     ? `\ud604\uc7ac \uc18c\uc18d ${count}\uac74`
@@ -750,6 +772,10 @@ export function AffiliationWorkspace({
           </p>
           <dl className="field-list">
             <div className="field-row">
+              <dt>{getEditFocusLabel(locale)}</dt>
+              <dd>{getEditFocusHint(affiliation, locale)}</dd>
+            </div>
+            <div className="field-row">
               <dt>{getTimelineSnapshotLabel(locale)}</dt>
               <dd>{getTimelineSummary(affiliation, text.present, locale)}</dd>
             </div>
@@ -779,6 +805,62 @@ export function AffiliationWorkspace({
       </div>
       <div className="card-body">
         <div className="profile-form-grid">
+          <label className="editor-field">
+            <span>{text.appointmentStatus}</span>
+            <select
+              value={affiliation.appointmentStatus}
+              onChange={(event) =>
+                handleUpdateAffiliation(affiliation.id, {
+                  appointmentStatus:
+                    event.target.value as AffiliationTimelineEntry["appointmentStatus"],
+                })
+              }
+            >
+              {appointmentStatuses.map((value) => (
+                <option key={value} value={value}>
+                  {text.appointmentLabels[value]}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="editor-field">
+            <span>{text.active}</span>
+            <select
+              value={affiliation.active ? "active" : "inactive"}
+              onChange={(event) =>
+                handleUpdateAffiliation(affiliation.id, {
+                  active: event.target.value === "active",
+                })
+              }
+            >
+              <option value="active">{text.active}</option>
+              <option value="inactive">{text.inactive}</option>
+            </select>
+          </label>
+          <label className="editor-field">
+            <span>{text.startDate}</span>
+            <input
+              type="date"
+              value={affiliation.startDate}
+              onChange={(event) =>
+                handleUpdateAffiliation(affiliation.id, {
+                  startDate: event.target.value,
+                })
+              }
+            />
+          </label>
+          <label className="editor-field">
+            <span>{text.endDate}</span>
+            <input
+              type="date"
+              value={affiliation.endDate ?? ""}
+              onChange={(event) =>
+                handleUpdateAffiliation(affiliation.id, {
+                  endDate: event.target.value,
+                })
+              }
+            />
+          </label>
           <label className="editor-field">
             <span>{text.institution}</span>
             <input
@@ -855,62 +937,6 @@ export function AffiliationWorkspace({
                   {text.roleTrackLabels[value]}
                 </option>
               ))}
-            </select>
-          </label>
-          <label className="editor-field">
-            <span>{text.appointmentStatus}</span>
-            <select
-              value={affiliation.appointmentStatus}
-              onChange={(event) =>
-                handleUpdateAffiliation(affiliation.id, {
-                  appointmentStatus:
-                    event.target.value as AffiliationTimelineEntry["appointmentStatus"],
-                })
-              }
-            >
-              {appointmentStatuses.map((value) => (
-                <option key={value} value={value}>
-                  {text.appointmentLabels[value]}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="editor-field">
-            <span>{text.startDate}</span>
-            <input
-              type="date"
-              value={affiliation.startDate}
-              onChange={(event) =>
-                handleUpdateAffiliation(affiliation.id, {
-                  startDate: event.target.value,
-                })
-              }
-            />
-          </label>
-          <label className="editor-field">
-            <span>{text.endDate}</span>
-            <input
-              type="date"
-              value={affiliation.endDate ?? ""}
-              onChange={(event) =>
-                handleUpdateAffiliation(affiliation.id, {
-                  endDate: event.target.value,
-                })
-              }
-            />
-          </label>
-          <label className="editor-field">
-            <span>{text.active}</span>
-            <select
-              value={affiliation.active ? "active" : "inactive"}
-              onChange={(event) =>
-                handleUpdateAffiliation(affiliation.id, {
-                  active: event.target.value === "active",
-                })
-              }
-            >
-              <option value="active">{text.active}</option>
-              <option value="inactive">{text.inactive}</option>
             </select>
           </label>
           <label className="editor-field editor-field-full">
