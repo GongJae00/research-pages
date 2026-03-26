@@ -427,6 +427,7 @@ export function HomepageAgentControlSection({
                 </div>
                 {setupFlowDigest ? (
                   <div className={styles.setupSummaryBar} aria-label={copy.setupStepsLabel}>
+                    <p className={styles.setupSequenceIntro}>{copy.setupSequenceIntro}</p>
                     <div className={styles.setupSummaryLead}>
                       <span className={styles.metaLabel}>{setupFlowLabel}</span>
                       <div className={styles.setupSummaryInline}>
@@ -554,15 +555,18 @@ export function HomepageAgentControlSection({
               {nextSetupCommand ? (
                 <div className={styles.nextCommandStrip}>
                   <div className={styles.nextCommandLead}>
-                      <div className={styles.nextCommandCopy}>
-                        <div className={styles.nextCommandLabelRow}>
-                          <span className={styles.setupPickerStep}>03</span>
-                          <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
-                        </div>
-                        <strong>{nextSetupCommand.title}</strong>
-                        <span className={styles.nextCommandContext}>
-                          {formatSetupPair(selectedProvider?.label, selectedTeam?.name)}
+                    <div className={styles.nextCommandCopy}>
+                      <div className={styles.nextCommandLabelRow}>
+                        <span className={styles.setupPickerStep}>03</span>
+                        <span className={styles.metaLabel}>
+                          {copy.nextActionLabel}: {copy.runCommandLabel}
                         </span>
+                      </div>
+                      <strong>{nextSetupCommand.title}</strong>
+                      <span className={styles.nextCommandContext}>
+                        {selectedProvider?.label ?? "-"} {"->"} {selectedTeam?.name ?? "-"}
+                      </span>
+                      <p className={styles.nextCommandHelp}>{copy.nextCommandHelp}</p>
                     </div>
                     <span className={styles.inlineMeta}>{setupOutputLabel}</span>
                   </div>

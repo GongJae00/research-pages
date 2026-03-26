@@ -650,6 +650,15 @@
   margin-top: 0;
 }
 
+.setupSequenceIntro {
+  margin: 0;
+  color: #475569;
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.25;
+  max-width: 34rem;
+}
+
 .setupSummaryLead {
   display: flex;
   flex-wrap: wrap;
@@ -1105,6 +1114,14 @@
   display: grid;
   gap: 0.02rem;
   min-width: 0;
+}
+
+.nextCommandHelp {
+  margin: 0;
+  color: #475569;
+  font-size: 0.68rem;
+  line-height: 1.25;
+  max-width: 28rem;
 }
 
 .nextCommandContext {
