@@ -1115,6 +1115,8 @@ export function ProfileWorkspace({
     () => savedKeywordList.slice(0, 4).join(" · "),
     [savedKeywordList],
   );
+  const coreFocusKeywords = useMemo(() => savedKeywordList.slice(0, 4), [savedKeywordList]);
+  const hiddenCoreFocusKeywordCount = Math.max(savedKeywordList.length - coreFocusKeywords.length, 0);
   const heroLinks = useMemo(() => savedLinks.slice(0, 3), [savedLinks]);
   const primarySavedEmail = savedEmails[0] ?? null;
   const primarySavedLink = savedLinks[0] ?? null;
@@ -1158,14 +1160,12 @@ export function ProfileWorkspace({
           ? `키워드 ${savedKeywordList.length}개`
           : `${savedKeywordList.length} keyword${savedKeywordList.length === 1 ? "" : "s"}`
         : undefined;
+    const leadSummary = joinUniqueTextParts([
+      savedProfile.primaryInstitution,
+      savedProfile.primaryDiscipline,
+    ]);
 
-    return (
-      joinUniqueTextParts([
-        savedProfile.primaryInstitution,
-        savedProfile.primaryDiscipline,
-        keywordSummary,
-      ]) || text.emptyValue
-    );
+    return leadSummary || keywordSummary || text.emptyValue;
   }, [
     isKo,
     savedKeywordList,
@@ -2404,11 +2404,14 @@ export function ProfileWorkspace({
                               label: text.keywords,
                               value: (
                                 <div className="profile-inline-list profile-inline-list-muted">
-                                  {savedKeywordList.map((keyword) => (
-                                    <span className="profile-inline-text" key={keyword}>
+                                  {coreFocusKeywords.map((keyword) => (
+                                    <span className="pill pill-gray" key={keyword}>
                                       {keyword}
                                     </span>
                                   ))}
+                                  {hiddenCoreFocusKeywordCount > 0 ? (
+                                    <span className="pill pill-gray">+{hiddenCoreFocusKeywordCount}</span>
+                                  ) : null}
                                 </div>
                               ),
                             }

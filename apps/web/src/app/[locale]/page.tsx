@@ -379,7 +379,7 @@ export default async function LocaleRoot({ params }: Props) {
 
   return (
     <div className="marketing-shell rp-landing">
-      <section className="rp-hero-section" id="overview">
+      <section className="rp-hero-section" id="overview" style={{ gap: "10px" }}>
         <article className="card document-intro-card rp-hero-card">
           <div className="rp-hero-grid">
             <div className="rp-hero-copy">
@@ -506,14 +506,14 @@ export default async function LocaleRoot({ params }: Props) {
             </div>
           </div>
         </article>
-      </section>
 
-      <section className="rp-section" id="agent-control" style={{ gap: "0px" }}>
-        <HomepageAgentControlSection
-          initialSnapshot={opsSnapshot}
-          locale={resolvedLocale}
-          opsEnabled={opsEnabled}
-        />
+        <div id="agent-control">
+          <HomepageAgentControlSection
+            initialSnapshot={opsSnapshot}
+            locale={resolvedLocale}
+            opsEnabled={opsEnabled}
+          />
+        </div>
       </section>
 
       <section className="rp-section" id="workflow">
