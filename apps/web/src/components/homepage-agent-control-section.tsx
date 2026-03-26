@@ -345,7 +345,7 @@ export function HomepageAgentControlSection({
     return left.step.localeCompare(right.step);
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
-  const setupFlowSteps = getSetupFlowSteps(locale);
+  const setupFlowTitle = getSetupFlowSteps(locale).join(" -> ");
   const setupSelectionSummary =
     selectedProvider && selectedTeam ? `${selectedProvider.label} -> ${selectedTeam.name}` : null;
   const setupFlowDigest =
@@ -434,39 +434,37 @@ export function HomepageAgentControlSection({
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
-                  {setupFlowSteps.length ? (
-                    <span className={styles.setupTitleHint}>{setupFlowSteps.join(" -> ")}</span>
-                  ) : null}
-                </div>
-                <div className={styles.setupScanGrid} aria-label={copy.setupStepsLabel}>
-                  <span className={styles.setupScanCell}>
-                    <span className={styles.commandStep}>01</span>
-                    <span className={styles.setupScanLabel}>{copy.selectedCli}</span>
-                    <strong>{selectedProvider?.label ?? "-"}</strong>
-                    <span className={styles.setupScanMeta}>
-                      <span className={styles.setupStatusLabel}>{copy.selectedCliStatusLabel}</span>
-                      <span>{selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}</span>
-                    </span>
-                  </span>
-                  <span className={styles.setupScanCell}>
-                    <span className={styles.commandStep}>02</span>
-                    <span className={styles.setupScanLabel}>{copy.selectedTeamLabel}</span>
-                    <strong>{selectedTeam?.name ?? "-"}</strong>
-                    <span className={styles.setupScanMeta}>
-                      <span className={styles.setupStatusLabel}>{copy.selectedLaneLabel}</span>
-                      <span>{selectedTeam?.lane ?? "-"}</span>
-                    </span>
-                  </span>
-                  <span className={`${styles.setupScanCell} ${styles.setupScanCellAccent}`}>
-                    <span className={styles.commandStep}>03</span>
-                    <span className={styles.setupScanLabel}>{copy.runCommandLabel}</span>
-                    <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
-                  </span>
                 </div>
                 {setupFlowDigest ? (
-                  <div className={styles.setupFlowDigest} title={getSetupFlowLabel(locale)}>
-                    <span className={styles.setupFlowDigestLabel}>{copy.activeSetup}</span>
-                    <strong>{setupFlowDigest}</strong>
+                  <div
+                    className={styles.setupCompactBar}
+                    aria-label={copy.setupStepsLabel}
+                    title={`${getSetupFlowLabel(locale)}: ${setupFlowTitle}`}
+                  >
+                    <span className={styles.setupDigestLead}>{copy.activeSetup}</span>
+                    <span className={styles.setupDigestChip}>
+                      <span className={styles.setupDigestOrdinal}>01</span>
+                      <span className={styles.setupDigestLabel}>{copy.selectedCli}</span>
+                      <strong className={styles.setupDigestValue}>{selectedProvider?.label ?? "-"}</strong>
+                    </span>
+                    <span className={styles.sequenceArrow} aria-hidden="true">
+                      <ArrowRight size={12} />
+                    </span>
+                    <span className={styles.setupDigestChip}>
+                      <span className={styles.setupDigestOrdinal}>02</span>
+                      <span className={styles.setupDigestLabel}>{copy.selectedTeamLabel}</span>
+                      <strong className={styles.setupDigestValue}>{selectedTeam?.name ?? "-"}</strong>
+                    </span>
+                    <span className={styles.sequenceArrow} aria-hidden="true">
+                      <ArrowRight size={12} />
+                    </span>
+                    <span className={`${styles.setupDigestChip} ${styles.setupDigestChipAccent}`}>
+                      <span className={styles.setupDigestOrdinal}>03</span>
+                      <span className={styles.setupDigestLabel}>{copy.runCommandLabel}</span>
+                      <strong className={styles.setupDigestValue}>
+                        {nextSetupCommand?.title ?? copy.setupCommand}
+                      </strong>
+                    </span>
                   </div>
                 ) : null}
               </div>
