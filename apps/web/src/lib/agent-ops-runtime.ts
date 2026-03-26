@@ -46,6 +46,7 @@ const validConversationChannels = new Set<AgentOperationsSnapshot["conversationF
   "review",
 ]);
 const validDirectiveStatuses = new Set<string>(["idle", "active", "paused", "completed"]);
+const validAutonomyTaskStatuses = new Set<string>(["planned", "fallback", "failed"]);
 
 export class AgentOpsRuntimeStateError extends Error {}
 
@@ -158,6 +159,57 @@ function sanitizeCurrentDirective(
   };
 }
 
+function sanitizeAutonomyCurrentTask(
+  candidate: unknown,
+): AgentOpsRuntimeState["autonomy"]["currentTask"] {
+  type AutonomyCurrentTask = NonNullable<AgentOpsRuntimeState["autonomy"]["currentTask"]>;
+
+  if (
+    !isRuntimeMergeEntry(candidate) ||
+    !hasNonEmptyRuntimeString(candidate, "id") ||
+    !hasNonEmptyRuntimeString(candidate, "time") ||
+    !hasNonEmptyRuntimeString(candidate, "providerId") ||
+    !hasNonEmptyRuntimeString(candidate, "providerLabel") ||
+    !hasNonEmptyRuntimeString(candidate, "teamId") ||
+    !hasNonEmptyRuntimeString(candidate, "teamLabel") ||
+    !hasNonEmptyRuntimeString(candidate, "lane") ||
+    !hasNonEmptyRuntimeString(candidate, "objective") ||
+    !hasNonEmptyRuntimeString(candidate, "summary") ||
+    !hasNonEmptyRuntimeString(candidate, "operatorBrief") ||
+    !hasNonEmptyRuntimeString(candidate, "nextAction") ||
+    !hasNonEmptyRuntimeString(candidate, "teamDispatch") ||
+    !hasNonEmptyRuntimeString(candidate, "checkpoint") ||
+    !hasNonEmptyRuntimeString(candidate, "workItemTitle") ||
+    !Array.isArray(candidate.workItemFiles) ||
+    candidate.workItemFiles.some((entry) => typeof entry !== "string") ||
+    (candidate.artifactPath !== null && typeof candidate.artifactPath !== "string") ||
+    typeof candidate.status !== "string" ||
+    !validAutonomyTaskStatuses.has(candidate.status)
+  ) {
+    return null;
+  }
+
+  return {
+    id: candidate.id as string,
+    time: candidate.time as string,
+    providerId: candidate.providerId as AutonomyCurrentTask["providerId"],
+    providerLabel: candidate.providerLabel as string,
+    teamId: candidate.teamId as string,
+    teamLabel: candidate.teamLabel as string,
+    lane: candidate.lane as string,
+    objective: candidate.objective as string,
+    summary: candidate.summary as string,
+    operatorBrief: candidate.operatorBrief as string,
+    nextAction: candidate.nextAction as string,
+    teamDispatch: candidate.teamDispatch as string,
+    checkpoint: candidate.checkpoint as string,
+    workItemTitle: candidate.workItemTitle as string,
+    workItemFiles: [...candidate.workItemFiles],
+    artifactPath: candidate.artifactPath,
+    status: candidate.status as AutonomyCurrentTask["status"],
+  };
+}
+
 function normalizeRuntimeState(candidate: unknown, locale: string): AgentOpsRuntimeState {
   const fallback = createDefaultAgentOpsRuntimeState(locale);
   const defaultAutonomy = createDefaultAutonomyRuntime(locale, fallback.updatedAt);
@@ -213,10 +265,7 @@ function normalizeRuntimeState(candidate: unknown, locale: string): AgentOpsRunt
             providerHealth: Array.isArray(value.autonomy.providerHealth)
               ? value.autonomy.providerHealth.filter(isRuntimeMergeEntry)
               : defaultAutonomy.providerHealth,
-            currentTask:
-              value.autonomy.currentTask && typeof value.autonomy.currentTask === "object"
-                ? value.autonomy.currentTask
-                : defaultAutonomy.currentTask,
+            currentTask: sanitizeAutonomyCurrentTask(value.autonomy.currentTask),
             taskHistory: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["taskHistory"][number]>(
               value.autonomy.taskHistory,
             ),

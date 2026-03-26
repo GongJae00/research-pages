@@ -958,7 +958,7 @@ export function AffiliationWorkspace({
           <dl className="field-list">
             <div className="field-row">
               <dt>{getNextUpdateLabel(locale)}</dt>
-              <dd>{getEditActionLabel(affiliation, locale)}</dd>
+              <dd>{getNextActionSummary(affiliation, locale)}</dd>
             </div>
             <div className="field-row">
               <dt>{getEditFocusLabel(locale)}</dt>
@@ -973,7 +973,6 @@ export function AffiliationWorkspace({
               <dd>{getAffiliationEditReadiness(affiliation, locale, text)}</dd>
             </div>
           </dl>
-          <p className="card-support-text">{getNextActionSummary(affiliation, locale)}</p>
         </div>
         <div className="profile-history-side">
           <span className={`pill ${getAffiliationStatusClass(affiliation)}`}>
