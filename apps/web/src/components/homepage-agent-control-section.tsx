@@ -435,20 +435,13 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
-                <div
-                  className={styles.setupFlowSummary}
-                  aria-label={copy.setupStepsLabel}
-                  title={`${setupBuilderHint} ${getSetupFlowLabel(locale)}: ${setupFlowTitle}`}
-                >
-                  <span className={styles.setupFlowLabel}>{getSetupFlowLabel(locale)}</span>
-                  <span className={styles.setupFlowSequence}>{setupFlowTitle}</span>
-                </div>
                 {setupFlowDigest ? (
                   <div
                     className={styles.setupScanLine}
                     aria-label={copy.setupStepsLabel}
-                    title={`${getSetupFlowLabel(locale)}: ${setupFlowTitle}`}
+                    title={`${setupBuilderHint} ${getSetupFlowLabel(locale)}: ${setupFlowTitle}`}
                   >
+                    <span className={styles.setupFlowLabel}>{getSetupFlowLabel(locale)}</span>
                     <span className={styles.setupScanItem}>
                       <span className={styles.setupScanKey}>{copy.selectedCli}</span>
                       <strong>{selectedProvider?.label ?? "-"}</strong>
@@ -470,7 +463,16 @@ export function HomepageAgentControlSection({
                       <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
                     </span>
                   </div>
-                ) : null}
+                ) : (
+                  <div
+                    className={styles.setupScanLine}
+                    aria-label={copy.setupStepsLabel}
+                    title={`${setupBuilderHint} ${getSetupFlowLabel(locale)}: ${setupFlowTitle}`}
+                  >
+                    <span className={styles.setupFlowLabel}>{getSetupFlowLabel(locale)}</span>
+                    <span className={styles.setupFlowSequence}>{setupFlowTitle}</span>
+                  </div>
+                )}
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
