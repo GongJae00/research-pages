@@ -102,9 +102,15 @@ function getNavigationLabel(
 }
 
 function getShellNavigationHint(
+  key: (typeof shellNavItems)[number]["key"],
   href: string,
+  locale: string,
 ) {
-  return href;
+  if (key === "home") {
+    return locale === "ko" ? `\uACF5\uAC1C \uC9C4\uC785 \uACBD\uB85C: ${href}` : `Shareable route: ${href}`;
+  }
+
+  return locale === "ko" ? `\uB0B4\uBD80 \uBCF4\uB4DC \uACBD\uB85C: ${href}` : `Internal board route: ${href}`;
 }
 
 function getShellNavigationScopeLabel(
@@ -144,7 +150,7 @@ export function Sidebar({ locale, dict }: SidebarProps) {
           emptyLabs: "No labs joined yet",
         };
   const shellSectionTitle =
-    locale === "ko" ? "\uACF5\uAC1C / \uB0B4\uBD80" : "Public / internal";
+    locale === "ko" ? "\uACF5\uAC1C \uC250 / \uB0B4\uBD80 \uBCF4\uB4DC" : "Public shell / internal board";
 
   const isActive = (href: string) => {
     const full = `/${locale}${href}`;
@@ -197,7 +203,7 @@ export function Sidebar({ locale, dict }: SidebarProps) {
               item.key === "home"
                 ? getHomepageNavigationLabel(locale)
                 : getNavigationLabel(item.key, locale, dict);
-            const hint = getShellNavigationHint(href);
+            const hint = getShellNavigationHint(item.key, href, locale);
             const scopeLabel = getShellNavigationScopeLabel(item.key, locale);
 
             return (

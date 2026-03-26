@@ -2096,7 +2096,7 @@ export function AffiliationWorkspace({
                       .filter(Boolean)
                       .join(" ")}
                   </p>
-                  {renderSectionPrioritySummary("current", currentPriorityAffiliation)}
+                  {renderSectionPrioritySummary("current", currentPriorityAffiliation, true)}
                 </div>
               </div>
               <div className="card-body detail-cards">
@@ -2140,7 +2140,7 @@ export function AffiliationWorkspace({
                       .filter(Boolean)
                       .join(" ")}
                   </p>
-                  {renderSectionPrioritySummary("archived", archivedPriorityAffiliation)}
+                  {renderSectionPrioritySummary("archived", archivedPriorityAffiliation, true)}
                 </div>
               </div>
               <div className="card-body detail-cards">
