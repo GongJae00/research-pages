@@ -529,42 +529,51 @@ export function HomepageAgentControlSection({
             <div className={styles.setupWorkbench}>
               <div className={styles.setupSelectionPanel} aria-label={getSetupInputLabel(locale)}>
                 {nextSetupCommand ? (
-                  <div className={styles.setupSelectionLead}>
-                    <div className={styles.setupSelectionLeadTop}>
-                      <span className={styles.setupSelectionLeadLabel}>{setupFlowLabel}</span>
-                      <span className={styles.setupSelectionLeadPath}>{selectedSetupPath}</span>
-                    </div>
-                    <div className={styles.selectionDigestRow} aria-label={setupFlowLabel}>
-                      <span className={styles.selectionDigestChip}>
-                        <span className={styles.setupDigestKey}>{`01 ${copy.selectedCli}`}</span>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
-                        <span className={styles.selectionDigestMeta}>
-                          {`${copy.selectedCliStatusLabel}: ${
-                            selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"
-                          }`}
+                  <div className={styles.setupSummaryInline} aria-label={setupFlowLabel}>
+                    <span className={`${styles.summaryChip} ${styles.summaryChipAccent}`}>
+                      <span className={styles.commandStep}>01</span>
+                      <span className={styles.summaryChipCopy}>
+                        <span className={styles.metaLabel}>{copy.selectedCli}</span>
+                        <span className={styles.summaryChipValueRow}>
+                          <strong>{selectedProvider?.label ?? "-"}</strong>
+                          <span
+                            className={`${styles.inlineStatusBadge} ${getProviderStatusClass(
+                              selectedProvider?.status ?? "ready",
+                            )}`}
+                          >
+                            {selectedProvider
+                              ? getProviderStatusLabel(locale, selectedProvider.status)
+                              : "-"}
+                          </span>
                         </span>
                       </span>
-                      <span className={styles.selectionDigestArrow} aria-hidden="true">
-                        <ArrowRight size={14} />
-                      </span>
-                      <span className={styles.selectionDigestChip}>
-                        <span className={styles.setupDigestKey}>{`02 ${copy.selectedTeamLabel}`}</span>
-                        <strong>{selectedTeam?.name ?? "-"}</strong>
-                        <span className={styles.selectionDigestMeta}>
-                          {`${copy.selectedLaneLabel}: ${selectedTeam?.lane ?? "-"}`}
+                    </span>
+                    <span className={styles.summaryFlowArrow} aria-hidden="true">
+                      <ArrowRight size={14} />
+                    </span>
+                    <span className={styles.summaryChip}>
+                      <span className={styles.commandStep}>02</span>
+                      <span className={styles.summaryChipCopy}>
+                        <span className={styles.metaLabel}>{copy.selectedTeamLabel}</span>
+                        <span className={styles.summaryChipValueRow}>
+                          <strong>{selectedTeam?.name ?? "-"}</strong>
+                          <span className={styles.setupSummaryTag}>{selectedTeam?.lane ?? "-"}</span>
                         </span>
                       </span>
-                      <span className={styles.selectionDigestArrow} aria-hidden="true">
-                        <ArrowRight size={14} />
-                      </span>
-                      <span className={`${styles.selectionDigestChip} ${styles.selectionDigestChipActive}`}>
-                        <span className={styles.setupDigestKey}>{`03 ${copy.runCommandLabel}`}</span>
-                        <strong>{nextSetupCommand.title}</strong>
-                        <span className={styles.selectionDigestMeta}>
-                          {`${copy.nextActionLabel}: ${selectedSetupPath}`}
+                    </span>
+                    <span className={styles.summaryFlowArrow} aria-hidden="true">
+                      <ArrowRight size={14} />
+                    </span>
+                    <span className={`${styles.summaryChip} ${styles.summaryChipAccent} ${styles.summaryChipWide}`}>
+                      <span className={styles.commandStep}>03</span>
+                      <span className={styles.summaryChipCopy}>
+                        <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
+                        <span className={styles.summaryChipValueRow}>
+                          <strong>{nextSetupCommand.title}</strong>
+                          <span className={styles.setupSummaryTag}>{selectedSetupPath}</span>
                         </span>
                       </span>
-                    </div>
+                    </span>
                   </div>
                 ) : null}
 

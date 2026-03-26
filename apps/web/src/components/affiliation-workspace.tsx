@@ -345,6 +345,17 @@ function getAffiliationScanSummary(
   )}`;
 }
 
+function getAffiliationOnePassSummary(
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+) {
+  return [
+    getAffiliationStateLabel(entry, locale),
+    getTimelineSummary(entry, locale),
+    getEditActionLabel(entry, locale),
+  ].join(" / ");
+}
+
 function getCurrentTimelineLabel(locale: Locale) {
   return locale === "ko" ? "\ud0c0\uc784\ub77c\uc778 \ud604\uc7ac \uc5ec\ubd80" : "Current in timeline";
 }
@@ -1039,6 +1050,7 @@ export function AffiliationWorkspace({
         <div className="card-header">
           <div>
             <h3>{affiliation.roleTitle}</h3>
+            <p className="card-support-text">{getAffiliationOnePassSummary(affiliation, locale)}</p>
             <dl className="field-list">
               <div className="field-row">
                 <dt>{text.institution}</dt>
@@ -1159,6 +1171,9 @@ export function AffiliationWorkspace({
               <strong>{getEditingNowLabel(locale)}</strong>
             </p>
           ) : null}
+          <p className="card-support-text">
+            {getAffiliationOnePassSummary(affiliation, locale)}
+          </p>
           <p className="card-support-text">
             {getAffiliationScanSummary(affiliation, locale)}
           </p>
