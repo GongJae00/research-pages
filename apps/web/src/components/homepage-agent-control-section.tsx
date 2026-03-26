@@ -337,6 +337,9 @@ export function HomepageAgentControlSection({
     snapshot.teams.find((entry) => entry.id === selectedTeamId) ?? snapshot.teams[0];
   const nextCommandKind: "connect" | "assign" =
     selectedProvider?.status === "connected" ? "assign" : "connect";
+  const selectedProviderStatusLabel = selectedProvider
+    ? getProviderStatusLabel(locale, selectedProvider.status)
+    : "-";
   const setupManifest = useMemo(() => {
     if (!selectedProvider || !selectedTeam) {
       return null;
@@ -383,28 +386,6 @@ export function HomepageAgentControlSection({
     return left.step.localeCompare(right.step);
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
-  const nextCommandPath = nextSetupCommand ? (
-    <div className={styles.nextCommandPath} aria-label={setupFlowLabel}>
-      <div className={styles.nextCommandPathSegment}>
-        <span className={styles.nextCommandPathMeta}>{copy.selectedCli}</span>
-        <strong>{selectedProvider?.label ?? "-"}</strong>
-      </div>
-      <span className={styles.nextCommandPathArrow} aria-hidden="true">
-        &rarr;
-      </span>
-      <div className={styles.nextCommandPathSegment}>
-        <span className={styles.nextCommandPathMeta}>{copy.selectedTeamLabel}</span>
-        <strong>{selectedTeam?.name ?? "-"}</strong>
-      </div>
-      <span className={styles.nextCommandPathArrow} aria-hidden="true">
-        &rarr;
-      </span>
-      <div className={`${styles.nextCommandPathSegment} ${styles.nextCommandPathSegmentActive}`}>
-        <span className={styles.nextCommandPathMeta}>{copy.runCommandLabel}</span>
-        <strong>{nextSetupCommand.title}</strong>
-      </div>
-    </div>
-  ) : null;
   const activeSetupSummary = (
     <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
       <div className={styles.setupCompactSummaryItem}>
@@ -413,10 +394,11 @@ export function HomepageAgentControlSection({
           <span className={styles.setupDigestKey}>{copy.selectedCli}</span>
           <div className={styles.setupCompactSummaryValueRow}>
             <strong>{selectedProvider?.label ?? "-"}</strong>
-            <span className={styles.inlineMeta}>
-              {copy.selectedCliStatusLabel}:{" "}
-              {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
-            </span>
+            {selectedProvider ? (
+              <span className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}>
+                {selectedProviderStatusLabel}
+              </span>
+            ) : null}
           </div>
         </div>
       </div>
@@ -431,9 +413,7 @@ export function HomepageAgentControlSection({
           <span className={styles.setupDigestKey}>{copy.selectedTeamLabel}</span>
           <div className={styles.setupCompactSummaryValueRow}>
             <strong>{selectedTeam?.name ?? "-"}</strong>
-            <span className={styles.inlineMeta}>
-              {copy.selectedLaneLabel}: {selectedTeam?.lane ?? "-"}
-            </span>
+            {selectedTeam ? <span className={styles.setupCompactSummaryMetaBadge}>{selectedTeam.lane}</span> : null}
           </div>
         </div>
       </div>
@@ -449,9 +429,6 @@ export function HomepageAgentControlSection({
               <span className={styles.setupDigestKey}>{copy.runCommandLabel}</span>
               <div className={styles.setupCompactSummaryValueRow}>
                 <strong>{nextSetupCommand.title}</strong>
-                <span className={styles.inlineMeta}>
-                  {(selectedProvider?.label ?? "-") + " -> " + (selectedTeam?.name ?? "-")}
-                </span>
               </div>
             </div>
           </div>
@@ -680,7 +657,19 @@ export function HomepageAgentControlSection({
                       <span className={styles.setupSelectionLeadLabel}>{copy.nextCommandLabel}</span>
                       <span className={styles.nextCommandOutput}>{nextSetupCommand.title}</span>
                     </div>
-                    {nextCommandPath}
+                    <div className={styles.nextCommandContext} aria-label={setupFlowLabel}>
+                      <div className={styles.nextCommandContextStep}>
+                        <span className={styles.nextCommandContextLabel}>{copy.selectedCli}</span>
+                        <strong>{selectedProvider?.label ?? "-"}</strong>
+                      </div>
+                      <span className={styles.nextCommandContextArrow} aria-hidden="true">
+                        &rarr;
+                      </span>
+                      <div className={styles.nextCommandContextStep}>
+                        <span className={styles.nextCommandContextLabel}>{copy.selectedTeamLabel}</span>
+                        <strong>{selectedTeam?.name ?? "-"}</strong>
+                      </div>
+                    </div>
                   </div>
 
                   <div className={styles.nextCommandMain}>

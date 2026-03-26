@@ -912,42 +912,6 @@ export function ProfileWorkspace({
     () => normalizeStructuredLinks(savedProfile.links),
     [savedProfile.links],
   );
-  const savedAdditionalEmailCountLabel = useMemo(() => {
-    const additionalCount = Math.max(savedEmails.length - 1, 0);
-
-    if (additionalCount === 0) {
-      return undefined;
-    }
-
-    return isKo
-      ? `추가 이메일 ${additionalCount}`
-      : `${additionalCount} more email${additionalCount === 1 ? "" : "s"}`;
-  }, [isKo, savedEmails.length]);
-  const savedAdditionalLinkCountLabel = useMemo(() => {
-    const additionalCount = Math.max(savedLinks.length - 1, 0);
-
-    if (additionalCount === 0) {
-      return undefined;
-    }
-
-    return isKo
-      ? `추가 링크 ${additionalCount}`
-      : `${additionalCount} more link${additionalCount === 1 ? "" : "s"}`;
-  }, [isKo, savedLinks.length]);
-  const savedEmailCountLabel = useMemo(
-    () =>
-      isKo
-        ? `이메일 ${savedEmails.length}`
-        : `${savedEmails.length} email${savedEmails.length === 1 ? "" : "s"}`,
-    [isKo, savedEmails.length],
-  );
-  const savedLinkCountLabel = useMemo(
-    () =>
-      isKo
-        ? `링크 ${savedLinks.length}`
-        : `${savedLinks.length} link${savedLinks.length === 1 ? "" : "s"}`,
-    [isKo, savedLinks.length],
-  );
   const linkedDocuments = useMemo(
     () => documents.filter((document) => linkedDocumentIds.includes(document.id)),
     [documents, linkedDocumentIds],
@@ -1123,22 +1087,16 @@ export function ProfileWorkspace({
   const primarySavedLinkDisplayUrl = primarySavedLink
     ? getProfileLinkDisplayUrl(primarySavedLink.url)
     : "";
-  const primaryEmailLabel = isKo ? `${text.primaryItem} ${text.email}` : "Primary email";
-  const primaryLinkLabel = isKo ? `${text.primaryItem} 링크` : "Primary link";
+  const savedEmailTotalLabel = isKo ? `${savedEmails.length}개` : `${savedEmails.length} total`;
+  const savedLinkTotalLabel = isKo ? `${savedLinks.length}개` : `${savedLinks.length} total`;
   const coreContactSummary = useMemo(() => {
-    const countParts = [
-      savedEmails.length > 0 ? savedEmailCountLabel : undefined,
-      savedLinks.length > 0 ? savedLinkCountLabel : undefined,
+    const primaryContactParts = [
+      primarySavedEmail,
+      primarySavedLinkDisplayUrl || undefined,
     ];
 
-    return joinUniqueTextParts(countParts) || text.emptyValue;
-  }, [
-    savedEmailCountLabel,
-    savedEmails.length,
-    savedLinkCountLabel,
-    savedLinks.length,
-    text.emptyValue,
-  ]);
+    return joinUniqueTextParts(primaryContactParts) || text.emptyValue;
+  }, [primarySavedEmail, primarySavedLinkDisplayUrl, text.emptyValue]);
   const coreIdentifierSummary = useMemo(() => {
     const parts = [
       savedProfile.nationalResearcherNumber ? text.nationalId : undefined,
@@ -1687,6 +1645,7 @@ export function ProfileWorkspace({
     items: Array<{
       key: string;
       label: string;
+      badge?: string;
       value: ReactNode;
     }>,
     emptyLabel: string,
@@ -1700,7 +1659,16 @@ export function ProfileWorkspace({
         {items.map((item) => (
           <div className="profile-career-status-row" key={item.key}>
             <div className="profile-career-status-main">
-              <strong>{item.label}</strong>
+              {item.badge ? (
+                <strong>
+                  <span className="profile-inline-list profile-inline-list-muted">
+                    <span>{item.label}</span>
+                    <span className="pill pill-gray">{item.badge}</span>
+                  </span>
+                </strong>
+              ) : (
+                <strong>{item.label}</strong>
+              )}
               {item.value}
             </div>
           </div>
@@ -2295,17 +2263,13 @@ export function ProfileWorkspace({
                         primarySavedEmail
                           ? {
                               key: "primary-email",
-                              label: primaryEmailLabel,
+                              label: text.emailsLabel,
+                              badge: savedEmailTotalLabel,
                               value: (
                                 <span className="profile-inline-list profile-inline-list-muted">
                                   <a href={`mailto:${primarySavedEmail}`} className="profile-inline-link">
                                     {primarySavedEmail}
                                   </a>
-                                  {savedAdditionalEmailCountLabel ? (
-                                    <span className="pill pill-gray">
-                                      {savedAdditionalEmailCountLabel}
-                                    </span>
-                                  ) : null}
                                 </span>
                               ),
                             }
@@ -2313,7 +2277,8 @@ export function ProfileWorkspace({
                         primarySavedLink
                           ? {
                               key: "primary-link",
-                              label: primaryLinkLabel,
+                              label: text.linksLabel,
+                              badge: savedLinkTotalLabel,
                               value: (
                                 <span className="profile-inline-list profile-inline-list-muted">
                                   <span className="pill pill-gray">
@@ -2331,11 +2296,6 @@ export function ProfileWorkspace({
                                     <span>{primarySavedLinkDisplayUrl}</span>
                                     <ExternalLink size={13} />
                                   </a>
-                                  {savedAdditionalLinkCountLabel ? (
-                                    <span className="pill pill-gray">
-                                      {savedAdditionalLinkCountLabel}
-                                    </span>
-                                  ) : null}
                                 </span>
                               ),
                             }

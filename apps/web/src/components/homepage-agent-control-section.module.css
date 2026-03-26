@@ -727,10 +727,10 @@
 
 .setupCompactSummaryItem {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.08rem;
   min-width: 0;
-  padding: 0.02rem 0.05rem;
+  padding: 0.03rem 0.06rem;
   border: 1px solid rgba(203, 213, 225, 0.64);
   border-radius: 10px;
   background: rgba(248, 250, 252, 0.92);
@@ -745,7 +745,7 @@
 
 .setupCompactSummaryContent {
   display: grid;
-  gap: 0.01rem;
+  gap: 0.02rem;
   min-width: 0;
 }
 
@@ -776,6 +776,24 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.04rem;
+}
+
+.setupCompactSummaryMetaBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0.94rem;
+  max-width: 100%;
+  padding: 0.05rem 0.1rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #475569;
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  overflow-wrap: anywhere;
 }
 
 .setupCompactSummaryItem strong {
@@ -1834,6 +1852,46 @@
   max-width: none;
 }
 
+.nextCommandContext {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.04rem;
+  width: 100%;
+}
+
+.nextCommandContextStep {
+  display: grid;
+  gap: 0.01rem;
+  min-width: 0;
+  padding: 0.07rem 0.1rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.88);
+  flex: 1 1 8.5rem;
+}
+
+.nextCommandContextStep strong {
+  color: #0f172a;
+  font-size: 0.72rem;
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+.nextCommandContextLabel {
+  color: #64748b;
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.nextCommandContextArrow {
+  color: #94a3b8;
+  flex: 0 0 auto;
+}
+
 .nextCommandPath {
   display: flex;
   flex-wrap: wrap;
@@ -2832,6 +2890,14 @@
   }
 
   .nextCommandPathArrow {
+    display: none;
+  }
+
+  .nextCommandContext {
+    align-items: stretch;
+  }
+
+  .nextCommandContextArrow {
     display: none;
   }
 
