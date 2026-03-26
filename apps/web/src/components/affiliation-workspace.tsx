@@ -269,14 +269,51 @@ function getAffiliationOverview(items: AffiliationTimelineEntry[], locale: Local
 
 function getTimelineSummary(
   entry: AffiliationTimelineEntry,
-  presentLabel: string,
   locale: Locale,
 ) {
   if (entry.active) {
     return locale === "ko" ? `${entry.startDate}부터 현재까지` : `Current since ${entry.startDate}`;
   }
 
-  return `${entry.startDate} - ${entry.endDate ?? presentLabel}`;
+  if (entry.appointmentStatus === "planned") {
+    return locale === "ko"
+      ? `${entry.startDate} 시작 예정`
+      : `Planned to start ${entry.startDate}`;
+  }
+
+  if (entry.appointmentStatus === "paused") {
+    return locale === "ko"
+      ? `${entry.startDate} 시작 후 보류`
+      : `Paused after starting ${entry.startDate}`;
+  }
+
+  if (entry.endDate) {
+    return `${entry.startDate} - ${entry.endDate}`;
+  }
+
+  return locale === "ko"
+    ? `${entry.startDate} 시작, 종료일 입력 필요`
+    : `Started ${entry.startDate}; add an end date`;
+}
+
+function getTimelineEndLabel(
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+  text: (typeof copy)[Locale],
+) {
+  if (entry.active) {
+    return text.present;
+  }
+
+  if (entry.endDate) {
+    return entry.endDate;
+  }
+
+  if (entry.appointmentStatus === "planned" || entry.appointmentStatus === "paused") {
+    return text.appointmentLabels[entry.appointmentStatus];
+  }
+
+  return locale === "ko" ? "종료일 필요" : "End date needed";
 }
 
 function getAffiliationStateLabel(
@@ -301,11 +338,9 @@ function getAffiliationStateLabel(
 function getAffiliationScanSummary(
   entry: AffiliationTimelineEntry,
   locale: Locale,
-  text: (typeof copy)[Locale],
 ) {
   return `${getAffiliationStateLabel(entry, locale)} · ${getTimelineSummary(
     entry,
-    text.present,
     locale,
   )}`;
 }
@@ -337,9 +372,21 @@ function getNextActionSummary(entry: AffiliationTimelineEntry, locale: Locale) {
       : "Add an end date and update the status when this role closes.";
   }
 
+  if (entry.appointmentStatus === "planned") {
+    return locale === "ko"
+      ? "시작 예정일을 확인하고, 시작 시점에 현재 소속으로 바꾸세요."
+      : "Confirm the planned start date, then switch this role to current when it begins.";
+  }
+
+  if (entry.appointmentStatus === "paused") {
+    return locale === "ko"
+      ? "이 역할을 재개할지 종료할지 먼저 결정하고 타임라인을 갱신하세요."
+      : "Decide whether this role should resume or close, then update the timeline.";
+  }
+
   return locale === "ko"
-    ? "역할이 다시 시작되거나 연결 문서를 갱신해야 하면 편집을 다시 여세요."
-    : "Reopen editing if this role resumes or its linked evidence needs an update.";
+    ? "종료 날짜, 메모, 연결 증빙이 틀릴 때만 다시 수정하세요."
+    : "Reopen editing only if closed dates, notes, or linked evidence need a correction.";
 }
 
 function getTimelineSnapshotLabel(locale: Locale) {
@@ -762,7 +809,7 @@ export function AffiliationWorkspace({
           <h3>{affiliation.roleTitle}</h3>
           <p className="card-support-text">{joinAffiliationSummary(affiliation)}</p>
           <p className="card-support-text">
-            {getAffiliationScanSummary(affiliation, locale, text)}
+            {getAffiliationScanSummary(affiliation, locale)}
           </p>
         </div>
         <div className="profile-history-side">
@@ -785,7 +832,7 @@ export function AffiliationWorkspace({
         <div className="profile-history-item profile-history-item-compact">
           <div className="profile-history-period">
             <strong>{affiliation.startDate}</strong>
-            <span>{affiliation.endDate ?? text.present}</span>
+            <span>{getTimelineEndLabel(affiliation, locale, text)}</span>
           </div>
           <div className="profile-history-body">
             <dl className="field-list">
@@ -798,7 +845,7 @@ export function AffiliationWorkspace({
               </div>
               <div className="field-row">
                 <dt>{getTimelineSnapshotLabel(locale)}</dt>
-                <dd>{getTimelineSummary(affiliation, text.present, locale)}</dd>
+                <dd>{getTimelineSummary(affiliation, locale)}</dd>
               </div>
               <div className="field-row">
                 <dt>{getNextUpdateLabel(locale)}</dt>
@@ -851,14 +898,12 @@ export function AffiliationWorkspace({
         <div>
           <h3>{getEditableAffiliationHeading(affiliation, index, locale, text)}</h3>
           <p className="card-support-text">
-            {getAffiliationScanSummary(affiliation, locale, text)}
+            {getAffiliationScanSummary(affiliation, locale)}
           </p>
           <p className="card-support-text">
             {[
               affiliation.roleTitle || affiliation.institutionName || text.institution,
-              affiliation.startDate
-                ? getTimelineSummary(affiliation, text.present, locale)
-                : text.startDate,
+              affiliation.startDate ? getTimelineSummary(affiliation, locale) : text.startDate,
               affiliation.active
                 ? locale === "ko"
                   ? "?꾩옱 吏꾪뻾 以?"
@@ -880,7 +925,7 @@ export function AffiliationWorkspace({
             </div>
             <div className="field-row">
               <dt>{getTimelineSnapshotLabel(locale)}</dt>
-              <dd>{getTimelineSummary(affiliation, text.present, locale)}</dd>
+              <dd>{getTimelineSummary(affiliation, locale)}</dd>
             </div>
             <div className="field-row">
               <dt>{getSaveReadinessLabel(locale)}</dt>
@@ -1192,7 +1237,7 @@ export function AffiliationWorkspace({
                       {[
                         affiliation.roleTitle || affiliation.institutionName || text.institution,
                         affiliation.startDate
-                          ? getTimelineSummary(affiliation, text.present, locale)
+                          ? getTimelineSummary(affiliation, locale)
                           : text.startDate,
                         affiliation.active
                           ? locale === "ko"

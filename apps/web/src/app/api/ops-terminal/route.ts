@@ -5,6 +5,7 @@ import {
   listOpsShellPresets,
   listOpsTerminalSessions,
   type OpsTerminalCommandResult,
+  type OpsTerminalSessionSnapshot,
   runOpsTerminalCommand,
   sendOpsTerminalInput,
   stopOpsTerminalSession,
@@ -65,11 +66,60 @@ function getCommandRecovery(result: OpsTerminalCommandResult) {
   return "Retry the command, or switch to an interactive terminal session if the task needs more context.";
 }
 
+function getSessionFailureState(
+  session: OpsTerminalSessionSnapshot | null,
+  sessionId?: string,
+): {
+  status: number;
+  transition: OpsTerminalFailureTransition;
+  recovery: string;
+} | null {
+  if (sessionId && !session) {
+    return {
+      status: 404,
+      transition: "missing",
+      recovery: "Refresh terminal sessions, then retry with an active session or start a new one.",
+    };
+  }
+
+  if (!session) {
+    return null;
+  }
+
+  switch (session.status) {
+    case "stopping":
+      return {
+        status: 409,
+        transition: "stopping",
+        recovery:
+          "Wait for the stop request to settle, refresh terminal sessions, then retry with a new active session.",
+      };
+    case "closed":
+      return {
+        status: 409,
+        transition: "closed",
+        recovery: session.stopRequestedAt
+          ? "The session has already closed after a stop request. Refresh terminal sessions, then start a new session before retrying."
+          : "The session has already closed. Refresh terminal sessions, then start a new session before retrying.",
+      };
+    case "error":
+      return {
+        status: 409,
+        transition: "error",
+        recovery:
+          "Review the session transcript for the failure details, then start a new session before retrying.",
+      };
+    default:
+      return null;
+  }
+}
+
 function getSessionErrorResponse(error: unknown, sessionId?: string) {
   const message = error instanceof Error ? error.message : "Ops terminal request failed.";
   const sessions = listOpsTerminalSessions();
   const session = sessionId ? sessions.find((item) => item.id === sessionId) ?? null : null;
   const availableShells = listOpsShellPresets();
+  const sessionFailure = getSessionFailureState(session, sessionId);
 
   const buildFailureResponse = (
     status: number,
@@ -97,35 +147,34 @@ function getSessionErrorResponse(error: unknown, sessionId?: string) {
     );
   }
 
-  if (message.startsWith('Unknown session "')) {
-    return buildFailureResponse(404, "missing", "Refresh terminal sessions and retry with an active session.");
-  }
-
-  if (message.includes('" is not running.')) {
-    const transition = session?.status === "error" ? "error" : "closed";
-    const recovery =
-      session?.status === "error"
-        ? "Review the session transcript for the failure, then start a new session before retrying."
-        : "Start a new session or stop the stale session before retrying.";
-
-    return buildFailureResponse(409, transition, recovery);
-  }
-
-  if (message.includes('" is not accepting input.')) {
-    const transition = session?.status === "closed" ? "closed" : "error";
-    const recovery =
-      transition === "closed"
-        ? "Refresh terminal sessions, then start a new session before retrying."
-        : "Review the session transcript for the stream failure, then start a new session before retrying.";
-
-    return buildFailureResponse(409, transition, recovery);
-  }
-
-  if (message.includes('" is stopping.')) {
+  if (message.startsWith('Unknown session "') || sessionFailure?.transition === "missing") {
     return buildFailureResponse(
-      409,
-      "stopping",
-      "Wait for the stop request to settle, refresh sessions, then retry with a new active session.",
+      sessionFailure?.status ?? 404,
+      sessionFailure?.transition ?? "missing",
+      sessionFailure?.recovery ??
+        "Refresh terminal sessions, then retry with an active session or start a new one.",
+    );
+  }
+
+  if (
+    message.includes('" is not running.') ||
+    message.includes('" is not accepting input.') ||
+    message.includes('" is stopping.')
+  ) {
+    if (sessionFailure) {
+      return buildFailureResponse(
+        sessionFailure.status,
+        sessionFailure.transition,
+        sessionFailure.recovery,
+      );
+    }
+  }
+
+  if (sessionFailure) {
+    return buildFailureResponse(
+      sessionFailure.status,
+      sessionFailure.transition,
+      sessionFailure.recovery,
     );
   }
 
