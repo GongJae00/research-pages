@@ -653,54 +653,53 @@
 }
 
 .setupSummaryBar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  display: grid;
   gap: 0.06rem;
   margin-top: 0.02rem;
 }
 
-.setupSummaryCompact {
+.setupSequenceGrid {
   display: grid;
-  gap: 0.02rem;
-  min-width: 0;
-  flex: 1 1 12rem;
-  padding: 0.08rem 0.12rem;
-  border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 14px;
-  background: rgba(248, 250, 252, 0.9);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.06rem;
 }
 
-.setupSummaryCompact strong {
+.setupSequenceCard {
+  display: grid;
+  gap: 0.04rem;
+  min-width: 0;
+  padding: 0.12rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 14px;
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.setupSequenceCard strong {
   color: #0f172a;
   font-size: 0.76rem;
   line-height: 1.15;
   overflow-wrap: anywhere;
 }
 
-.setupSummaryBar .setupSummaryItem {
+.setupSequenceHead {
   display: inline-flex;
   align-items: center;
-  gap: 0.24rem;
+  gap: 0.12rem;
   min-width: 0;
-  padding: 0.1rem 0.18rem;
-  border-radius: 999px;
 }
 
-.setupSummaryBar .setupSummaryItem strong {
-  display: inline;
-  font-size: 0.72rem;
-  line-height: 1;
+.setupSequenceMeta {
+  color: #475569;
+  font-size: 0.66rem;
+  font-weight: 700;
+  line-height: 1.15;
   overflow-wrap: anywhere;
 }
 
-.setupSummaryBar .setupSummaryItem .setupScanLabel {
-  white-space: nowrap;
-}
-
-.setupSummaryItemAccent {
+.setupSequenceCardAccent {
   border-color: rgba(15, 23, 42, 0.12);
   background: rgba(241, 245, 249, 0.98);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
 }
 
 .sequenceArrow {
@@ -1788,8 +1787,11 @@
     align-items: stretch;
   }
 
-  .setupSummaryCompact,
-  .setupFlowChip {
+  .setupSequenceGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .setupSequenceCard {
     width: 100%;
   }
 
