@@ -1823,6 +1823,10 @@
   gap: 0.02rem;
 }
 
+.nextCommandLead .setupCompactSummary {
+  width: 100%;
+}
+
 .nextCommandPath {
   display: flex;
   flex-wrap: wrap;

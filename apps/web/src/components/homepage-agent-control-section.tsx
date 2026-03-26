@@ -158,7 +158,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
         "브라우저가 로컬 터미널을 직접 제어하지는 않지만, 각 개발자는 CLI 세션을 로컬 브리지에 등록하고 이 페이지에서 연결 상태를 확인할 수 있습니다.",
       setupBuilderLabel: "홈페이지 셋업 빌더",
       setupBuilderTitle: "CLI 설정 한눈에 보기",
-      setupSequenceIntro: "CLI를 고르고 팀을 붙인 다음 바로 실행할 명령까지 같은 순서로 확인합니다.",
+      setupSequenceIntro: "CLI를 먼저 고르고 팀을 붙인 뒤, 아래 강조된 다음 명령을 바로 실행합니다.",
       selectedCliStatusLabel: "CLI 상태",
       selectedLaneLabel: "팀 lane",
       connectCommand: "연결 명령 복사",
@@ -171,8 +171,9 @@ function getCopy(locale: string, opsEnabled: boolean) {
       selectedTeamLabel: "선택 팀",
       statusLabel: "상태",
       nextActionLabel: "다음",
+      nextCommandLabel: "다음 명령",
       runCommandLabel: "명령 실행",
-      nextCommandHelp: "위에서 CLI와 팀을 고른 뒤 이 명령을 터미널에서 바로 실행합니다.",
+      nextCommandHelp: "선택한 CLI와 팀 기준으로 아래 강조된 명령 하나만 터미널에서 바로 실행합니다.",
       chooseProvider: "CLI 선택",
       chooseTeam: "팀 선택",
       setupCommand: "셋업 명령",
@@ -221,7 +222,7 @@ function getCopy(locale: string, opsEnabled: boolean) {
       "Each developer registers a local CLI session with the bridge, and this page keeps connection state and team ownership visible.",
     setupBuilderLabel: "Homepage setup builder",
     setupBuilderTitle: "CLI setup at a glance",
-    setupSequenceIntro: "Pick the CLI, confirm the team, then run the next command in that same order.",
+    setupSequenceIntro: "Choose the CLI first, assign the team second, then run the highlighted command below.",
     selectedCliStatusLabel: "CLI status",
     selectedLaneLabel: "Team lane",
     connectCommand: "Copy connect command",
@@ -234,8 +235,9 @@ function getCopy(locale: string, opsEnabled: boolean) {
     selectedTeamLabel: "Selected team",
     statusLabel: "Status",
     nextActionLabel: "Next",
+    nextCommandLabel: "Next command",
     runCommandLabel: "Run command",
-    nextCommandHelp: "After choosing the CLI and team above, run this command in the terminal next.",
+    nextCommandHelp: "For the selected CLI and team, run the single highlighted command below in the terminal next.",
     chooseProvider: "CLI",
     chooseTeam: "Team",
     setupCommand: "Setup command",
@@ -381,6 +383,60 @@ export function HomepageAgentControlSection({
     return left.step.localeCompare(right.step);
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
+  const activeSetupSummary = (
+    <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
+      <div className={styles.setupCompactSummaryItem}>
+        <span className={styles.setupCompactSummaryOrdinal}>01</span>
+        <div className={styles.setupCompactSummaryContent}>
+          <span className={styles.setupDigestKey}>{copy.selectedCli}</span>
+          <div className={styles.setupCompactSummaryValueRow}>
+            <strong>{selectedProvider?.label ?? "-"}</strong>
+            <span className={styles.inlineMeta}>
+              {copy.selectedCliStatusLabel}:{" "}
+              {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
+        &rarr;
+      </span>
+
+      <div className={styles.setupCompactSummaryItem}>
+        <span className={styles.setupCompactSummaryOrdinal}>02</span>
+        <div className={styles.setupCompactSummaryContent}>
+          <span className={styles.setupDigestKey}>{copy.selectedTeamLabel}</span>
+          <div className={styles.setupCompactSummaryValueRow}>
+            <strong>{selectedTeam?.name ?? "-"}</strong>
+            <span className={styles.inlineMeta}>
+              {copy.selectedLaneLabel}: {selectedTeam?.lane ?? "-"}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {nextSetupCommand ? (
+        <>
+          <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
+            &rarr;
+          </span>
+          <div className={`${styles.setupCompactSummaryItem} ${styles.setupCompactSummaryItemAccent}`}>
+            <span className={styles.setupCompactSummaryOrdinal}>03</span>
+            <div className={styles.setupCompactSummaryContent}>
+              <span className={styles.setupDigestKey}>{copy.runCommandLabel}</span>
+              <div className={styles.setupCompactSummaryValueRow}>
+                <strong>{nextSetupCommand.title}</strong>
+                <span className={styles.inlineMeta}>
+                  {(selectedProvider?.label ?? "-") + " -> " + (selectedTeam?.name ?? "-")}
+                </span>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : null}
+    </div>
+  );
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
       kind === "connect" ? setupManifest?.commands.connect ?? "" : setupManifest?.commands.assign ?? "";
@@ -546,60 +602,6 @@ export function HomepageAgentControlSection({
                     <span className={styles.setupSelectionLeadLabel}>{copy.activeSetup}</span>
                   </div>
                   <p className={styles.setupSelectionLeadHint}>{copy.setupSequenceIntro}</p>
-                  <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
-                    <div className={styles.setupCompactSummaryItem}>
-                      <span className={styles.setupCompactSummaryOrdinal}>01</span>
-                      <div className={styles.setupCompactSummaryContent}>
-                        <span className={styles.setupDigestKey}>{copy.selectedCli}</span>
-                        <div className={styles.setupCompactSummaryValueRow}>
-                          <strong>{selectedProvider?.label ?? "-"}</strong>
-                          <span className={styles.inlineMeta}>
-                            {copy.selectedCliStatusLabel}:{" "}
-                            {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
-                      →
-                    </span>
-
-                    <div className={styles.setupCompactSummaryItem}>
-                      <span className={styles.setupCompactSummaryOrdinal}>02</span>
-                      <div className={styles.setupCompactSummaryContent}>
-                        <span className={styles.setupDigestKey}>{copy.selectedTeamLabel}</span>
-                        <div className={styles.setupCompactSummaryValueRow}>
-                          <strong>{selectedTeam?.name ?? "-"}</strong>
-                          <span className={styles.inlineMeta}>
-                            {copy.selectedLaneLabel}: {selectedTeam?.lane ?? "-"}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {nextSetupCommand ? (
-                      <>
-                        <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
-                          →
-                        </span>
-                        <div
-                          className={`${styles.setupCompactSummaryItem} ${styles.setupCompactSummaryItemAccent}`}
-                        >
-                          <span className={styles.setupCompactSummaryOrdinal}>03</span>
-                          <div className={styles.setupCompactSummaryContent}>
-                            <span className={styles.setupDigestKey}>{copy.runCommandLabel}</span>
-                            <div className={styles.setupCompactSummaryValueRow}>
-                              <strong>{nextSetupCommand.title}</strong>
-                              <span className={styles.inlineMeta}>
-                                {(selectedProvider?.label ?? "-") + " -> " + (selectedTeam?.name ?? "-")}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </>
-                    ) : null}
-                  </div>
                 </div>
 
                 <div className={styles.setupPickerGrid}>
@@ -676,27 +678,12 @@ export function HomepageAgentControlSection({
               {nextSetupCommand ? (
                 <div className={styles.nextCommandStrip}>
                   <div className={styles.nextCommandLead}>
-                    <div className={styles.nextCommandPath} aria-label={setupFlowLabel}>
-                      <div className={styles.nextCommandPathSegment}>
-                        <span className={styles.nextCommandPathMeta}>01 {copy.selectedCli}</span>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
-                      </div>
-                      <ArrowRight className={styles.nextCommandPathArrow} size={14} aria-hidden="true" />
-                      <div className={styles.nextCommandPathSegment}>
-                        <span className={styles.nextCommandPathMeta}>02 {copy.selectedTeamLabel}</span>
-                        <strong>{selectedTeam?.name ?? "-"}</strong>
-                      </div>
-                      <ArrowRight className={styles.nextCommandPathArrow} size={14} aria-hidden="true" />
-                      <div className={`${styles.nextCommandPathSegment} ${styles.nextCommandPathSegmentActive}`}>
-                        <span className={styles.nextCommandPathMeta}>03 {copy.runCommandLabel}</span>
-                        <strong>{nextSetupCommand.title}</strong>
-                      </div>
-                    </div>
+                    {activeSetupSummary}
                     <div className={styles.copyTitleGroup}>
                       <span className={styles.commandStep}>03</span>
                       <div className={styles.nextCommandCopy}>
                         <div className={styles.nextCommandLabelRow}>
-                          <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
+                          <span className={styles.metaLabel}>{copy.nextCommandLabel}</span>
                           <span className={styles.nextCommandOutput}>{nextSetupCommand.title}</span>
                         </div>
                         <strong>{(selectedProvider?.label ?? "-") + " -> " + (selectedTeam?.name ?? "-")}</strong>

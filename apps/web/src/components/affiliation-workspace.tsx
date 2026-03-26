@@ -7,7 +7,7 @@ import {
   roleTracks,
 } from "@research-os/types";
 import { PencilLine, Plus, Save, Trash2, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useAuth } from "@/components/auth-provider";
 import { DocumentEvidencePicker } from "@/components/document-evidence-picker";
@@ -1120,6 +1120,7 @@ export function AffiliationWorkspace({
   const [draftAffiliations, setDraftAffiliations] =
     useState<AffiliationTimelineEntry[]>(affiliations);
   const [isEditing, setIsEditing] = useState(false);
+  const editableCardRefs = useRef<Record<string, HTMLElement | null>>({});
   const [focusedAffiliationId, setFocusedAffiliationId] = useState<string | null>(null);
   const [editingAffiliationId, setEditingAffiliationId] = useState<string | null>(null);
   const orderedResolvedAffiliations = sortAffiliations(resolvedAffiliations);
@@ -1268,6 +1269,25 @@ export function AffiliationWorkspace({
       cancelled = true;
     };
   }, [affiliations, currentAccount?.id]);
+
+  useEffect(() => {
+    if (!isEditing || !activeDraftAffiliationId) {
+      return;
+    }
+
+    const targetCard = editableCardRefs.current[activeDraftAffiliationId];
+    if (!targetCard) {
+      return;
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      targetCard.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+    };
+  }, [activeDraftAffiliationId, isEditing]);
 
   const handleOpenEdit = () => {
     setDraftAffiliations(resolvedAffiliations);
@@ -1501,6 +1521,9 @@ export function AffiliationWorkspace({
       <section
         className="card profile-edit-card"
         key={affiliation.id}
+        ref={(node) => {
+          editableCardRefs.current[affiliation.id] = node;
+        }}
         onFocusCapture={() => {
           if (focusedAffiliationId !== affiliation.id || editingAffiliationId !== affiliation.id) {
             setActiveAffiliation(affiliation.id);
