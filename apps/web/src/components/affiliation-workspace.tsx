@@ -1042,6 +1042,8 @@ export function AffiliationWorkspace({
   const currentCorrections = currentAffiliations.filter((item) =>
     needsTimelineCorrection(item),
   ).length;
+  const currentPriorityAffiliation =
+    currentAffiliations.find((item) => needsTimelineCorrection(item)) ?? currentAffiliations[0];
   const queuedCorrections = queuedAffiliations.filter((item) =>
     needsTimelineCorrection(item),
   ).length;
@@ -1065,6 +1067,9 @@ export function AffiliationWorkspace({
   const currentDraftCorrections = currentDraftAffiliations.filter((item) =>
     needsTimelineCorrection(item),
   ).length;
+  const currentDraftPriorityAffiliation =
+    currentDraftAffiliations.find((item) => needsTimelineCorrection(item)) ??
+    currentDraftAffiliations[0];
   const queuedDraftCorrections = queuedDraftAffiliations.filter((item) =>
     needsTimelineCorrection(item),
   ).length;
@@ -1717,6 +1722,7 @@ export function AffiliationWorkspace({
                             .filter(Boolean)
                             .join(" ")}
                         </p>
+                        {renderSectionPrioritySummary(currentDraftPriorityAffiliation)}
                       </div>
                     </div>
                     <div className="card-body detail-cards">
@@ -2007,6 +2013,7 @@ export function AffiliationWorkspace({
                       .filter(Boolean)
                       .join(" ")}
                   </p>
+                  {renderSectionPrioritySummary(currentPriorityAffiliation)}
                 </div>
               </div>
               <div className="card-body detail-cards">

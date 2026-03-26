@@ -42,6 +42,14 @@ function getOpsNavigationLabel(locale: string): string {
 }
 
 function getHomepageNavigationLabel(locale: string): string {
+  if (locale === "ko") {
+    return "\uACF5\uAC1C \uD648\uD398\uC774\uC9C0";
+  }
+
+  if (locale === "en") {
+    return "Public homepage";
+  }
+
   return locale === "ko" ? "홈페이지 셸" : "Homepage shell";
 }
 
@@ -82,6 +90,8 @@ export function Sidebar({ locale, dict }: SidebarProps) {
           members: "members",
           emptyLabs: "No labs joined yet",
         };
+  const shellSectionTitle =
+    locale === "ko" ? "\uACF5\uAC1C / \uB0B4\uBD80" : "Public / internal";
 
   const isActive = (href: string) => {
     const full = `/${locale}${href}`;
@@ -124,7 +134,7 @@ export function Sidebar({ locale, dict }: SidebarProps) {
 
         <div className="sidebar-group">
           <div className="sidebar-group-header">
-            <span className="sidebar-group-title">{copy.shell}</span>
+            <span className="sidebar-group-title">{shellSectionTitle}</span>
           </div>
           {shellNavItems.map((item) => {
             const active = isActive(item.href);
