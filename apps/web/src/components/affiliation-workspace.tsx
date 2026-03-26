@@ -776,6 +776,32 @@ function getAffiliationSectionName(
   return locale === "ko" ? "\ubcf4\uad00 \uc774\ub825" : "Archived timeline";
 }
 
+function getAffiliationSectionBadge(
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+) {
+  const section = getAffiliationSectionKey(entry);
+
+  if (section === "current") {
+    return {
+      className: "pill-green",
+      label: getAffiliationSectionName(section, locale),
+    };
+  }
+
+  if (section === "queued") {
+    return {
+      className: "pill-amber",
+      label: getAffiliationSectionName(section, locale),
+    };
+  }
+
+  return {
+    className: "pill-gray",
+    label: getAffiliationSectionName(section, locale),
+  };
+}
+
 function getTimelinePlacementSummary(
   entry: AffiliationTimelineEntry,
   locale: Locale,
@@ -1415,6 +1441,7 @@ export function AffiliationWorkspace({
 
   const renderReadOnlyAffiliationCard = (affiliation: AffiliationTimelineEntry) => {
     const actionBadge = getAffiliationActionBadge(affiliation, locale);
+    const sectionBadge = getAffiliationSectionBadge(affiliation, locale);
     const timelineSnapshot = getAffiliationScanSummary(affiliation, locale);
     const nextEdit = getNextEditSummary(affiliation, locale);
 
@@ -1451,6 +1478,7 @@ export function AffiliationWorkspace({
             </dl>
           </div>
           <div className="profile-history-side">
+            <span className={`pill ${sectionBadge.className}`}>{sectionBadge.label}</span>
             <span className={`pill ${getAffiliationStatusClass(affiliation)}`}>
               {getAffiliationStateLabel(affiliation, locale)}
             </span>
@@ -1532,6 +1560,7 @@ export function AffiliationWorkspace({
   ) => {
     const isEditingNow = activeDraftAffiliationId === affiliation.id;
     const actionBadge = getAffiliationActionBadge(affiliation, locale);
+    const sectionBadge = getAffiliationSectionBadge(affiliation, locale);
     const appointmentStatusHint = getAppointmentStatusFieldHint(affiliation, locale);
     const endDateHint = getEndDateFieldHint(affiliation, locale);
 
@@ -1609,6 +1638,7 @@ export function AffiliationWorkspace({
                 {getPrimaryEditButtonLabel(affiliation, locale)}
               </button>
             )}
+            <span className={`pill ${sectionBadge.className}`}>{sectionBadge.label}</span>
             <span className={`pill ${getAffiliationStatusClass(affiliation)}`}>
               {getAffiliationStateLabel(affiliation, locale)}
             </span>

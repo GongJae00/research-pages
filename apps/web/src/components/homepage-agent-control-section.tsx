@@ -555,35 +555,34 @@ export function HomepageAgentControlSection({
         <article className={styles.providerPanel}>
           <article className={styles.setupBuilderCard}>
             <div className={styles.setupHeader}>
-              <div className={styles.setupTitleBlock}>
-                <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
-                <div className={styles.setupTitleRow}>
-                  <h4>{copy.setupBuilderTitle}</h4>
+              <div className={styles.setupHeaderTop}>
+                <div className={styles.setupTitleBlock}>
+                  <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
+                  <div className={styles.setupTitleRow}>
+                    <h4>{copy.setupBuilderTitle}</h4>
+                  </div>
+                </div>
+                <div className={styles.setupHeaderActions}>
+                  <div className={styles.panelHeadIcon}>
+                    <TerminalSquare size={20} />
+                  </div>
+                  {setupBriefHref ? (
+                    <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
+                      {copy.openBrief}
+                      <ArrowRight size={16} />
+                    </Link>
+                  ) : null}
                 </div>
               </div>
-              <div className={styles.setupHeaderActions}>
-                <div className={styles.panelHeadIcon}>
-                  <TerminalSquare size={20} />
-                </div>
-                {setupBriefHref ? (
-                  <Link href={setupBriefHref} className={styles.secondaryLink} target="_blank">
-                    {copy.openBrief}
-                    <ArrowRight size={16} />
-                  </Link>
-                ) : null}
+
+              <div className={styles.setupHeaderSummaryRow}>
+                <span className={styles.setupHeaderSummaryLabel}>{copy.activeSetup}</span>
+                {activeSetupSummary}
               </div>
             </div>
 
             <div className={styles.setupWorkbench}>
               <div className={styles.setupSelectionPanel} aria-label={getSetupInputLabel(locale)}>
-                <div className={styles.setupSelectionLead}>
-                  <div className={styles.setupSelectionLeadTop}>
-                    <span className={styles.setupSelectionLeadLabel}>{copy.activeSetup}</span>
-                  </div>
-                  <p className={styles.setupSelectionLeadHint}>{copy.setupSequenceIntro}</p>
-                  {activeSetupSummary}
-                </div>
-
                 <div className={styles.setupPickerGrid}>
                   <div className={`${styles.setupPicker} ${styles.setupPickerPrimary}`} aria-label={copy.chooseProvider}>
                     <div className={styles.setupPickerLabelGroup}>
@@ -657,24 +656,12 @@ export function HomepageAgentControlSection({
                     <div className={styles.nextCommandIntro}>
                       <span className={`${styles.setupPickerStep} ${styles.nextCommandStep}`}>03</span>
                       <div className={styles.nextCommandIntroCopy}>
-                        <div className={styles.setupSelectionLeadTop}>
-                          <span className={styles.setupSelectionLeadLabel}>{copy.runCommandLabel}</span>
-                          <span className={styles.nextCommandOutput}>{nextSetupCommand.title}</span>
+                        <span className={styles.setupSelectionLeadLabel}>{copy.runCommandLabel}</span>
+                        <div className={styles.nextCommandTitleRow}>
+                          <strong>{nextSetupCommand.title}</strong>
+                          <span className={styles.nextCommandSelectionPill}>{selectedProvider?.label ?? "-"}</span>
+                          <span className={styles.nextCommandSelectionPill}>{selectedTeam?.name ?? "-"}</span>
                         </div>
-                        <p className={styles.setupSelectionLeadHint}>{copy.nextCommandHelp}</p>
-                      </div>
-                    </div>
-                    <div className={styles.nextCommandContext} aria-label={setupFlowLabel}>
-                      <div className={styles.nextCommandContextStep}>
-                        <span className={styles.nextCommandContextLabel}>{copy.selectedCli}</span>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
-                      </div>
-                      <span className={styles.nextCommandContextArrow} aria-hidden="true">
-                        &rarr;
-                      </span>
-                      <div className={styles.nextCommandContextStep}>
-                        <span className={styles.nextCommandContextLabel}>{copy.selectedTeamLabel}</span>
-                        <strong>{selectedTeam?.name ?? "-"}</strong>
                       </div>
                     </div>
                   </div>
