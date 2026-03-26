@@ -103,8 +103,8 @@ function getCopy(locale: string, opsEnabled: boolean) {
       providersBody:
         "브라우저가 로컬 터미널을 직접 제어하지는 않지만, 각 개발자는 CLI 세션을 로컬 브리지에 등록하고 이 페이지에서 연결 상태를 확인할 수 있습니다.",
       setupBuilderLabel: "홈페이지 셋업 빌더",
-      setupBuilderTitle: "두 명령으로 CLI 연결",
-      setupBuilderBody: "CLI와 팀을 고른 뒤 강조된 명령만 로컬 터미널에서 실행하면 됩니다.",
+      setupBuilderTitle: "CLI 설정 한눈에 보기",
+      setupBuilderBody: "CLI 선택, 팀 선택, 다음 명령 실행만 확인하면 됩니다.",
       connectCommand: "연결 명령 복사",
       assignCommand: "재배정 명령 복사",
       copied: "복사됨",
@@ -163,8 +163,8 @@ function getCopy(locale: string, opsEnabled: boolean) {
     providersBody:
       "Each developer registers a local CLI session with the bridge, and this page keeps connection state and team ownership visible.",
     setupBuilderLabel: "Homepage setup builder",
-    setupBuilderTitle: "Choose a CLI, run the next command",
-    setupBuilderBody: "Select a CLI and team, then run only the highlighted command in the local terminal.",
+    setupBuilderTitle: "CLI setup at a glance",
+    setupBuilderBody: "Scan the CLI, team, and next command, then run the highlighted step locally.",
     connectCommand: "Copy connect command",
     assignCommand: "Copy assign command",
     copied: "Copied",
@@ -394,8 +394,10 @@ export function HomepageAgentControlSection({
             <div className={styles.setupHeader}>
               <div className={styles.setupTitleBlock}>
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
-                <h4>{copy.setupBuilderTitle}</h4>
-                <p className={styles.setupBody}>{copy.setupBuilderBody}</p>
+                <div className={styles.setupTitleRow}>
+                  <h4>{copy.setupBuilderTitle}</h4>
+                  <span className={styles.setupInlineNote}>{copy.setupBuilderBody}</span>
+                </div>
                 <div className={styles.setupScanGrid} aria-label={copy.setupStepsLabel} title={setupFlowLabel}>
                   <span className={styles.setupScanCell}>
                     <span className={styles.commandStep}>01</span>
