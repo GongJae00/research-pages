@@ -123,8 +123,14 @@ function waitForSessionSpawn(child: ChildProcessWithoutNullStreams) {
       settle(() => reject(error));
     };
 
-    const handleClose = (code: number | null) => {
-      settle(() => reject(new Error(`Shell exited before session startup completed (exit code ${String(code ?? 0)}).`)));
+    const handleClose = (code: number | null, signal: NodeJS.Signals | null) => {
+      settle(() =>
+        reject(
+          new Error(
+            `Shell exited before session startup completed (${describeSessionTermination(code, signal)}).`,
+          ),
+        ),
+      );
     };
 
     child.once("spawn", handleSpawn);
@@ -139,6 +145,18 @@ function trimTranscript(value: string) {
   }
 
   return value.slice(value.length - maxTranscriptChars);
+}
+
+function describeSessionTermination(code: number | null, signal: NodeJS.Signals | null) {
+  if (typeof code === "number") {
+    return `exit code ${code}`;
+  }
+
+  if (signal) {
+    return `signal ${signal}`;
+  }
+
+  return "an unknown termination state";
 }
 
 function appendTranscript(record: OpsTerminalSessionRecord, chunk: string) {
@@ -185,12 +203,13 @@ function reconcileSessionState(record: OpsTerminalSessionRecord) {
   record.snapshot.pid = null;
   record.snapshot.statusDetail = record.stopRequestedAt
     ? `Session stopped after the operator requested a stop at ${record.stopRequestedAt}.`
-    : `Session exited unexpectedly with code ${String(exitCode ?? signalCode ?? "unknown")}. Start a new session to continue.`;
+    : `Session exited unexpectedly with ${describeSessionTermination(exitCode, signalCode)}. Start a new session to continue.`;
 
   const transitionMessage = record.stopRequestedAt
     ? `${os.EOL}[ops] session stop is still settling; refresh and retry once it closes.${os.EOL}`
-    : `${os.EOL}[ops] session is no longer accepting input (exit code ${String(
-        exitCode ?? signalCode ?? "unknown",
+    : `${os.EOL}[ops] session is no longer accepting input (${describeSessionTermination(
+        exitCode,
+        signalCode,
       )}). Start a new session and retry.${os.EOL}`;
 
   if (!record.snapshot.transcript.includes(transitionMessage.trim())) {
@@ -383,7 +402,7 @@ export async function createOpsTerminalSession(shellId: OpsShellId, label?: stri
     appendTranscript(record, `${os.EOL}[ops] session error: ${error.message}${os.EOL}`);
   });
 
-  child.on("close", (code) => {
+  child.on("close", (code, signal) => {
     const stopRequestedAt = record.stopRequestedAt;
     record.snapshot.status = stopRequestedAt || code === 0 ? "closed" : "error";
     record.snapshot.exitCode = code;
@@ -391,12 +410,12 @@ export async function createOpsTerminalSession(shellId: OpsShellId, label?: stri
     record.snapshot.stopRequestedAt = stopRequestedAt;
     record.snapshot.statusDetail = stopRequestedAt
       ? `Session stopped after the operator requested a stop at ${stopRequestedAt}.`
-      : `Session closed with exit code ${String(code ?? 0)}. Start a new session to continue.`;
+      : `Session closed with ${describeSessionTermination(code, signal)}. Start a new session to continue.`;
     appendTranscript(
       record,
       stopRequestedAt
         ? `${os.EOL}[ops] session stopped by operator at ${stopRequestedAt}${os.EOL}`
-        : `${os.EOL}[ops] session closed with exit code ${String(code ?? 0)}${os.EOL}`,
+        : `${os.EOL}[ops] session closed with ${describeSessionTermination(code, signal)}${os.EOL}`,
     );
   });
 

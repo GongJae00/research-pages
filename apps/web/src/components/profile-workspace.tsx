@@ -435,14 +435,6 @@ function summarizePrimaryValue(values: string[], formatter?: (value: string) => 
   return remainingCount > 0 ? `${displayValue} +${remainingCount}` : displayValue;
 }
 
-function formatCountLabel(locale: Locale, count: number, singularLabel: string, pluralLabel: string) {
-  if (locale === "ko") {
-    return `${pluralLabel} ${count}`;
-  }
-
-  return `${count} ${count === 1 ? singularLabel : pluralLabel}`;
-}
-
 function normalizePublicationMonth(value?: string) {
   const source = value?.trim();
   if (!source) return undefined;
@@ -1152,18 +1144,6 @@ export function ProfileWorkspace({
         savedProfile.orcid ? text.orcid : undefined,
       ].filter(isDefined),
     [savedProfile.nationalResearcherNumber, savedProfile.orcid, text.nationalId, text.orcid],
-  );
-  const coreContactHighlights = useMemo(
-    () =>
-      [
-        savedEmails.length > 0
-          ? formatCountLabel(locale, savedEmails.length, text.email, text.emailsLabel)
-          : undefined,
-        savedLinks.length > 0
-          ? formatCountLabel(locale, savedLinks.length, text.link, text.linksLabel)
-          : undefined,
-      ].filter(isDefined),
-    [locale, savedEmails.length, savedLinks.length, text.email, text.emailsLabel, text.link, text.linksLabel],
   );
   const coreFocusHighlights = useMemo(
     () =>
@@ -2240,26 +2220,24 @@ export function ProfileWorkspace({
                   <dd>
                     {savedEmails.length > 0 || savedLinks.length > 0 ? (
                       <div className="profile-career-status-list">
-                        {coreContactHighlights.length > 0 ? (
-                          <div className="profile-inline-list profile-inline-list-muted">
-                            {coreContactHighlights.map((item) => (
-                              <span className="pill pill-gray" key={item}>
-                                {item}
-                              </span>
-                            ))}
-                          </div>
-                        ) : null}
                         <div className="profile-career-status-row">
                           <div className="profile-career-status-main">
                             <strong>{text.emailsLabel}</strong>
                             {savedEmails.length > 0 ? (
-                              <div className="profile-inline-list">
-                                {savedEmails.map((email) => (
-                                  <a key={email} href={`mailto:${email}`} className="profile-inline-link">
-                                    {email}
-                                  </a>
-                                ))}
-                              </div>
+                              <>
+                                <a href={`mailto:${savedEmails[0]}`} className="profile-inline-link">
+                                  {savedEmails[0]}
+                                </a>
+                                {savedEmails.length > 1 ? (
+                                  <div className="profile-inline-list profile-inline-list-muted">
+                                    {savedEmails.slice(1).map((email) => (
+                                      <a key={email} href={`mailto:${email}`} className="profile-inline-link">
+                                        {email}
+                                      </a>
+                                    ))}
+                                  </div>
+                                ) : null}
+                              </>
                             ) : (
                               <span>{text.emptyValue}</span>
                             )}
@@ -2267,7 +2245,7 @@ export function ProfileWorkspace({
                         </div>
                         <div className="profile-career-status-row">
                           <div className="profile-career-status-main">
-                            <strong>{text.linksLabel}</strong>
+                            <strong>{careerLinksTitle}</strong>
                             {savedLinks.length > 0 ? (
                               <div className="profile-link-stack">
                                 {savedLinks.map((link) => (
