@@ -70,6 +70,30 @@ const teamMemberRoster = {
   "reliability-desk": ["Release Guard", "Docs Drift Agent"],
 };
 
+const teamCapacityBias = {
+  "shell-experience": 1.08,
+  "workflow-systems": 1.2,
+  "reliability-desk": 0.96,
+  "executive-desk": 0.88,
+};
+
+const workItemPriorityBias = {
+  "homepage-control-density": 1.18,
+  "homepage-onboarding-scan": 1.12,
+  "shell-navigation-clarity": 0.92,
+  "profile-workspace-clarity": 1.02,
+  "affiliation-workspace-clarity": 1,
+  "funding-workspace-clarity": 1.06,
+  "document-workspace-density": 1.12,
+  "lab-workspace-structure": 0.98,
+  "timetable-workspace-clarity": 0.96,
+  "public-researcher-page-clarity": 0.92,
+  "public-lab-page-clarity": 0.92,
+  "ops-runtime-guard": 1.04,
+  "terminal-bridge-clarity": 1.02,
+  "operator-loop-doc-sync": 0.88,
+};
+
 const laneGuidance = {
   "shell-experience": {
     ownedPaths: [
@@ -681,6 +705,98 @@ function getRecentExecutionsForTeam(state, teamId, limit = 5) {
   return recent;
 }
 
+function getDedupedExecutionPool(state, teamId = null, limit = 24) {
+  const recent = [];
+  const seen = new Set();
+  const candidates = [
+    state.autonomy?.currentExecution,
+    ...(state.autonomy?.executionHistory ?? []),
+  ];
+
+  for (const entry of candidates) {
+    if (!entry || typeof entry !== "object") {
+      continue;
+    }
+    if (teamId && entry.teamId !== teamId) {
+      continue;
+    }
+
+    const key =
+      entry.id
+      ?? `${entry.teamId ?? "team"}:${entry.time ?? "time"}:${(entry.changedFiles ?? []).join("|")}:${entry.workItemTitle ?? "work"}`;
+    if (seen.has(key)) {
+      continue;
+    }
+
+    seen.add(key);
+    recent.push(entry);
+    if (recent.length >= limit) {
+      break;
+    }
+  }
+
+  return recent;
+}
+
+function getWorkItemSignature(workItem) {
+  return getUniquePaths(workItem?.targetFiles ?? []).sort().join("|");
+}
+
+function executionMatchesWorkItem(entry, workItem) {
+  if (!entry || !workItem) {
+    return false;
+  }
+
+  if (entry.workItemTitle && entry.workItemTitle === workItem.title) {
+    return true;
+  }
+
+  const executionSignature = getExecutionWorkSignature(entry);
+  const workItemSignature = getWorkItemSignature(workItem);
+  return Boolean(executionSignature && workItemSignature && executionSignature === workItemSignature);
+}
+
+function getRecentWorkItemUsageStats(state, teamId, items, limit = 18) {
+  const pool = getDedupedExecutionPool(state, teamId, limit);
+  const counts = new Map(items.map((item) => [item.id, 0]));
+  const distances = new Map(items.map((item) => [item.id, limit + 1]));
+
+  pool.forEach((entry, index) => {
+    for (const item of items) {
+      if (!executionMatchesWorkItem(entry, item)) {
+        continue;
+      }
+
+      counts.set(item.id, (counts.get(item.id) ?? 0) + 1);
+      distances.set(item.id, Math.min(distances.get(item.id) ?? limit + 1, index));
+    }
+  });
+
+  return { counts, distances, pool };
+}
+
+function getTeamRecentOutcomeCount(state, teamId, limit = 12, outcomes = ["changed"]) {
+  return getDedupedExecutionPool(state, teamId, limit).filter((entry) => outcomes.includes(entry.outcome)).length;
+}
+
+function getRecentOutcomeCount(state, teamId, limit = 12) {
+  return getDedupedExecutionPool(state, teamId, limit).length;
+}
+
+function isRecoverableDirtyTeam(state, teamId, dirtyPaths) {
+  const latestExecution = getLatestChangedExecutionForTeam(state, teamId);
+  if (!latestExecution) {
+    return false;
+  }
+
+  const recoverablePaths = getUniquePaths(dirtyPaths);
+  const latestChangedPaths = getUniquePaths(latestExecution.changedFiles ?? []);
+  return Boolean(
+    recoverablePaths.length
+    && recoverablePaths.every((entry) => latestChangedPaths.includes(entry)),
+  );
+}
+
 function getExecutionWorkSignature(entry) {
   if (!entry || typeof entry !== "object") {
     return "";
@@ -893,12 +1009,92 @@ function resolveDirectiveSpecificWorkItem(teamId, directiveText, items) {
   return null;
 }
 
-function selectBoundedWorkItem(teamId, loopCount, operatorDirective = null, recentExecutions = []) {
+function scoreWorkItemForBroadDirective({
+  teamId,
+  workItem,
+  state,
+  recentExecutions,
+  usageStats,
+  itemCountAverage,
+}) {
+  const recentCount = usageStats.counts.get(workItem.id) ?? 0;
+  const lastDistance = usageStats.distances.get(workItem.id) ?? usageStats.pool.length + 1;
+  const recentBlocked = recentExecutions
+    .slice(0, 3)
+    .some((entry) => entry.outcome === "blocked" && executionMatchesWorkItem(entry, workItem));
+  const basePriority = workItemPriorityBias[workItem.id] ?? 1;
+  const deficitBoost = Math.max(0, itemCountAverage - recentCount) * 0.45;
+  const freshnessBoost = Math.min(lastDistance, 5) * 0.08;
+  const repetitionPenalty = isWorkItemOverused(workItem, recentExecutions) ? 0.95 : 0;
+  const blockedPenalty = recentBlocked ? 0.18 : 0;
+  const currentTeamLoadPenalty = Math.max(0, getRecentOutcomeCount(state, teamId, 10) - 4) * 0.03;
+
+  return (
+    basePriority
+    + deficitBoost
+    + freshnessBoost
+    - repetitionPenalty
+    - blockedPenalty
+    - currentTeamLoadPenalty
+  );
+}
+
+function selectBroadDirectiveWorkItem(teamId, items, state, recentExecutions, loopCount) {
+  if (!items.length) {
+    return null;
+  }
+
+  const usageStats = getRecentWorkItemUsageStats(state, teamId, items);
+  const itemCountAverage = usageStats.pool.length / Math.max(items.length, 1);
+  let selectedItem = items[0];
+  let selectedScore = Number.NEGATIVE_INFINITY;
+
+  for (const item of items) {
+    const score = scoreWorkItemForBroadDirective({
+      teamId,
+      workItem: item,
+      state,
+      recentExecutions,
+      usageStats,
+      itemCountAverage,
+    });
+
+    if (score > selectedScore) {
+      selectedItem = item;
+      selectedScore = score;
+      continue;
+    }
+
+    if (score === selectedScore) {
+      const currentIndex = items.findIndex((entry) => entry.id === selectedItem.id);
+      const candidateIndex = items.findIndex((entry) => entry.id === item.id);
+      if (candidateIndex === -1 || currentIndex === -1) {
+        continue;
+      }
+
+      const rotationIndex = Math.max(loopCount, 1) % items.length;
+      const currentDistance = (currentIndex - rotationIndex + items.length) % items.length;
+      const candidateDistance = (candidateIndex - rotationIndex + items.length) % items.length;
+      if (candidateDistance < currentDistance) {
+        selectedItem = item;
+      }
+    }
+  }
+
+  return selectedItem;
+}
+
+function selectBoundedWorkItem(teamId, loopCount, operatorDirective = null, recentExecutions = [], state = null) {
   const items = getWorkItems(teamId);
   const directiveText = getDirectiveText(operatorDirective);
+  const isBroadDirective = isAllPagesDirectiveText(directiveText);
   const preferredItem =
     resolveDirectiveSpecificWorkItem(teamId, directiveText, items)
-    ?? selectWorkItem(teamId, loopCount, operatorDirective);
+    ?? (
+      isBroadDirective && state
+        ? selectBroadDirectiveWorkItem(teamId, items, state, recentExecutions, loopCount)
+        : selectWorkItem(teamId, loopCount, operatorDirective)
+    );
   return chooseAlternateWorkItem(items, preferredItem, recentExecutions) ?? preferredItem;
 }
 
@@ -2932,7 +3128,24 @@ function resolvePreferredTeamForCycle(state, loopCount) {
 
   if (isAllPagesDirectiveText(directiveText)) {
     const broadCycle = ["shell-experience", "workflow-systems", "reliability-desk"];
-    const preferredTeamId = broadCycle[(Math.max(loopCount, 1) - 1) % broadCycle.length];
+    const rotationTeamId = broadCycle[(Math.max(loopCount, 1) - 1) % broadCycle.length];
+    const teamScores = broadCycle.map((teamId) => {
+      const capacityBias = teamCapacityBias[teamId] ?? 1;
+      const recentChanged = getTeamRecentOutcomeCount(state, teamId, 10, ["changed"]);
+      const recentBlocked = getTeamRecentOutcomeCount(state, teamId, 10, ["blocked", "failed"]);
+      const recentLoad = getRecentOutcomeCount(state, teamId, 10);
+      const underServiceBoost = Math.max(0, 3 - recentChanged) * 0.18;
+      const blockedPressureBoost = Math.min(recentBlocked, 3) * 0.06;
+      const overusePenalty = Math.max(0, recentLoad - 4) * 0.04;
+      const rotationBoost = teamId === rotationTeamId ? 0.08 : 0;
+      return {
+        teamId,
+        score: capacityBias + underServiceBoost + blockedPressureBoost + rotationBoost - overusePenalty,
+      };
+    });
+
+    teamScores.sort((left, right) => right.score - left.score);
+    const preferredTeamId = teamScores[0]?.teamId ?? rotationTeamId;
     return teamCycle.find((team) => team.id === preferredTeamId) ?? teamCycle[0];
   }
 
@@ -2980,7 +3193,7 @@ async function selectTeamsForCycle(state, loopCount, limit) {
   for (const team of orderedTeams) {
     const dirtyPaths = await listDirtyOwnedPaths(getLaneGuidance(team.id).ownedPaths);
 
-    if (!dirtyPaths.length) {
+    if (!dirtyPaths.length || isRecoverableDirtyTeam(state, team.id, dirtyPaths)) {
       selectedTeams.push(team);
       if (selectedTeams.length >= limit) {
         break;
@@ -2992,6 +3205,7 @@ async function selectTeamsForCycle(state, loopCount, limit) {
       teamId: team.id,
       dirtyPaths,
       preferred: team.id === preferredTeam.id,
+      recoverable: isRecoverableDirtyTeam(state, team.id, dirtyPaths),
     });
   }
 
@@ -3124,6 +3338,7 @@ async function runExecutionStep(team, loopCount, taskPacket, state, provider) {
     loopCount,
     state.currentDirective,
     getRecentExecutionsForTeam(state, team.id),
+    state,
   );
   if (taskPacket.status === "failed") {
     return {

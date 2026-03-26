@@ -24,6 +24,7 @@ const webOut = path.join(stateDir, "dev-web.stdout.log");
 const webErr = path.join(stateDir, "dev-web.stderr.log");
 const autonomyOut = path.join(stateDir, "autonomy-daemon.stdout.log");
 const autonomyErr = path.join(stateDir, "autonomy-daemon.stderr.log");
+const localWebPorts = [3000, 3001, 3002, 3003];
 
 function nowIso() {
   return new Date().toISOString();
@@ -80,6 +81,25 @@ async function isProcessAlive(pid) {
       return false;
     }
   }
+}
+
+async function isLocalWebReachable() {
+  for (const port of localWebPorts) {
+    try {
+      const response = await fetch(`http://localhost:${port}/ko/ops`, {
+        headers: {
+          accept: "text/html,application/xhtml+xml",
+        },
+      });
+      if (response.ok) {
+        return true;
+      }
+    } catch {
+      // try next port
+    }
+  }
+
+  return false;
 }
 
 async function readPidFile(filePath) {
@@ -219,7 +239,8 @@ async function statusStack() {
   const webMeta = await readPidFile(webPidFile);
   const autonomyMeta = await readPidFile(autonomyPidFile);
   const supervisorRunning = supervisorMeta ? await isProcessAlive(supervisorMeta.pid) : false;
-  const webRunning = webMeta ? await isProcessAlive(webMeta.pid) : false;
+  const webRunningByPid = webMeta ? await isProcessAlive(webMeta.pid) : false;
+  const webRunning = webRunningByPid || (await isLocalWebReachable());
   const autonomyRunning = autonomyMeta ? await isProcessAlive(autonomyMeta.pid) : false;
   const heartbeatAt =
     supervisorState && typeof supervisorState.lastHeartbeatAt === "string"
