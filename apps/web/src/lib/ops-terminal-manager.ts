@@ -10,7 +10,7 @@ const commandMaxBuffer = 1_024 * 1_024;
 const maxTranscriptChars = 24_000;
 
 export type OpsShellId = "powershell" | "cmd" | "bash";
-export type OpsTerminalSessionStatus = "running" | "closed" | "error";
+export type OpsTerminalSessionStatus = "running" | "stopping" | "closed" | "error";
 
 export interface OpsShellPreset {
   id: OpsShellId;
@@ -40,8 +40,10 @@ export interface OpsTerminalSessionSnapshot {
   updatedAt: string;
   transcript: string;
   status: OpsTerminalSessionStatus;
+  statusDetail: string | null;
   lastInput: string | null;
   exitCode: number | null;
+  stopRequestedAt: string | null;
 }
 
 export interface OpsTerminalStopResult {
@@ -145,7 +147,11 @@ function appendTranscript(record: OpsTerminalSessionRecord, chunk: string) {
 }
 
 function reconcileSessionState(record: OpsTerminalSessionRecord) {
-  if (record.snapshot.status !== "running") {
+  if (record.stopRequestedAt) {
+    record.snapshot.stopRequestedAt = record.stopRequestedAt;
+  }
+
+  if (record.snapshot.status !== "running" && record.snapshot.status !== "stopping") {
     return record.snapshot;
   }
 
@@ -153,12 +159,20 @@ function reconcileSessionState(record: OpsTerminalSessionRecord) {
   const signalCode = record.child.signalCode;
 
   if (exitCode === null && signalCode === null && !record.child.stdin.destroyed) {
+    if (record.stopRequestedAt) {
+      record.snapshot.status = "stopping";
+      record.snapshot.statusDetail = `Stop requested at ${record.stopRequestedAt}. Waiting for the shell process to exit.`;
+    }
+
     return record.snapshot;
   }
 
   record.snapshot.status = record.stopRequestedAt || exitCode === 0 ? "closed" : "error";
   record.snapshot.exitCode = exitCode;
   record.snapshot.pid = null;
+  record.snapshot.statusDetail = record.stopRequestedAt
+    ? `Session stopped after the operator requested a stop at ${record.stopRequestedAt}.`
+    : `Session exited unexpectedly with code ${String(exitCode ?? signalCode ?? "unknown")}. Start a new session to continue.`;
 
   const transitionMessage = record.stopRequestedAt
     ? `${os.EOL}[ops] session stop is still settling; refresh and retry once it closes.${os.EOL}`
@@ -326,8 +340,10 @@ export async function createOpsTerminalSession(shellId: OpsShellId, label?: stri
       updatedAt: createdAt,
       transcript: "",
       status: "running",
+      statusDetail: null,
       lastInput: null,
       exitCode: null,
+      stopRequestedAt: null,
     },
     stopRequestedAt: null,
   };
@@ -343,6 +359,7 @@ export async function createOpsTerminalSession(shellId: OpsShellId, label?: stri
   child.on("error", (error) => {
     record.snapshot.status = "error";
     record.snapshot.exitCode = 1;
+    record.snapshot.statusDetail = `Shell process error: ${error.message}`;
     appendTranscript(record, `${os.EOL}[ops] session error: ${error.message}${os.EOL}`);
   });
 
@@ -351,6 +368,10 @@ export async function createOpsTerminalSession(shellId: OpsShellId, label?: stri
     record.snapshot.status = stopRequestedAt || code === 0 ? "closed" : "error";
     record.snapshot.exitCode = code;
     record.snapshot.pid = null;
+    record.snapshot.stopRequestedAt = stopRequestedAt;
+    record.snapshot.statusDetail = stopRequestedAt
+      ? `Session stopped after the operator requested a stop at ${stopRequestedAt}.`
+      : `Session closed with exit code ${String(code ?? 0)}. Start a new session to continue.`;
     appendTranscript(
       record,
       stopRequestedAt
@@ -406,6 +427,16 @@ export async function stopOpsTerminalSession(sessionId: string) {
     throw new Error(`Unknown session "${sessionId}".`);
   }
 
+  if (record.snapshot.status === "stopping" || record.stopRequestedAt) {
+    reconcileSessionState(record);
+
+    return {
+      session: record.snapshot,
+      transition: "stop-requested",
+      recovery: "Stop already requested. Wait for the session to close, refresh terminal sessions, then start a new session if needed.",
+    } satisfies OpsTerminalStopResult;
+  }
+
   if (record.snapshot.status !== "running") {
     return {
       session: record.snapshot,
@@ -415,6 +446,9 @@ export async function stopOpsTerminalSession(sessionId: string) {
   }
 
   record.stopRequestedAt = new Date().toISOString();
+  record.snapshot.status = "stopping";
+  record.snapshot.statusDetail = `Stop requested at ${record.stopRequestedAt}. Waiting for the shell process to exit.`;
+  record.snapshot.stopRequestedAt = record.stopRequestedAt;
   appendTranscript(record, `${os.EOL}[ops] stop requested by operator${os.EOL}`);
 
   if (record.snapshot.pid) {

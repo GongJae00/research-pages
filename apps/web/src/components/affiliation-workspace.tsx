@@ -350,24 +350,36 @@ function getNextUpdateLabel(locale: Locale) {
   return locale === "ko" ? "\ub2e4\uc74c \uc218\uc815" : "Next update";
 }
 
-function getCurrentSectionLabel(locale: Locale) {
-  return locale === "ko" ? "\ud604\uc7ac \uc18c\uc18d" : "Current affiliations";
-}
-
-function getCurrentSectionHint(locale: Locale) {
+function getCurrentSectionLabel(locale: Locale, count: number) {
   return locale === "ko"
-    ? "\uc5ed\ud560\uc774 \ubc14\ub00c\uac70\ub098 \uc885\ub8cc\ub418\uba74 \uc5ec\uae30\uc11c \uba3c\uc800 \uac31\uc2e0\ud558\uc138\uc694."
-    : "Review these first when a role changes status, dates, or institution details.";
+    ? `\ud604\uc7ac \uc18c\uc18d ${count}\uac74`
+    : `Current affiliations (${count})`;
 }
 
-function getHistorySectionLabel(locale: Locale) {
-  return locale === "ko" ? "\uc774\uc804 \ubc0f \uc608\uc815 \uc18c\uc18d" : "Timeline history";
-}
-
-function getHistorySectionHint(locale: Locale) {
+function getCurrentSectionHint(locale: Locale, count: number) {
   return locale === "ko"
-    ? "\uc644\ub8cc\ub41c \ud0c0\uc784\ub77c\uc778\uacfc \uc7ac\uac1c \uac00\ub2a5\uc131\uc774 \uc788\ub294 \ud56d\ubaa9\uc744 \ud55c \uacf3\uc5d0\uc11c \ud655\uc778\ud569\ub2c8\ub2e4."
-    : "Keep completed, paused, and planned roles together for quick timeline review.";
+    ? count > 0
+      ? "\uc5ed\ud560\uc774 \ubc14\ub00c\uac70\ub098 \uc885\ub8cc\ub418\uba74 \uc774 \uc139\uc158\uc5d0\uc11c \uba3c\uc800 \uc0c1\ud0dc\uc640 \ub0a0\uc9dc\ub97c \uac31\uc2e0\ud558\uc138\uc694."
+      : "\ud604\uc7ac \uc9c4\ud589 \uc911\uc778 \uc18c\uc18d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4."
+    : count > 0
+      ? "Review these first when a role changes status, dates, or institution details."
+      : "No active affiliations are on record right now.";
+}
+
+function getHistorySectionLabel(locale: Locale, count: number) {
+  return locale === "ko"
+    ? `\uc774\uc804 \ubc0f \uc608\uc815 \uc18c\uc18d ${count}\uac74`
+    : `Timeline history (${count})`;
+}
+
+function getHistorySectionHint(locale: Locale, count: number) {
+  return locale === "ko"
+    ? count > 0
+      ? "\uc644\ub8cc\ub41c \ud0c0\uc784\ub77c\uc778\uacfc \uc7ac\uac1c \uac00\ub2a5\uc131\uc774 \uc788\ub294 \ud56d\ubaa9\uc744 \ud55c \uacf3\uc5d0\uc11c \ud655\uc778\ud569\ub2c8\ub2e4."
+      : "\uc774\uc804, \ubcf4\ub958, \uc608\uc815 \uc18c\uc18d\uc774 \uc544\uc9c1 \uc5c6\uc2b5\ub2c8\ub2e4."
+    : count > 0
+      ? "Keep completed, paused, and planned roles together for quick timeline review."
+      : "No past or planned timeline entries are on record yet.";
 }
 
 function getEditItemLabel(locale: Locale) {
@@ -379,6 +391,43 @@ function getAffiliationSections(items: AffiliationTimelineEntry[]) {
     current: items.filter((item) => item.active),
     history: items.filter((item) => !item.active),
   };
+}
+
+function getAffiliationStats(items: AffiliationTimelineEntry[], locale: Locale) {
+  const currentCount = items.filter((item) => item.active).length;
+  const queuedCount = items.filter(
+    (item) => item.appointmentStatus === "planned" || item.appointmentStatus === "paused",
+  ).length;
+  const archivedCount = items.filter(
+    (item) => !item.active && item.appointmentStatus === "completed",
+  ).length;
+
+  return [
+    {
+      label: locale === "ko" ? "\ud604\uc7ac \uc18c\uc18d" : "Current roles",
+      value: currentCount,
+      detail:
+        locale === "ko"
+          ? "\uc9c0\uae08 \uc9c4\ud589 \uc911\uc778 \uc5ed\ud560"
+          : "Roles to review first when dates or status change",
+    },
+    {
+      label: locale === "ko" ? "\ubcf4\ub958 \ubc0f \uc608\uc815" : "Planned or paused",
+      value: queuedCount,
+      detail:
+        locale === "ko"
+          ? "\ub2e4\uc74c \uc5c5\ub370\uc774\ud2b8 \ud6c4\ubcf4"
+          : "Entries that may need a restart or status update",
+    },
+    {
+      label: locale === "ko" ? "\uc885\ub8cc \uae30\ub85d" : "Archived roles",
+      value: archivedCount,
+      detail:
+        locale === "ko"
+          ? "\uc885\ub8cc\ub41c \ud0c0\uc784\ub77c\uc778"
+          : "Completed timeline entries kept for reference",
+    },
+  ];
 }
 
 export function AffiliationWorkspace({
@@ -398,6 +447,7 @@ export function AffiliationWorkspace({
   const orderedResolvedAffiliations = sortAffiliations(resolvedAffiliations);
   const orderedDraftAffiliations = sortAffiliations(draftAffiliations);
   const affiliationOverview = getAffiliationOverview(orderedResolvedAffiliations, locale);
+  const affiliationStats = getAffiliationStats(orderedResolvedAffiliations, locale);
   const { current: currentAffiliations, history: historicalAffiliations } =
     getAffiliationSections(orderedResolvedAffiliations);
 
@@ -652,6 +702,15 @@ export function AffiliationWorkspace({
               )}
             </div>
           </div>
+          <div className="document-intro-stats" aria-label={getTimelineSnapshotLabel(locale)}>
+            {affiliationStats.map((stat) => (
+              <div className="document-intro-stat" key={stat.label}>
+                <strong>{stat.value}</strong>
+                <span>{stat.label}</span>
+                <p className="card-support-text">{stat.detail}</p>
+              </div>
+            ))}
+          </div>
         </section>
       )}
 
@@ -876,8 +935,10 @@ export function AffiliationWorkspace({
             <section className="card profile-detail-card">
               <div className="card-header">
                 <div>
-                  <h3>{getCurrentSectionLabel(locale)}</h3>
-                  <p className="card-support-text">{getCurrentSectionHint(locale)}</p>
+                  <h3>{getCurrentSectionLabel(locale, currentAffiliations.length)}</h3>
+                  <p className="card-support-text">
+                    {getCurrentSectionHint(locale, currentAffiliations.length)}
+                  </p>
                 </div>
               </div>
               <div className="card-body detail-cards">
@@ -890,8 +951,10 @@ export function AffiliationWorkspace({
             <section className="card profile-detail-card">
               <div className="card-header">
                 <div>
-                  <h3>{getHistorySectionLabel(locale)}</h3>
-                  <p className="card-support-text">{getHistorySectionHint(locale)}</p>
+                  <h3>{getHistorySectionLabel(locale, historicalAffiliations.length)}</h3>
+                  <p className="card-support-text">
+                    {getHistorySectionHint(locale, historicalAffiliations.length)}
+                  </p>
                 </div>
               </div>
               <div className="card-body detail-cards">
