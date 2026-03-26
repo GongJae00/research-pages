@@ -6,6 +6,13 @@ import {
   getLiveAgentOperationsSnapshot,
 } from "@/lib/agent-ops-runtime";
 
+function getLiveResponseHeaders() {
+  return {
+    "cache-control": "no-store, max-age=0",
+    "x-research-os-ops-state": "live",
+  };
+}
+
 function getDegradedResponseHeaders(error: unknown) {
   return {
     "cache-control": "no-store, max-age=0",
@@ -22,7 +29,9 @@ export async function GET(request: NextRequest) {
 
   try {
     const snapshot = await getLiveAgentOperationsSnapshot(locale);
-    return NextResponse.json(snapshot);
+    return NextResponse.json(snapshot, {
+      headers: getLiveResponseHeaders(),
+    });
   } catch (error) {
     return NextResponse.json(getDegradedAgentOperationsSnapshot(locale), {
       headers: getDegradedResponseHeaders(error),

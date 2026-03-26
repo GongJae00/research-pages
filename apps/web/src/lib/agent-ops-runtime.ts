@@ -501,6 +501,32 @@ const validProviderStatuses = new Set<ProviderConnectionCard["status"]>([
   "attention",
 ]);
 
+function sanitizeProviderConnectionUpdates(runtimeState: AgentOpsRuntimeState) {
+  return runtimeState.providerConnections.flatMap((entry) => {
+    if (
+      !isRuntimeMergeEntry(entry) ||
+      (entry.providerId !== "codex" &&
+        entry.providerId !== "claude" &&
+        entry.providerId !== "gemini") ||
+      typeof entry.status !== "string" ||
+      !validProviderStatuses.has(entry.status as ProviderConnectionCard["status"]) ||
+      !hasNonEmptyRuntimeString(entry, "updatedAt")
+    ) {
+      return [];
+    }
+
+    return [
+      {
+        providerId: entry.providerId,
+        status: entry.status as ProviderConnectionCard["status"],
+        updatedAt: entry.updatedAt as string,
+        teamId: getOptionalRuntimeString(entry, "teamId"),
+        note: getOptionalRuntimeString(entry, "note"),
+      },
+    ];
+  });
+}
+
 function sanitizeRuntimeTeamUpdates(teams: TeamUnit[], runtimeState: AgentOpsRuntimeState) {
   const knownTeamIds = new Set(teams.map((team) => team.id));
 
@@ -633,15 +659,7 @@ function mergeProviderConnections(
   runtimeState: AgentOpsRuntimeState,
 ) {
   const updates = new Map(
-    runtimeState.providerConnections
-      .filter(
-        (entry) =>
-          isRuntimeMergeEntry(entry) &&
-          (entry.providerId === "codex" ||
-            entry.providerId === "claude" ||
-            entry.providerId === "gemini"),
-      )
-      .map((entry) => [entry.providerId, entry]),
+    sanitizeProviderConnectionUpdates(runtimeState).map((entry) => [entry.providerId, entry]),
   );
 
   return baseConnections.map((connection) => {
