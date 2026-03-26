@@ -852,6 +852,9 @@ export function AffiliationWorkspace({
           <p className="card-support-text">
             {getAffiliationScanSummary(affiliation, locale)}
           </p>
+          <p className="card-support-text">
+            <strong>{getNextUpdateLabel(locale)}</strong> {getNextActionSummary(affiliation, locale)}
+          </p>
         </div>
         <div className="profile-history-side">
           <span className={`pill ${getAffiliationStatusClass(affiliation)}`}>
@@ -887,10 +890,6 @@ export function AffiliationWorkspace({
               <div className="field-row">
                 <dt>{getTimelineSnapshotLabel(locale)}</dt>
                 <dd>{getTimelineSummary(affiliation, locale)}</dd>
-              </div>
-              <div className="field-row">
-                <dt>{getNextUpdateLabel(locale)}</dt>
-                <dd>{getNextActionSummary(affiliation, locale)}</dd>
               </div>
             </dl>
             {(affiliation.department || affiliation.labName) && (
@@ -955,11 +954,10 @@ export function AffiliationWorkspace({
           <p className="card-support-text">
             {joinAffiliationSummary(affiliation) || text.institution}
           </p>
+          <p className="card-support-text">
+            <strong>{getNextUpdateLabel(locale)}</strong> {getNextActionSummary(affiliation, locale)}
+          </p>
           <dl className="field-list">
-            <div className="field-row">
-              <dt>{getNextUpdateLabel(locale)}</dt>
-              <dd>{getNextActionSummary(affiliation, locale)}</dd>
-            </div>
             <div className="field-row">
               <dt>{getEditFocusLabel(locale)}</dt>
               <dd>{getEditFocusHint(affiliation, locale)}</dd>

@@ -252,7 +252,7 @@ function normalizeRuntimeState(candidate: unknown, locale: string): AgentOpsRunt
       value.providerConnections,
     ),
     autonomy:
-      value.autonomy && typeof value.autonomy === "object"
+      isRuntimeMergeEntry(value.autonomy)
         ? {
             ...defaultAutonomy,
             ...value.autonomy,
