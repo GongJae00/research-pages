@@ -447,16 +447,16 @@ export function HomepageAgentControlSection({
             {nextSetupCommand ? (
               <div className={styles.nextCommandStrip}>
                 <div className={styles.nextCommandLead}>
+                  <span className={styles.commandStep}>{nextSetupCommand.step}</span>
                   <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
                   <strong>{nextSetupCommand.title}</strong>
-                  <span className={styles.inlineMeta}>
+                  <span className={styles.nextCommandTarget}>
                     {nextSetupCommand.kind === "connect"
                       ? selectedProvider?.label ?? "-"
                       : selectedTeam?.name ?? "-"}
                   </span>
                 </div>
                 <div className={styles.nextCommandMain}>
-                  <span className={styles.commandStep}>{nextSetupCommand.step}</span>
                   <code>{nextSetupCommand.command}</code>
                   <button
                     type="button"

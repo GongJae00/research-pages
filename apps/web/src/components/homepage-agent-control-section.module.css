@@ -655,7 +655,9 @@
 
 .nextCommandStrip {
   display: grid;
-  gap: 0.06rem;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.12rem;
   margin-top: 0.02rem;
   padding: 0.08rem 0.1rem;
   border: 1px solid rgba(15, 23, 42, 0.14);
@@ -679,6 +681,19 @@
 .nextCommandLead strong {
   color: #0f172a;
   font-size: 0.78rem;
+  line-height: 1.1;
+}
+
+.nextCommandTarget {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  padding: 0.08rem 0.34rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.08);
+  color: #0f172a;
+  font-size: 0.66rem;
+  font-weight: 700;
   line-height: 1.1;
 }
 
@@ -1394,5 +1409,9 @@
 
   .title {
     font-size: 2rem;
+  }
+
+  .nextCommandStrip {
+    grid-template-columns: 1fr;
   }
 }
