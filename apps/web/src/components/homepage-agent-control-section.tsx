@@ -478,7 +478,6 @@ export function HomepageAgentControlSection({
                     </span>
                   ) : null}
                 </div>
-                <p className={styles.setupTitleHint}>{copy.setupSequenceIntro}</p>
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
@@ -595,40 +594,19 @@ export function HomepageAgentControlSection({
               </div>
 
               {nextSetupCommand ? (
-                <div className={styles.setupActivePath}>
-                  <div className={styles.setupActivePathHeader}>
-                    <div className={styles.setupActivePathLead}>
+                <div className={styles.nextCommandStrip}>
+                  <div className={styles.nextCommandLead}>
+                    <div className={styles.nextCommandLabelRow}>
                       <span className={styles.metaLabel}>{copy.activeSetup}</span>
+                      <span className={styles.nextCommandOutput}>{setupOutputLabel}</span>
+                    </div>
+                    <div className={styles.nextCommandCopy}>
                       <strong>{`${nextSetupCommand.step}. ${nextSetupCommand.title}`}</strong>
-                    </div>
-                    <span className={styles.nextCommandOutput}>{setupOutputLabel}</span>
-                  </div>
-
-                  <div className={styles.setupActiveDetails}>
-                    <div className={styles.setupActiveSelectionChip}>
-                      <span className={styles.metaLabel}>{copy.selectedCli}</span>
-                      <div className={styles.setupActiveSelectionValueRow}>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
-                        {selectedProvider ? (
-                          <span
-                            className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
-                          >
-                            {getProviderStatusLabel(locale, selectedProvider.status)}
-                          </span>
-                        ) : null}
-                      </div>
-                    </div>
-
-                    <div className={styles.setupActiveSelectionChip}>
-                      <span className={styles.metaLabel}>{copy.selectedTeamLabel}</span>
-                      <strong>{selectedTeam?.name ?? "-"}</strong>
-                      <span className={styles.setupSummaryMeta}>{selectedTeam?.lane ?? "-"}</span>
+                      <span className={styles.nextCommandContext}>{copy.nextCommandHelp}</span>
                     </div>
                   </div>
 
-                  <p className={styles.setupTitleHint}>{copy.nextCommandHelp}</p>
-
-                  <div className={styles.setupActiveCommandRow}>
+                  <div className={styles.nextCommandMain}>
                     <code>{nextSetupCommand.command}</code>
                     <button
                       type="button"
@@ -651,11 +629,7 @@ export function HomepageAgentControlSection({
               <summary className={styles.setupCommandsSummary}>
                 <div className={styles.setupCommandsSummaryCopy}>
                   <span className={styles.metaLabel}>{copy.commandOrder}</span>
-                  <strong>
-                    {nextSetupCommand
-                      ? `${nextSetupCommand.step}. ${nextSetupCommand.title}`
-                      : copy.setupCommand}
-                  </strong>
+                  <strong>{copy.setupCommand}</strong>
                 </div>
                 <span className={styles.setupCommandsHint}>
                   {isKoreanLocale(locale) ? "?紐⑤뱺 紐낅졊 蹂닿린" : "View both commands"}

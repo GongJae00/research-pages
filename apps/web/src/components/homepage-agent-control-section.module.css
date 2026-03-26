@@ -2167,8 +2167,8 @@
   }
 
   .setupWorkbench {
-    grid-template-columns: 1fr;
-    align-items: stretch;
+    grid-template-columns: minmax(0, 1.12fr) minmax(280px, 0.88fr);
+    align-items: start;
   }
 
   .setupSelectionPanel {
