@@ -675,6 +675,10 @@
 
 .setupHeaderScan {
   margin-top: 0.03rem;
+  padding: 0.06rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 16px;
+  background: rgba(248, 250, 252, 0.82);
 }
 
 .setupScanSummaryItem {
@@ -760,8 +764,8 @@
 }
 
 .setupActiveDetails {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.04rem;
 }
 
@@ -788,6 +792,8 @@
   align-items: center;
   gap: 0.05rem;
   min-width: 0;
+  padding-top: 0.02rem;
+  border-top: 1px solid rgba(203, 213, 225, 0.72);
 }
 
 .setupActiveCommandRow code {
@@ -2447,6 +2453,10 @@
 
   .setupCompactSummaryDivider {
     display: none;
+  }
+
+  .setupActiveDetails {
+    grid-template-columns: 1fr;
   }
 
   .surfaceEntryGrid {
