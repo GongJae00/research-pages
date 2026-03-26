@@ -94,6 +94,31 @@ const workItemPriorityBias = {
   "operator-loop-doc-sync": 0.88,
 };
 
+const broadDirectiveQuotaWeight = {
+  "shell-experience": {
+    "homepage-control-density": 1.08,
+    "homepage-onboarding-scan": 1.04,
+    "shell-navigation-clarity": 0.88,
+  },
+  "workflow-systems": {
+    "profile-workspace-clarity": 0.72,
+    "affiliation-workspace-clarity": 0.68,
+    "funding-workspace-clarity": 1.35,
+    "document-workspace-density": 1.45,
+    "lab-workspace-structure": 1.18,
+    "timetable-workspace-clarity": 1.22,
+    "public-researcher-page-clarity": 1.16,
+    "public-lab-page-clarity": 1.16,
+  },
+  "reliability-desk": {
+    "ops-runtime-guard": 0.94,
+    "terminal-bridge-clarity": 1.06,
+  },
+  "executive-desk": {
+    "operator-loop-doc-sync": 1,
+  },
+};
+
 const laneGuidance = {
   "shell-experience": {
     ownedPaths: [
@@ -775,6 +800,10 @@ function getRecentWorkItemUsageStats(state, teamId, items, limit = 18) {
   return { counts, distances, pool };
 }
 
+function getBroadDirectiveQuota(teamId, workItemId) {
+  return broadDirectiveQuotaWeight[teamId]?.[workItemId] ?? 1;
+}
+
 function getTeamRecentOutcomeCount(state, teamId, limit = 12, outcomes = ["changed"]) {
   return getDedupedExecutionPool(state, teamId, limit).filter((entry) => outcomes.includes(entry.outcome)).length;
 }
@@ -1015,7 +1044,8 @@ function scoreWorkItemForBroadDirective({
   state,
   recentExecutions,
   usageStats,
-  itemCountAverage,
+  totalRecentCount,
+  totalQuotaWeight,
 }) {
   const recentCount = usageStats.counts.get(workItem.id) ?? 0;
   const lastDistance = usageStats.distances.get(workItem.id) ?? usageStats.pool.length + 1;
@@ -1023,18 +1053,30 @@ function scoreWorkItemForBroadDirective({
     .slice(0, 3)
     .some((entry) => entry.outcome === "blocked" && executionMatchesWorkItem(entry, workItem));
   const basePriority = workItemPriorityBias[workItem.id] ?? 1;
-  const deficitBoost = Math.max(0, itemCountAverage - recentCount) * 0.45;
-  const freshnessBoost = Math.min(lastDistance, 5) * 0.08;
+  const quotaWeight = getBroadDirectiveQuota(teamId, workItem.id);
+  const expectedCount =
+    totalRecentCount > 0 && totalQuotaWeight > 0
+      ? (totalRecentCount * quotaWeight) / totalQuotaWeight
+      : 0;
+  const deficitBoost = Math.max(0, expectedCount - recentCount) * 0.78;
+  const overservedPenalty = Math.max(0, recentCount - expectedCount) * 0.34;
+  const freshnessBoost = Math.min(lastDistance, 7) * 0.1;
   const repetitionPenalty = isWorkItemOverused(workItem, recentExecutions) ? 0.95 : 0;
   const blockedPenalty = recentBlocked ? 0.18 : 0;
   const currentTeamLoadPenalty = Math.max(0, getRecentOutcomeCount(state, teamId, 10) - 4) * 0.03;
+  const underServedNeverTouchedBoost =
+    recentCount === 0 && totalRecentCount >= 4
+      ? Math.min(quotaWeight * 0.38, 0.62)
+      : 0;
 
   return (
     basePriority
     + deficitBoost
+    + underServedNeverTouchedBoost
     + freshnessBoost
     - repetitionPenalty
     - blockedPenalty
+    - overservedPenalty
     - currentTeamLoadPenalty
   );
 }
@@ -1044,8 +1086,12 @@ function selectBroadDirectiveWorkItem(teamId, items, state, recentExecutions, lo
     return null;
   }
 
-  const usageStats = getRecentWorkItemUsageStats(state, teamId, items);
-  const itemCountAverage = usageStats.pool.length / Math.max(items.length, 1);
+  const usageStats = getRecentWorkItemUsageStats(state, teamId, items, 30);
+  const totalRecentCount = usageStats.pool.length;
+  const totalQuotaWeight = items.reduce(
+    (sum, item) => sum + getBroadDirectiveQuota(teamId, item.id),
+    0,
+  );
   let selectedItem = items[0];
   let selectedScore = Number.NEGATIVE_INFINITY;
 
@@ -1056,7 +1102,8 @@ function selectBroadDirectiveWorkItem(teamId, items, state, recentExecutions, lo
       state,
       recentExecutions,
       usageStats,
-      itemCountAverage,
+      totalRecentCount,
+      totalQuotaWeight,
     });
 
     if (score > selectedScore) {
