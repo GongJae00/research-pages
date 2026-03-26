@@ -604,6 +604,16 @@ export function ProfileWorkspace({
   const linkLabelPlaceholder = isKo ? "예: GitHub, Personal site" : "e.g. GitHub, Personal site";
   const linkUrlLabel = isKo ? "링크 주소" : "URL";
   const linkUrlPlaceholder = isKo ? "예: https://github.com/..." : "e.g. https://github.com/...";
+  const emailPlaceholder = isKo ? "예: name@university.ac.kr" : "e.g. name@university.edu";
+  const contactSectionDescription = isKo
+    ? "첫 번째 이메일이 기본 연락처로 재사용됩니다. 공개 가능한 링크만 정리해 두면 프로필 요약과 공개 페이지 준비가 더 빨라집니다."
+    : "The first email is reused as the primary contact. Keep only public-facing links here so profile summaries and public-page prep stay compact.";
+  const emailCountLabel = isKo
+    ? `이메일 ${draftProfile.emails.length}`
+    : `${draftProfile.emails.length} email${draftProfile.emails.length === 1 ? "" : "s"}`;
+  const linkCountLabel = isKo
+    ? `링크 ${draftProfile.links.length}`
+    : `${draftProfile.links.length} link${draftProfile.links.length === 1 ? "" : "s"}`;
   const careerDocumentsTitle = isKo ? "커리어 문서" : "Career documents";
   const careerHubTitle = isKo ? "커리어 운영 허브" : "Career hub";
   const careerHubDescription = isKo
@@ -1758,11 +1768,15 @@ export function ProfileWorkspace({
               <div className="profile-editor-section">
                 <div className="profile-editor-section-head">
                   <strong>{text.contacts}</strong>
+                  <p>{contactSectionDescription}</p>
                 </div>
                 <div className="profile-form-grid">
                   <div className="profile-array-section editor-field-full">
                     <div className="profile-array-header">
-                      <span>{text.email}</span>
+                      <div className="profile-inline-list profile-inline-list-muted">
+                        <span>{text.email}</span>
+                        <span className="pill pill-gray">{emailCountLabel}</span>
+                      </div>
                       <button
                         type="button"
                         className="secondary-cta profile-inline-btn"
@@ -1777,6 +1791,8 @@ export function ProfileWorkspace({
                           <div className="profile-array-row" key={`email-${index}`}>
                             <input
                               value={email}
+                              placeholder={emailPlaceholder}
+                              aria-label={`${text.email} ${index + 1}`}
                               onChange={(event) => updateEmailItem(index, event.target.value)}
                             />
                             <button
@@ -1794,7 +1810,10 @@ export function ProfileWorkspace({
 
                   <div className="profile-array-section editor-field-full">
                     <div className="profile-array-header">
-                      <span>{onlineLinksLabel}</span>
+                      <div className="profile-inline-list profile-inline-list-muted">
+                        <span>{onlineLinksLabel}</span>
+                        <span className="pill pill-gray">{linkCountLabel}</span>
+                      </div>
                       <button
                         type="button"
                         className="secondary-cta profile-inline-btn"

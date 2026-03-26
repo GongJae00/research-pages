@@ -146,6 +146,19 @@ function appendTranscript(record: OpsTerminalSessionRecord, chunk: string) {
   record.snapshot.updatedAt = new Date().toISOString();
 }
 
+function markSessionInputUnavailable(record: OpsTerminalSessionRecord, reason: string) {
+  if (record.snapshot.status === "closed" || record.snapshot.status === "error") {
+    return record.snapshot;
+  }
+
+  record.snapshot.status = record.stopRequestedAt ? "closed" : "error";
+  record.snapshot.pid = null;
+  record.snapshot.statusDetail = reason;
+  appendTranscript(record, `${os.EOL}[ops] input stream unavailable: ${reason}${os.EOL}`);
+
+  return record.snapshot;
+}
+
 function reconcileSessionState(record: OpsTerminalSessionRecord) {
   if (record.stopRequestedAt) {
     record.snapshot.stopRequestedAt = record.stopRequestedAt;
@@ -356,6 +369,13 @@ export async function createOpsTerminalSession(shellId: OpsShellId, label?: stri
     appendTranscript(record, chunk.toString());
   });
 
+  child.stdin.on("error", (error) => {
+    markSessionInputUnavailable(
+      record,
+      `Shell input stream failed: ${error.message}. Start a new session to continue.`,
+    );
+  });
+
   child.on("error", (error) => {
     record.snapshot.status = "error";
     record.snapshot.exitCode = 1;
@@ -412,10 +432,27 @@ export function sendOpsTerminalInput(sessionId: string, input: string) {
     throw new Error(`Session "${sessionId}" is not running.`);
   }
 
+  if (record.child.stdin.destroyed || record.child.stdin.writableEnded) {
+    markSessionInputUnavailable(
+      record,
+      "Shell input stream closed unexpectedly. Start a new session to continue.",
+    );
+    throw new Error(`Session "${sessionId}" is not accepting input.`);
+  }
+
   const normalizedInput = input.trimEnd();
   record.snapshot.lastInput = normalizedInput;
   appendTranscript(record, `${os.EOL}> ${normalizedInput}${os.EOL}`);
-  record.child.stdin.write(`${normalizedInput}${os.EOL}`);
+
+  try {
+    record.child.stdin.write(`${normalizedInput}${os.EOL}`);
+  } catch {
+    markSessionInputUnavailable(
+      record,
+      "Shell input stream closed unexpectedly while sending input. Start a new session to continue.",
+    );
+    throw new Error(`Session "${sessionId}" is not accepting input.`);
+  }
 
   return record.snapshot;
 }

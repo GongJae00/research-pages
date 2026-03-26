@@ -63,6 +63,16 @@ function getSessionErrorResponse(error: unknown, sessionId?: string) {
     return buildFailureResponse(409, transition, recovery);
   }
 
+  if (message.includes('" is not accepting input.')) {
+    const transition = session?.status === "closed" ? "closed" : "error";
+    const recovery =
+      transition === "closed"
+        ? "Refresh terminal sessions, then start a new session before retrying."
+        : "Review the session transcript for the stream failure, then start a new session before retrying.";
+
+    return buildFailureResponse(409, transition, recovery);
+  }
+
   if (message.includes('" is stopping.')) {
     return buildFailureResponse(
       409,
