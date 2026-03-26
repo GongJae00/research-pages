@@ -88,6 +88,14 @@ function getSetupFlowLabel(locale: string) {
   return "Setup flow";
 }
 
+function getSetupBuilderHint(locale: string) {
+  if (isKoreanLocale(locale)) {
+    return "CLI와 lane을 고른 뒤 강조된 명령을 실행하세요.";
+  }
+
+  return "Select a CLI, select a team, then run the highlighted command.";
+}
+
 function getSetupInputLabel(locale: string) {
   if (isKoreanLocale(locale)) {
     return "?좏깮 ?낅젰";
@@ -246,6 +254,7 @@ export function HomepageAgentControlSection({
   const [selectedTeamId, setSelectedTeamId] = useState(initialSnapshot.selectedTeamId);
   const [copiedCommand, setCopiedCommand] = useState<"connect" | "assign" | null>(null);
   const copy = getCopy(locale, opsEnabled);
+  const setupBuilderHint = getSetupBuilderHint(locale);
 
   useEffect(() => {
     let mounted = true;
@@ -347,7 +356,6 @@ export function HomepageAgentControlSection({
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
   const setupFlowTitle = getSetupFlowSteps(locale).join(" -> ");
   const setupFlowDigest = selectedProvider && selectedTeam && nextSetupCommand;
-  const setupInputLabel = getSetupInputLabel(locale);
   const setupOutputLabel = getSetupOutputLabel(locale);
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
@@ -426,6 +434,7 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
+                <p className={styles.setupBuilderBody}>{setupBuilderHint}</p>
                 {setupFlowDigest ? (
                   <div
                     className={styles.setupScanLine}
@@ -469,11 +478,7 @@ export function HomepageAgentControlSection({
             </div>
 
             <div className={styles.setupWorkbench}>
-              <div className={styles.setupSelectionPanel}>
-                <div className={styles.setupSectionHead}>
-                  <span className={styles.metaLabel}>{setupInputLabel}</span>
-                </div>
-
+              <div className={styles.setupSelectionPanel} aria-label={getSetupInputLabel(locale)}>
                 <div className={styles.setupPickerGrid}>
                   <div className={styles.setupPicker} aria-label={copy.chooseProvider}>
                     <span className={styles.setupPickerLabel}>{copy.chooseProvider}</span>
