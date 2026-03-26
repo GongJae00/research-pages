@@ -1406,6 +1406,9 @@ export function AffiliationWorkspace({
           <div>
             <h3>{affiliation.roleTitle}</h3>
             <p className="card-support-text">{getAffiliationScanSummary(affiliation, locale)}</p>
+            <p className="card-support-text">
+              {getTimelinePlacementScanSummary(affiliation, locale)}
+            </p>
             <p className="card-support-text">{getNextEditSummary(affiliation, locale)}</p>
             <dl className="field-list">
               <div className="field-row">
@@ -1413,12 +1416,8 @@ export function AffiliationWorkspace({
                 <dd>{joinAffiliationSummary(affiliation) || text.institution}</dd>
               </div>
               <div className="field-row">
-                <dt>{getTimelineSnapshotLabel(locale)}</dt>
-                <dd>{getAffiliationScanSummary(affiliation, locale)}</dd>
-              </div>
-              <div className="field-row">
-                <dt>{getNextUpdateLabel(locale)}</dt>
-                <dd>{getNextEditSummary(affiliation, locale)}</dd>
+                <dt>{getTimelinePlacementLabel(locale)}</dt>
+                <dd>{getTimelinePlacementSummary(affiliation, locale)}</dd>
               </div>
               <div className="field-row">
                 <dt>{getEditFocusLabel(locale)}</dt>
