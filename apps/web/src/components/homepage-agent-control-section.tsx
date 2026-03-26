@@ -439,6 +439,13 @@ export function HomepageAgentControlSection({
                     aria-label={copy.setupStepsLabel}
                     title={`${getSetupFlowLabel(locale)}: ${setupFlowTitle}`}
                   >
+                    <span className={`${styles.setupScanItem} ${styles.setupScanItemAccent}`}>
+                      <span className={styles.setupScanKey}>{copy.runCommandLabel}</span>
+                      <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
+                    </span>
+                    <span className={styles.sequenceArrow} aria-hidden="true">
+                      <ArrowRight size={12} />
+                    </span>
                     <span className={styles.setupScanItem}>
                       <span className={styles.setupScanKey}>{copy.chooseProvider}</span>
                       <strong>{selectedProvider?.label ?? "-"}</strong>
@@ -449,13 +456,6 @@ export function HomepageAgentControlSection({
                     <span className={styles.setupScanItem}>
                       <span className={styles.setupScanKey}>{copy.chooseTeam}</span>
                       <strong>{selectedTeam?.name ?? "-"}</strong>
-                    </span>
-                    <span className={styles.sequenceArrow} aria-hidden="true">
-                      <ArrowRight size={12} />
-                    </span>
-                    <span className={`${styles.setupScanItem} ${styles.setupScanItemAccent}`}>
-                      <span className={styles.setupScanKey}>{copy.runCommandLabel}</span>
-                      <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
                     </span>
                   </div>
                 ) : null}
