@@ -76,7 +76,7 @@ function getNextSetupActionLabel(locale: string, status: ProviderStatus) {
 
 function getSetupCommandTitle(locale: string, kind: "connect" | "assign") {
   if (isKoreanLocale(locale)) {
-    return kind === "connect" ? "CLI ?곌껐" : "? 諛곗젙";
+    return kind === "connect" ? "CLI 연결" : "팀 배정";
   }
 
   return kind === "connect" ? "Connect CLI" : "Assign team";
@@ -84,7 +84,7 @@ function getSetupCommandTitle(locale: string, kind: "connect" | "assign") {
 
 function getSetupFlowLabel(locale: string) {
   if (isKoreanLocale(locale)) {
-    return "?ㅼ젙 ?먮쫫";
+    return "설정 흐름";
   }
 
   return "Setup flow";
@@ -92,7 +92,7 @@ function getSetupFlowLabel(locale: string) {
 
 function getSetupInputLabel(locale: string) {
   if (isKoreanLocale(locale)) {
-    return "?좏깮 ?낅젰";
+    return "선택 입력";
   }
 
   return "Selection";
@@ -100,7 +100,7 @@ function getSetupInputLabel(locale: string) {
 
 function getSetupOutputLabel(locale: string) {
   if (isKoreanLocale(locale)) {
-    return "?ㅽ뻾 紐낅졊";
+    return "실행 명령";
   }
 
   return "Command output";
@@ -496,6 +496,7 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
+                <p className={styles.setupSequenceIntro}>{copy.setupSequenceIntro}</p>
                 {nextSetupCommand ? (
                   <>
                     <div className={`${styles.setupDigestLine} ${styles.setupHeaderScan}`} aria-label={setupFlowLabel}>
@@ -538,6 +539,7 @@ export function HomepageAgentControlSection({
                         </span>
                         <span className={styles.nextCommandOutput}>{setupOutputLabel}</span>
                       </div>
+                      <p className={styles.nextCommandHint}>{copy.nextCommandHelp}</p>
 
                       <div className={styles.setupCommandInlineMain}>
                         <code>{nextSetupCommand.command}</code>
@@ -652,7 +654,7 @@ export function HomepageAgentControlSection({
                   <strong>{copy.setupCommand}</strong>
                 </div>
                 <span className={styles.setupCommandsHint}>
-                  {isKoreanLocale(locale) ? "?紐⑤뱺 紐낅졊 蹂닿린" : "View both commands"}
+                  {isKoreanLocale(locale) ? "모든 명령 보기" : "View both commands"}
                 </span>
               </summary>
 
