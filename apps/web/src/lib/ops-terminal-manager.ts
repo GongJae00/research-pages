@@ -159,6 +159,20 @@ function trimTranscript(value: string) {
   return value.slice(value.length - maxTranscriptChars);
 }
 
+function formatInputPreview(input: string) {
+  const normalizedInput = input.replace(/\s+/g, " ").trim();
+
+  if (!normalizedInput) {
+    return "the requested input";
+  }
+
+  if (normalizedInput.length <= 80) {
+    return `"${normalizedInput}"`;
+  }
+
+  return `"${normalizedInput.slice(0, 77)}..."`;
+}
+
 function describeSessionTermination(code: number | null, signal: NodeJS.Signals | null) {
   if (typeof code === "number") {
     return `exit code ${code}`;
@@ -546,29 +560,31 @@ export async function sendOpsTerminalInput(sessionId: string, input: string) {
     throw new Error(`Session "${sessionId}" is not running.`);
   }
 
+  const normalizedInput = input.trimEnd();
+  const inputPreview = formatInputPreview(normalizedInput);
+
   if (record.child.stdin.destroyed || record.child.stdin.writableEnded) {
     markSessionInputUnavailable(
       record,
-      "Shell input stream closed unexpectedly. Start a new session to continue.",
+      `${inputPreview} was not delivered because the shell input stream closed unexpectedly. Start a new session to continue.`,
     );
     throw new Error(`Session "${sessionId}" is not accepting input.`);
   }
-
-  const normalizedInput = input.trimEnd();
-  record.snapshot.lastInput = normalizedInput;
-  appendTranscript(record, `${os.EOL}> ${normalizedInput}${os.EOL}`);
 
   try {
     await writeToSessionInput(record, `${normalizedInput}${os.EOL}`);
   } catch (error) {
     markSessionInputUnavailable(
       record,
-      `Shell input stream closed unexpectedly while sending input${
+      `${inputPreview} was not delivered because the shell input stream closed unexpectedly${
         error instanceof Error && error.message ? `: ${error.message}` : "."
       } Start a new session to continue.`,
     );
     throw new Error(`Session "${sessionId}" is not accepting input.`);
   }
+
+  record.snapshot.lastInput = normalizedInput;
+  appendTranscript(record, `${os.EOL}> ${normalizedInput}${os.EOL}`);
 
   const currentSession = reconcileSessionState(record);
 

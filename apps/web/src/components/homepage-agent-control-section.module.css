@@ -231,6 +231,86 @@
   gap: 0.24rem;
 }
 
+.surfaceEntryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.08rem;
+  margin-top: 0.05rem;
+}
+
+.surfaceEntryCard {
+  display: grid;
+  gap: 0.04rem;
+  min-width: 0;
+  padding: 0.14rem 0.16rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 14px;
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.surfaceEntryCardAccent {
+  border-color: rgba(15, 23, 42, 0.18);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(241, 245, 249, 0.98));
+}
+
+.surfaceEntryHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.08rem;
+}
+
+.surfaceEntryCard strong {
+  color: #0f172a;
+  font-size: 0.8rem;
+  line-height: 1.12;
+}
+
+.surfaceEntryRoute {
+  color: #0f172a;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.surfaceEntryHint {
+  color: #475569;
+  font-size: 0.66rem;
+  font-weight: 600;
+  line-height: 1.26;
+}
+
+.surfaceEntryState,
+.surfaceEntryLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.24rem;
+  min-height: 0.96rem;
+  padding: 0.05rem 0.1rem;
+  border-radius: 999px;
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.surfaceEntryState {
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  background: rgba(255, 255, 255, 0.92);
+  color: #475569;
+}
+
+.surfaceEntryLink {
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: rgba(15, 23, 42, 0.08);
+  color: #0f172a;
+  text-decoration: none;
+}
+
 .primaryLink {
   display: inline-flex;
   width: fit-content;
@@ -2302,6 +2382,10 @@
 
   .setupCompactSummaryDivider {
     display: none;
+  }
+
+  .surfaceEntryGrid {
+    grid-template-columns: 1fr;
   }
 
   .setupActivePathGrid {

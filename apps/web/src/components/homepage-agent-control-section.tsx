@@ -108,6 +108,38 @@ function formatSetupPair(providerLabel: string | undefined, teamName: string | u
   return `${providerLabel ?? "-"} -> ${teamName ?? "-"}`;
 }
 
+function getSurfaceEntryCopy(locale: string, opsEnabled: boolean) {
+  if (isKoreanLocale(locale)) {
+    return {
+      ariaLabel: "\uC250 \uC9C4\uC785 \uAD6C\uBD84",
+      publicLabel: "\uACF5\uAC1C \uC250",
+      publicTitle: "\uD648\uD398\uC774\uC9C0 \uBBF8\uB9AC\uBCF4\uAE30",
+      publicHint: "\uD604\uC7AC \uD648\uD398\uC774\uC9C0\uC5D0\uC11C \uBCF4\uB294 \uACF5\uAC1C \uC11C\uD398\uC774\uC2A4",
+      currentSurface: "\uD604\uC7AC \uD45C\uC2DC",
+      internalLabel: "\uB0B4\uBD80 \uC635\uC2A4",
+      internalTitle: "\uC81C\uC5B4\uC2E4 \uBCF4\uB4DC",
+      internalHint: opsEnabled
+        ? "\uB85C\uCEEC \uAC1C\uBC1C \uB610\uB294 \uB370\uBAA8 \uBBF8\uB9AC\uBCF4\uAE30\uC5D0\uC11C \uC0C1\uC138 \uD050\uC640 \uD578\uB4DC\uC624\uD504 \uD750\uB984 \uD655\uC778"
+        : "\uC0C1\uC138 \uC635\uC2A4 \uBCF4\uB4DC\uB294 \uB0B4\uBD80 \uBBF8\uB9AC\uBCF4\uAE30\uC5D0\uC11C\uB9CC \uC5F4\uB9BC",
+      previewOnly: "\uB0B4\uBD80 \uBBF8\uB9AC\uBCF4\uAE30 \uC804\uC6A9",
+    };
+  }
+
+  return {
+    ariaLabel: "Surface split",
+    publicLabel: "Public shell",
+    publicTitle: "Homepage preview",
+    publicHint: "Current public-facing surface on the homepage",
+    currentSurface: "Current surface",
+    internalLabel: "Internal ops",
+    internalTitle: "Control room board",
+    internalHint: opsEnabled
+      ? "Open the detailed queue and handoff board in local or demo preview."
+      : "The detailed ops board is available only in internal preview deployments.",
+    previewOnly: "Internal preview only",
+  };
+}
+
 function getCopy(locale: string, opsEnabled: boolean) {
   if (isKoreanLocale(locale)) {
     return {
@@ -246,6 +278,7 @@ export function HomepageAgentControlSection({
   const [selectedTeamId, setSelectedTeamId] = useState(initialSnapshot.selectedTeamId);
   const [copiedCommand, setCopiedCommand] = useState<"connect" | "assign" | null>(null);
   const copy = getCopy(locale, opsEnabled);
+  const surfaceEntryCopy = getSurfaceEntryCopy(locale, opsEnabled);
   const setupFlowLabel = getSetupFlowLabel(locale);
 
   useEffect(() => {
@@ -406,14 +439,33 @@ export function HomepageAgentControlSection({
             </div>
           </div>
 
-          <div className={styles.actionRow}>
-            {opsEnabled ? (
-              <Link href={`/${locale}/ops`} className={styles.primaryLink}>
-                {copy.openOps}
-                <ArrowRight size={16} />
-              </Link>
-            ) : null}
-            <span className={styles.inlineMeta}>{copy.opsNote}</span>
+          <div className={styles.surfaceEntryGrid} aria-label={surfaceEntryCopy.ariaLabel}>
+            <div className={styles.surfaceEntryCard}>
+              <div className={styles.surfaceEntryHead}>
+                <span className={styles.metaLabel}>{surfaceEntryCopy.publicLabel}</span>
+                <span className={styles.surfaceEntryState}>{surfaceEntryCopy.currentSurface}</span>
+              </div>
+              <strong>{surfaceEntryCopy.publicTitle}</strong>
+              <span className={styles.surfaceEntryRoute}>{`/${locale}`}</span>
+              <span className={styles.surfaceEntryHint}>{surfaceEntryCopy.publicHint}</span>
+            </div>
+
+            <div className={`${styles.surfaceEntryCard} ${styles.surfaceEntryCardAccent}`}>
+              <div className={styles.surfaceEntryHead}>
+                <span className={styles.metaLabel}>{surfaceEntryCopy.internalLabel}</span>
+                {opsEnabled ? (
+                  <Link href={`/${locale}/ops`} className={styles.surfaceEntryLink}>
+                    {copy.openOps}
+                    <ArrowRight size={14} />
+                  </Link>
+                ) : (
+                  <span className={styles.surfaceEntryState}>{surfaceEntryCopy.previewOnly}</span>
+                )}
+              </div>
+              <strong>{surfaceEntryCopy.internalTitle}</strong>
+              <span className={styles.surfaceEntryRoute}>{`/${locale}/ops`}</span>
+              <span className={styles.surfaceEntryHint}>{surfaceEntryCopy.internalHint}</span>
+            </div>
           </div>
         </article>
 
