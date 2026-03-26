@@ -27,6 +27,25 @@ function getShellId(value: unknown): OpsShellId {
   return "powershell";
 }
 
+function getOpsTerminalErrorResponse(
+  error: string,
+  status: number,
+  transition?: OpsTerminalFailureTransition,
+  recovery?: string,
+) {
+  return NextResponse.json(
+    {
+      ok: false,
+      error,
+      transition,
+      recovery,
+      sessions: listOpsTerminalSessions(),
+      availableShells: listOpsShellPresets(),
+    },
+    { status },
+  );
+}
+
 function getSessionErrorResponse(error: unknown, sessionId?: string) {
   const message = error instanceof Error ? error.message : "Ops terminal request failed.";
   const sessions = listOpsTerminalSessions();
@@ -110,7 +129,7 @@ function getSessionErrorResponse(error: unknown, sessionId?: string) {
 
 export async function GET() {
   if (!isLocalOpsTerminalEnabled()) {
-    return NextResponse.json({ error: "Ops terminal is unavailable." }, { status: 404 });
+    return getOpsTerminalErrorResponse("Ops terminal is unavailable.", 404);
   }
 
   return NextResponse.json({
@@ -122,7 +141,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   if (!isLocalOpsTerminalEnabled()) {
-    return NextResponse.json({ error: "Ops terminal is unavailable." }, { status: 404 });
+    return getOpsTerminalErrorResponse("Ops terminal is unavailable.", 404);
   }
 
   let body: Record<string, unknown> = {};
@@ -130,7 +149,12 @@ export async function POST(request: NextRequest) {
   try {
     body = (await request.json()) as Record<string, unknown>;
   } catch {
-    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+    return getOpsTerminalErrorResponse(
+      "Invalid request body.",
+      400,
+      "error",
+      "Send a valid JSON payload, then retry the terminal action.",
+    );
   }
 
   const action = typeof body.action === "string" ? body.action : "command.run";
@@ -141,7 +165,12 @@ export async function POST(request: NextRequest) {
     switch (action) {
       case "command.run": {
         if (!command) {
-          return NextResponse.json({ error: "Command is required." }, { status: 400 });
+          return getOpsTerminalErrorResponse(
+            "Command is required.",
+            400,
+            "error",
+            "Provide a command string, then retry the terminal action.",
+          );
         }
 
         const result = await runOpsTerminalCommand(command);
@@ -167,7 +196,12 @@ export async function POST(request: NextRequest) {
         const input = typeof body.input === "string" ? body.input : "";
 
         if (!sessionId || !input.trim()) {
-          return NextResponse.json({ error: "Session id and input are required." }, { status: 400 });
+          return getOpsTerminalErrorResponse(
+            "Session id and input are required.",
+            400,
+            "error",
+            "Select an active session, provide terminal input, then retry.",
+          );
         }
 
         const session = sendOpsTerminalInput(sessionId, input);
@@ -182,7 +216,12 @@ export async function POST(request: NextRequest) {
         const sessionId = typeof body.sessionId === "string" ? body.sessionId : "";
 
         if (!sessionId) {
-          return NextResponse.json({ error: "Session id is required." }, { status: 400 });
+          return getOpsTerminalErrorResponse(
+            "Session id is required.",
+            400,
+            "error",
+            "Refresh terminal sessions, choose the session to stop, then retry.",
+          );
         }
 
         const result = await stopOpsTerminalSession(sessionId);
@@ -196,7 +235,12 @@ export async function POST(request: NextRequest) {
       }
 
       default:
-        return NextResponse.json({ error: `Unsupported action "${action}".` }, { status: 400 });
+        return getOpsTerminalErrorResponse(
+          `Unsupported action "${action}".`,
+          400,
+          "error",
+          "Use a supported terminal action, then retry the request.",
+        );
     }
   } catch (error) {
     return getSessionErrorResponse(error, sessionId);
