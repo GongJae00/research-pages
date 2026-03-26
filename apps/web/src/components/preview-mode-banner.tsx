@@ -7,6 +7,17 @@ interface PreviewModeBannerProps {
   locale: Locale;
 }
 
+function getPreviewRoutePath(href: string) {
+  const normalizedHref = href.replace(/^https?:\/\/[^/]+/i, "");
+  const [pathname] = normalizedHref.split(/[?#]/);
+
+  return pathname || href;
+}
+
+function formatPreviewLinkLabel(label: string, href: string) {
+  return `${label} ${getPreviewRoutePath(href)}`;
+}
+
 export function PreviewModeBanner({ locale }: PreviewModeBannerProps) {
   if (!isDemoPreviewRuntimeEnabled()) {
     return null;
@@ -71,17 +82,17 @@ export function PreviewModeBanner({ locale }: PreviewModeBannerProps) {
           <span className="preview-mode-banner-link preview-mode-banner-link-subtle">{copy.internalRoutes}</span>
           {internalLinks.map((link) => (
             <Link key={link.href} href={link.href} className="preview-mode-banner-link">
-              {link.label}
+              {formatPreviewLinkLabel(link.label, link.href)}
             </Link>
           ))}
           <span className="preview-mode-banner-link preview-mode-banner-link-subtle">{copy.publicRoutes}</span>
           {publicLinks.map((link) => (
             <Link key={link.href} href={link.href} className="preview-mode-banner-link">
-              {link.label}
+              {formatPreviewLinkLabel(link.label, link.href)}
             </Link>
           ))}
           <Link href="/api/health" className="preview-mode-banner-link preview-mode-banner-link-subtle">
-            {copy.health}
+            {formatPreviewLinkLabel(copy.health, "/api/health")}
           </Link>
         </div>
       </div>
