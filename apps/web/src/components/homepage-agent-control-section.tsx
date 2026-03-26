@@ -506,6 +506,7 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
+                <p className={styles.setupTitleHint}>{copy.setupSequenceIntro}</p>
                 <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
                   <div className={styles.setupCompactSummaryItem}>
                     <span className={styles.setupCompactSummaryOrdinal}>01</span>
@@ -566,6 +567,36 @@ export function HomepageAgentControlSection({
 
             <div className={styles.setupWorkbench}>
               <div className={styles.setupSelectionPanel} aria-label={getSetupInputLabel(locale)}>
+                <div className={styles.setupSelectionLead}>
+                  <div className={styles.setupSelectionLeadTop}>
+                    <span className={styles.setupSelectionLeadLabel}>{copy.activeSetup}</span>
+                    <span className={styles.setupSelectionLeadPath}>{selectedSetupPath}</span>
+                  </div>
+
+                  <div className={styles.selectionDigestRow} aria-label={setupFlowLabel}>
+                    <div className={`${styles.selectionDigestChip} ${styles.selectionDigestChipActive}`}>
+                      <span className={styles.setupDigestKey}>{copy.selectedCli}</span>
+                      <strong>{selectedProvider?.label ?? "-"}</strong>
+                      <span className={styles.selectionDigestMeta}>
+                        {copy.selectedCliStatusLabel}:{" "}
+                        {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
+                      </span>
+                    </div>
+
+                    <span className={styles.selectionDigestArrow} aria-hidden="true">
+                      →
+                    </span>
+
+                    <div className={`${styles.selectionDigestChip} ${styles.selectionDigestChipActive}`}>
+                      <span className={styles.setupDigestKey}>{copy.selectedTeamLabel}</span>
+                      <strong>{selectedTeam?.name ?? "-"}</strong>
+                      <span className={styles.selectionDigestMeta}>
+                        {copy.selectedLaneLabel}: {selectedTeam?.lane ?? "-"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
                 <div className={styles.setupPickerGrid}>
                   <div className={styles.setupPicker} aria-label={copy.chooseProvider}>
                     <div className={styles.setupPickerLabelGroup}>
@@ -645,9 +676,11 @@ export function HomepageAgentControlSection({
                       <div className={styles.setupCommandInlineCopy}>
                         <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
                         <strong>{nextSetupCommand.title}</strong>
+                        <p className={styles.setupTitleHint}>{copy.nextCommandHelp}</p>
                       </div>
                     </div>
                     <div className={styles.setupCommandInlineMeta}>
+                      <span className={styles.metaLabel}>{copy.activeSetup}</span>
                       <span className={styles.setupCommandInlinePath}>{selectedSetupPath}</span>
                     </div>
                   </div>

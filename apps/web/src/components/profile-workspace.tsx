@@ -1122,19 +1122,13 @@ export function ProfileWorkspace({
     ? getProfileLinkDisplayUrl(primarySavedLink.url)
     : "";
   const coreContactSummary = useMemo(() => {
-    const primaryParts = [
-      primarySavedEmail ?? undefined,
-      primarySavedLinkDisplayUrl || undefined,
-    ];
     const countParts = [
       savedEmails.length > 0 ? savedEmailCountLabel : undefined,
       savedLinks.length > 0 ? savedLinkCountLabel : undefined,
     ];
 
-    return joinUniqueTextParts(primaryParts) || joinUniqueTextParts(countParts) || text.emptyValue;
+    return joinUniqueTextParts(countParts) || text.emptyValue;
   }, [
-    primarySavedEmail,
-    primarySavedLinkDisplayUrl,
     savedEmailCountLabel,
     savedEmails.length,
     savedLinkCountLabel,
@@ -2270,34 +2264,33 @@ export function ProfileWorkspace({
                   <dd>
                     {savedEmails.length > 0 || savedLinks.length > 0 ? (
                       <div className="profile-career-status-list">
-                        {primarySavedEmail ? (
+                        {primarySavedEmail || primarySavedLink ? (
                           <div className="profile-career-status-row">
                             <div className="profile-career-status-main">
-                              <strong>{text.email}</strong>
-                              <a href={`mailto:${primarySavedEmail}`} className="profile-inline-link">
-                                {primarySavedEmail}
-                              </a>
-                            </div>
-                          </div>
-                        ) : null}
-                        {primarySavedLink ? (
-                          <div className="profile-career-status-row">
-                            <div className="profile-career-status-main">
-                              <strong>
-                                {getProfileLinkLabel(locale, {
-                                  kind: primarySavedLink.kind,
-                                  label: primarySavedLink.label ?? "",
-                                })}
-                              </strong>
-                              <a
-                                href={primarySavedLink.url}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="profile-inline-link"
-                              >
-                                <span>{primarySavedLinkDisplayUrl}</span>
-                                <ExternalLink size={13} />
-                              </a>
+                              <strong>{text.primaryItem}</strong>
+                              <span className="profile-inline-list profile-inline-list-muted">
+                                {primarySavedEmail ? (
+                                  <a href={`mailto:${primarySavedEmail}`} className="profile-inline-link">
+                                    {primarySavedEmail}
+                                  </a>
+                                ) : null}
+                                {primarySavedLink ? (
+                                  <a
+                                    href={primarySavedLink.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="profile-inline-link"
+                                  >
+                                    <span>
+                                      {`${getProfileLinkLabel(locale, {
+                                        kind: primarySavedLink.kind,
+                                        label: primarySavedLink.label ?? "",
+                                      })}: ${primarySavedLinkDisplayUrl}`}
+                                    </span>
+                                    <ExternalLink size={13} />
+                                  </a>
+                                ) : null}
+                              </span>
                             </div>
                           </div>
                         ) : null}

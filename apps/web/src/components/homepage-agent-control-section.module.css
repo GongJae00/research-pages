@@ -1685,6 +1685,8 @@
 .setupSelectionLead {
   display: grid;
   gap: 0.04rem;
+  padding: 0.04rem 0.05rem 0.03rem;
+  border-bottom: 1px solid rgba(203, 213, 225, 0.72);
 }
 
 .setupSelectionLeadTop {
@@ -1707,6 +1709,7 @@
 .setupSelectionLeadPath {
   display: inline-flex;
   align-items: center;
+  justify-self: flex-start;
   min-height: 0.92rem;
   padding: 0.04rem 0.12rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
