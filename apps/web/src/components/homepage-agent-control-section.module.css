@@ -302,7 +302,7 @@
 .setupTitleBlock {
   margin: 0;
   display: grid;
-  gap: 0.01rem;
+  gap: 0.04rem;
 }
 
 .setupScanGrid {
@@ -460,7 +460,7 @@
   color: #0f172a;
   font-size: 0.82rem;
   line-height: 1.08;
-  max-width: 14rem;
+  max-width: 12rem;
 }
 
 .setupSummaryBar {
@@ -563,7 +563,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.06rem;
-  margin-top: 0.02rem;
+  margin-top: 0;
 }
 
 .setupScanItem {
@@ -734,14 +734,14 @@
 
 .setupWorkbench {
   display: grid;
-  gap: 0.04rem;
+  gap: 0.06rem;
   margin-top: 0.01rem;
 }
 
 .setupSelectionPanel {
   display: grid;
   gap: 0.08rem;
-  padding: 0.06rem;
+  padding: 0.05rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 16px;
   background: rgba(248, 250, 252, 0.92);
@@ -775,7 +775,7 @@
   align-items: center;
   gap: 0.12rem;
   margin-top: 0;
-  padding: 0.04rem;
+  padding: 0.05rem 0.06rem;
   border: 1px solid rgba(15, 23, 42, 0.14);
   border-radius: 16px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(241, 245, 249, 0.98));
@@ -800,27 +800,10 @@
   min-width: 0;
 }
 
-.nextCommandMeta {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 0.08rem;
-  min-width: 0;
-}
-
-.nextCommandMetaItem {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.12rem;
-  min-width: 0;
-  padding: 0.08rem 0.12rem;
-  border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 999px;
-  background: rgba(248, 250, 252, 0.92);
-}
-
-.nextCommandMetaItem strong {
-  color: #0f172a;
+.nextCommandContext {
+  color: #64748b;
   font-size: 0.68rem;
+  font-weight: 700;
   line-height: 1.1;
 }
 

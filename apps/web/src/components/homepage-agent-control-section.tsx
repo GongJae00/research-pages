@@ -346,14 +346,7 @@ export function HomepageAgentControlSection({
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
   const setupFlowTitle = getSetupFlowSteps(locale).join(" -> ");
-  const setupFlowDigest =
-    selectedProvider && selectedTeam && nextSetupCommand
-      ? [
-          `${selectedProvider.label}`,
-          `${selectedTeam.name}`,
-          `${nextSetupCommand.step}. ${nextSetupCommand.title}`,
-        ].join(" -> ")
-      : null;
+  const setupFlowDigest = selectedProvider && selectedTeam && nextSetupCommand;
   const setupInputLabel = getSetupInputLabel(locale);
   const setupOutputLabel = getSetupOutputLabel(locale);
   const copyCommand = async (kind: "connect" | "assign") => {
@@ -440,15 +433,17 @@ export function HomepageAgentControlSection({
                     title={`${getSetupFlowLabel(locale)}: ${setupFlowTitle}`}
                   >
                     <span className={styles.setupScanItem}>
-                      <span className={styles.setupScanKey}>{copy.chooseProvider}</span>
+                      <span className={styles.setupScanKey}>{copy.selectedCli}</span>
                       <strong>{selectedProvider?.label ?? "-"}</strong>
                     </span>
                     <span className={styles.sequenceArrow} aria-hidden="true">
                       <ArrowRight size={12} />
                     </span>
                     <span className={styles.setupScanItem}>
-                      <span className={styles.setupScanKey}>{copy.chooseTeam}</span>
-                      <strong>{selectedTeam?.name ?? "-"}</strong>
+                      <span className={styles.setupScanKey}>{copy.selectedTeamLabel}</span>
+                      <strong>
+                        {selectedTeam ? `${selectedTeam.name} / ${selectedTeam.lane}` : "-"}
+                      </strong>
                     </span>
                     <span className={styles.sequenceArrow} aria-hidden="true">
                       <ArrowRight size={12} />
@@ -537,19 +532,8 @@ export function HomepageAgentControlSection({
                     <div className={styles.nextCommandCopy}>
                       <span className={styles.metaLabel}>{setupOutputLabel}</span>
                       <strong>{nextSetupCommand.title}</strong>
-                    </div>
-                    <div className={styles.nextCommandMeta}>
-                      <span className={styles.nextCommandMetaItem}>
-                        <span className={styles.metaLabel}>{copy.selectedCliStatusLabel}</span>
-                        <span
-                          className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider?.status ?? "ready")}`}
-                        >
-                          {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
-                        </span>
-                      </span>
-                      <span className={styles.nextCommandMetaItem}>
-                        <span className={styles.metaLabel}>{copy.selectedLaneLabel}</span>
-                        <strong>{selectedTeam?.lane ?? "-"}</strong>
+                      <span className={styles.nextCommandContext}>
+                        {selectedProvider?.label ?? "-"} / {selectedTeam?.name ?? "-"}
                       </span>
                     </div>
                   </div>
