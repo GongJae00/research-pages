@@ -112,7 +112,8 @@ function getCopy(locale: string, opsEnabled: boolean) {
         "브라우저가 로컬 터미널을 직접 제어하지는 않지만, 각 개발자는 CLI 세션을 로컬 브리지에 등록하고 이 페이지에서 연결 상태를 확인할 수 있습니다.",
       setupBuilderLabel: "홈페이지 셋업 빌더",
       setupBuilderTitle: "CLI 설정 한눈에 보기",
-      setupBuilderBody: "CLI 선택, 팀 선택, 다음 명령 실행만 확인하면 됩니다.",
+      selectedCliStatusLabel: "CLI 상태",
+      selectedLaneLabel: "팀 lane",
       connectCommand: "연결 명령 복사",
       assignCommand: "재배정 명령 복사",
       copied: "복사됨",
@@ -172,7 +173,8 @@ function getCopy(locale: string, opsEnabled: boolean) {
       "Each developer registers a local CLI session with the bridge, and this page keeps connection state and team ownership visible.",
     setupBuilderLabel: "Homepage setup builder",
     setupBuilderTitle: "CLI setup at a glance",
-    setupBuilderBody: "Scan the CLI, team, and next command, then run the highlighted step locally.",
+    selectedCliStatusLabel: "CLI status",
+    selectedLaneLabel: "Team lane",
     connectCommand: "Copy connect command",
     assignCommand: "Copy assign command",
     copied: "Copied",
@@ -406,9 +408,6 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
-                <p className={styles.setupBuilderBody} title={setupFlowSummary}>
-                  {copy.setupBuilderBody}
-                </p>
                 <div className={styles.setupScanGrid} aria-label={copy.setupStepsLabel}>
                   <span className={styles.setupScanCell}>
                     <span className={styles.commandStep}>01</span>
@@ -424,6 +423,16 @@ export function HomepageAgentControlSection({
                     <span className={styles.commandStep}>03</span>
                     <span className={styles.setupScanLabel}>{copy.runCommandLabel}</span>
                     <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
+                  </span>
+                </div>
+                <div className={styles.setupStatusBar} title={setupFlowSummary}>
+                  <span className={styles.setupStatusItem}>
+                    <span className={styles.setupStatusLabel}>{copy.selectedCliStatusLabel}</span>
+                    <strong>{selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}</strong>
+                  </span>
+                  <span className={styles.setupStatusItem}>
+                    <span className={styles.setupStatusLabel}>{copy.selectedLaneLabel}</span>
+                    <strong>{selectedTeam?.lane ?? "-"}</strong>
                   </span>
                 </div>
               </div>
