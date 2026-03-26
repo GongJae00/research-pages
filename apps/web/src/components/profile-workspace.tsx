@@ -1122,13 +1122,19 @@ export function ProfileWorkspace({
     ? getProfileLinkDisplayUrl(primarySavedLink.url)
     : "";
   const coreContactSummary = useMemo(() => {
-    const parts = [
+    const primaryParts = [
+      primarySavedEmail ?? undefined,
+      primarySavedLinkDisplayUrl || undefined,
+    ];
+    const countParts = [
       savedEmails.length > 0 ? savedEmailCountLabel : undefined,
       savedLinks.length > 0 ? savedLinkCountLabel : undefined,
     ];
 
-    return joinUniqueTextParts(parts) || text.emptyValue;
+    return joinUniqueTextParts(primaryParts) || joinUniqueTextParts(countParts) || text.emptyValue;
   }, [
+    primarySavedEmail,
+    primarySavedLinkDisplayUrl,
     savedEmailCountLabel,
     savedEmails.length,
     savedLinkCountLabel,

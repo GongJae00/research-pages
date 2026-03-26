@@ -512,9 +512,18 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
-                <p className={styles.setupTitleHint} aria-label={setupFlowLabel}>
-                  {copy.setupSequenceIntro}
-                </p>
+                <div className={styles.setupHeaderSummary} aria-label={setupFlowLabel}>
+                  <div className={styles.setupHeaderPill}>
+                    <span className={styles.setupDigestKey}>{copy.activeSetup}</span>
+                    <strong>{selectedSetupPath}</strong>
+                  </div>
+                  {nextSetupCommand ? (
+                    <div className={`${styles.setupHeaderPill} ${styles.setupHeaderPillAccent}`}>
+                      <span className={styles.setupDigestKey}>{copy.runCommandLabel}</span>
+                      <strong>{`03. ${nextSetupCommand.title}`}</strong>
+                    </div>
+                  ) : null}
+                </div>
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
@@ -526,55 +535,6 @@ export function HomepageAgentControlSection({
                     <ArrowRight size={16} />
                   </Link>
                 ) : null}
-              </div>
-            </div>
-
-            <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
-              <div className={styles.setupCompactSummaryItem}>
-                <span className={styles.setupCompactSummaryOrdinal}>01</span>
-                <div className={styles.setupCompactSummaryContent}>
-                  <span className={styles.setupDigestKey}>{copy.selectedCli}</span>
-                  <div className={styles.setupCompactSummaryValueRow}>
-                    <strong>{selectedProvider?.label ?? "-"}</strong>
-                    {selectedProvider ? (
-                      <span
-                        className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
-                      >
-                        {getProviderStatusLabel(locale, selectedProvider.status)}
-                      </span>
-                    ) : null}
-                  </div>
-                </div>
-              </div>
-
-              <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
-                -&gt;
-              </span>
-
-              <div className={styles.setupCompactSummaryItem}>
-                <span className={styles.setupCompactSummaryOrdinal}>02</span>
-                <div className={styles.setupCompactSummaryContent}>
-                  <span className={styles.setupDigestKey}>{copy.selectedTeamLabel}</span>
-                  <div className={styles.setupCompactSummaryValueRow}>
-                    <strong>{selectedTeam?.name ?? "-"}</strong>
-                    {selectedTeam ? <span className={styles.setupScanMeta}>{selectedTeam.lane}</span> : null}
-                  </div>
-                </div>
-              </div>
-
-              <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
-                -&gt;
-              </span>
-
-              <div className={`${styles.setupCompactSummaryItem} ${styles.setupCompactSummaryItemAccent}`}>
-                <span className={styles.setupCompactSummaryOrdinal}>03</span>
-                <div className={styles.setupCompactSummaryContent}>
-                  <span className={styles.setupDigestKey}>{copy.runCommandLabel}</span>
-                  <div className={styles.setupCompactSummaryValueRow}>
-                    <strong>{nextSetupCommand ? nextSetupCommand.title : copy.setupCommand}</strong>
-                    {nextSetupCommand ? <span className={styles.setupScanMeta}>{selectedSetupPath}</span> : null}
-                  </div>
-                </div>
               </div>
             </div>
 

@@ -471,6 +471,38 @@
   gap: 0.03rem;
 }
 
+.setupHeaderSummary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.04rem;
+  margin-top: 0.02rem;
+}
+
+.setupHeaderPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.18rem;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0.08rem 0.12rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 999px;
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.setupHeaderPillAccent {
+  border-color: rgba(15, 23, 42, 0.16);
+  background: rgba(241, 245, 249, 0.98);
+}
+
+.setupHeaderPill strong {
+  min-width: 0;
+  color: #0f172a;
+  font-size: 0.68rem;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
 .setupFlowBar {
   display: flex;
   flex-wrap: wrap;
