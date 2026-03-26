@@ -350,11 +350,11 @@ function getAffiliationScanSummary(
   locale: Locale,
 ) {
   return [
+    getAffiliationSectionName(getAffiliationSectionKey(entry), locale),
     getLegacyAffiliationScanSummary(entry, locale).replace(
       ` ${String.fromCharCode(51724)} `,
       " / ",
     ),
-    getAffiliationSectionName(getAffiliationSectionKey(entry), locale),
   ].join(" / ");
 }
 
