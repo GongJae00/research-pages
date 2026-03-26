@@ -480,6 +480,27 @@ export function HomepageAgentControlSection({
                     <span className={styles.setupFlowSequence}>{setupFlowTitle}</span>
                   </div>
                 )}
+                {selectedProvider && selectedTeam && nextSetupCommand ? (
+                  <div className={styles.setupHeaderSummary} aria-label={copy.activeSetup}>
+                    <span className={styles.setupHeaderSummaryItem}>
+                      <span className={styles.setupHeaderSummaryLabel}>{copy.selectedCli}</span>
+                      <strong>{selectedProvider.label}</strong>
+                      <span
+                        className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
+                      >
+                        {getProviderStatusLabel(locale, selectedProvider.status)}
+                      </span>
+                    </span>
+                    <span className={styles.setupHeaderSummaryItem}>
+                      <span className={styles.setupHeaderSummaryLabel}>{copy.selectedTeamLabel}</span>
+                      <strong>{selectedTeam.name}</strong>
+                    </span>
+                    <span className={`${styles.setupHeaderSummaryItem} ${styles.setupHeaderSummaryItemAccent}`}>
+                      <span className={styles.setupHeaderSummaryLabel}>{copy.runCommandLabel}</span>
+                      <strong>{nextSetupCommand.title}</strong>
+                    </span>
+                  </div>
+                ) : null}
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
@@ -504,10 +525,6 @@ export function HomepageAgentControlSection({
                         <span className={styles.metaLabel}>{setupOutputLabel}</span>
                       </div>
                       <strong>{nextSetupCommand.title}</strong>
-                      <div className={styles.nextCommandMetaRow}>
-                        <span className={styles.nextCommandContext}>{selectedProvider?.label ?? "-"}</span>
-                        <span className={styles.nextCommandContext}>{selectedTeam?.name ?? "-"}</span>
-                      </div>
                     </div>
                   </div>
                   <div className={styles.nextCommandMain}>

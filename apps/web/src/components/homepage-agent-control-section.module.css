@@ -313,6 +313,49 @@
   margin-top: 0;
 }
 
+.setupHeaderSummary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.04rem;
+  margin-top: 0.04rem;
+}
+
+.setupHeaderSummaryItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.14rem;
+  min-width: 0;
+  min-height: 1.1rem;
+  padding: 0.07rem 0.12rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 999px;
+  background: rgba(248, 250, 252, 0.92);
+}
+
+.setupHeaderSummaryItem strong {
+  min-width: 0;
+  color: #0f172a;
+  font-size: 0.68rem;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.setupHeaderSummaryItemAccent {
+  border-color: rgba(15, 23, 42, 0.14);
+  background: rgba(241, 245, 249, 0.98);
+}
+
+.setupHeaderSummaryLabel {
+  color: #64748b;
+  font-size: 0.54rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 .setupFlowChip {
   display: inline-flex;
   align-items: center;
@@ -962,29 +1005,6 @@
 
 .nextCommandLabelRow .metaLabel {
   line-height: 1;
-}
-
-.nextCommandContext {
-  color: #64748b;
-  font-size: 0.68rem;
-  font-weight: 700;
-  line-height: 1.1;
-}
-
-.nextCommandMetaRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.06rem;
-}
-
-.nextCommandMetaRow .nextCommandContext {
-  display: inline-flex;
-  align-items: center;
-  min-height: 1rem;
-  padding: 0.04rem 0.1rem;
-  border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 999px;
-  background: rgba(248, 250, 252, 0.92);
 }
 
 .nextCommandLead strong {
