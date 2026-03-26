@@ -942,6 +942,16 @@ function prioritizeEditSectionItems(
   ];
 }
 
+function getNextAffiliationFocusId(items: AffiliationTimelineEntry[]) {
+  const orderedItems = sortAffiliations(items);
+
+  return (
+    orderedItems.find((item) => needsTimelineCorrection(item))?.id ??
+    orderedItems[0]?.id ??
+    null
+  );
+}
+
 export function AffiliationWorkspace({
   locale,
   affiliations,
@@ -1075,7 +1085,7 @@ export function AffiliationWorkspace({
 
   const handleOpenEdit = () => {
     setDraftAffiliations(resolvedAffiliations);
-    const nextAffiliationId = orderedResolvedAffiliations[0]?.id ?? null;
+    const nextAffiliationId = getNextAffiliationFocusId(resolvedAffiliations);
     setActiveAffiliation(nextAffiliationId);
     setIsEditing(true);
   };
@@ -1109,7 +1119,7 @@ export function AffiliationWorkspace({
 
   const handleRemoveAffiliation = (id: string) => {
     const nextAffiliations = draftAffiliations.filter((item) => item.id !== id);
-    const nextAffiliationId = nextAffiliations[0]?.id ?? null;
+    const nextAffiliationId = getNextAffiliationFocusId(nextAffiliations);
 
     setDraftAffiliations(nextAffiliations);
     if (focusedAffiliationId === id || editingAffiliationId === id) {

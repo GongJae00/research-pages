@@ -2,7 +2,18 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Calendar, FileText, FlaskConical, LayoutGrid, LogOut, Plus, User, Users, Wallet } from "lucide-react";
+import {
+  Calendar,
+  FileText,
+  FlaskConical,
+  Globe2,
+  LayoutGrid,
+  LogOut,
+  Plus,
+  User,
+  Users,
+  Wallet,
+} from "lucide-react";
 
 import type { Dictionary } from "@/lib/i18n";
 import { t } from "@/lib/i18n";
@@ -21,7 +32,8 @@ const personalNavItems = [
   { key: "timetable", icon: Calendar, href: "/timetable" },
 ] as const;
 
-const internalNavItems = [
+const shellNavItems = [
+  { key: "home", icon: Globe2, href: "" },
   { key: "ops", icon: LayoutGrid, href: "/ops" },
 ] as const;
 
@@ -29,8 +41,12 @@ function getOpsNavigationLabel(locale: string): string {
   return locale === "ko" ? "내부 옵스 보드" : "Internal ops board";
 }
 
+function getHomepageNavigationLabel(locale: string): string {
+  return locale === "ko" ? "홈페이지 셸" : "Homepage shell";
+}
+
 function getNavigationLabel(
-  key: (typeof personalNavItems)[number]["key"] | (typeof internalNavItems)[number]["key"],
+  key: (typeof personalNavItems)[number]["key"] | Exclude<(typeof shellNavItems)[number]["key"], "home">,
   locale: string,
   dict: Dictionary,
 ): string {
@@ -50,7 +66,7 @@ export function Sidebar({ locale, dict }: SidebarProps) {
     locale === "ko"
       ? {
           personal: "내 공간",
-          internal: "시스템",
+          shell: "진입 경로",
           labs: "연구실",
           labHub: "연구실 허브",
           openLab: "연구실 열기",
@@ -59,7 +75,7 @@ export function Sidebar({ locale, dict }: SidebarProps) {
         }
       : {
           personal: "Personal",
-          internal: "Internal",
+          shell: "Entry points",
           labs: "Labs",
           labHub: "Lab hub",
           openLab: "Open labs",
@@ -69,7 +85,12 @@ export function Sidebar({ locale, dict }: SidebarProps) {
 
   const isActive = (href: string) => {
     const full = `/${locale}${href}`;
-    return pathname.startsWith(full);
+
+    if (!href) {
+      return pathname === `/${locale}` || pathname === `/${locale}/`;
+    }
+
+    return pathname === full || pathname.startsWith(`${full}/`);
   };
 
   return (
@@ -103,20 +124,21 @@ export function Sidebar({ locale, dict }: SidebarProps) {
 
         <div className="sidebar-group">
           <div className="sidebar-group-header">
-            <span className="sidebar-group-title">{copy.internal}</span>
+            <span className="sidebar-group-title">{copy.shell}</span>
           </div>
-          {internalNavItems.map((item) => {
+          {shellNavItems.map((item) => {
             const active = isActive(item.href);
             const Icon = item.icon;
+            const href = item.href ? `/${locale}${item.href}` : `/${locale}`;
+            const label =
+              item.key === "home"
+                ? getHomepageNavigationLabel(locale)
+                : getNavigationLabel(item.key, locale, dict);
 
             return (
-              <Link
-                key={item.key}
-                href={`/${locale}${item.href}`}
-                className={`sidebar-link${active ? " sidebar-link-active" : ""}`}
-              >
+              <Link key={item.key} href={href} className={`sidebar-link${active ? " sidebar-link-active" : ""}`}>
                 <Icon size={18} />
-                <span>{getNavigationLabel(item.key, locale, dict)}</span>
+                <span>{label}</span>
               </Link>
             );
           })}
