@@ -88,6 +88,22 @@ function getSetupFlowLabel(locale: string) {
   return "Setup flow";
 }
 
+function getSetupInputLabel(locale: string) {
+  if (isKoreanLocale(locale)) {
+    return "?좏깮 ?낅젰";
+  }
+
+  return "Selection";
+}
+
+function getSetupOutputLabel(locale: string) {
+  if (isKoreanLocale(locale)) {
+    return "?ㅽ뻾 紐낅졊";
+  }
+
+  return "Command output";
+}
+
 function getSetupFlowSteps(locale: string) {
   if (isKoreanLocale(locale)) {
     return ["CLI ?좏깮", "? ?좏깮", "?ㅼ쓬 紐낅졊 ?ㅽ뻾"];
@@ -332,6 +348,8 @@ export function HomepageAgentControlSection({
   const setupFlowSteps = getSetupFlowSteps(locale);
   const setupSelectionSummary =
     selectedProvider && selectedTeam ? `${selectedProvider.label} -> ${selectedTeam.name}` : null;
+  const setupInputLabel = getSetupInputLabel(locale);
+  const setupOutputLabel = getSetupOutputLabel(locale);
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
       kind === "connect" ? setupManifest?.commands.connect ?? "" : setupManifest?.commands.assign ?? "";
@@ -451,84 +469,95 @@ export function HomepageAgentControlSection({
               </div>
             </div>
 
-            {nextSetupCommand ? (
-              <div className={styles.nextCommandStrip}>
-                <div className={styles.nextCommandLead}>
-                  <span className={styles.commandStep}>{nextSetupCommand.step}</span>
-                  <div className={styles.nextCommandCopy}>
-                    <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
-                    <strong>{nextSetupCommand.title}</strong>
-                  </div>
+            <div className={styles.setupWorkbench}>
+              <div className={styles.setupSelectionPanel}>
+                <div className={styles.setupSectionHead}>
+                  <span className={styles.metaLabel}>{setupInputLabel}</span>
                   {setupSelectionSummary ? (
-                    <span className={styles.nextCommandRoute}>{setupSelectionSummary}</span>
+                    <strong className={styles.setupSectionSummary}>{setupSelectionSummary}</strong>
                   ) : null}
                 </div>
-                <div className={styles.nextCommandMain}>
-                  <code>{nextSetupCommand.command}</code>
-                  <button
-                    type="button"
-                    className={`${styles.copyButton} ${styles.copyIconButton}`}
-                    onClick={() => void copyCommand(nextSetupCommand.kind)}
-                    aria-label={nextSetupCommand.buttonLabel}
-                    title={nextSetupCommand.buttonLabel}
-                  >
-                    {copiedCommand === nextSetupCommand.kind ? <Check size={14} /> : <Copy size={14} />}
-                    <span className={styles.copyButtonText}>
-                      {copiedCommand === nextSetupCommand.kind ? copy.copied : nextSetupCommand.buttonLabel}
-                    </span>
-                  </button>
-                </div>
-              </div>
-            ) : null}
 
-            <div className={styles.setupPickerGrid}>
-              <div className={styles.setupPicker} aria-label={copy.chooseProvider}>
-                <span className={styles.setupPickerLabel}>{copy.chooseProvider}</span>
-                <div className={styles.optionRow}>
-                  {providerOrder.map((providerId) => {
-                    const provider = snapshot.providerConnections.find((entry) => entry.providerId === providerId);
-                    if (!provider) {
-                      return null;
-                    }
+                <div className={styles.setupPickerGrid}>
+                  <div className={styles.setupPicker} aria-label={copy.chooseProvider}>
+                    <span className={styles.setupPickerLabel}>{copy.chooseProvider}</span>
+                    <div className={styles.optionRow}>
+                      {providerOrder.map((providerId) => {
+                        const provider = snapshot.providerConnections.find((entry) => entry.providerId === providerId);
+                        if (!provider) {
+                          return null;
+                        }
 
-                    return (
-                      <button
-                        key={provider.providerId}
-                        type="button"
-                        className={`${styles.optionButton}${
-                          selectedProviderId === provider.providerId ? ` ${styles.optionButtonActive}` : ""
-                        }`}
-                        onClick={() => setSelectedProviderId(provider.providerId)}
-                      >
-                        <span className={styles.optionButtonText}>{provider.label}</span>
-                        <span
-                          className={`${styles.inlineStatusBadge} ${getProviderStatusClass(provider.status)}`}
+                        return (
+                          <button
+                            key={provider.providerId}
+                            type="button"
+                            className={`${styles.optionButton}${
+                              selectedProviderId === provider.providerId ? ` ${styles.optionButtonActive}` : ""
+                            }`}
+                            onClick={() => setSelectedProviderId(provider.providerId)}
+                          >
+                            <span className={styles.optionButtonText}>{provider.label}</span>
+                            <span
+                              className={`${styles.inlineStatusBadge} ${getProviderStatusClass(provider.status)}`}
+                            >
+                              {getProviderStatusLabel(locale, provider.status)}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className={styles.setupPicker} aria-label={copy.chooseTeam}>
+                    <span className={styles.setupPickerLabel}>{copy.chooseTeam}</span>
+                    <div className={styles.optionRow}>
+                      {snapshot.teams.map((team) => (
+                        <button
+                          key={team.id}
+                          type="button"
+                          className={`${styles.optionButton}${
+                            selectedTeamId === team.id ? ` ${styles.optionButtonActive}` : ""
+                          }`}
+                          onClick={() => setSelectedTeamId(team.id)}
                         >
-                          {getProviderStatusLabel(locale, provider.status)}
-                        </span>
-                      </button>
-                    );
-                  })}
+                          {team.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className={styles.setupPicker} aria-label={copy.chooseTeam}>
-                <span className={styles.setupPickerLabel}>{copy.chooseTeam}</span>
-                <div className={styles.optionRow}>
-                  {snapshot.teams.map((team) => (
+              {nextSetupCommand ? (
+                <div className={styles.nextCommandStrip}>
+                  <div className={styles.nextCommandLead}>
+                    <span className={styles.commandStep}>{nextSetupCommand.step}</span>
+                    <div className={styles.nextCommandCopy}>
+                      <span className={styles.metaLabel}>{setupOutputLabel}</span>
+                      <strong>{nextSetupCommand.title}</strong>
+                    </div>
+                    {setupSelectionSummary ? (
+                      <span className={styles.nextCommandRoute}>{setupSelectionSummary}</span>
+                    ) : null}
+                  </div>
+                  <div className={styles.nextCommandMain}>
+                    <code>{nextSetupCommand.command}</code>
                     <button
-                      key={team.id}
                       type="button"
-                      className={`${styles.optionButton}${
-                        selectedTeamId === team.id ? ` ${styles.optionButtonActive}` : ""
-                      }`}
-                      onClick={() => setSelectedTeamId(team.id)}
+                      className={`${styles.copyButton} ${styles.copyIconButton}`}
+                      onClick={() => void copyCommand(nextSetupCommand.kind)}
+                      aria-label={nextSetupCommand.buttonLabel}
+                      title={nextSetupCommand.buttonLabel}
                     >
-                      {team.name}
+                      {copiedCommand === nextSetupCommand.kind ? <Check size={14} /> : <Copy size={14} />}
+                      <span className={styles.copyButtonText}>
+                        {copiedCommand === nextSetupCommand.kind ? copy.copied : nextSetupCommand.buttonLabel}
+                      </span>
                     </button>
-                  ))}
+                  </div>
                 </div>
-              </div>
+              ) : null}
             </div>
 
             <details className={styles.setupCommandsDisclosure}>
