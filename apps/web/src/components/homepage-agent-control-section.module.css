@@ -1711,6 +1711,19 @@
   text-transform: uppercase;
 }
 
+.setupSelectionLeadHint {
+  margin: 0;
+  max-width: 30rem;
+  color: #475569;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.24;
+}
+
+.setupSelectionLead .setupCompactSummary {
+  display: none;
+}
+
 .setupSectionHead {
   display: flex;
   flex-wrap: wrap;
@@ -1808,6 +1821,52 @@
   flex-direction: column;
   justify-content: space-between;
   gap: 0.02rem;
+}
+
+.nextCommandPath {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.04rem;
+  width: 100%;
+}
+
+.nextCommandPathSegment {
+  display: grid;
+  gap: 0.02rem;
+  min-width: 0;
+  padding: 0.08rem 0.1rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.88);
+  flex: 1 1 8.5rem;
+}
+
+.nextCommandPathSegment strong {
+  color: #0f172a;
+  font-size: 0.72rem;
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+.nextCommandPathSegmentActive {
+  border-color: rgba(15, 23, 42, 0.22);
+  background: rgba(241, 245, 249, 0.98);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+.nextCommandPathMeta {
+  color: #64748b;
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.nextCommandPathArrow {
+  color: #94a3b8;
+  flex: 0 0 auto;
 }
 
 .nextCommandCopy {
@@ -2739,6 +2798,14 @@
   }
 
   .selectionDigestArrow {
+    display: none;
+  }
+
+  .nextCommandPath {
+    align-items: stretch;
+  }
+
+  .nextCommandPathArrow {
     display: none;
   }
 

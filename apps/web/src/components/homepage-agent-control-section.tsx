@@ -545,6 +545,7 @@ export function HomepageAgentControlSection({
                   <div className={styles.setupSelectionLeadTop}>
                     <span className={styles.setupSelectionLeadLabel}>{copy.activeSetup}</span>
                   </div>
+                  <p className={styles.setupSelectionLeadHint}>{copy.setupSequenceIntro}</p>
                   <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
                     <div className={styles.setupCompactSummaryItem}>
                       <span className={styles.setupCompactSummaryOrdinal}>01</span>
@@ -675,6 +676,22 @@ export function HomepageAgentControlSection({
               {nextSetupCommand ? (
                 <div className={styles.nextCommandStrip}>
                   <div className={styles.nextCommandLead}>
+                    <div className={styles.nextCommandPath} aria-label={setupFlowLabel}>
+                      <div className={styles.nextCommandPathSegment}>
+                        <span className={styles.nextCommandPathMeta}>01 {copy.selectedCli}</span>
+                        <strong>{selectedProvider?.label ?? "-"}</strong>
+                      </div>
+                      <ArrowRight className={styles.nextCommandPathArrow} size={14} aria-hidden="true" />
+                      <div className={styles.nextCommandPathSegment}>
+                        <span className={styles.nextCommandPathMeta}>02 {copy.selectedTeamLabel}</span>
+                        <strong>{selectedTeam?.name ?? "-"}</strong>
+                      </div>
+                      <ArrowRight className={styles.nextCommandPathArrow} size={14} aria-hidden="true" />
+                      <div className={`${styles.nextCommandPathSegment} ${styles.nextCommandPathSegmentActive}`}>
+                        <span className={styles.nextCommandPathMeta}>03 {copy.runCommandLabel}</span>
+                        <strong>{nextSetupCommand.title}</strong>
+                      </div>
+                    </div>
                     <div className={styles.copyTitleGroup}>
                       <span className={styles.commandStep}>03</span>
                       <div className={styles.nextCommandCopy}>

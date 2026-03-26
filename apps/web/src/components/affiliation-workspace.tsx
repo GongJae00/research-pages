@@ -384,6 +384,18 @@ function getCurrentTimelineHint(
   entry: AffiliationTimelineEntry,
   locale: Locale,
 ) {
+  if (entry.active && entry.appointmentStatus !== "active") {
+    return locale === "ko"
+      ? "\ud604\uc7ac \uc18c\uc18d\uc5d0 \ub0a8\uae38 \uac83\uc774\uba74 \uc774 \uac12\uc740 \uc720\uc9c0\ud558\uace0, \uc0c1\ud0dc\ub97c \uc9c4\ud589 \uc911\uc73c\ub85c \ub9de\ucdb0\uc8fc\uc138\uc694."
+      : "Leave this on if the role is still current, then align the status to Active.";
+  }
+
+  if (!entry.active && entry.appointmentStatus === "active") {
+    return locale === "ko"
+      ? "\uc0c1\ud0dc\ub294 \uc9c4\ud589 \uc911\uc774\ubbc0\ub85c \uc5ec\uc804\ud788 \ud604\uc7ac \uc18c\uc18d\uc774\uba74 \ub2e4\uc2dc \ucf1c\uc8fc\uc138\uc694."
+      : "Status says Active. Turn this back on if the role still belongs with Current affiliations.";
+  }
+
   if (entry.active) {
     return locale === "ko"
       ? "\uc774 \ud56d\ubaa9\uc774 \ud604\uc7ac \uc18c\uc18d \uc139\uc158\uc5d0 \ub0a8\uc544\uc57c \ud55c\ub2e4\uba74 \ucf1c \ub450\uc138\uc694."
@@ -399,6 +411,50 @@ function getCurrentTimelineHint(
   return locale === "ko"
     ? "\uc885\ub8cc\ub41c \uc5ed\ud560\uc740 \ub044\uace0 \ub450\uc5b4 \ubcf4\uad00 \uc774\ub825\uc5d0 \ub0a8\uac8c \ud558\uc138\uc694."
     : "Leave this off so closed roles stay in Archived timeline.";
+}
+
+function getAppointmentStatusFieldHint(
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+) {
+  if (entry.active && entry.appointmentStatus !== "active") {
+    return locale === "ko"
+      ? "\ud604\uc7ac \uc18c\uc18d \uc139\uc158\uc5d0 \ubcf4\uc774\ubbc0\ub85c \uc0c1\ud0dc\ub3c4 \uc9c4\ud589 \uc911\uc73c\ub85c \ub9de\ucdb0\uc57c \ud0c0\uc784\ub77c\uc778\uc774 \ud55c \ubc88\uc5d0 \uc77d\ud799\ub2c8\ub2e4."
+      : "Set this to Active when the role should keep showing with Current affiliations.";
+  }
+
+  if (!entry.active && entry.appointmentStatus === "active") {
+    return locale === "ko"
+      ? "\ud604\uc7ac \uc18c\uc18d\uc774 \uc544\ub2c8\ub77c\uba74 \uba3c\uc800 \uc0c1\ud0dc\ub97c \ubc14\uafd4 \uc774 \ud56d\ubaa9\uc758 \uc704\uce58\ub97c \uc815\ub9ac\ud558\uc138\uc694."
+      : "Change this status first unless the role should move back into Current affiliations.";
+  }
+
+  return null;
+}
+
+function getEndDateFieldHint(
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+) {
+  if (entry.active && entry.endDate) {
+    return locale === "ko"
+      ? "\ud604\uc7ac \uc18c\uc18d\uc774\uba74 \uc885\ub8cc \ub0a0\uc9dc\ub97c \ube44\uc6b0\uace0, \ub05d\ub09c \uc5ed\ud560\uc774\uba74 \uc0c1\ud0dc\ub97c \uc644\ub8cc\ub85c \ubc14\uafc0\uc138\uc694."
+      : "Clear the end date while this role stays current, or close the role first.";
+  }
+
+  if (!entry.active && entry.appointmentStatus === "completed" && !entry.endDate) {
+    return locale === "ko"
+      ? "\ubcf4\uad00 \uc774\ub825\ub85c \ub0a8\uae38 \uc644\ub8cc \uc18c\uc18d\uc740 \ub9c8\uc9c0\ub9c9 \ub0a0\uc9dc\ub97c \uc785\ub825\ud574 \ud0c0\uc784\ub77c\uc778\uc744 \ub2eb\uc544\uc8fc\uc138\uc694."
+      : "Add the last day so this archived role closes cleanly in the timeline.";
+  }
+
+  if (entry.appointmentStatus === "planned" && entry.endDate) {
+    return locale === "ko"
+      ? "\uc608\uc815 \uc18c\uc18d\uc740 \uc2e4\uc81c\ub85c \ub05d\ub098\uae30 \uc804\uae4c\uc9c0 \uc885\ub8cc \ub0a0\uc9dc\ub97c \ube44\uc6cc \ub450\ub294 \ud3b8\uc774 \uc120\uba85\ud569\ub2c8\ub2e4."
+      : "Leave this empty until the planned role actually ends.";
+  }
+
+  return null;
 }
 
 function getAffiliationEditReadiness(
@@ -1438,6 +1494,8 @@ export function AffiliationWorkspace({
   ) => {
     const isEditingNow = activeDraftAffiliationId === affiliation.id;
     const actionBadge = getAffiliationActionBadge(affiliation, locale);
+    const appointmentStatusHint = getAppointmentStatusFieldHint(affiliation, locale);
+    const endDateHint = getEndDateFieldHint(affiliation, locale);
 
     return (
       <section
@@ -1546,8 +1604,11 @@ export function AffiliationWorkspace({
                 <option key={value} value={value}>
                   {text.appointmentLabels[value]}
                 </option>
-              ))}
+                ))}
             </select>
+            {appointmentStatusHint ? (
+              <p className="card-support-text">{appointmentStatusHint}</p>
+            ) : null}
           </label>
           <label className="editor-field">
             <span>{getCurrentTimelineLabel(locale)}</span>
@@ -1587,6 +1648,7 @@ export function AffiliationWorkspace({
                 })
               }
             />
+            {endDateHint ? <p className="card-support-text">{endDateHint}</p> : null}
           </label>
         </div>
 
