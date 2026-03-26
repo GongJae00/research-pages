@@ -436,28 +436,29 @@ export function HomepageAgentControlSection({
                         {copy.nextActionLabel}: {nextSetupCommand?.title ?? copy.setupCommand}
                       </span>
                     </div>
-                    <div className={styles.setupSequenceGrid}>
-                      <div className={styles.setupSequencePill}>
-                        <div className={styles.setupSequencePillCopy}>
-                          <span className={styles.setupFlowLabel}>01 {copy.chooseProvider}</span>
-                          <strong>{selectedProvider?.label ?? "-"}</strong>
-                          <span className={styles.setupSequenceMeta}>
-                            {copy.selectedCliStatusLabel}:{" "}
-                            {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
-                          </span>
-                        </div>
+                    <div className={styles.setupDigestRow}>
+                      <div className={styles.setupDigestChipCompact}>
+                        <span className={styles.setupFlowLabel}>01 {copy.chooseProvider}</span>
+                        <strong>{selectedProvider?.label ?? "-"}</strong>
+                        <span className={styles.setupSequenceMeta}>
+                          {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
+                        </span>
                       </div>
-                      <span className={styles.sequenceArrow} aria-hidden="true">
-                        <ArrowRight size={14} />
+                      <span className={styles.sequenceArrowCompact} aria-hidden="true">
+                        <ArrowRight size={12} />
                       </span>
-                      <div className={styles.setupSequencePill}>
-                        <div className={styles.setupSequencePillCopy}>
-                          <span className={styles.setupFlowLabel}>02 {copy.chooseTeam}</span>
-                          <strong>{selectedTeam?.name ?? "-"}</strong>
-                          <span className={styles.setupSequenceMeta}>
-                            {copy.selectedLaneLabel}: {selectedTeam?.lane ?? "-"}
-                          </span>
-                        </div>
+                      <div className={styles.setupDigestChipCompact}>
+                        <span className={styles.setupFlowLabel}>02 {copy.chooseTeam}</span>
+                        <strong>{selectedTeam?.name ?? "-"}</strong>
+                        <span className={styles.setupSequenceMeta}>{selectedTeam?.lane ?? "-"}</span>
+                      </div>
+                      <span className={styles.sequenceArrowCompact} aria-hidden="true">
+                        <ArrowRight size={12} />
+                      </span>
+                      <div className={`${styles.setupDigestChipCompact} ${styles.setupDigestChipAccentCompact}`}>
+                        <span className={styles.setupFlowLabel}>03 {copy.runCommandLabel}</span>
+                        <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
+                        <span className={styles.setupSequenceMeta}>{setupOutputLabel}</span>
                       </div>
                     </div>
                   </div>
