@@ -807,6 +807,7 @@ export function AffiliationWorkspace({
     useState<AffiliationTimelineEntry[]>(affiliations);
   const [isEditing, setIsEditing] = useState(false);
   const [focusedAffiliationId, setFocusedAffiliationId] = useState<string | null>(null);
+  const [editingAffiliationId, setEditingAffiliationId] = useState<string | null>(null);
   const orderedResolvedAffiliations = sortAffiliations(resolvedAffiliations);
   const orderedDraftAffiliations = prioritizeAffiliation(
     sortAffiliations(draftAffiliations),
@@ -829,6 +830,10 @@ export function AffiliationWorkspace({
   const focusedDraftAffiliation = focusedAffiliationId
     ? orderedDraftAffiliations.find((item) => item.id === focusedAffiliationId) ?? null
     : null;
+  const activeDraftAffiliationId = editingAffiliationId ?? focusedAffiliationId;
+  const activeDraftAffiliation = activeDraftAffiliationId
+    ? orderedDraftAffiliations.find((item) => item.id === activeDraftAffiliationId) ?? null
+    : null;
   const editSectionOrder = getAffiliationSectionOrder(focusedDraftAffiliation);
 
   useEffect(() => {
@@ -848,6 +853,7 @@ export function AffiliationWorkspace({
     if (!isEditing) {
       setDraftAffiliations(resolvedAffiliations);
       setFocusedAffiliationId(null);
+      setEditingAffiliationId(null);
     }
   }, [isEditing, resolvedAffiliations]);
 
@@ -897,19 +903,23 @@ export function AffiliationWorkspace({
 
   const handleOpenEdit = () => {
     setDraftAffiliations(resolvedAffiliations);
-    setFocusedAffiliationId(orderedResolvedAffiliations[0]?.id ?? null);
+    const nextAffiliationId = orderedResolvedAffiliations[0]?.id ?? null;
+    setFocusedAffiliationId(nextAffiliationId);
+    setEditingAffiliationId(nextAffiliationId);
     setIsEditing(true);
   };
 
   const handleEditAffiliation = (id: string) => {
     setDraftAffiliations(resolvedAffiliations);
     setFocusedAffiliationId(id);
+    setEditingAffiliationId(id);
     setIsEditing(true);
   };
 
   const handleCancelEdit = () => {
     setDraftAffiliations(resolvedAffiliations);
     setFocusedAffiliationId(null);
+    setEditingAffiliationId(null);
     setIsEditing(false);
   };
 
@@ -917,6 +927,7 @@ export function AffiliationWorkspace({
     const nextAffiliation = createEmptyAffiliation(currentAccount?.id ?? null);
     setDraftAffiliations((current) => [...current, nextAffiliation]);
     setFocusedAffiliationId(nextAffiliation.id);
+    setEditingAffiliationId(nextAffiliation.id);
   };
 
   const handleUpdateAffiliation = (
@@ -929,8 +940,12 @@ export function AffiliationWorkspace({
   };
 
   const handleRemoveAffiliation = (id: string) => {
-    setDraftAffiliations((current) => current.filter((item) => item.id !== id));
-    setFocusedAffiliationId((current) => (current === id ? null : current));
+    const nextAffiliations = draftAffiliations.filter((item) => item.id !== id);
+    const nextAffiliationId = nextAffiliations[0]?.id ?? null;
+
+    setDraftAffiliations(nextAffiliations);
+    setFocusedAffiliationId((current) => (current === id ? nextAffiliationId : current));
+    setEditingAffiliationId((current) => (current === id ? nextAffiliationId : current));
   };
 
   const handleSaveAffiliations = async () => {
@@ -953,6 +968,7 @@ export function AffiliationWorkspace({
       setResolvedAffiliations(persistedAffiliations);
       setDraftAffiliations(persistedAffiliations);
       setFocusedAffiliationId(null);
+      setEditingAffiliationId(null);
       setIsEditing(false);
     } catch {
       // Keep the editor open so the user can retry.
@@ -1059,11 +1075,27 @@ export function AffiliationWorkspace({
   const renderEditableAffiliationCard = (
     affiliation: AffiliationTimelineEntry,
     index: number,
-  ) => (
-    <section className="card profile-edit-card" key={affiliation.id}>
+  ) => {
+    const isEditingNow = activeDraftAffiliationId === affiliation.id;
+
+    return (
+      <section
+        className="card profile-edit-card"
+        key={affiliation.id}
+        onFocusCapture={() => {
+          if (editingAffiliationId !== affiliation.id) {
+            setEditingAffiliationId(affiliation.id);
+          }
+        }}
+      >
       <div className="card-header">
         <div>
           <h3>{getEditableAffiliationHeading(affiliation, index, locale, text)}</h3>
+          {isEditingNow ? (
+            <p className="card-support-text">
+              <strong>{getEditingNowLabel(locale)}</strong>
+            </p>
+          ) : null}
           <p className="card-support-text">
             {getAffiliationScanSummary(affiliation, locale)}
           </p>
@@ -1108,6 +1140,9 @@ export function AffiliationWorkspace({
           </dl>
         </div>
         <div className="profile-history-side">
+          {isEditingNow ? (
+            <span className="pill pill-blue">{getEditingNowLabel(locale)}</span>
+          ) : null}
           <span className={`pill ${getAffiliationStatusClass(affiliation)}`}>
             {getAffiliationStateLabel(affiliation, locale)}
           </span>
@@ -1284,7 +1319,8 @@ export function AffiliationWorkspace({
         </div>
       </div>
     </section>
-  );
+    );
+  };
 
   return (
     <div className="page-standard workspace-page-shell affiliation-workspace">
@@ -1295,40 +1331,40 @@ export function AffiliationWorkspace({
               <strong>{text.title}</strong>
               <p className="card-support-text">{text.subtitle}</p>
               <p className="card-support-text">{affiliationOverview}</p>
-              {isEditing && focusedDraftAffiliation ? (
+              {isEditing && activeDraftAffiliation ? (
                 <dl className="field-list">
                   <div className="field-row">
                     <dt>{getEditingNowLabel(locale)}</dt>
                     <dd>
                       {getEditableAffiliationHeading(
-                        focusedDraftAffiliation,
+                        activeDraftAffiliation,
                         0,
                         locale,
                         text,
                       )}{" "}
                       /{" "}
-                      {joinAffiliationSummary(focusedDraftAffiliation) || text.institution}
+                      {joinAffiliationSummary(activeDraftAffiliation) || text.institution}
                     </dd>
                   </div>
                   <div className="field-row">
                     <dt>{getTimelineSnapshotLabel(locale)}</dt>
-                    <dd>{getAffiliationScanSummary(focusedDraftAffiliation, locale)}</dd>
+                    <dd>{getAffiliationScanSummary(activeDraftAffiliation, locale)}</dd>
                   </div>
                   <div className="field-row">
                     <dt>{getNextUpdateLabel(locale)}</dt>
-                    <dd>{getNextActionSummary(focusedDraftAffiliation, locale)}</dd>
+                    <dd>{getNextActionSummary(activeDraftAffiliation, locale)}</dd>
                   </div>
                   <div className="field-row">
                     <dt>{getTimelinePlacementLabel(locale)}</dt>
-                    <dd>{getTimelinePlacementSummary(focusedDraftAffiliation, locale)}</dd>
+                    <dd>{getTimelinePlacementSummary(activeDraftAffiliation, locale)}</dd>
                   </div>
                   <div className="field-row">
                     <dt>{getTimelineCheckLabel(locale)}</dt>
-                    <dd>{getTimelineCheckSummary(focusedDraftAffiliation, locale, text)}</dd>
+                    <dd>{getTimelineCheckSummary(activeDraftAffiliation, locale, text)}</dd>
                   </div>
                   <div className="field-row">
                     <dt>{getEditFocusLabel(locale)}</dt>
-                    <dd>{getEditFocusHint(focusedDraftAffiliation, locale)}</dd>
+                    <dd>{getEditFocusHint(activeDraftAffiliation, locale)}</dd>
                   </div>
                 </dl>
               ) : null}

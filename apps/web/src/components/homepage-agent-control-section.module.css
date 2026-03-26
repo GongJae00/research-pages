@@ -1728,6 +1728,11 @@
   background: rgba(248, 250, 252, 0.92);
 }
 
+.setupSelectionLead {
+  display: grid;
+  gap: 0.05rem;
+}
+
 .setupSectionHead {
   display: flex;
   flex-wrap: wrap;
@@ -1745,6 +1750,8 @@
 .selectionDigestRow {
   display: flex;
   flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: flex-start;
   gap: 0.05rem;
 }
 
@@ -2377,10 +2384,6 @@
   .setupCommandInline {
     align-self: stretch;
     align-content: start;
-  }
-
-  .selectionDigestRow {
-    display: none;
   }
 
   .nextCommandStrip {

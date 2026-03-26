@@ -567,6 +567,35 @@ export function HomepageAgentControlSection({
 
             <div className={styles.setupWorkbench}>
               <div className={styles.setupSelectionPanel} aria-label={getSetupInputLabel(locale)}>
+                {nextSetupCommand ? (
+                  <div className={styles.setupSelectionLead}>
+                    <p className={styles.setupSequenceIntro}>{copy.setupSequenceIntro}</p>
+                    <div className={styles.selectionDigestRow} aria-label={setupFlowLabel}>
+                      <span className={styles.selectionDigestChip}>
+                        <span className={styles.setupDigestKey}>{`01 ${copy.selectedCli}`}</span>
+                        <strong>{selectedProvider?.label ?? "-"}</strong>
+                        <span className={styles.selectionDigestMeta}>
+                          {`${copy.selectedCliStatusLabel}: ${
+                            selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"
+                          }`}
+                        </span>
+                      </span>
+                      <span className={styles.selectionDigestChip}>
+                        <span className={styles.setupDigestKey}>{`02 ${copy.selectedTeamLabel}`}</span>
+                        <strong>{selectedTeam?.name ?? "-"}</strong>
+                        <span className={styles.selectionDigestMeta}>
+                          {`${copy.selectedLaneLabel}: ${selectedTeam?.lane ?? "-"}`}
+                        </span>
+                      </span>
+                      <span className={styles.selectionDigestChip}>
+                        <span className={styles.setupDigestKey}>{`03 ${copy.runCommandLabel}`}</span>
+                        <strong>{nextSetupCommand.title}</strong>
+                        <span className={styles.selectionDigestMeta}>{setupOutputLabel}</span>
+                      </span>
+                    </div>
+                  </div>
+                ) : null}
+
                 <div className={styles.setupPickerGrid}>
                   <div className={styles.setupPicker} aria-label={copy.chooseProvider}>
                     <div className={styles.setupPickerLabelGroup}>
@@ -644,6 +673,7 @@ export function HomepageAgentControlSection({
                     <div className={styles.setupCommandInlineCopy}>
                       <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
                       <strong>{`03. ${nextSetupCommand.title}`}</strong>
+                      <p className={styles.nextCommandHint}>{copy.nextCommandHelp}</p>
                     </div>
                     <div className={styles.setupCommandInlineMeta}>
                       <span className={styles.setupCommandInlinePath}>
