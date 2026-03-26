@@ -397,6 +397,10 @@ function getNextUpdateLabel(locale: Locale) {
   return locale === "ko" ? "\ub2e4\uc74c \uc218\uc815 \uc791\uc5c5" : "Next edit";
 }
 
+function getTimelineCheckLabel(locale: Locale) {
+  return locale === "ko" ? "\ud0c0\uc784\ub77c\uc778 \uc810\uac80" : "Timeline check";
+}
+
 function getSaveReadinessLabel(locale: Locale) {
   return locale === "ko" ? "\uc800\uc7a5 \uc900\ube44" : "Save readiness";
 }
@@ -569,6 +573,48 @@ function getTimelinePlacementScanSummary(
   return locale === "ko"
     ? "\ubcf4\uad00 \uc774\ub825 \uc139\uc158\uc5d0 \ubc30\uce58\ub418\uc5b4 \uae30\ub85d \ubcf4\uc815 \uc2dc\uc5d0\ub9cc \ub2e4\uc2dc \uc5fd\ub2c8\ub2e4."
     : "Shown in the archived timeline and only reopened for record corrections.";
+}
+
+function getTimelineCheckSummary(
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+  text: (typeof copy)[Locale],
+) {
+  const statusLabel = text.appointmentLabels[entry.appointmentStatus];
+
+  if (entry.active && entry.appointmentStatus !== "active") {
+    return locale === "ko"
+      ? `\ud604\uc7ac \uc18c\uc18d\uc73c\ub85c \ud45c\uc2dc\ub418\uc9c0\ub9cc \uc0c1\ud0dc\ub294 ${statusLabel}\uc785\ub2c8\ub2e4. \ud604\uc7ac \uc5ec\ubd80\uc640 \uc0c1\ud0dc\ub97c \uac19\uc774 \ub9de\ucd94\uc138\uc694.`
+      : `This still scans as current, but status is ${statusLabel.toLowerCase()}. Match active state and status so the timeline reads clearly.`;
+  }
+
+  if (!entry.active && entry.appointmentStatus === "active") {
+    return locale === "ko"
+      ? "\uc0c1\ud0dc\ub294 \uc9c4\ud589 \uc911\uc778\ub370 \ud604\uc7ac \uc5ec\ubd80\ub294 \uaebc\uc838 \uc788\uc2b5\ub2c8\ub2e4. \uc774 \ud56d\ubaa9\uc774 \uc5b4\ub290 \uc139\uc158\uc5d0 \uac08\uc9c0 \uba3c\uc800 \uc815\ud558\uc138\uc694."
+      : "Status says active, but the current toggle is off. Decide whether this belongs with current roles or a closed section first.";
+  }
+
+  if (entry.active && entry.endDate) {
+    return locale === "ko"
+      ? "\ud604\uc7ac \uc18c\uc18d\uc740 \ubcf4\ud1b5 \uc885\ub8cc \ub0a0\uc9dc\ub97c \ube44\uc6cc\ub461\ub2c8\ub2e4. \uc5ed\ud560\uc774 \ub05d\ub0ac\ub2e4\uba74 \uc885\ub8cc \uc0c1\ud0dc\ub85c \ub9de\ucd94\uc138\uc694."
+      : "Current roles usually leave the end date empty. Clear it or move the role to a closed status.";
+  }
+
+  if (!entry.active && entry.appointmentStatus === "completed" && !entry.endDate) {
+    return locale === "ko"
+      ? "\uc885\ub8cc \uc18c\uc18d\uc740 \ub05d\ub09c \ub0a0\uc9dc\uac00 \uc788\uc5b4\uc57c \ud0c0\uc784\ub77c\uc778\uc744 \ube60\ub974\uac8c \uc77d\uc744 \uc218 \uc788\uc2b5\ub2c8\ub2e4."
+      : "Completed roles scan better with a final end date.";
+  }
+
+  if (entry.appointmentStatus === "planned" && entry.endDate) {
+    return locale === "ko"
+      ? "\uc608\uc815 \uc18c\uc18d\uc5d0 \uc885\ub8cc \ub0a0\uc9dc\uac00 \uc788\uc2b5\ub2c8\ub2e4. \uc2e4\uc81c\ub85c \ub2eb\ud78c \uc774\ub825\uc774 \uc544\ub2c8\ub77c\uba74 \ub0a0\uc9dc\ub97c \ub2e4\uc2dc \ud655\uc778\ud558\uc138\uc694."
+      : "Planned roles usually should not have an end date yet. Recheck the dates if this role has not closed.";
+  }
+
+  return locale === "ko"
+    ? "\uc0c1\ud0dc, \ud604\uc7ac \uc5ec\ubd80, \ub0a0\uc9dc\uac00 \uac19\uc740 \ud0c0\uc784\ub77c\uc778\uc744 \uac00\ub9ac\ud0a4\uace0 \uc788\uc2b5\ub2c8\ub2e4."
+    : "Status, current state, and dates point to the same timeline placement.";
 }
 
 function getEditActionLabel(entry: AffiliationTimelineEntry, locale: Locale) {
