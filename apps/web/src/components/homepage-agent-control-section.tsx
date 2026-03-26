@@ -427,7 +427,6 @@ export function HomepageAgentControlSection({
                 </div>
                 {setupFlowDigest ? (
                   <div className={styles.setupSummaryBar} aria-label={copy.setupStepsLabel}>
-                    <p className={styles.setupSequenceIntro}>{copy.setupSequenceIntro}</p>
                     <div className={styles.setupSummaryLead}>
                       <span className={styles.metaLabel}>{setupFlowLabel}</span>
                       <div className={styles.setupSummaryInline}>
@@ -439,10 +438,10 @@ export function HomepageAgentControlSection({
                         </span>
                       </div>
                     </div>
-                    <div className={styles.setupSequenceGrid}>
-                      <div className={styles.setupSequencePill}>
+                    <div className={styles.setupScanRowCompact}>
+                      <div className={styles.setupScanCompactItem}>
                         <span className={styles.setupPickerStep}>01</span>
-                        <div className={styles.setupSequencePillCopy}>
+                        <div className={styles.setupScanCompactCopy}>
                           <span className={styles.setupFlowLabel}>{copy.chooseProvider}</span>
                           <strong>{selectedProvider?.label ?? "-"}</strong>
                           <span className={styles.setupSequenceMeta}>
@@ -452,9 +451,9 @@ export function HomepageAgentControlSection({
                         </div>
                       </div>
 
-                      <div className={styles.setupSequencePill}>
+                      <div className={styles.setupScanCompactItem}>
                         <span className={styles.setupPickerStep}>02</span>
-                        <div className={styles.setupSequencePillCopy}>
+                        <div className={styles.setupScanCompactCopy}>
                           <span className={styles.setupFlowLabel}>{copy.chooseTeam}</span>
                           <strong>{selectedTeam?.name ?? "-"}</strong>
                           <span className={styles.setupSequenceMeta}>
@@ -463,9 +462,11 @@ export function HomepageAgentControlSection({
                         </div>
                       </div>
 
-                      <div className={`${styles.setupSequencePill} ${styles.setupSequencePillAccent}`}>
+                      <div
+                        className={`${styles.setupScanCompactItem} ${styles.setupScanCompactItemAccent}`}
+                      >
                         <span className={styles.setupPickerStep}>03</span>
-                        <div className={styles.setupSequencePillCopy}>
+                        <div className={styles.setupScanCompactCopy}>
                           <span className={styles.setupFlowLabel}>{copy.runCommandLabel}</span>
                           <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
                           <span className={styles.setupSequenceMeta}>{setupOutputLabel}</span>
