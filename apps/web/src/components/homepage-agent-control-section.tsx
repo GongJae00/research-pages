@@ -355,8 +355,8 @@ export function HomepageAgentControlSection({
     return left.step.localeCompare(right.step);
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
-  const setupFlowTitle = setupFlowSteps.join(" -> ");
   const setupFlowDigest = selectedProvider && selectedTeam && nextSetupCommand;
+  const setupFlowTitle = setupFlowSteps.join(" -> ");
   const setupOutputLabel = getSetupOutputLabel(locale);
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
@@ -437,7 +437,7 @@ export function HomepageAgentControlSection({
                 </div>
                 {setupFlowDigest ? (
                   <div
-                    className={styles.setupFlowBar}
+                    className={styles.setupSummaryBar}
                     aria-label={copy.setupStepsLabel}
                     title={`${setupBuilderHint} ${getSetupFlowLabel(locale)}: ${setupFlowTitle}`}
                   >
@@ -470,16 +470,7 @@ export function HomepageAgentControlSection({
                       </span>
                     </span>
                   </div>
-                ) : (
-                  <div
-                    className={styles.setupScanLine}
-                    aria-label={copy.setupStepsLabel}
-                    title={`${setupBuilderHint} ${getSetupFlowLabel(locale)}: ${setupFlowTitle}`}
-                  >
-                    <span className={styles.setupFlowLabel}>{getSetupFlowLabel(locale)}</span>
-                    <span className={styles.setupFlowSequence}>{setupFlowTitle}</span>
-                  </div>
-                )}
+                ) : null}
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
@@ -504,6 +495,16 @@ export function HomepageAgentControlSection({
                         <span className={styles.metaLabel}>{setupOutputLabel}</span>
                       </div>
                       <strong>{nextSetupCommand.title}</strong>
+                    </div>
+                    <div className={styles.nextCommandMeta}>
+                      <span className={styles.nextCommandTag}>
+                        <span className={styles.setupFlowLabel}>{copy.selectedCli}</span>
+                        <strong>{selectedProvider?.label ?? "-"}</strong>
+                      </span>
+                      <span className={styles.nextCommandTag}>
+                        <span className={styles.setupFlowLabel}>{copy.selectedTeamLabel}</span>
+                        <strong>{selectedTeam?.name ?? "-"}</strong>
+                      </span>
                     </div>
                   </div>
                   <div className={styles.nextCommandMain}>
