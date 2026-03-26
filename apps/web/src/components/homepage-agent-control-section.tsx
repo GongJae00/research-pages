@@ -449,31 +449,6 @@ export function HomepageAgentControlSection({
                         {copy.nextActionLabel}: {nextSetupCommand?.title ?? copy.setupCommand}
                       </span>
                     </div>
-                    <div className={styles.setupDigestRow}>
-                      <div className={styles.setupDigestChipCompact}>
-                        <span className={styles.setupFlowLabel}>01 {copy.chooseProvider}</span>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
-                        <span className={styles.setupSequenceMeta}>
-                          {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
-                        </span>
-                      </div>
-                      <span className={styles.sequenceArrowCompact} aria-hidden="true">
-                        <ArrowRight size={12} />
-                      </span>
-                      <div className={styles.setupDigestChipCompact}>
-                        <span className={styles.setupFlowLabel}>02 {copy.chooseTeam}</span>
-                        <strong>{selectedTeam?.name ?? "-"}</strong>
-                        <span className={styles.setupSequenceMeta}>{selectedTeam?.lane ?? "-"}</span>
-                      </div>
-                      <span className={styles.sequenceArrowCompact} aria-hidden="true">
-                        <ArrowRight size={12} />
-                      </span>
-                      <div className={`${styles.setupDigestChipCompact} ${styles.setupDigestChipAccentCompact}`}>
-                        <span className={styles.setupFlowLabel}>03 {copy.runCommandLabel}</span>
-                        <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
-                        <span className={styles.setupSequenceMeta}>{setupOutputLabel}</span>
-                      </div>
-                    </div>
                   </div>
                 ) : null}
               </div>
@@ -556,14 +531,14 @@ export function HomepageAgentControlSection({
                       <div className={styles.nextCommandLabelRow}>
                         <span className={styles.setupPickerStep}>03</span>
                         <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
+                        <span className={styles.nextCommandOutput}>{setupOutputLabel}</span>
                       </div>
                       <strong>{nextSetupCommand.title}</strong>
                       <span className={styles.nextCommandContext}>
-                        {selectedProvider?.label ?? "-"} {"->"} {selectedTeam?.name ?? "-"}
+                        {selectedProvider?.label ?? "-"} {"->"} {selectedTeam?.name ?? "-"} {"·"}{" "}
+                        {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
                       </span>
                     </div>
-                    <p className={styles.nextCommandHelp}>{copy.nextCommandHelp}</p>
-                    <span className={styles.inlineMeta}>{setupOutputLabel}</span>
                   </div>
                   <div className={styles.nextCommandMain}>
                     <code>{nextSetupCommand.command}</code>
