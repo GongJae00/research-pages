@@ -505,7 +505,26 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
-                <p className={styles.setupTitleHint}>{copy.setupSequenceIntro}</p>
+                <div className={styles.setupHeaderFlow} aria-label={setupFlowLabel}>
+                  <div className={styles.setupHeaderFlowChip}>
+                    <span className={styles.setupHeaderFlowStep}>01</span>
+                    <strong>{copy.chooseProvider}</strong>
+                  </div>
+                  <span className={styles.setupHeaderFlowArrow} aria-hidden="true">
+                    &rarr;
+                  </span>
+                  <div className={styles.setupHeaderFlowChip}>
+                    <span className={styles.setupHeaderFlowStep}>02</span>
+                    <strong>{copy.chooseTeam}</strong>
+                  </div>
+                  <span className={styles.setupHeaderFlowArrow} aria-hidden="true">
+                    &rarr;
+                  </span>
+                  <div className={`${styles.setupHeaderFlowChip} ${styles.setupHeaderFlowChipAccent}`}>
+                    <span className={styles.setupHeaderFlowStep}>03</span>
+                    <strong>{copy.runCommandLabel}</strong>
+                  </div>
+                </div>
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
@@ -525,9 +544,6 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupSelectionLead}>
                   <div className={styles.setupSelectionLeadTop}>
                     <span className={styles.setupSelectionLeadLabel}>{copy.activeSetup}</span>
-                    <span className={styles.setupSelectionLeadPath}>
-                      {copy.chooseProvider} -&gt; {copy.chooseTeam} -&gt; {copy.runCommandLabel}
-                    </span>
                   </div>
                   <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
                     <div className={styles.setupCompactSummaryItem}>

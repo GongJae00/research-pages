@@ -1171,6 +1171,24 @@ export function ProfileWorkspace({
     savedProfile.primaryInstitution,
     text.emptyValue,
   ]);
+  const coreEducationSummary = useMemo(() => {
+    const leadEducation = educationAffiliations[0];
+    const additionalEducationCount = Math.max(educationAffiliations.length - 1, 0);
+    const additionalEducationSummary =
+      additionalEducationCount > 0
+        ? isKo
+          ? `외 ${additionalEducationCount}건`
+          : `${additionalEducationCount} more`
+        : undefined;
+
+    return (
+      joinUniqueTextParts([
+        leadEducation?.roleTitle,
+        leadEducation?.institutionName,
+        additionalEducationSummary,
+      ]) || text.educationEmpty
+    );
+  }, [educationAffiliations, isKo, text.educationEmpty]);
   const publicProfileHref = useMemo(() => {
     if (!savedProfile.publicProfileEnabled) {
       return null;
@@ -2398,7 +2416,12 @@ export function ProfileWorkspace({
                   </dd>
                 </div>
                 <div className="profile-core-row">
-                  <dt>{text.education}</dt>
+                  <dt>
+                    <div className="profile-career-status-main">
+                      <strong>{text.education}</strong>
+                      <span>{coreEducationSummary}</span>
+                    </div>
+                  </dt>
                   <dd>{renderCompactAffiliationList(educationAffiliations, text.educationEmpty)}</dd>
                 </div>
               </dl>
