@@ -525,6 +525,45 @@ function getPrimaryEditActionLabel(
   return getEditActionLabel(entry, locale);
 }
 
+function getPrimaryEditButtonLabel(
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+) {
+  if (entry.active && entry.appointmentStatus !== "active") {
+    return locale === "ko" ? "\uc0c1\ud0dc \uc218\uc815" : "Edit status";
+  }
+
+  if (!entry.active && entry.appointmentStatus === "active") {
+    return locale === "ko"
+      ? "\ud0c0\uc784\ub77c\uc778 \uc704\uce58 \uc218\uc815"
+      : "Edit timeline placement";
+  }
+
+  if (entry.active && entry.endDate) {
+    return locale === "ko" ? "\uc885\ub8cc\uc77c \uc218\uc815" : "Edit end date";
+  }
+
+  if (!entry.active && entry.appointmentStatus === "completed" && !entry.endDate) {
+    return locale === "ko" ? "\uc885\ub8cc\uc77c \ucd94\uac00" : "Add end date";
+  }
+
+  if (entry.appointmentStatus === "planned" && entry.endDate) {
+    return locale === "ko" ? "\ub0a0\uc9dc \ub2e4\uc2dc \ud655\uc778" : "Review dates";
+  }
+
+  if (entry.active) {
+    return locale === "ko"
+      ? "\uc0c1\ud0dc\u00b7\ub0a0\uc9dc \uc218\uc815"
+      : "Edit status and dates";
+  }
+
+  if (entry.appointmentStatus === "planned" || entry.appointmentStatus === "paused") {
+    return locale === "ko" ? "\ub2e4\uc74c \uc0c1\ud0dc \uac80\ud1a0" : "Review next status";
+  }
+
+  return locale === "ko" ? "\ubcf4\uad00 \uae30\ub85d \uc218\uc815" : "Edit archived record";
+}
+
 function getTimelineCorrectionActionLabel(
   entry: AffiliationTimelineEntry,
   locale: Locale,
@@ -1396,7 +1435,7 @@ export function AffiliationWorkspace({
               onClick={() => handleEditAffiliation(affiliation.id)}
             >
               <PencilLine size={15} />
-              {getPrimaryEditActionLabel(affiliation, locale)}
+              {getPrimaryEditButtonLabel(affiliation, locale)}
             </button>
           </div>
         ) : null}
@@ -1445,10 +1484,10 @@ export function AffiliationWorkspace({
               type="button"
               className="profile-inline-btn"
               onClick={() => handleEditAffiliation(affiliation.id)}
-              aria-label={getPrimaryEditActionLabel(affiliation, locale)}
+              aria-label={getPrimaryEditButtonLabel(affiliation, locale)}
             >
               <PencilLine size={15} />
-              {getPrimaryEditActionLabel(affiliation, locale)}
+              {getPrimaryEditButtonLabel(affiliation, locale)}
             </button>
           </div>
         </div>
@@ -1591,7 +1630,7 @@ export function AffiliationWorkspace({
               onClick={() => setActiveAffiliation(affiliation.id)}
             >
               <PencilLine size={15} />
-              {getPrimaryEditActionLabel(affiliation, locale)}
+              {getPrimaryEditButtonLabel(affiliation, locale)}
             </button>
           )}
           <span className={`pill ${getAffiliationStatusClass(affiliation)}`}>

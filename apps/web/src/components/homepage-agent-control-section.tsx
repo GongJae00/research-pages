@@ -578,7 +578,7 @@ export function HomepageAgentControlSection({
             <div className={styles.setupWorkbench}>
               <div className={styles.setupSelectionPanel} aria-label={getSetupInputLabel(locale)}>
                 <div className={styles.setupPickerGrid}>
-                  <div className={styles.setupPicker} aria-label={copy.chooseProvider}>
+                  <div className={`${styles.setupPicker} ${styles.setupPickerPrimary}`} aria-label={copy.chooseProvider}>
                     <div className={styles.setupPickerLabelGroup}>
                       <span className={styles.setupPickerStep}>01</span>
                       <span className={styles.setupPickerLabel}>{copy.chooseProvider}</span>
@@ -602,10 +602,7 @@ export function HomepageAgentControlSection({
                             <span className={styles.optionButtonCopy}>
                               <span className={styles.optionButtonText}>{provider.label}</span>
                               <span className={styles.optionButtonMeta}>
-                                <span className={styles.optionButtonMetaLabel}>{copy.nextActionLabel}</span>
-                                <span className={styles.optionButtonMetaValue}>
-                                  {getNextSetupActionLabel(locale, provider.status)}
-                                </span>
+                                <span className={styles.optionButtonMetaValue}>{provider.cliName}</span>
                               </span>
                             </span>
                             <span
@@ -637,7 +634,6 @@ export function HomepageAgentControlSection({
                           <span className={styles.optionButtonCopy}>
                             <span className={styles.optionButtonText}>{team.name}</span>
                             <span className={styles.optionButtonMeta}>
-                              <span className={styles.optionButtonMetaLabel}>{copy.selectedLaneLabel}</span>
                               <span className={styles.optionButtonMetaValue}>{team.lane}</span>
                             </span>
                           </span>
