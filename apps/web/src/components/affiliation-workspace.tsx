@@ -1094,38 +1094,32 @@ function getAffiliationSections(items: AffiliationTimelineEntry[]) {
 }
 
 function getAffiliationStats(items: AffiliationTimelineEntry[], locale: Locale) {
-  const currentCount = items.filter((item) => item.active).length;
-  const queuedCount = items.filter(
-    (item) => item.appointmentStatus === "planned" || item.appointmentStatus === "paused",
-  ).length;
-  const archivedCount = items.filter(
-    (item) => !item.active && item.appointmentStatus === "completed",
-  ).length;
+  const sections = getAffiliationSections(items);
 
   return [
     {
-      label: locale === "ko" ? "\ud604\uc7ac \uc18c\uc18d" : "Current roles",
-      value: currentCount,
+      label: getAffiliationSectionName("current", locale),
+      value: sections.current.length,
       detail:
         locale === "ko"
-          ? "\uc9c0\uae08 \uc9c4\ud589 \uc911\uc778 \uc5ed\ud560"
-          : "Roles to review first when dates or status change",
+          ? "\ub0a0\uc9dc\ub098 \uc0c1\ud0dc\uac00 \ubc14\ub00c\uba74 \uc5ec\uae30\uc11c \uba3c\uc800 \ud655\uc778\ud558\ub294 \uc18c\uc18d"
+          : "Review here first when dates or status change",
     },
     {
-      label: locale === "ko" ? "\ubcf4\ub958 \ubc0f \uc608\uc815" : "Planned or paused",
-      value: queuedCount,
+      label: getAffiliationSectionName("queued", locale),
+      value: sections.queued.length,
       detail:
         locale === "ko"
-          ? "\ub2e4\uc74c \uc5c5\ub370\uc774\ud2b8 \ud6c4\ubcf4"
-          : "Entries that may need a restart or status update",
+          ? "\uc7ac\uac1c, \uc720\uc9c0, \uc885\ub8cc \uacb0\uc815\uc744 \ub2e4\uc74c\uc73c\ub85c \uc815\ub9ac\ud560 \ud56d\ubaa9"
+          : "Roles still waiting on a resume, pause, or close decision",
     },
     {
-      label: locale === "ko" ? "\uc885\ub8cc \uae30\ub85d" : "Archived roles",
-      value: archivedCount,
+      label: getAffiliationSectionName("archived", locale),
+      value: sections.archived.length,
       detail:
         locale === "ko"
-          ? "\uc885\ub8cc\ub41c \ud0c0\uc784\ub77c\uc778"
-          : "Completed timeline entries kept for reference",
+          ? "\ub2eb\ud78c \uc774\ub825\uacfc \uae30\ub85d \uc218\uc815\uc6a9 \ud56d\ubaa9"
+          : "Closed or moved-out roles kept for reference and corrections",
     },
   ];
 }

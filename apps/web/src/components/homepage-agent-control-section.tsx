@@ -562,6 +562,7 @@ export function HomepageAgentControlSection({
                 </div>
               </div>
 
+              <p className={styles.setupTitleHint}>{copy.setupSequenceIntro}</p>
               {setupHeaderFlow}
             </div>
 
