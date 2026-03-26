@@ -4,6 +4,7 @@ import {
   createOpsTerminalSession,
   listOpsShellPresets,
   listOpsTerminalSessions,
+  type OpsTerminalCommandResult,
   runOpsTerminalCommand,
   sendOpsTerminalInput,
   stopOpsTerminalSession,
@@ -44,6 +45,24 @@ function getOpsTerminalErrorResponse(
     },
     { status },
   );
+}
+
+function getCommandRecovery(result: OpsTerminalCommandResult) {
+  const stderr = result.stderr.trim();
+
+  if (result.signal) {
+    return `The command was interrupted by signal ${result.signal}. Retry the command if the interruption was expected, or inspect the local shell environment before retrying.`;
+  }
+
+  if (stderr.includes("timed out")) {
+    return "The command timed out. Retry with a shorter command or run it inside an interactive terminal session for longer tasks.";
+  }
+
+  if (result.exitCode !== 0) {
+    return "Review stderr for the failure details, correct the command or environment issue, then retry or switch to an interactive terminal session.";
+  }
+
+  return "Retry the command, or switch to an interactive terminal session if the task needs more context.";
 }
 
 function getSessionErrorResponse(error: unknown, sessionId?: string) {
@@ -174,7 +193,17 @@ export async function POST(request: NextRequest) {
         }
 
         const result = await runOpsTerminalCommand(command);
-        return NextResponse.json(result);
+        return NextResponse.json(
+          result.ok
+            ? result
+            : {
+                ...result,
+                transition: "error" as const,
+                recovery: getCommandRecovery(result),
+                sessions: listOpsTerminalSessions(),
+                availableShells: listOpsShellPresets(),
+              },
+        );
       }
 
       case "session.create": {

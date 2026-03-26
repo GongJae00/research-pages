@@ -662,13 +662,13 @@ export function AffiliationWorkspace({
         <div>
           <h3>{affiliation.roleTitle}</h3>
           <p className="card-support-text">{joinAffiliationSummary(affiliation)}</p>
+          <p className="card-support-text">
+            {getAffiliationScanSummary(affiliation, locale, text)}
+          </p>
         </div>
         <div className="profile-history-side">
           <span className={`pill ${getAffiliationStatusClass(affiliation)}`}>
-            {text.appointmentLabels[affiliation.appointmentStatus]}
-          </span>
-          <span className={`pill ${affiliation.active ? "pill-green" : "pill-gray"}`}>
-            {affiliation.active ? text.active : text.inactive}
+            {getAffiliationStateLabel(affiliation, locale)}
           </span>
           <button
             type="button"
@@ -689,9 +689,6 @@ export function AffiliationWorkspace({
             <span>{affiliation.endDate ?? text.present}</span>
           </div>
           <div className="profile-history-body">
-            <p className="card-support-text">
-              {getAffiliationScanSummary(affiliation, locale, text)}
-            </p>
             <dl className="field-list">
               <div className="field-row">
                 <dt>{text.appointmentStatus}</dt>
@@ -755,6 +752,9 @@ export function AffiliationWorkspace({
         <div>
           <h3>{getEditableAffiliationHeading(affiliation, index, locale, text)}</h3>
           <p className="card-support-text">
+            {getAffiliationScanSummary(affiliation, locale, text)}
+          </p>
+          <p className="card-support-text">
             {[
               affiliation.roleTitle || affiliation.institutionName || text.institution,
               affiliation.startDate
@@ -772,6 +772,10 @@ export function AffiliationWorkspace({
           </p>
           <dl className="field-list">
             <div className="field-row">
+              <dt>{getNextUpdateLabel(locale)}</dt>
+              <dd>{getEditActionLabel(affiliation, locale)}</dd>
+            </div>
+            <div className="field-row">
               <dt>{getEditFocusLabel(locale)}</dt>
               <dd>{getEditFocusHint(affiliation, locale)}</dd>
             </div>
@@ -780,14 +784,11 @@ export function AffiliationWorkspace({
               <dd>{getTimelineSummary(affiliation, text.present, locale)}</dd>
             </div>
             <div className="field-row">
-              <dt>{getNextUpdateLabel(locale)}</dt>
-              <dd>{getNextActionSummary(affiliation, locale)}</dd>
-            </div>
-            <div className="field-row">
               <dt>{getSaveReadinessLabel(locale)}</dt>
               <dd>{getAffiliationEditReadiness(affiliation, locale, text)}</dd>
             </div>
           </dl>
+          <p className="card-support-text">{getNextActionSummary(affiliation, locale)}</p>
         </div>
         <div className="profile-history-side">
           <span className={`pill ${getAffiliationStatusClass(affiliation)}`}>
