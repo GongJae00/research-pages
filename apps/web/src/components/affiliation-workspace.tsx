@@ -468,6 +468,41 @@ function getEditActionLabel(entry: AffiliationTimelineEntry, locale: Locale) {
   return locale === "ko" ? "\uc774\ub825 \uc218\uc815" : "Edit history";
 }
 
+function getTimelineEditorSectionLabel(locale: Locale) {
+  return locale === "ko" ? "\ud0c0\uc784\ub77c\uc778 \uba3c\uc800" : "Timeline first";
+}
+
+function getTimelineEditorSectionHint(
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+) {
+  if (entry.active) {
+    return locale === "ko"
+      ? "\uc774 \uc18c\uc18d\uc774 \uc5b4\ub514\uc5d0 \ub180\uc9c0 \uba3c\uc800 \uace0\uc815\ud558\uc138\uc694. \uc0c1\ud0dc, \ud604\uc7ac \uc5ec\ubd80, \uc2dc\uc791\u00b7\uc885\ub8cc \ub0a0\uc9dc\uac00 \ubcf4\uae30 \uc21c\uc11c\ub97c \uacb0\uc815\ud569\ub2c8\ub2e4."
+      : "Set the timeline placement first. Status, active state, and start or end dates decide where this entry appears.";
+  }
+
+  if (entry.appointmentStatus === "planned" || entry.appointmentStatus === "paused") {
+    return locale === "ko"
+      ? "\uc7ac\uac1c, \uc720\uc9c0, \uc885\ub8cc \uc911 \uc5b4\ub5a4 \uc0c1\ud0dc\uc778\uc9c0 \uba3c\uc800 \uc815\ud558\uace0 \ub0a0\uc9dc\ub97c \ub9de\ucdb0 \ud0c0\uc784\ub77c\uc778 \uc704\uce58\ub97c \uc815\ub9ac\ud558\uc138\uc694."
+      : "Decide whether this role should resume, stay queued, or close, then align the dates before editing details.";
+  }
+
+  return locale === "ko"
+    ? "\ub2eb\ud78c \uc774\ub825\uc740 \uc885\ub8cc \ub0a0\uc9dc\uc640 \uc0c1\ud0dc\uac00 \uba3c\uc800\uc785\ub2c8\ub2e4. \ud0c0\uc784\ub77c\uc778\uc744 \ub9de\ucd98 \ub4a4 \uc138\ubd80 \uc815\ubcf4\ub97c \uc815\ub9ac\ud558\uc138\uc694."
+    : "Closed roles should confirm their final status and dates first, then clean up the remaining details.";
+}
+
+function getDetailsEditorSectionLabel(locale: Locale) {
+  return locale === "ko" ? "\uae30\uad00 \uc815\ubcf4 \uc815\ub9ac" : "Institution details";
+}
+
+function getDetailsEditorSectionHint(locale: Locale) {
+  return locale === "ko"
+    ? "\ud0c0\uc784\ub77c\uc778\uc744 \ub9de\ucd98 \ub4a4 \uae30\uad00, \uc5ed\ud560, \ud559\uacfc, \uc5f0\uad6c\uc2e4, \uba54\ubaa8\ub97c \uc815\ub9ac\ud558\uc138\uc694."
+    : "Once the timeline is correct, verify institution, role, department, lab, and notes together.";
+}
+
 function getEditableAffiliationHeading(
   entry: AffiliationTimelineEntry,
   index: number,
@@ -849,6 +884,12 @@ export function AffiliationWorkspace({
         </div>
       </div>
       <div className="card-body">
+        <div>
+          <h4>{getTimelineEditorSectionLabel(locale)}</h4>
+          <p className="card-support-text">
+            {getTimelineEditorSectionHint(affiliation, locale)}
+          </p>
+        </div>
         <div className="profile-form-grid">
           <label className="editor-field">
             <span>{text.appointmentStatus}</span>
@@ -906,6 +947,13 @@ export function AffiliationWorkspace({
               }
             />
           </label>
+        </div>
+
+        <div>
+          <h4>{getDetailsEditorSectionLabel(locale)}</h4>
+          <p className="card-support-text">{getDetailsEditorSectionHint(locale)}</p>
+        </div>
+        <div className="profile-form-grid">
           <label className="editor-field">
             <span>{text.institution}</span>
             <input

@@ -1,6 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { getDegradedAgentOperationsSnapshot, getLiveAgentOperationsSnapshot } from "@/lib/agent-ops-runtime";
+import {
+  AgentOpsRuntimeStateError,
+  getDegradedAgentOperationsSnapshot,
+  getLiveAgentOperationsSnapshot,
+} from "@/lib/agent-ops-runtime";
+
+function getDegradedResponseHeaders(error: unknown) {
+  return {
+    "cache-control": "no-store, max-age=0",
+    "x-research-os-ops-state": "degraded-fallback",
+    "x-research-os-ops-state-reason":
+      error instanceof AgentOpsRuntimeStateError
+        ? "invalid-runtime-state"
+        : "runtime-read-failed",
+  };
+}
 
 export async function GET(request: NextRequest) {
   const locale = request.nextUrl.searchParams.get("locale") ?? "ko";
@@ -8,11 +23,9 @@ export async function GET(request: NextRequest) {
   try {
     const snapshot = await getLiveAgentOperationsSnapshot(locale);
     return NextResponse.json(snapshot);
-  } catch {
+  } catch (error) {
     return NextResponse.json(getDegradedAgentOperationsSnapshot(locale), {
-      headers: {
-        "x-research-os-ops-state": "degraded-fallback",
-      },
+      headers: getDegradedResponseHeaders(error),
     });
   }
 }

@@ -47,7 +47,7 @@ const validConversationChannels = new Set<AgentOperationsSnapshot["conversationF
 ]);
 const validDirectiveStatuses = new Set<string>(["idle", "active", "paused", "completed"]);
 
-class AgentOpsRuntimeStateError extends Error {}
+export class AgentOpsRuntimeStateError extends Error {}
 
 function isDirectiveStatus(
   candidate: unknown,
