@@ -32,6 +32,7 @@ const landingCopy = {
       "필요할 때 급히 모으는 대신, 프로필·링크·소속·연구비·문서·시간표를 평소에 관리해두고 CV, SOP, 연구자 페이지, 연구실 페이지로 바로 이어지게 합니다.",
     heroPrimaryCta: "워크스페이스 열기",
     heroSecondaryCta: "핵심 화면 보기",
+    agentSetup: "에이전트 설정",
     heroProof: [
       "GitHub, 홈페이지, Google Scholar 같은 대표 링크를 프로필 원본 데이터로 유지합니다.",
       "CV, SOP, Bio 초안을 문서 저장소에서 계속 업데이트하고 필요할 때 바로 다운로드합니다.",
@@ -130,6 +131,7 @@ const landingCopy = {
       "Instead of rebuilding everything only when needed, keep profile links, affiliations, funding, documents, and timetables current so they can flow into CVs, SOPs, researcher pages, and lab pages immediately.",
     heroPrimaryCta: "Open workspace",
     heroSecondaryCta: "See core screens",
+    agentSetup: "Agent setup",
     heroProof: [
       "Keep GitHub, homepage, and Google Scholar links inside the profile source record.",
       "Update CV, SOP, and bio drafts continuously in the document repository and download them when needed.",
@@ -368,6 +370,7 @@ export default async function LocaleRoot({ params }: Props) {
   ];
 
   const heroRoutes = [
+    { href: "#agent-control", label: copy.agentSetup },
     { href: `/${resolvedLocale}/profile`, label: copy.researcherPage },
     { href: `/${resolvedLocale}/documents`, label: copy.careerKit },
     { href: `/${resolvedLocale}/lab`, label: copy.labPage },
