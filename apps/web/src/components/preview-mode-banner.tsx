@@ -33,24 +33,35 @@ export function PreviewModeBanner({ locale }: PreviewModeBannerProps) {
           lab: "Public lab page",
           health: "Health",
         };
+  const routeLinks = [
+    {
+      href: `/${locale}/profile`,
+      label: `${locale === "ko" ? "내부" : "Internal"}: ${copy.workspace}`,
+    },
+    {
+      href: `/${locale}/ops`,
+      label: `${locale === "ko" ? "내부" : "Internal"}: ${copy.ops}`,
+    },
+    {
+      href: links.researcher[locale],
+      label: `${locale === "ko" ? "공개" : "Public"}: ${copy.researcher}`,
+    },
+    {
+      href: links.lab[locale],
+      label: `${locale === "ko" ? "공개" : "Public"}: ${copy.lab}`,
+    },
+  ];
 
   return (
     <div className="preview-mode-banner-shell">
       <div className="preview-mode-banner">
         <span className="preview-mode-banner-label">{copy.label}</span>
         <div className="preview-mode-banner-links">
-          <Link href={`/${locale}/profile`} className="preview-mode-banner-link">
-            {copy.workspace}
-          </Link>
-          <Link href={`/${locale}/ops`} className="preview-mode-banner-link">
-            {copy.ops}
-          </Link>
-          <Link href={links.researcher[locale]} className="preview-mode-banner-link">
-            {copy.researcher}
-          </Link>
-          <Link href={links.lab[locale]} className="preview-mode-banner-link">
-            {copy.lab}
-          </Link>
+          {routeLinks.map((link) => (
+            <Link key={link.href} href={link.href} className="preview-mode-banner-link">
+              {link.label}
+            </Link>
+          ))}
           <Link href="/api/health" className="preview-mode-banner-link preview-mode-banner-link-subtle">
             {copy.health}
           </Link>

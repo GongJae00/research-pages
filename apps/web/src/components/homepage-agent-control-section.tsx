@@ -563,11 +563,21 @@ export function HomepageAgentControlSection({
                         <span className={styles.nextCommandOutput}>{setupOutputLabel}</span>
                       </div>
                       <strong>{nextSetupCommand.title}</strong>
+                      <div className={styles.nextCommandMetaRow}>
+                        <span className={styles.nextCommandMetaChip}>
+                          <span className={styles.metaLabel}>{copy.selectedCliStatusLabel}</span>
+                          <strong>
+                            {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
+                          </strong>
+                        </span>
+                        <span className={styles.nextCommandMetaChip}>
+                          <span className={styles.metaLabel}>{copy.selectedLaneLabel}</span>
+                          <strong>{selectedTeam?.lane ?? "-"}</strong>
+                        </span>
+                      </div>
                       <span className={styles.nextCommandContext}>
-                        {selectedProvider?.label ?? "-"} {"->"} {selectedTeam?.name ?? "-"} {"·"}{" "}
-                        {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
+                        {formatSetupPair(selectedProvider?.label, selectedTeam?.name)}
                       </span>
-                      <span className={styles.nextCommandHelp}>{copy.nextCommandHelp}</span>
                     </div>
                   </div>
                   <div className={styles.nextCommandMain}>
