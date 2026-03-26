@@ -437,29 +437,22 @@ export function HomepageAgentControlSection({
                 </div>
                 {setupFlowDigest ? (
                   <div
-                    className={styles.setupScanLine}
+                    className={styles.setupScanGrid}
                     aria-label={copy.setupStepsLabel}
                     title={`${setupBuilderHint} ${getSetupFlowLabel(locale)}: ${setupFlowTitle}`}
                   >
-                    <span className={styles.setupFlowLabel}>{getSetupFlowLabel(locale)}</span>
-                    <span className={styles.setupScanItem}>
-                      <span className={styles.setupScanKey}>{copy.selectedCli}</span>
+                    <span className={styles.setupScanCell}>
+                      <span className={styles.setupFlowLabel}>{copy.selectedCli}</span>
                       <strong>{selectedProvider?.label ?? "-"}</strong>
                     </span>
-                    <span className={styles.sequenceArrow} aria-hidden="true">
-                      <ArrowRight size={12} />
-                    </span>
-                    <span className={styles.setupScanItem}>
-                      <span className={styles.setupScanKey}>{copy.selectedTeamLabel}</span>
+                    <span className={styles.setupScanCell}>
+                      <span className={styles.setupFlowLabel}>{copy.selectedTeamLabel}</span>
                       <strong>
                         {selectedTeam ? `${selectedTeam.name} / ${selectedTeam.lane}` : "-"}
                       </strong>
                     </span>
-                    <span className={styles.sequenceArrow} aria-hidden="true">
-                      <ArrowRight size={12} />
-                    </span>
-                    <span className={`${styles.setupScanItem} ${styles.setupScanItemAccent}`}>
-                      <span className={styles.setupScanKey}>{copy.runCommandLabel}</span>
+                    <span className={`${styles.setupScanCell} ${styles.setupScanCellAccent}`}>
+                      <span className={styles.setupFlowLabel}>{copy.runCommandLabel}</span>
                       <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
                     </span>
                   </div>
