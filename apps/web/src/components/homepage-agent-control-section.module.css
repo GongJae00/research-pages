@@ -656,27 +656,27 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.04rem;
-  margin-top: 0.02rem;
+  gap: 0.03rem;
+  margin-top: 0.03rem;
 }
 
 .setupHeaderFlowChip {
   display: inline-flex;
-  flex-wrap: wrap;
+  flex: 1 1 8.5rem;
   align-items: center;
-  gap: 0.12rem;
+  gap: 0.1rem;
   min-width: 0;
-  padding: 0.08rem 0.12rem;
+  padding: 0.06rem 0.1rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 14px;
+  border-radius: 12px;
   background: rgba(248, 250, 252, 0.92);
 }
 
 .setupHeaderFlowChip strong {
   min-width: 0;
   color: #0f172a;
-  font-size: 0.7rem;
-  line-height: 1.1;
+  font-size: 0.68rem;
+  line-height: 1.08;
   overflow-wrap: anywhere;
 }
 
@@ -684,16 +684,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1rem;
-  height: 1rem;
+  width: 0.92rem;
+  height: 0.92rem;
   border-radius: 999px;
   background: rgba(15, 23, 42, 0.08);
   color: #0f172a;
-  font-size: 0.54rem;
+  font-size: 0.5rem;
   font-weight: 800;
   letter-spacing: 0.04em;
   line-height: 1;
-  flex: 0 0 1rem;
+  flex: 0 0 0.92rem;
 }
 
 .setupHeaderFlowChipAccent {
@@ -711,7 +711,7 @@
   align-items: center;
   justify-content: center;
   color: #94a3b8;
-  font-size: 0.76rem;
+  font-size: 0.68rem;
   font-weight: 800;
   line-height: 1;
 }
@@ -1690,10 +1690,7 @@
 }
 
 .setupSelectionLead {
-  display: grid;
-  gap: 0.04rem;
-  padding: 0.02rem 0.02rem 0.04rem;
-  border-bottom: 1px solid rgba(203, 213, 225, 0.72);
+  display: none;
 }
 
 .setupSelectionLeadTop {

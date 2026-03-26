@@ -335,7 +335,7 @@ function getAffiliationStateLabel(
   return locale === "ko" ? "\uc885\ub8cc \uc18c\uc18d" : "Past role";
 }
 
-function getAffiliationScanSummary(
+function getLegacyAffiliationScanSummary(
   entry: AffiliationTimelineEntry,
   locale: Locale,
 ) {
@@ -345,6 +345,16 @@ function getAffiliationScanSummary(
   )}`;
 }
 
+function getAffiliationScanSummary(
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+) {
+  return getLegacyAffiliationScanSummary(entry, locale).replace(
+    ` ${String.fromCharCode(51724)} `,
+    " / ",
+  );
+}
+
 function getAffiliationOnePassSummary(
   entry: AffiliationTimelineEntry,
   locale: Locale,
@@ -352,7 +362,7 @@ function getAffiliationOnePassSummary(
   return [
     getAffiliationStateLabel(entry, locale),
     getTimelineSummary(entry, locale),
-    getPrimaryEditActionLabel(entry, locale),
+    `${getNextUpdateLabel(locale)}: ${getPrimaryEditActionLabel(entry, locale)}`,
   ].join(" / ");
 }
 
