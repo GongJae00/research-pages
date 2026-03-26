@@ -249,6 +249,52 @@ async function readRuntimeState(locale: string) {
   }
 }
 
+function createDegradedDirective(locale: string, issuedAt: string) {
+  if (locale === "ko") {
+    return {
+      source: "ops-state fallback",
+      issuedAt,
+      status: "idle" as const,
+      title: "제어 평면 상태가 기본값으로 대체됨",
+      body: "잘못되었거나 불완전한 제어 평면 상태를 무시하고 안전한 기본값으로 응답했습니다. 유효한 상태 파일이 다시 기록될 때까지 미리보기 런타임은 축소 모드로 유지됩니다.",
+    };
+  }
+
+  return {
+    source: "ops-state fallback",
+    issuedAt,
+    status: "idle" as const,
+    title: "Control-plane state degraded to safe defaults",
+    body: "Malformed or incomplete control-plane state was ignored. Preview consumers are running on safe defaults until a valid runtime state is written again.",
+  };
+}
+
+export function getDegradedAgentOperationsSnapshot(locale: string): AgentOperationsSnapshot {
+  const snapshot = getAgentOperationsSnapshot(locale);
+
+  return {
+    ...snapshot,
+    runtime: {
+      ...snapshot.runtime,
+      terminalConnected: false,
+    },
+    currentDirective: createDegradedDirective(locale, snapshot.runtime.lastSync),
+    autonomy: {
+      ...snapshot.autonomy,
+      enabled: false,
+      status: "stopped",
+      latestSummary:
+        locale === "ko"
+          ? "제어 평면 상태를 읽지 못해 안전한 기본 런타임으로 축소되었습니다."
+          : "The control-plane state could not be read, so the preview runtime fell back to safe defaults.",
+      operatorBrief:
+        locale === "ko"
+          ? "상태 파일이 다시 유효해질 때까지 경로는 기본 스냅샷과 축소된 런타임 상태를 반환합니다."
+          : "Until the state file is valid again, the route returns the base snapshot with a degraded runtime state.",
+    },
+  };
+}
+
 const validTeamStates = new Set<TeamUnit["state"]>(["delivering", "syncing", "queued", "waiting"]);
 const validAgentStates = new Set<TeamUnit["members"][number]["state"]>([
   "running",

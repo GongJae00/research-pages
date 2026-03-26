@@ -420,6 +420,21 @@ function getEditActionLabel(entry: AffiliationTimelineEntry, locale: Locale) {
   return locale === "ko" ? "\uc774\ub825 \uc218\uc815" : "Edit history";
 }
 
+function getEditableAffiliationHeading(
+  entry: AffiliationTimelineEntry,
+  index: number,
+  locale: Locale,
+  text: (typeof copy)[Locale],
+) {
+  const primaryLabel = entry.roleTitle.trim() || entry.institutionName.trim();
+
+  if (primaryLabel.length > 0) {
+    return primaryLabel;
+  }
+
+  return locale === "ko" ? `${text.item} ${index + 1}` : `${text.item} ${index + 1}`;
+}
+
 function getAffiliationSections(items: AffiliationTimelineEntry[]) {
   return {
     current: items.filter((item) => item.active),
