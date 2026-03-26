@@ -480,27 +480,6 @@ export function HomepageAgentControlSection({
                     <span className={styles.setupFlowSequence}>{setupFlowTitle}</span>
                   </div>
                 )}
-                {selectedProvider && selectedTeam && nextSetupCommand ? (
-                  <div className={styles.setupHeaderSummary} aria-label={copy.activeSetup}>
-                    <span className={styles.setupHeaderSummaryItem}>
-                      <span className={styles.setupHeaderSummaryLabel}>{copy.selectedCli}</span>
-                      <strong>{selectedProvider.label}</strong>
-                      <span
-                        className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}
-                      >
-                        {getProviderStatusLabel(locale, selectedProvider.status)}
-                      </span>
-                    </span>
-                    <span className={styles.setupHeaderSummaryItem}>
-                      <span className={styles.setupHeaderSummaryLabel}>{copy.selectedTeamLabel}</span>
-                      <strong>{selectedTeam.name}</strong>
-                    </span>
-                    <span className={`${styles.setupHeaderSummaryItem} ${styles.setupHeaderSummaryItemAccent}`}>
-                      <span className={styles.setupHeaderSummaryLabel}>{copy.runCommandLabel}</span>
-                      <strong>{nextSetupCommand.title}</strong>
-                    </span>
-                  </div>
-                ) : null}
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
