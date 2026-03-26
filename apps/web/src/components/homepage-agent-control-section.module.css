@@ -1181,8 +1181,44 @@
     grid-column: 1 / -1;
   }
 
+  .setupWorkbench {
+    grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+    align-items: stretch;
+  }
+
   .setupPickerGrid {
     grid-column: 1;
+  }
+
+  .setupSelectionPanel {
+    height: 100%;
+  }
+
+  .nextCommandStrip {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: stretch;
+    grid-template-columns: 1fr;
+    align-content: start;
+    padding: 0.12rem;
+  }
+
+  .nextCommandLead,
+  .nextCommandMain {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nextCommandMain {
+    gap: 0.08rem;
+  }
+
+  .nextCommandMain code {
+    width: 100%;
+  }
+
+  .copyIconButton {
+    width: 100%;
   }
 
   .setupCommands {
@@ -1198,10 +1234,6 @@
     grid-template-columns: minmax(96px, auto) minmax(0, 1fr);
     align-items: start;
     column-gap: 0.24rem;
-  }
-
-  .nextCommandStrip {
-    grid-column: 1 / -1;
   }
 }
 
