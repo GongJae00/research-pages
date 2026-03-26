@@ -95,6 +95,26 @@ async function isProcessAlive(pid) {
   }
 }
 
+async function isLocalWebReachable() {
+  for (const port of localWebPorts) {
+    try {
+      const response = await fetch(`http://localhost:${port}/ko/ops`, {
+        headers: {
+          accept: "text/html,application/xhtml+xml",
+        },
+      });
+
+      if (response.ok) {
+        return true;
+      }
+    } catch {
+      // continue trying the next known port
+    }
+  }
+
+  return false;
+}
+
 async function readJson(filePath) {
   try {
     return JSON.parse(await readFile(filePath, "utf8"));
@@ -790,13 +810,16 @@ async function monitorOnce(supervisorState) {
   let degraded = false;
 
   let webMeta = await readJson(webPidFile);
-  if (!webMeta?.pid || !(await isProcessAlive(webMeta.pid))) {
+  const webReachable = await isLocalWebReachable();
+  if ((!webMeta?.pid || !(await isProcessAlive(webMeta.pid))) && !webReachable) {
     webMeta = await startWebProcess("supervisor recovered missing web process");
     supervisorState.webRestartCount += 1;
     supervisorState.lastWebRestartAt = checkedAt;
     supervisorState.lastRestartReason = "web process was missing";
     note(supervisorState, "Restarted the web dev server.");
     recovering = true;
+  } else if (webReachable && (!webMeta?.pid || !(await isProcessAlive(webMeta.pid)))) {
+    note(supervisorState, "Detected a reachable web server and skipped a redundant restart.");
   }
 
   let autonomyMeta = await readJson(autonomyPidFile);
