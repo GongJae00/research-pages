@@ -14,8 +14,12 @@ function getPreviewRoutePath(href: string) {
   return pathname || href;
 }
 
-function formatPreviewLinkLabel(scopeLabel: string, label: string, href: string) {
-  return `${scopeLabel}: ${label} ${getPreviewRoutePath(href)}`;
+function formatPreviewGroupLabel(groupLabel: string, scopeHint: string) {
+  return `${groupLabel} | ${scopeHint}`;
+}
+
+function formatPreviewLinkLabel(label: string, href: string) {
+  return `${label} | ${getPreviewRoutePath(href)}`;
 }
 
 export function PreviewModeBanner({ locale }: PreviewModeBannerProps) {
@@ -35,11 +39,11 @@ export function PreviewModeBanner({ locale }: PreviewModeBannerProps) {
           researcher: "\uC5F0\uAD6C\uC790 \uD398\uC774\uC9C0",
           lab: "\uC5F0\uAD6C\uC2E4 \uD398\uC774\uC9C0",
           health: "\uB7F0\uD0C0\uC784 \uD5EC\uC2A4",
-          internalRoutes: "\uB0B4\uBD80 \uBBF8\uB9AC\uBCF4\uAE30 \uACBD\uB85C",
-          publicRoutes: "\uACF5\uAC1C \uC250 \uACBD\uB85C",
-          internalTag: "\uB0B4\uBD80",
-          publicTag: "\uACF5\uAC1C",
-          apiTag: "API",
+          internalRoutes: "\uB0B4\uBD80 \uBBF8\uB9AC\uBCF4\uAE30",
+          publicRoutes: "\uACF5\uAC1C \uC250",
+          internalScopeHint: "\uB0B4\uBD80 \uC804\uC6A9",
+          publicScopeHint: "\uACF5\uAC1C \uC9C4\uC785",
+          apiTag: "API \uD5EC\uC2A4",
         }
       : {
           label: "Internal demo preview",
@@ -50,11 +54,11 @@ export function PreviewModeBanner({ locale }: PreviewModeBannerProps) {
           researcher: "Researcher page",
           lab: "Lab page",
           health: "Runtime health",
-          internalRoutes: "Internal preview routes",
-          publicRoutes: "Public shell routes",
-          internalTag: "Internal",
-          publicTag: "Public",
-          apiTag: "API",
+          internalRoutes: "Internal preview",
+          publicRoutes: "Public shell",
+          internalScopeHint: "Preview only",
+          publicScopeHint: "Shareable",
+          apiTag: "API health",
         };
 
   const internalLinks = [
@@ -91,20 +95,24 @@ export function PreviewModeBanner({ locale }: PreviewModeBannerProps) {
           <p>{copy.body}</p>
         </div>
         <div className="preview-mode-banner-links">
-          <span className="preview-mode-banner-link preview-mode-banner-link-subtle">{copy.internalRoutes}</span>
+          <span className="preview-mode-banner-link preview-mode-banner-link-subtle">
+            {formatPreviewGroupLabel(copy.internalRoutes, copy.internalScopeHint)}
+          </span>
           {internalLinks.map((link) => (
             <Link key={link.href} href={link.href} className="preview-mode-banner-link">
-              {formatPreviewLinkLabel(copy.internalTag, link.label, link.href)}
+              {formatPreviewLinkLabel(link.label, link.href)}
             </Link>
           ))}
-          <span className="preview-mode-banner-link preview-mode-banner-link-subtle">{copy.publicRoutes}</span>
+          <span className="preview-mode-banner-link preview-mode-banner-link-subtle">
+            {formatPreviewGroupLabel(copy.publicRoutes, copy.publicScopeHint)}
+          </span>
           {publicLinks.map((link) => (
             <Link key={link.href} href={link.href} className="preview-mode-banner-link">
-              {formatPreviewLinkLabel(copy.publicTag, link.label, link.href)}
+              {formatPreviewLinkLabel(link.label, link.href)}
             </Link>
           ))}
           <Link href="/api/health" className="preview-mode-banner-link preview-mode-banner-link-subtle">
-            {formatPreviewLinkLabel(copy.apiTag, copy.health, "/api/health")}
+            {formatPreviewLinkLabel(copy.apiTag, "/api/health")}
           </Link>
         </div>
       </div>

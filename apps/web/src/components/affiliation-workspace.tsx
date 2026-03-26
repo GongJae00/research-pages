@@ -613,8 +613,8 @@ function getTimelineCheckSummary(
   }
 
   return locale === "ko"
-    ? "\uc0c1\ud0dc, \ud604\uc7ac \uc5ec\ubd80, \ub0a0\uc9dc\uac00 \uac19\uc740 \ud0c0\uc784\ub77c\uc778\uc744 \uac00\ub9ac\ud0a4\uace0 \uc788\uc2b5\ub2c8\ub2e4."
-    : "Status, current state, and dates point to the same timeline placement.";
+    ? "\ud0c0\uc784\ub77c\uc778 \uc815\ub82c \uc644\ub8cc. \uc0c1\ud0dc\ub098 \ub0a0\uc9dc\uac00 \ubc14\ub00c \ub54c\ub9cc \uc218\uc815\ud558\uc138\uc694."
+    : "Timeline aligned. Edit this only when the status or dates change.";
 }
 
 function getEditActionLabel(entry: AffiliationTimelineEntry, locale: Locale) {
@@ -972,6 +972,10 @@ export function AffiliationWorkspace({
             <div className="field-row">
               <dt>{getTimelineSnapshotLabel(locale)}</dt>
               <dd>{getAffiliationScanSummary(affiliation, locale)}</dd>
+            </div>
+            <div className="field-row">
+              <dt>{getTimelineCheckLabel(locale)}</dt>
+              <dd>{getTimelineCheckSummary(affiliation, locale, text)}</dd>
             </div>
             <div className="field-row">
               <dt>{getNextUpdateLabel(locale)}</dt>
