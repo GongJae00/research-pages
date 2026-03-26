@@ -327,9 +327,8 @@ export function HomepageAgentControlSection({
     return left.step.localeCompare(right.step);
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
-  const setupFlowLabel = getSetupFlowLabel(locale);
   const setupFlowSteps = getSetupFlowSteps(locale);
-  const setupFlowSummary = setupFlowSteps.join(" -> ");
+  const setupFlowSummary = `${getSetupFlowLabel(locale)}: ${setupFlowSteps.join(" -> ")}`;
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
       kind === "connect" ? setupManifest?.commands.connect ?? "" : setupManifest?.commands.assign ?? "";
@@ -407,18 +406,9 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
-                <div
-                  className={styles.setupFlowLegend}
-                  aria-label={setupFlowLabel}
-                  title={setupFlowSummary}
-                >
-                  {setupFlowSteps.map((step, index) => (
-                    <span className={styles.setupFlowPill} key={step}>
-                      <span className={styles.commandStep}>{String(index + 1).padStart(2, "0")}</span>
-                      <span>{step}</span>
-                    </span>
-                  ))}
-                </div>
+                <p className={styles.setupBuilderBody} title={setupFlowSummary}>
+                  {copy.setupBuilderBody}
+                </p>
                 <div className={styles.setupScanGrid} aria-label={copy.setupStepsLabel}>
                   <span className={styles.setupScanCell}>
                     <span className={styles.commandStep}>01</span>
