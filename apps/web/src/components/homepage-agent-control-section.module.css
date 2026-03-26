@@ -302,24 +302,6 @@
   margin-top: 0.01rem;
 }
 
-.setupStatusBar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.08rem;
-  margin-top: 0.08rem;
-}
-
-.setupStatusItem {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.18rem;
-  min-width: 0;
-  padding: 0.08rem 0.12rem;
-  border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 999px;
-  background: rgba(248, 250, 252, 0.9);
-}
-
 .setupStatusLabel {
   color: #64748b;
   font-size: 0.58rem;
@@ -328,14 +310,6 @@
   line-height: 1;
   text-transform: uppercase;
   white-space: nowrap;
-}
-
-.setupStatusItem strong {
-  min-width: 0;
-  color: #0f172a;
-  font-size: 0.68rem;
-  line-height: 1.1;
-  overflow-wrap: anywhere;
 }
 
 .setupEyebrow {
@@ -385,7 +359,7 @@
   display: grid;
   gap: 0.04rem;
   min-width: 0;
-  padding: 0.09rem 0.11rem;
+  padding: 0.1rem 0.11rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 14px;
   background: rgba(248, 250, 252, 0.92);
@@ -403,6 +377,26 @@
   font-size: 0.72rem;
   line-height: 1.15;
   overflow-wrap: anywhere;
+}
+
+.setupScanMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.18rem;
+  min-width: 0;
+  color: #475569;
+  font-size: 0.66rem;
+  font-weight: 700;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.setupFlowSummary {
+  margin: 0.05rem 0 0;
+  color: #64748b;
+  font-size: 0.64rem;
+  font-weight: 600;
+  line-height: 1.2;
 }
 
 .setupScanCellAccent {
@@ -1355,15 +1349,6 @@
 
   .setupScanGrid {
     grid-template-columns: 1fr;
-  }
-
-  .setupStatusBar {
-    align-items: stretch;
-  }
-
-  .setupStatusItem {
-    width: 100%;
-    justify-content: space-between;
   }
 
   .setupSummaryBar {

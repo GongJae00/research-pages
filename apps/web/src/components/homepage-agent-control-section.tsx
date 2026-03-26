@@ -413,11 +413,19 @@ export function HomepageAgentControlSection({
                     <span className={styles.commandStep}>01</span>
                     <span className={styles.setupScanLabel}>{copy.selectedCli}</span>
                     <strong>{selectedProvider?.label ?? "-"}</strong>
+                    <span className={styles.setupScanMeta}>
+                      <span className={styles.setupStatusLabel}>{copy.selectedCliStatusLabel}</span>
+                      <span>{selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}</span>
+                    </span>
                   </span>
                   <span className={styles.setupScanCell}>
                     <span className={styles.commandStep}>02</span>
                     <span className={styles.setupScanLabel}>{copy.selectedTeamLabel}</span>
                     <strong>{selectedTeam?.name ?? "-"}</strong>
+                    <span className={styles.setupScanMeta}>
+                      <span className={styles.setupStatusLabel}>{copy.selectedLaneLabel}</span>
+                      <span>{selectedTeam?.lane ?? "-"}</span>
+                    </span>
                   </span>
                   <span className={`${styles.setupScanCell} ${styles.setupScanCellAccent}`}>
                     <span className={styles.commandStep}>03</span>
@@ -425,16 +433,9 @@ export function HomepageAgentControlSection({
                     <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
                   </span>
                 </div>
-                <div className={styles.setupStatusBar} title={setupFlowSummary}>
-                  <span className={styles.setupStatusItem}>
-                    <span className={styles.setupStatusLabel}>{copy.selectedCliStatusLabel}</span>
-                    <strong>{selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}</strong>
-                  </span>
-                  <span className={styles.setupStatusItem}>
-                    <span className={styles.setupStatusLabel}>{copy.selectedLaneLabel}</span>
-                    <strong>{selectedTeam?.lane ?? "-"}</strong>
-                  </span>
-                </div>
+                <p className={styles.setupFlowSummary} title={setupFlowSummary}>
+                  {setupFlowSummary}
+                </p>
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
