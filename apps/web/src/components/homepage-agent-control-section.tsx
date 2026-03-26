@@ -459,16 +459,6 @@ export function HomepageAgentControlSection({
                           </span>
                         </div>
                       </div>
-                      <span className={styles.sequenceArrow} aria-hidden="true">
-                        <ArrowRight size={14} />
-                      </span>
-                      <div className={`${styles.setupSequencePill} ${styles.setupSequencePillAccent}`}>
-                        <div className={styles.setupSequencePillCopy}>
-                          <span className={styles.setupFlowLabel}>03 {copy.runCommandLabel}</span>
-                          <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
-                          <span className={styles.setupSequenceMeta}>{setupOutputLabel}</span>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 ) : null}
