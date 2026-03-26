@@ -328,7 +328,8 @@ export function HomepageAgentControlSection({
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
   const setupFlowLabel = getSetupFlowLabel(locale);
-  const setupFlowSummary = getSetupFlowSteps(locale).join(" -> ");
+  const setupFlowSteps = getSetupFlowSteps(locale);
+  const setupFlowSummary = setupFlowSteps.join(" -> ");
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
       kind === "connect" ? setupManifest?.commands.connect ?? "" : setupManifest?.commands.assign ?? "";
@@ -406,13 +407,18 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
-                <p
-                  className={styles.setupBuilderBody}
+                <div
+                  className={styles.setupFlowLegend}
                   aria-label={setupFlowLabel}
                   title={setupFlowSummary}
                 >
-                  {copy.setupBuilderBody}
-                </p>
+                  {setupFlowSteps.map((step, index) => (
+                    <span className={styles.setupFlowPill} key={step}>
+                      <span className={styles.commandStep}>{String(index + 1).padStart(2, "0")}</span>
+                      <span>{step}</span>
+                    </span>
+                  ))}
+                </div>
                 <div className={styles.setupScanGrid} aria-label={copy.setupStepsLabel}>
                   <span className={styles.setupScanCell}>
                     <span className={styles.commandStep}>01</span>
