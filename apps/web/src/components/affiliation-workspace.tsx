@@ -848,6 +848,11 @@ export function AffiliationWorkspace({
     : null;
   const editSectionOrder = getAffiliationSectionOrder(focusedDraftAffiliation);
 
+  const setActiveAffiliation = (id: string | null) => {
+    setFocusedAffiliationId(id);
+    setEditingAffiliationId(id);
+  };
+
   useEffect(() => {
     setResolvedDocuments(loadBrowserDocuments(documents));
   }, [documents]);
@@ -916,30 +921,26 @@ export function AffiliationWorkspace({
   const handleOpenEdit = () => {
     setDraftAffiliations(resolvedAffiliations);
     const nextAffiliationId = orderedResolvedAffiliations[0]?.id ?? null;
-    setFocusedAffiliationId(nextAffiliationId);
-    setEditingAffiliationId(nextAffiliationId);
+    setActiveAffiliation(nextAffiliationId);
     setIsEditing(true);
   };
 
   const handleEditAffiliation = (id: string) => {
     setDraftAffiliations(resolvedAffiliations);
-    setFocusedAffiliationId(id);
-    setEditingAffiliationId(id);
+    setActiveAffiliation(id);
     setIsEditing(true);
   };
 
   const handleCancelEdit = () => {
     setDraftAffiliations(resolvedAffiliations);
-    setFocusedAffiliationId(null);
-    setEditingAffiliationId(null);
+    setActiveAffiliation(null);
     setIsEditing(false);
   };
 
   const handleAddAffiliation = () => {
     const nextAffiliation = createEmptyAffiliation(currentAccount?.id ?? null);
     setDraftAffiliations((current) => [...current, nextAffiliation]);
-    setFocusedAffiliationId(nextAffiliation.id);
-    setEditingAffiliationId(nextAffiliation.id);
+    setActiveAffiliation(nextAffiliation.id);
   };
 
   const handleUpdateAffiliation = (
@@ -956,8 +957,9 @@ export function AffiliationWorkspace({
     const nextAffiliationId = nextAffiliations[0]?.id ?? null;
 
     setDraftAffiliations(nextAffiliations);
-    setFocusedAffiliationId((current) => (current === id ? nextAffiliationId : current));
-    setEditingAffiliationId((current) => (current === id ? nextAffiliationId : current));
+    if (focusedAffiliationId === id || editingAffiliationId === id) {
+      setActiveAffiliation(nextAffiliationId);
+    }
   };
 
   const handleSaveAffiliations = async () => {
@@ -1096,8 +1098,8 @@ export function AffiliationWorkspace({
         className="card profile-edit-card"
         key={affiliation.id}
         onFocusCapture={() => {
-          if (editingAffiliationId !== affiliation.id) {
-            setEditingAffiliationId(affiliation.id);
+          if (focusedAffiliationId !== affiliation.id || editingAffiliationId !== affiliation.id) {
+            setActiveAffiliation(affiliation.id);
           }
         }}
       >
@@ -1155,7 +1157,16 @@ export function AffiliationWorkspace({
         <div className="profile-history-side">
           {isEditingNow ? (
             <span className="pill pill-blue">{getEditingNowLabel(locale)}</span>
-          ) : null}
+          ) : (
+            <button
+              type="button"
+              className="secondary-cta profile-inline-btn"
+              onClick={() => setActiveAffiliation(affiliation.id)}
+            >
+              <PencilLine size={15} />
+              {getEditActionLabel(affiliation, locale)}
+            </button>
+          )}
           <span className={`pill ${getAffiliationStatusClass(affiliation)}`}>
             {getAffiliationStateLabel(affiliation, locale)}
           </span>

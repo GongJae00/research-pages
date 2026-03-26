@@ -389,6 +389,7 @@ export function HomepageAgentControlSection({
     return left.step.localeCompare(right.step);
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
+  const selectedSetupPath = `${selectedProvider?.label ?? "-"} -> ${selectedTeam?.name ?? "-"}`;
   const setupOutputLabel = getSetupOutputLabel(locale);
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
@@ -540,6 +541,9 @@ export function HomepageAgentControlSection({
                           }`}
                         </span>
                       </span>
+                      <span className={styles.selectionDigestArrow} aria-hidden="true">
+                        <ArrowRight size={14} />
+                      </span>
                       <span className={styles.selectionDigestChip}>
                         <span className={styles.setupDigestKey}>{`02 ${copy.selectedTeamLabel}`}</span>
                         <strong>{selectedTeam?.name ?? "-"}</strong>
@@ -547,10 +551,15 @@ export function HomepageAgentControlSection({
                           {`${copy.selectedLaneLabel}: ${selectedTeam?.lane ?? "-"}`}
                         </span>
                       </span>
-                      <span className={styles.selectionDigestChip}>
+                      <span className={styles.selectionDigestArrow} aria-hidden="true">
+                        <ArrowRight size={14} />
+                      </span>
+                      <span className={`${styles.selectionDigestChip} ${styles.selectionDigestChipActive}`}>
                         <span className={styles.setupDigestKey}>{`03 ${copy.runCommandLabel}`}</span>
                         <strong>{nextSetupCommand.title}</strong>
-                        <span className={styles.selectionDigestMeta}>{setupOutputLabel}</span>
+                        <span className={styles.selectionDigestMeta}>
+                          {`${copy.nextActionLabel}: ${selectedSetupPath}`}
+                        </span>
                       </span>
                     </div>
                   </div>
