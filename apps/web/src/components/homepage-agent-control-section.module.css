@@ -679,23 +679,30 @@
   flex-wrap: wrap;
 }
 
+.nextCommandCopy {
+  display: grid;
+  gap: 0.02rem;
+  min-width: 0;
+}
+
 .nextCommandLead strong {
   color: #0f172a;
   font-size: 0.78rem;
   line-height: 1.1;
 }
 
-.nextCommandTarget {
+.nextCommandRoute {
   display: inline-flex;
   align-items: center;
   min-width: 0;
-  padding: 0.08rem 0.34rem;
+  padding: 0.08rem 0.3rem;
   border-radius: 999px;
   background: rgba(15, 23, 42, 0.08);
   color: #0f172a;
   font-size: 0.66rem;
   font-weight: 700;
   line-height: 1.1;
+  overflow-wrap: anywhere;
 }
 
 .nextCommandMain code {

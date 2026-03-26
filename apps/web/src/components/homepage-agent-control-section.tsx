@@ -330,7 +330,8 @@ export function HomepageAgentControlSection({
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
   const setupFlowSteps = getSetupFlowSteps(locale);
-  const setupFlowSummary = `${getSetupFlowLabel(locale)}: ${setupFlowSteps.join(" -> ")}`;
+  const setupSelectionSummary =
+    selectedProvider && selectedTeam ? `${selectedProvider.label} -> ${selectedTeam.name}` : null;
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
       kind === "connect" ? setupManifest?.commands.connect ?? "" : setupManifest?.commands.assign ?? "";
@@ -433,8 +434,8 @@ export function HomepageAgentControlSection({
                     <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
                   </span>
                 </div>
-                <p className={styles.setupFlowSummary} title={setupFlowSummary}>
-                  {setupFlowSummary}
+                <p className={styles.setupFlowSummary} title={getSetupFlowLabel(locale)}>
+                  {setupFlowSteps.join(" -> ")}
                 </p>
               </div>
               <div className={styles.setupHeaderActions}>
@@ -454,13 +455,13 @@ export function HomepageAgentControlSection({
               <div className={styles.nextCommandStrip}>
                 <div className={styles.nextCommandLead}>
                   <span className={styles.commandStep}>{nextSetupCommand.step}</span>
-                  <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
-                  <strong>{nextSetupCommand.title}</strong>
-                  <span className={styles.nextCommandTarget}>
-                    {nextSetupCommand.kind === "connect"
-                      ? selectedProvider?.label ?? "-"
-                      : selectedTeam?.name ?? "-"}
-                  </span>
+                  <div className={styles.nextCommandCopy}>
+                    <span className={styles.metaLabel}>{copy.nextActionLabel}</span>
+                    <strong>{nextSetupCommand.title}</strong>
+                  </div>
+                  {setupSelectionSummary ? (
+                    <span className={styles.nextCommandRoute}>{setupSelectionSummary}</span>
+                  ) : null}
                 </div>
                 <div className={styles.nextCommandMain}>
                   <code>{nextSetupCommand.command}</code>
