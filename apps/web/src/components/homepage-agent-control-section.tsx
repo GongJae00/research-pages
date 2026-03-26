@@ -425,7 +425,6 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
-                <p className={styles.setupBuilderBody}>{copy.setupSequenceIntro}</p>
                 {setupFlowDigest ? (
                   <div className={styles.setupSummaryBar} aria-label={copy.setupStepsLabel}>
                     <span className={styles.metaLabel}>{setupFlowLabel}</span>
@@ -553,16 +552,15 @@ export function HomepageAgentControlSection({
               {nextSetupCommand ? (
                 <div className={styles.nextCommandStrip}>
                   <div className={styles.nextCommandLead}>
-                    <div className={styles.nextCommandCopy}>
-                      <div className={styles.nextCommandLabelRow}>
-                        <span className={styles.setupPickerStep}>03</span>
-                        <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
-                      </div>
-                      <strong>{nextSetupCommand.title}</strong>
-                      <span className={styles.inlineMeta}>{copy.nextCommandHelp}</span>
-                      <span className={styles.nextCommandContext}>
-                        {formatSetupPair(selectedProvider?.label, selectedTeam?.name)}
-                      </span>
+                      <div className={styles.nextCommandCopy}>
+                        <div className={styles.nextCommandLabelRow}>
+                          <span className={styles.setupPickerStep}>03</span>
+                          <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
+                        </div>
+                        <strong>{nextSetupCommand.title}</strong>
+                        <span className={styles.nextCommandContext}>
+                          {formatSetupPair(selectedProvider?.label, selectedTeam?.name)}
+                        </span>
                     </div>
                     <span className={styles.inlineMeta}>{setupOutputLabel}</span>
                   </div>
