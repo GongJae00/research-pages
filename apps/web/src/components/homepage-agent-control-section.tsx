@@ -435,6 +435,7 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
+                <p className={styles.setupTitleHint}>{setupBuilderHint}</p>
                 {setupFlowDigest ? (
                   <div
                     className={styles.setupFlowBar}
@@ -455,9 +456,8 @@ export function HomepageAgentControlSection({
                       <span className={styles.setupPickerStep}>02</span>
                       <span className={styles.setupFlowChipCopy}>
                         <span className={styles.setupFlowLabel}>{copy.selectedTeamLabel}</span>
-                        <strong>
-                          {selectedTeam ? `${selectedTeam.name} / ${selectedTeam.lane}` : "-"}
-                        </strong>
+                        <strong>{selectedTeam?.name ?? "-"}</strong>
+                        <span className={styles.setupFlowMeta}>{selectedTeam?.lane ?? "-"}</span>
                       </span>
                     </span>
                     <span className={styles.setupFlowArrow} aria-hidden="true">
@@ -505,9 +505,10 @@ export function HomepageAgentControlSection({
                         <span className={styles.metaLabel}>{setupOutputLabel}</span>
                       </div>
                       <strong>{nextSetupCommand.title}</strong>
-                      <span className={styles.nextCommandContext}>
-                        {selectedProvider?.label ?? "-"} / {selectedTeam?.name ?? "-"}
-                      </span>
+                      <div className={styles.nextCommandMetaRow}>
+                        <span className={styles.nextCommandContext}>{selectedProvider?.label ?? "-"}</span>
+                        <span className={styles.nextCommandContext}>{selectedTeam?.name ?? "-"}</span>
+                      </div>
                     </div>
                   </div>
                   <div className={styles.nextCommandMain}>
