@@ -435,14 +435,13 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
-                <p className={styles.setupBuilderBody}>{setupBuilderHint}</p>
-                <div className={styles.setupStepBar} aria-label={copy.setupStepsLabel}>
-                  {setupFlowSteps.map((step, index) => (
-                    <span className={styles.setupStepPill} key={step}>
-                      <span className={styles.setupStepIndex}>{String(index + 1).padStart(2, "0")}</span>
-                      <span className={styles.setupStepText}>{step}</span>
-                    </span>
-                  ))}
+                <div
+                  className={styles.setupFlowSummary}
+                  aria-label={copy.setupStepsLabel}
+                  title={`${setupBuilderHint} ${getSetupFlowLabel(locale)}: ${setupFlowTitle}`}
+                >
+                  <span className={styles.setupFlowLabel}>{getSetupFlowLabel(locale)}</span>
+                  <span className={styles.setupFlowSequence}>{setupFlowTitle}</span>
                 </div>
                 {setupFlowDigest ? (
                   <div

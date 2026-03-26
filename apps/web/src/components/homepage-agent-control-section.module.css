@@ -354,6 +354,34 @@
   max-width: 24rem;
 }
 
+.setupFlowSummary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.12rem;
+  margin-top: 0.02rem;
+  min-width: 0;
+}
+
+.setupFlowLabel {
+  color: #64748b;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.setupFlowSequence {
+  min-width: 0;
+  color: #0f172a;
+  font-size: 0.66rem;
+  font-weight: 700;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
 .setupStepBar {
   display: flex;
   flex-wrap: wrap;
