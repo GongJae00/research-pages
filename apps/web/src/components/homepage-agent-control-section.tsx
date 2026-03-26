@@ -88,6 +88,14 @@ function getSetupFlowLabel(locale: string) {
   return "Setup flow";
 }
 
+function getSetupFlowSteps(locale: string) {
+  if (isKoreanLocale(locale)) {
+    return ["CLI ?좏깮", "? ?좏깮", "?ㅼ쓬 紐낅졊 ?ㅽ뻾"];
+  }
+
+  return ["Pick CLI", "Pick team", "Run next command"];
+}
+
 function getCopy(locale: string, opsEnabled: boolean) {
   if (isKoreanLocale(locale)) {
     return {
@@ -320,6 +328,7 @@ export function HomepageAgentControlSection({
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
   const setupFlowLabel = getSetupFlowLabel(locale);
+  const setupFlowSteps = getSetupFlowSteps(locale);
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
       kind === "connect" ? setupManifest?.commands.connect ?? "" : setupManifest?.commands.assign ?? "";
@@ -396,7 +405,14 @@ export function HomepageAgentControlSection({
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
-                  <span className={styles.setupInlineNote}>{copy.setupBuilderBody}</span>
+                </div>
+                <div className={styles.setupFlowLegend} aria-label={setupFlowLabel}>
+                  {setupFlowSteps.map((step, index) => (
+                    <span className={styles.setupFlowPill} key={step}>
+                      <span className={styles.commandStep}>{String(index + 1).padStart(2, "0")}</span>
+                      <span>{step}</span>
+                    </span>
+                  ))}
                 </div>
                 <div className={styles.setupScanGrid} aria-label={copy.setupStepsLabel} title={setupFlowLabel}>
                   <span className={styles.setupScanCell}>
