@@ -1,8 +1,10 @@
+import { spawn } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
 const stateFile = path.join(process.cwd(), ".researchos", "agent-ops-state.json");
+const autonomyRunFile = path.join(process.cwd(), ".researchos", "run", "autonomy.json");
 const knownTeams = new Map([
   ["executive-desk", "Executive Desk"],
   ["shell-experience", "Shell and Experience Team"],
@@ -135,6 +137,36 @@ async function saveState(state) {
   await mkdir(path.dirname(stateFile), { recursive: true });
   state.updatedAt = nowIso();
   await writeFile(stateFile, JSON.stringify(state, null, 2));
+}
+
+async function wakeAutonomyDaemonIfPossible(state) {
+  if (!state.autonomy?.enabled) {
+    return;
+  }
+
+  try {
+    const meta = JSON.parse(await readFile(autonomyRunFile, "utf8"));
+    if (!meta?.pid) {
+      return;
+    }
+
+    spawn(process.execPath, ["scripts/agent-ops-daemon.mjs", "--once"], {
+      cwd: process.cwd(),
+      detached: true,
+      windowsHide: true,
+      stdio: "ignore",
+      env: process.env,
+    }).unref();
+  } catch {
+    // Ignore wake failures; the background daemon will pick the directive up on its next tick.
+  }
+}
+
+async function saveStateAndMaybeWake(state, shouldWake = false) {
+  await saveState(state);
+  if (shouldWake) {
+    await wakeAutonomyDaemonIfPossible(state);
+  }
 }
 
 function upsertTeamUpdate(state, teamId, updates) {
@@ -322,7 +354,7 @@ async function main() {
         subject: "CLI agent connected",
         body: message,
       });
-      await saveState(state);
+      await saveStateAndMaybeWake(state, true);
       printStatus(state);
       return;
     }
@@ -359,7 +391,7 @@ async function main() {
         subject: "Provider reassigned",
         body: message,
       });
-      await saveState(state);
+      await saveStateAndMaybeWake(state, true);
       printStatus(state);
       return;
     }
@@ -390,7 +422,7 @@ async function main() {
         subject: "CLI agent disconnected",
         body: message,
       });
-      await saveState(state);
+      await saveStateAndMaybeWake(state, true);
       printStatus(state);
       return;
     }
@@ -418,7 +450,7 @@ async function main() {
         subject: "New terminal directive",
         body: message,
       });
-      await saveState(state);
+      await saveStateAndMaybeWake(state, true);
       printStatus(state);
       return;
     }
@@ -442,7 +474,7 @@ async function main() {
         subject: "Pause the active queue",
         body: reason,
       });
-      await saveState(state);
+      await saveStateAndMaybeWake(state, true);
       printStatus(state);
       return;
     }
@@ -466,7 +498,7 @@ async function main() {
         subject: "Resume planning",
         body: reason,
       });
-      await saveState(state);
+      await saveStateAndMaybeWake(state, true);
       printStatus(state);
       return;
     }
@@ -500,7 +532,7 @@ async function main() {
         subject: "Terminal focus change",
         body: message,
       });
-      await saveState(state);
+      await saveStateAndMaybeWake(state, true);
       printStatus(state);
       return;
     }
