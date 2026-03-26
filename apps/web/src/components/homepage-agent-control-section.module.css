@@ -261,6 +261,29 @@
   gap: 0.08rem;
 }
 
+.surfaceEntryKindBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.22rem;
+  min-height: 0.96rem;
+  padding: 0.05rem 0.12rem;
+  border: 1px solid rgba(148, 163, 184, 0.36);
+  border-radius: 999px;
+  background: rgba(226, 232, 240, 0.5);
+  color: #334155;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.surfaceEntryKindBadgeAccent {
+  border-color: rgba(15, 23, 42, 0.14);
+  background: rgba(15, 23, 42, 0.08);
+  color: #0f172a;
+}
+
 .surfaceEntryCard strong {
   color: #0f172a;
   font-size: 0.8rem;
@@ -272,6 +295,11 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.06rem;
+}
+
+.surfaceEntryBody {
+  display: grid;
+  gap: 0.03rem;
 }
 
 .surfaceEntryRouteBadge {

@@ -8,6 +8,8 @@ import {
   Check,
   Copy,
   Command,
+  Globe2,
+  LayoutGrid,
   Network,
   ShieldCheck,
   Sparkles,
@@ -441,20 +443,28 @@ export function HomepageAgentControlSection({
           <div className={styles.surfaceEntryGrid} aria-label={surfaceEntryCopy.ariaLabel}>
             <div className={styles.surfaceEntryCard}>
               <div className={styles.surfaceEntryHead}>
-                <span className={styles.metaLabel}>{surfaceEntryCopy.publicLabel}</span>
+                <span className={styles.surfaceEntryKindBadge}>
+                  <Globe2 size={12} />
+                  {surfaceEntryCopy.publicLabel}
+                </span>
                 <span className={styles.surfaceEntryState}>{surfaceEntryCopy.currentSurface}</span>
               </div>
-              <strong>{surfaceEntryCopy.publicTitle}</strong>
               <div className={styles.surfaceEntryRouteRow}>
                 <span className={styles.surfaceEntryRouteBadge}>{surfaceEntryCopy.publicRoute}</span>
                 <span className={styles.surfaceEntryRoute}>{`/${locale}`}</span>
               </div>
-              <span className={styles.surfaceEntryHint}>{surfaceEntryCopy.publicHint}</span>
+              <div className={styles.surfaceEntryBody}>
+                <strong>{surfaceEntryCopy.publicTitle}</strong>
+                <span className={styles.surfaceEntryHint}>{surfaceEntryCopy.publicHint}</span>
+              </div>
             </div>
 
             <div className={`${styles.surfaceEntryCard} ${styles.surfaceEntryCardAccent}`}>
               <div className={styles.surfaceEntryHead}>
-                <span className={styles.metaLabel}>{surfaceEntryCopy.internalLabel}</span>
+                <span className={`${styles.surfaceEntryKindBadge} ${styles.surfaceEntryKindBadgeAccent}`}>
+                  <LayoutGrid size={12} />
+                  {surfaceEntryCopy.internalLabel}
+                </span>
                 {opsEnabled ? (
                   <Link href={`/${locale}/ops`} className={styles.surfaceEntryLink}>
                     {copy.openOps}
@@ -464,14 +474,16 @@ export function HomepageAgentControlSection({
                   <span className={styles.surfaceEntryState}>{surfaceEntryCopy.previewOnly}</span>
                 )}
               </div>
-              <strong>{surfaceEntryCopy.internalTitle}</strong>
               <div className={styles.surfaceEntryRouteRow}>
                 <span className={`${styles.surfaceEntryRouteBadge} ${styles.surfaceEntryRouteBadgeAccent}`}>
                   {surfaceEntryCopy.internalRoute}
                 </span>
                 <span className={styles.surfaceEntryRoute}>{`/${locale}/ops`}</span>
               </div>
-              <span className={styles.surfaceEntryHint}>{surfaceEntryCopy.internalHint}</span>
+              <div className={styles.surfaceEntryBody}>
+                <strong>{surfaceEntryCopy.internalTitle}</strong>
+                <span className={styles.surfaceEntryHint}>{surfaceEntryCopy.internalHint}</span>
+              </div>
             </div>
           </div>
         </article>
