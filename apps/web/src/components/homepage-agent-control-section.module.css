@@ -658,36 +658,6 @@
   margin-top: 0.02rem;
 }
 
-.setupSequenceGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.06rem;
-}
-
-.setupSequenceCard {
-  display: grid;
-  gap: 0.04rem;
-  min-width: 0;
-  padding: 0.12rem;
-  border: 1px solid rgba(203, 213, 225, 0.72);
-  border-radius: 14px;
-  background: rgba(248, 250, 252, 0.92);
-}
-
-.setupSequenceCard strong {
-  color: #0f172a;
-  font-size: 0.76rem;
-  line-height: 1.15;
-  overflow-wrap: anywhere;
-}
-
-.setupSequenceHead {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.12rem;
-  min-width: 0;
-}
-
 .setupSequenceMeta {
   color: #475569;
   font-size: 0.66rem;
@@ -696,10 +666,50 @@
   overflow-wrap: anywhere;
 }
 
-.setupSequenceCardAccent {
+.setupScanRowCompact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.05rem;
+}
+
+.setupScanCompactItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.12rem;
+  min-width: 0;
+  padding: 0.1rem 0.12rem;
+  border: 1px solid rgba(203, 213, 225, 0.72);
+  border-radius: 14px;
+  background: rgba(248, 250, 252, 0.92);
+  flex: 1 1 11rem;
+}
+
+.setupScanCompactItemAccent {
   border-color: rgba(15, 23, 42, 0.12);
   background: rgba(241, 245, 249, 0.98);
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+.setupScanCompactCopy {
+  display: grid;
+  gap: 0.02rem;
+  min-width: 0;
+}
+
+.setupScanCompactCopy strong {
+  color: #0f172a;
+  font-size: 0.74rem;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.setupCompactArrow {
+  color: #94a3b8;
+  font-size: 0.74rem;
+  font-weight: 800;
+  line-height: 1;
+  flex: 0 0 auto;
 }
 
 .sequenceArrow {
@@ -1787,12 +1797,16 @@
     align-items: stretch;
   }
 
-  .setupSequenceGrid {
-    grid-template-columns: 1fr;
+  .setupScanRowCompact {
+    align-items: stretch;
   }
 
-  .setupSequenceCard {
+  .setupScanCompactItem {
     width: 100%;
+  }
+
+  .setupCompactArrow {
+    display: none;
   }
 
   .setupFlowLegend {

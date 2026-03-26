@@ -420,38 +420,48 @@ export function HomepageAgentControlSection({
                 {setupFlowDigest ? (
                   <div className={styles.setupSummaryBar} aria-label={copy.setupStepsLabel}>
                     <span className={styles.metaLabel}>{setupFlowLabel}</span>
-                    <div className={styles.setupSequenceGrid}>
-                      <article className={styles.setupSequenceCard}>
-                        <div className={styles.setupSequenceHead}>
-                          <span className={styles.setupPickerStep}>01</span>
+                    <div className={styles.setupScanRowCompact}>
+                      <div className={styles.setupScanCompactItem}>
+                        <span className={styles.setupPickerStep}>01</span>
+                        <div className={styles.setupScanCompactCopy}>
                           <span className={styles.setupFlowLabel}>{copy.chooseProvider}</span>
+                          <strong>{selectedProvider?.label ?? "-"}</strong>
+                          <span className={styles.setupSequenceMeta}>
+                            {copy.selectedCliStatusLabel}:{" "}
+                            {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
+                          </span>
                         </div>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
-                        <span className={styles.setupSequenceMeta}>
-                          {copy.selectedCliStatusLabel}:{" "}
-                          {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
-                        </span>
-                      </article>
+                      </div>
 
-                      <article className={styles.setupSequenceCard}>
-                        <div className={styles.setupSequenceHead}>
-                          <span className={styles.setupPickerStep}>02</span>
+                      <span className={styles.setupCompactArrow} aria-hidden="true">
+                        →
+                      </span>
+
+                      <div className={styles.setupScanCompactItem}>
+                        <span className={styles.setupPickerStep}>02</span>
+                        <div className={styles.setupScanCompactCopy}>
                           <span className={styles.setupFlowLabel}>{copy.chooseTeam}</span>
+                          <strong>{selectedTeam?.name ?? "-"}</strong>
+                          <span className={styles.setupSequenceMeta}>
+                            {copy.selectedLaneLabel}: {selectedTeam?.lane ?? "-"}
+                          </span>
                         </div>
-                        <strong>{selectedTeam?.name ?? "-"}</strong>
-                        <span className={styles.setupSequenceMeta}>
-                          {copy.selectedLaneLabel}: {selectedTeam?.lane ?? "-"}
-                        </span>
-                      </article>
+                      </div>
 
-                      <article className={`${styles.setupSequenceCard} ${styles.setupSequenceCardAccent}`}>
-                        <div className={styles.setupSequenceHead}>
-                          <span className={styles.setupPickerStep}>03</span>
+                      <span className={styles.setupCompactArrow} aria-hidden="true">
+                        →
+                      </span>
+
+                      <div
+                        className={`${styles.setupScanCompactItem} ${styles.setupScanCompactItemAccent}`}
+                      >
+                        <span className={styles.setupPickerStep}>03</span>
+                        <div className={styles.setupScanCompactCopy}>
                           <span className={styles.setupFlowLabel}>{copy.runCommandLabel}</span>
+                          <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
+                          <span className={styles.setupSequenceMeta}>{setupOutputLabel}</span>
                         </div>
-                        <strong>{nextSetupCommand?.title ?? copy.setupCommand}</strong>
-                        <span className={styles.setupSequenceMeta}>{setupOutputLabel}</span>
-                      </article>
+                      </div>
                     </div>
                   </div>
                 ) : null}
