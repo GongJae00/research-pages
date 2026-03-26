@@ -484,6 +484,19 @@ export function HomepageAgentControlSection({
                   ) : null}
                 </div>
                 <p className={styles.setupSequenceIntro}>{copy.setupSequenceIntro}</p>
+                <div className={styles.setupActionOrder} aria-label={setupFlowLabel}>
+                  <span className={styles.setupActionStep}>{`01 ${copy.chooseProvider}`}</span>
+                  <span className={styles.setupActionArrow} aria-hidden="true">
+                    &rarr;
+                  </span>
+                  <span className={styles.setupActionStep}>{`02 ${copy.chooseTeam}`}</span>
+                  <span className={styles.setupActionArrow} aria-hidden="true">
+                    &rarr;
+                  </span>
+                  <span className={`${styles.setupActionStep} ${styles.setupActionStepActive}`}>
+                    {`03 ${nextSetupCommand?.title ?? copy.runCommandLabel}`}
+                  </span>
+                </div>
               </div>
               <div className={styles.setupHeaderActions}>
                 <div className={styles.panelHeadIcon}>
@@ -500,6 +513,20 @@ export function HomepageAgentControlSection({
 
             <div className={styles.setupWorkbench}>
               <div className={styles.setupSelectionPanel} aria-label={getSetupInputLabel(locale)}>
+                <div className={styles.setupActionOrder} aria-label={setupFlowLabel}>
+                  <span className={styles.setupActionStep}>{`01 ${copy.chooseProvider}`}</span>
+                  <span className={styles.setupActionArrow} aria-hidden="true">
+                    &rarr;
+                  </span>
+                  <span className={styles.setupActionStep}>{`02 ${copy.chooseTeam}`}</span>
+                  <span className={styles.setupActionArrow} aria-hidden="true">
+                    &rarr;
+                  </span>
+                  <span className={`${styles.setupActionStep} ${styles.setupActionStepActive}`}>
+                    {`03 ${nextSetupCommand?.title ?? copy.runCommandLabel}`}
+                  </span>
+                </div>
+
                 <div className={styles.setupPickerGrid}>
                   <div className={styles.setupPicker} aria-label={copy.chooseProvider}>
                     <div className={styles.setupPickerLabelGroup}>
