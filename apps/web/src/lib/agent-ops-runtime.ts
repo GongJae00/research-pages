@@ -45,6 +45,13 @@ const validConversationChannels = new Set<AgentOperationsSnapshot["conversationF
   "team",
   "review",
 ]);
+const validDirectiveStatuses = new Set<string>(["idle", "active", "paused", "completed"]);
+
+function isDirectiveStatus(
+  candidate: unknown,
+): candidate is AgentOpsRuntimeState["currentDirective"]["status"] {
+  return typeof candidate === "string" && validDirectiveStatuses.has(candidate);
+}
 
 function isRuntimeMergeEntry(candidate: unknown): candidate is Record<string, unknown> {
   return typeof candidate === "object" && candidate !== null;
@@ -100,6 +107,30 @@ function sanitizeConversationFeed(
   });
 }
 
+function sanitizeCurrentDirective(
+  candidate: unknown,
+  fallback: AgentOpsRuntimeState["currentDirective"],
+): AgentOpsRuntimeState["currentDirective"] {
+  if (!isRuntimeMergeEntry(candidate)) {
+    return fallback;
+  }
+
+  if (
+    typeof candidate.title !== "string" ||
+    typeof candidate.body !== "string" ||
+    typeof candidate.issuedAt !== "string" ||
+    typeof candidate.source !== "string"
+  ) {
+    return fallback;
+  }
+
+  return {
+    ...fallback,
+    ...candidate,
+    status: isDirectiveStatus(candidate.status) ? candidate.status : fallback.status,
+  };
+}
+
 function normalizeRuntimeState(candidate: unknown, locale: string): AgentOpsRuntimeState {
   const fallback = createDefaultAgentOpsRuntimeState(locale);
   const defaultAutonomy = createDefaultAutonomyRuntime(locale, fallback.updatedAt);
@@ -126,18 +157,7 @@ function normalizeRuntimeState(candidate: unknown, locale: string): AgentOpsRunt
         : fallback.assistantMode,
     selectedTeamId:
       typeof value.selectedTeamId === "string" ? value.selectedTeamId : fallback.selectedTeamId,
-    currentDirective:
-      value.currentDirective &&
-      typeof value.currentDirective === "object" &&
-      typeof value.currentDirective.title === "string" &&
-      typeof value.currentDirective.body === "string" &&
-      typeof value.currentDirective.issuedAt === "string" &&
-      typeof value.currentDirective.source === "string"
-        ? {
-            ...fallback.currentDirective,
-            ...value.currentDirective,
-          }
-        : fallback.currentDirective,
+    currentDirective: sanitizeCurrentDirective(value.currentDirective, fallback.currentDirective),
     conversationFeed: Array.isArray(value.conversationFeed)
       ? sanitizeConversationFeed(value.conversationFeed)
       : [],

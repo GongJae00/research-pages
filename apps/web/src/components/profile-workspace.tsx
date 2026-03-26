@@ -419,6 +419,18 @@ function getProfileLinkDisplayUrl(url: string) {
   return url.replace(/^https?:\/\//i, "").replace(/\/$/, "");
 }
 
+function summarizePrimaryValue(values: string[], formatter?: (value: string) => string) {
+  const primaryValue = values[0];
+  if (!primaryValue) {
+    return undefined;
+  }
+
+  const displayValue = formatter ? formatter(primaryValue) : primaryValue;
+  const remainingCount = values.length - 1;
+
+  return remainingCount > 0 ? `${displayValue} +${remainingCount}` : displayValue;
+}
+
 function normalizePublicationMonth(value?: string) {
   const source = value?.trim();
   if (!source) return undefined;
@@ -1066,20 +1078,15 @@ export function ProfileWorkspace({
   const heroLinks = useMemo(() => savedLinks.slice(0, 3), [savedLinks]);
   const coreContactSummary = useMemo(() => {
     const parts = [
-      savedEmails.length > 0
-        ? isKo
-          ? `이메일 ${savedEmails.length}개`
-          : `${savedEmails.length} email${savedEmails.length === 1 ? "" : "s"}`
-        : undefined,
-      savedLinks.length > 0
-        ? isKo
-          ? `링크 ${savedLinks.length}개`
-          : `${savedLinks.length} link${savedLinks.length === 1 ? "" : "s"}`
-        : undefined,
+      summarizePrimaryValue(savedEmails),
+      summarizePrimaryValue(
+        savedLinks.map((link) => link.url),
+        getProfileLinkDisplayUrl,
+      ),
     ];
 
     return joinUniqueTextParts(parts) || text.emptyValue;
-  }, [isKo, savedEmails.length, savedLinks.length, text.emptyValue]);
+  }, [savedEmails, savedLinks, text.emptyValue]);
   const coreIdentifierSummary = useMemo(() => {
     const parts = [
       savedProfile.nationalResearcherNumber ? text.nationalId : undefined,
@@ -1116,14 +1123,6 @@ export function ProfileWorkspace({
     savedProfile.primaryInstitution,
     text.emptyValue,
   ]);
-  const coreContactHighlights = useMemo(
-    () =>
-      [
-        savedEmails.length > 0 ? `${text.email} ${savedEmails.length}` : undefined,
-        savedLinks.length > 0 ? `${onlineLinksLabel} ${savedLinks.length}` : undefined,
-      ].filter(isDefined),
-    [onlineLinksLabel, savedEmails.length, savedLinks.length, text.email],
-  );
   const coreIdentifierHighlights = useMemo(
     () =>
       [
@@ -2198,15 +2197,6 @@ export function ProfileWorkspace({
                   <dd>
                     {savedEmails.length > 0 || savedLinks.length > 0 ? (
                       <div className="profile-career-status-list">
-                        {coreContactHighlights.length > 0 ? (
-                          <div className="profile-inline-list profile-inline-list-muted">
-                            {coreContactHighlights.map((item) => (
-                              <span className="pill pill-gray" key={item}>
-                                {item}
-                              </span>
-                            ))}
-                          </div>
-                        ) : null}
                         <div className="profile-career-status-row">
                           <div className="profile-career-status-main">
                             <strong>{text.contacts}</strong>
