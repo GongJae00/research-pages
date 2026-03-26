@@ -47,6 +47,7 @@ const validConversationChannels = new Set<AgentOperationsSnapshot["conversationF
 ]);
 const validDirectiveStatuses = new Set<string>(["idle", "active", "paused", "completed"]);
 const validAutonomyTaskStatuses = new Set<string>(["planned", "fallback", "failed"]);
+const validAutonomyExecutionOutcomes = new Set<string>(["changed", "noop", "blocked", "failed"]);
 
 export class AgentOpsRuntimeStateError extends Error {}
 
@@ -210,6 +211,81 @@ function sanitizeAutonomyCurrentTask(
   };
 }
 
+function sanitizeAutonomyCurrentExecution(
+  candidate: unknown,
+): AgentOpsRuntimeState["autonomy"]["currentExecution"] {
+  type AutonomyCurrentExecution = NonNullable<AgentOpsRuntimeState["autonomy"]["currentExecution"]>;
+  type ValidationEntry = AutonomyCurrentExecution["validation"][number];
+
+  if (
+    !isRuntimeMergeEntry(candidate) ||
+    !hasNonEmptyRuntimeString(candidate, "id") ||
+    !hasNonEmptyRuntimeString(candidate, "time") ||
+    !hasNonEmptyRuntimeString(candidate, "providerId") ||
+    !hasNonEmptyRuntimeString(candidate, "providerLabel") ||
+    !hasNonEmptyRuntimeString(candidate, "teamId") ||
+    !hasNonEmptyRuntimeString(candidate, "teamLabel") ||
+    !hasNonEmptyRuntimeString(candidate, "summary") ||
+    !hasNonEmptyRuntimeString(candidate, "operatorBrief") ||
+    !Array.isArray(candidate.changedFiles) ||
+    candidate.changedFiles.some((entry) => typeof entry !== "string") ||
+    !hasNonEmptyRuntimeString(candidate, "nextAction") ||
+    !hasNonEmptyRuntimeString(candidate, "workItemTitle") ||
+    !Array.isArray(candidate.workItemFiles) ||
+    candidate.workItemFiles.some((entry) => typeof entry !== "string") ||
+    (candidate.artifactPath !== null && typeof candidate.artifactPath !== "string") ||
+    (candidate.sessionId !== undefined &&
+      candidate.sessionId !== null &&
+      typeof candidate.sessionId !== "string") ||
+    typeof candidate.outcome !== "string" ||
+    !validAutonomyExecutionOutcomes.has(candidate.outcome) ||
+    !Array.isArray(candidate.validation)
+  ) {
+    return null;
+  }
+
+  const validation = candidate.validation.flatMap((entry): ValidationEntry[] => {
+    if (
+      !isRuntimeMergeEntry(entry) ||
+      !hasNonEmptyRuntimeString(entry, "label") ||
+      (entry.status !== "passed" && entry.status !== "failed" && entry.status !== "not-run") ||
+      !hasNonEmptyRuntimeString(entry, "detail")
+    ) {
+      return [];
+    }
+
+    return [
+      {
+        label: entry.label as string,
+        status: entry.status as ValidationEntry["status"],
+        detail: entry.detail as string,
+      },
+    ];
+  });
+
+  return {
+    id: candidate.id as string,
+    time: candidate.time as string,
+    providerId: candidate.providerId as AutonomyCurrentExecution["providerId"],
+    providerLabel: candidate.providerLabel as string,
+    teamId: candidate.teamId as string,
+    teamLabel: candidate.teamLabel as string,
+    summary: candidate.summary as string,
+    operatorBrief: candidate.operatorBrief as string,
+    changedFiles: [...candidate.changedFiles],
+    nextAction: candidate.nextAction as string,
+    workItemTitle: candidate.workItemTitle as string,
+    workItemFiles: [...candidate.workItemFiles],
+    artifactPath: candidate.artifactPath,
+    sessionId:
+      typeof candidate.sessionId === "string" || candidate.sessionId === null
+        ? candidate.sessionId
+        : undefined,
+    outcome: candidate.outcome as AutonomyCurrentExecution["outcome"],
+    validation,
+  };
+}
+
 function normalizeRuntimeState(candidate: unknown, locale: string): AgentOpsRuntimeState {
   const fallback = createDefaultAgentOpsRuntimeState(locale);
   const defaultAutonomy = createDefaultAutonomyRuntime(locale, fallback.updatedAt);
@@ -269,10 +345,7 @@ function normalizeRuntimeState(candidate: unknown, locale: string): AgentOpsRunt
             taskHistory: getRuntimeObjectList<AgentOpsRuntimeState["autonomy"]["taskHistory"][number]>(
               value.autonomy.taskHistory,
             ),
-            currentExecution:
-              isRuntimeMergeEntry(value.autonomy.currentExecution)
-                ? value.autonomy.currentExecution
-                : defaultAutonomy.currentExecution,
+            currentExecution: sanitizeAutonomyCurrentExecution(value.autonomy.currentExecution),
             executionHistory: getRuntimeObjectList<
               AgentOpsRuntimeState["autonomy"]["executionHistory"][number]
             >(value.autonomy.executionHistory),

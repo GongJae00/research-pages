@@ -368,25 +368,25 @@ function getAffiliationEditReadiness(
 function getNextActionSummary(entry: AffiliationTimelineEntry, locale: Locale) {
   if (entry.active) {
     return locale === "ko"
-      ? "역할이 끝나면 종료일과 상태를 함께 업데이트하세요."
-      : "Add an end date and update the status when this role closes.";
+      ? "역할이 끝나면 종료일을 넣고 완료 상태로 바꾸세요."
+      : "When this role ends, add the end date and mark it completed.";
   }
 
   if (entry.appointmentStatus === "planned") {
     return locale === "ko"
-      ? "시작 예정일을 확인하고, 시작 시점에 현재 소속으로 바꾸세요."
-      : "Confirm the planned start date, then switch this role to current when it begins.";
+      ? "시작하면 현재 소속으로 바꾸고 날짜를 다시 확인하세요."
+      : "When this starts, switch it to current and confirm the dates.";
   }
 
   if (entry.appointmentStatus === "paused") {
     return locale === "ko"
-      ? "이 역할을 재개할지 종료할지 먼저 결정하고 타임라인을 갱신하세요."
-      : "Decide whether this role should resume or close, then update the timeline.";
+      ? "재개할지 종료할지 정한 뒤 날짜와 상태를 맞추세요."
+      : "Choose resume or completed, then align the dates and status.";
   }
 
   return locale === "ko"
-    ? "종료 날짜, 메모, 연결 증빙이 틀릴 때만 다시 수정하세요."
-    : "Reopen editing only if closed dates, notes, or linked evidence need a correction.";
+    ? "종료 기록이 틀린 경우에만 날짜, 메모, 증빙을 보정하세요."
+    : "Only reopen this if the closed dates, notes, or evidence need correction.";
 }
 
 function getTimelineSnapshotLabel(locale: Locale) {
@@ -394,7 +394,7 @@ function getTimelineSnapshotLabel(locale: Locale) {
 }
 
 function getNextUpdateLabel(locale: Locale) {
-  return locale === "ko" ? "\ub2e4\uc74c \uc218\uc815" : "Next update";
+  return locale === "ko" ? "\ub2e4\uc74c \uc218\uc815 \uc791\uc5c5" : "Next edit";
 }
 
 function getSaveReadinessLabel(locale: Locale) {
@@ -504,15 +504,15 @@ function getArchivedEditSectionHint(locale: Locale, count: number) {
 function getEditActionLabel(entry: AffiliationTimelineEntry, locale: Locale) {
   if (entry.active) {
     return locale === "ko"
-      ? "\uc0c1\ud0dc\u00b7\ub0a0\uc9dc \uc218\uc815"
-      : "Edit status and dates";
+      ? "\uc885\ub8cc \uc815\ubcf4 \ud655\uc778"
+      : "Review close details";
   }
 
   if (entry.appointmentStatus === "planned" || entry.appointmentStatus === "paused") {
-    return locale === "ko" ? "\ud0c0\uc784\ub77c\uc778 \uac31\uc2e0" : "Update timeline";
+    return locale === "ko" ? "\ud0c0\uc784\ub77c\uc778 \uacb0\uc815" : "Resolve timeline";
   }
 
-  return locale === "ko" ? "\uc774\ub825 \uc218\uc815" : "Edit history";
+  return locale === "ko" ? "\uc885\ub8cc \uae30\ub85d \ubcf4\uc815" : "Correct record";
 }
 
 function getTimelineEditorSectionLabel(locale: Locale) {
