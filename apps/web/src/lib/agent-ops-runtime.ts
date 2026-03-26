@@ -47,6 +47,8 @@ const validConversationChannels = new Set<AgentOperationsSnapshot["conversationF
 ]);
 const validDirectiveStatuses = new Set<string>(["idle", "active", "paused", "completed"]);
 
+class AgentOpsRuntimeStateError extends Error {}
+
 function isDirectiveStatus(
   candidate: unknown,
 ): candidate is AgentOpsRuntimeState["currentDirective"]["status"] {
@@ -69,6 +71,22 @@ function hasNonEmptyRuntimeString(
   key: string,
 ): boolean {
   return typeof entry[key] === "string" && entry[key].trim().length > 0;
+}
+
+function hasValidConnectedRuntimeEnvelope(candidate: Record<string, unknown>) {
+  if (candidate.terminalConnected !== true) {
+    return true;
+  }
+
+  return (
+    hasNonEmptyRuntimeString(candidate, "updatedAt") &&
+    isRuntimeMergeEntry(candidate.currentDirective) &&
+    hasNonEmptyRuntimeString(candidate.currentDirective, "title") &&
+    hasNonEmptyRuntimeString(candidate.currentDirective, "body") &&
+    hasNonEmptyRuntimeString(candidate.currentDirective, "issuedAt") &&
+    hasNonEmptyRuntimeString(candidate.currentDirective, "source") &&
+    isDirectiveStatus(candidate.currentDirective.status)
+  );
 }
 
 function getRuntimeObjectList<T>(candidate: unknown): T[] {
@@ -142,11 +160,17 @@ function normalizeRuntimeState(candidate: unknown, locale: string): AgentOpsRunt
   const fallback = createDefaultAgentOpsRuntimeState(locale);
   const defaultAutonomy = createDefaultAutonomyRuntime(locale, fallback.updatedAt);
 
-  if (!candidate || typeof candidate !== "object") {
+  if (!isRuntimeMergeEntry(candidate)) {
     return fallback;
   }
 
   const value = candidate as Partial<AgentOpsRuntimeState>;
+
+  if (!hasValidConnectedRuntimeEnvelope(candidate)) {
+    throw new AgentOpsRuntimeStateError(
+      "Incomplete live agent ops runtime state cannot be treated as connected.",
+    );
+  }
 
   return {
     version: typeof value.version === "number" ? value.version : fallback.version,
@@ -240,9 +264,13 @@ async function readRuntimeState(locale: string) {
     // Invalid runtime JSON should surface as a degraded route read instead of
     // looking like a clean defaulted control-plane state.
     if (error instanceof SyntaxError) {
-      throw new Error(`Malformed agent ops runtime state at ${stateFilePath}`, {
+      throw new AgentOpsRuntimeStateError(`Malformed agent ops runtime state at ${stateFilePath}`, {
         cause: error,
       });
+    }
+
+    if (error instanceof AgentOpsRuntimeStateError) {
+      throw error;
     }
 
     return createDefaultAgentOpsRuntimeState(locale);

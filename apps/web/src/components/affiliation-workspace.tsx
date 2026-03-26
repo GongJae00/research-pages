@@ -392,22 +392,6 @@ function getCurrentSectionHint(locale: Locale, count: number) {
       : "No active affiliations are on record right now.";
 }
 
-function getHistorySectionLabel(locale: Locale, count: number) {
-  return locale === "ko"
-    ? `\uc774\uc804 \ubc0f \uc608\uc815 \uc18c\uc18d ${count}\uac74`
-    : `Timeline history (${count})`;
-}
-
-function getHistorySectionHint(locale: Locale, count: number) {
-  return locale === "ko"
-    ? count > 0
-      ? "\uc644\ub8cc\ub41c \ud0c0\uc784\ub77c\uc778\uacfc \uc7ac\uac1c \uac00\ub2a5\uc131\uc774 \uc788\ub294 \ud56d\ubaa9\uc744 \ud55c \uacf3\uc5d0\uc11c \ud655\uc778\ud569\ub2c8\ub2e4."
-      : "\uc774\uc804, \ubcf4\ub958, \uc608\uc815 \uc18c\uc18d\uc774 \uc544\uc9c1 \uc5c6\uc2b5\ub2c8\ub2e4."
-    : count > 0
-      ? "Keep completed, paused, and planned roles together for quick timeline review."
-      : "No past or planned timeline entries are on record yet.";
-}
-
 function getCurrentEditSectionHint(locale: Locale, count: number) {
   return locale === "ko"
     ? count > 0
@@ -418,14 +402,56 @@ function getCurrentEditSectionHint(locale: Locale, count: number) {
       : "No active affiliation items need edits right now.";
 }
 
-function getHistoryEditSectionHint(locale: Locale, count: number) {
+function getQueuedSectionLabel(locale: Locale, count: number) {
+  return locale === "ko"
+    ? `\ub2e4\uc74c \ud655\uc778 \uc18c\uc18d ${count}\uac74`
+    : `Needs follow-up (${count})`;
+}
+
+function getQueuedSectionHint(locale: Locale, count: number) {
   return locale === "ko"
     ? count > 0
-      ? "\uc885\ub8cc\ub41c \ud56d\ubaa9\uacfc \uc608\uc815 \ub610\ub294 \ubcf4\ub958 \uc0c1\ud0dc\ub97c \ud568\uaed8 \uc815\ub9ac\ud558\uc138\uc694."
-      : "\uc218\uc815\ud560 \uc774\uc804 \ub610\ub294 \uc608\uc815 \uc18c\uc18d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4."
+      ? "\ubcf4\ub958\ub418\uac70\ub098 \uc608\uc815\ub41c \uc18c\uc18d\uc744 \uba3c\uc800 \ubcf4\uace0 \uc7ac\uac1c, \uc720\uc9c0, \uc885\ub8cc \uc5ec\ubd80\ub97c \uc815\ud558\uc138\uc694."
+      : "\ub2e4\uc74c \uc5c5\ub370\uc774\ud2b8\uac00 \ud544\uc694\ud55c \ubcf4\ub958 \ub610\ub294 \uc608\uc815 \uc18c\uc18d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4."
     : count > 0
-      ? "Use this section for completed, paused, or planned entries that need cleanup."
-      : "No past or planned items need edits right now.";
+      ? "Review planned and paused roles here first so it is clear whether they should resume, stay queued, or close."
+      : "No planned or paused roles need follow-up right now.";
+}
+
+function getArchivedSectionLabel(locale: Locale, count: number) {
+  return locale === "ko"
+    ? `\ubcf4\uad00 \uc774\ub825 ${count}\uac74`
+    : `Archived timeline (${count})`;
+}
+
+function getArchivedSectionHint(locale: Locale, count: number) {
+  return locale === "ko"
+    ? count > 0
+      ? "\uc644\ub8cc\ub41c \uc18c\uc18d\uc740 \ucc38\uace0\uc6a9\uc73c\ub85c \ubcf4\uad00\ud558\uace0, \ub0a0\uc9dc\ub098 \uba54\ubaa8\uac00 \ud2c0\ub9b4 \ub54c\ub9cc \uc218\uc815\ud558\uc138\uc694."
+      : "\ubcf4\uad00 \uc911\uc778 \uc644\ub8cc \uc774\ub825\uc774 \uc5c6\uc2b5\ub2c8\ub2e4."
+    : count > 0
+      ? "Completed roles stay here for reference, so you only reopen them when dates, notes, or institution details are inaccurate."
+      : "No completed timeline entries are archived yet.";
+}
+
+function getQueuedEditSectionHint(locale: Locale, count: number) {
+  return locale === "ko"
+    ? count > 0
+      ? "\uc7ac\uac1c \uc5ec\ubd80\uc640 \uc0c1\ud0dc \uacb0\uc815\uc774 \uba3c\uc800\uc778 \ud56d\ubaa9\ub4e4\uc785\ub2c8\ub2e4."
+      : "\uc218\uc815\ud560 \ubcf4\ub958 \ub610\ub294 \uc608\uc815 \uc18c\uc18d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4."
+    : count > 0
+      ? "Use this section for entries that still need a resume, pause, or completion decision."
+      : "No planned or paused items need edits right now.";
+}
+
+function getArchivedEditSectionHint(locale: Locale, count: number) {
+  return locale === "ko"
+    ? count > 0
+      ? "\uc885\ub8cc\ub41c \ud56d\ubaa9\uc740 \ud0c0\uc784\ub77c\uc778 \uc815\ud655\uc131\uc744 \ub2e4\ub4ec\uc744 \ub54c\ub9cc \uc218\uc815\ud558\uc138\uc694."
+      : "\uc218\uc815\ud560 \ubcf4\uad00 \uc774\ub825\uc774 \uc5c6\uc2b5\ub2c8\ub2e4."
+    : count > 0
+      ? "Keep archived edits focused on correcting closed dates, notes, or institution details."
+      : "No archived timeline items need edits right now.";
 }
 
 function getEditActionLabel(entry: AffiliationTimelineEntry, locale: Locale) {
@@ -460,7 +486,17 @@ function getEditableAffiliationHeading(
 function getAffiliationSections(items: AffiliationTimelineEntry[]) {
   return {
     current: items.filter((item) => item.active),
-    history: items.filter((item) => !item.active),
+    queued: items.filter(
+      (item) =>
+        !item.active &&
+        (item.appointmentStatus === "planned" || item.appointmentStatus === "paused"),
+    ),
+    archived: items.filter(
+      (item) =>
+        !item.active &&
+        item.appointmentStatus !== "planned" &&
+        item.appointmentStatus !== "paused",
+    ),
   };
 }
 
@@ -519,9 +555,17 @@ export function AffiliationWorkspace({
   const orderedDraftAffiliations = sortAffiliations(draftAffiliations);
   const affiliationOverview = getAffiliationOverview(orderedResolvedAffiliations, locale);
   const affiliationStats = getAffiliationStats(orderedResolvedAffiliations, locale);
-  const { current: currentAffiliations, history: historicalAffiliations } =
+  const {
+    current: currentAffiliations,
+    queued: queuedAffiliations,
+    archived: archivedAffiliations,
+  } =
     getAffiliationSections(orderedResolvedAffiliations);
-  const { current: currentDraftAffiliations, history: historicalDraftAffiliations } =
+  const {
+    current: currentDraftAffiliations,
+    queued: queuedDraftAffiliations,
+    archived: archivedDraftAffiliations,
+  } =
     getAffiliationSections(orderedDraftAffiliations);
 
   useEffect(() => {
@@ -1027,21 +1071,42 @@ export function AffiliationWorkspace({
               </section>
             ) : null}
 
-            {historicalDraftAffiliations.length > 0 ? (
+            {queuedDraftAffiliations.length > 0 ? (
               <section className="card profile-detail-card">
                 <div className="card-header">
                   <div>
-                    <h3>{getHistorySectionLabel(locale, historicalDraftAffiliations.length)}</h3>
+                    <h3>{getQueuedSectionLabel(locale, queuedDraftAffiliations.length)}</h3>
                     <p className="card-support-text">
-                      {getHistoryEditSectionHint(locale, historicalDraftAffiliations.length)}
+                      {getQueuedEditSectionHint(locale, queuedDraftAffiliations.length)}
                     </p>
                   </div>
                 </div>
                 <div className="card-body detail-cards">
-                  {historicalDraftAffiliations.map((affiliation, index) =>
+                  {queuedDraftAffiliations.map((affiliation, index) =>
                     renderEditableAffiliationCard(
                       affiliation,
                       currentDraftAffiliations.length + index,
+                    ),
+                  )}
+                </div>
+              </section>
+            ) : null}
+
+            {archivedDraftAffiliations.length > 0 ? (
+              <section className="card profile-detail-card">
+                <div className="card-header">
+                  <div>
+                    <h3>{getArchivedSectionLabel(locale, archivedDraftAffiliations.length)}</h3>
+                    <p className="card-support-text">
+                      {getArchivedEditSectionHint(locale, archivedDraftAffiliations.length)}
+                    </p>
+                  </div>
+                </div>
+                <div className="card-body detail-cards">
+                  {archivedDraftAffiliations.map((affiliation, index) =>
+                    renderEditableAffiliationCard(
+                      affiliation,
+                      currentDraftAffiliations.length + queuedDraftAffiliations.length + index,
                     ),
                   )}
                 </div>
@@ -1270,18 +1335,34 @@ export function AffiliationWorkspace({
             </section>
           ) : null}
 
-          {historicalAffiliations.length > 0 ? (
+          {queuedAffiliations.length > 0 ? (
             <section className="card profile-detail-card">
               <div className="card-header">
                 <div>
-                  <h3>{getHistorySectionLabel(locale, historicalAffiliations.length)}</h3>
+                  <h3>{getQueuedSectionLabel(locale, queuedAffiliations.length)}</h3>
                   <p className="card-support-text">
-                    {getHistorySectionHint(locale, historicalAffiliations.length)}
+                    {getQueuedSectionHint(locale, queuedAffiliations.length)}
                   </p>
                 </div>
               </div>
               <div className="card-body detail-cards">
-                {historicalAffiliations.map(renderReadOnlyAffiliationCard)}
+                {queuedAffiliations.map(renderReadOnlyAffiliationCard)}
+              </div>
+            </section>
+          ) : null}
+
+          {archivedAffiliations.length > 0 ? (
+            <section className="card profile-detail-card">
+              <div className="card-header">
+                <div>
+                  <h3>{getArchivedSectionLabel(locale, archivedAffiliations.length)}</h3>
+                  <p className="card-support-text">
+                    {getArchivedSectionHint(locale, archivedAffiliations.length)}
+                  </p>
+                </div>
+              </div>
+              <div className="card-body detail-cards">
+                {archivedAffiliations.map(renderReadOnlyAffiliationCard)}
               </div>
             </section>
           ) : null}
