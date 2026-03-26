@@ -424,7 +424,16 @@ export function HomepageAgentControlSection({
                       <strong>
                         {selectedProvider?.label ?? "-"} {"->"} {selectedTeam?.name ?? "-"}
                       </strong>
-                      <span className={styles.setupFlowMeta}>{selectedTeam?.lane ?? "-"}</span>
+                      <div className={styles.setupMetaChipRow}>
+                        <span className={styles.setupMetaChip}>
+                          <span className={styles.setupFlowMeta}>{copy.selectedCliStatusLabel}</span>
+                          <strong>{selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}</strong>
+                        </span>
+                        <span className={styles.setupMetaChip}>
+                          <span className={styles.setupFlowMeta}>{copy.selectedLaneLabel}</span>
+                          <strong>{selectedTeam?.lane ?? "-"}</strong>
+                        </span>
+                      </div>
                     </div>
                     <span className={`${styles.setupFlowChip} ${styles.setupFlowChipAccent}`}>
                       <span className={styles.setupPickerStep}>03</span>
@@ -458,9 +467,6 @@ export function HomepageAgentControlSection({
                       {copy.chooseProvider} {"->"} {copy.chooseTeam}
                     </strong>
                   </div>
-                  <span className={styles.setupSectionHint}>
-                    {selectedProvider?.label ?? "-"} {"->"} {selectedTeam?.name ?? "-"}
-                  </span>
                 </div>
                 <div className={styles.setupPickerGrid}>
                   <div className={styles.setupPicker} aria-label={copy.chooseProvider}>
@@ -528,9 +534,16 @@ export function HomepageAgentControlSection({
                         <span className={styles.metaLabel}>{copy.activeSetup}</span>
                       </div>
                       <strong>{nextSetupCommand.title}</strong>
-                      <span className={styles.nextCommandRoute}>
-                        {selectedProvider?.label ?? "-"} {"->"} {selectedTeam?.name ?? "-"}
-                      </span>
+                      <div className={styles.setupMetaChipRow}>
+                        <span className={styles.setupMetaChip}>
+                          <span className={styles.setupFlowMeta}>{copy.chooseProvider}</span>
+                          <strong>{selectedProvider?.label ?? "-"}</strong>
+                        </span>
+                        <span className={styles.setupMetaChip}>
+                          <span className={styles.setupFlowMeta}>{copy.chooseTeam}</span>
+                          <strong>{selectedTeam?.name ?? "-"}</strong>
+                        </span>
+                      </div>
                     </div>
                     <span className={styles.inlineMeta}>{setupOutputLabel}</span>
                   </div>
