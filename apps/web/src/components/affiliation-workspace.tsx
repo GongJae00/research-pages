@@ -107,6 +107,12 @@ const copy = {
     endDate: "End date",
     roleTitle: "Role title",
     remove: "Remove",
+    timelineSnapshot: "Timeline snapshot",
+    nextUpdate: "Next update",
+    currentRole: "Current role",
+    pastRole: "Past role",
+    plannedRole: "Planned role",
+    pausedRole: "Paused role",
     organizationLabels: {
       university: "University",
       lab: "Lab",
@@ -273,6 +279,37 @@ function getTimelineSummary(
   return `${entry.startDate} - ${entry.endDate ?? presentLabel}`;
 }
 
+function getAffiliationStateLabel(
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+) {
+  if (entry.active) {
+    return locale === "ko" ? "\ud604\uc7ac \uc18c\uc18d" : "Current role";
+  }
+
+  if (entry.appointmentStatus === "planned") {
+    return locale === "ko" ? "\uc608\uc815 \uc18c\uc18d" : "Planned role";
+  }
+
+  if (entry.appointmentStatus === "paused") {
+    return locale === "ko" ? "\ubcf4\ub958 \uc18c\uc18d" : "Paused role";
+  }
+
+  return locale === "ko" ? "\uc885\ub8cc \uc18c\uc18d" : "Past role";
+}
+
+function getAffiliationScanSummary(
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+  text: (typeof copy)[Locale],
+) {
+  return `${getAffiliationStateLabel(entry, locale)} · ${getTimelineSummary(
+    entry,
+    text.present,
+    locale,
+  )}`;
+}
+
 function getAffiliationEditReadiness(
   entry: AffiliationTimelineEntry,
   locale: Locale,
@@ -303,6 +340,14 @@ function getNextActionSummary(entry: AffiliationTimelineEntry, locale: Locale) {
   return locale === "ko"
     ? "역할이 다시 시작되거나 연결 문서를 갱신해야 하면 편집을 다시 여세요."
     : "Reopen editing if this role resumes or its linked evidence needs an update.";
+}
+
+function getTimelineSnapshotLabel(locale: Locale) {
+  return locale === "ko" ? "\ud0c0\uc784\ub77c\uc778 \uc694\uc57d" : "Timeline snapshot";
+}
+
+function getNextUpdateLabel(locale: Locale) {
+  return locale === "ko" ? "\ub2e4\uc74c \uc218\uc815" : "Next update";
 }
 
 export function AffiliationWorkspace({
@@ -712,6 +757,9 @@ export function AffiliationWorkspace({
                     <span>{affiliation.endDate ?? text.present}</span>
                   </div>
                   <div className="profile-history-body">
+                    <p className="card-support-text">
+                      {getAffiliationScanSummary(affiliation, locale, text)}
+                    </p>
                     <dl className="field-list">
                       <div className="field-row">
                         <dt>{text.appointmentStatus}</dt>
@@ -721,11 +769,11 @@ export function AffiliationWorkspace({
                         </dd>
                       </div>
                       <div className="field-row">
-                        <dt>{text.period}</dt>
+                        <dt>{getTimelineSnapshotLabel(locale)}</dt>
                         <dd>{getTimelineSummary(affiliation, text.present, locale)}</dd>
                       </div>
                       <div className="field-row">
-                        <dt>{text.edit}</dt>
+                        <dt>{getNextUpdateLabel(locale)}</dt>
                         <dd>{getNextActionSummary(affiliation, locale)}</dd>
                       </div>
                     </dl>
