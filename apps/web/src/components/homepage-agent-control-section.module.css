@@ -1760,7 +1760,8 @@
 .setupCommandsDisclosure {
   margin-top: 0.01rem;
   overflow: hidden;
-  background: rgba(248, 250, 252, 0.76);
+  border-color: rgba(203, 213, 225, 0.58);
+  background: rgba(248, 250, 252, 0.62);
 }
 
 .setupCommandsSummary {
@@ -1768,7 +1769,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.6rem;
-  padding: 0.08rem 0.14rem;
+  padding: 0.06rem 0.12rem;
   cursor: pointer;
   list-style: none;
 }
@@ -1785,14 +1786,14 @@
 
 .setupCommandsSummaryCopy strong {
   color: #334155;
-  font-size: 0.74rem;
+  font-size: 0.7rem;
   line-height: 1.1;
   overflow-wrap: anywhere;
 }
 
 .setupCommandsHint {
-  color: #94a3b8;
-  font-size: 0.66rem;
+  color: #64748b;
+  font-size: 0.62rem;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -1974,8 +1975,47 @@
     color 140ms ease;
 }
 
+.optionButton {
+  align-items: flex-start;
+  justify-content: space-between;
+  text-align: left;
+}
+
+.optionButtonCopy {
+  display: grid;
+  gap: 0.02rem;
+  min-width: 0;
+}
+
 .optionButtonText {
+  display: block;
+  min-width: 0;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.optionButtonMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.14rem;
+  min-width: 0;
+}
+
+.optionButtonMetaLabel {
+  color: #64748b;
+  font-size: 0.54rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   line-height: 1;
+  text-transform: uppercase;
+}
+
+.optionButtonMetaValue {
+  color: #475569;
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
 }
 
 .optionButton:hover,
@@ -1987,6 +2027,11 @@
   border-color: rgba(15, 23, 42, 0.8);
   background: linear-gradient(180deg, #0f172a, #172554);
   color: #f8fafc;
+}
+
+.optionButtonActive .optionButtonMetaLabel,
+.optionButtonActive .optionButtonMetaValue {
+  color: rgba(226, 232, 240, 0.92);
 }
 
 .inlineStatusBadge {

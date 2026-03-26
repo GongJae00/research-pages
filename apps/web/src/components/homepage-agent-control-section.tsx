@@ -571,7 +571,15 @@ export function HomepageAgentControlSection({
                             }`}
                             onClick={() => setSelectedProviderId(provider.providerId)}
                           >
-                            <span className={styles.optionButtonText}>{provider.label}</span>
+                            <span className={styles.optionButtonCopy}>
+                              <span className={styles.optionButtonText}>{provider.label}</span>
+                              <span className={styles.optionButtonMeta}>
+                                <span className={styles.optionButtonMetaLabel}>{copy.nextActionLabel}</span>
+                                <span className={styles.optionButtonMetaValue}>
+                                  {getNextSetupActionLabel(locale, provider.status)}
+                                </span>
+                              </span>
+                            </span>
                             <span
                               className={`${styles.inlineStatusBadge} ${getProviderStatusClass(provider.status)}`}
                             >
@@ -598,7 +606,13 @@ export function HomepageAgentControlSection({
                           }`}
                           onClick={() => setSelectedTeamId(team.id)}
                         >
-                          {team.name}
+                          <span className={styles.optionButtonCopy}>
+                            <span className={styles.optionButtonText}>{team.name}</span>
+                            <span className={styles.optionButtonMeta}>
+                              <span className={styles.optionButtonMetaLabel}>{copy.selectedLaneLabel}</span>
+                              <span className={styles.optionButtonMetaValue}>{team.lane}</span>
+                            </span>
+                          </span>
                         </button>
                       ))}
                     </div>
