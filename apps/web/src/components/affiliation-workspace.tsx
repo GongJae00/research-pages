@@ -1047,9 +1047,14 @@ export function AffiliationWorkspace({
   const queuedCorrections = queuedAffiliations.filter((item) =>
     needsTimelineCorrection(item),
   ).length;
+  const queuedPriorityAffiliation =
+    queuedAffiliations.find((item) => needsTimelineCorrection(item)) ?? queuedAffiliations[0];
   const archivedCorrections = archivedAffiliations.filter((item) =>
     needsTimelineCorrection(item),
   ).length;
+  const archivedPriorityAffiliation =
+    archivedAffiliations.find((item) => needsTimelineCorrection(item)) ??
+    archivedAffiliations[0];
   const {
     current: currentDraftAffiliations,
     queued: queuedDraftAffiliations,
@@ -1073,9 +1078,15 @@ export function AffiliationWorkspace({
   const queuedDraftCorrections = queuedDraftAffiliations.filter((item) =>
     needsTimelineCorrection(item),
   ).length;
+  const queuedDraftPriorityAffiliation =
+    queuedDraftAffiliations.find((item) => needsTimelineCorrection(item)) ??
+    queuedDraftAffiliations[0];
   const archivedDraftCorrections = archivedDraftAffiliations.filter((item) =>
     needsTimelineCorrection(item),
   ).length;
+  const archivedDraftPriorityAffiliation =
+    archivedDraftAffiliations.find((item) => needsTimelineCorrection(item)) ??
+    archivedDraftAffiliations[0];
   const focusedDraftAffiliation = focusedAffiliationId
     ? orderedDraftAffiliations.find((item) => item.id === focusedAffiliationId) ?? null
     : null;
@@ -1748,7 +1759,7 @@ export function AffiliationWorkspace({
                             .filter(Boolean)
                             .join(" ")}
                         </p>
-                        {renderSectionPrioritySummary(queuedDraftAffiliations[0])}
+                        {renderSectionPrioritySummary(queuedDraftPriorityAffiliation)}
                       </div>
                     </div>
                     <div className="card-body detail-cards">
@@ -1777,6 +1788,7 @@ export function AffiliationWorkspace({
                             .filter(Boolean)
                             .join(" ")}
                         </p>
+                        {renderSectionPrioritySummary(archivedDraftPriorityAffiliation)}
                       </div>
                     </div>
                     <div className="card-body detail-cards">
@@ -2035,7 +2047,7 @@ export function AffiliationWorkspace({
                       .filter(Boolean)
                       .join(" ")}
                   </p>
-                  {renderSectionPrioritySummary(queuedAffiliations[0])}
+                  {renderSectionPrioritySummary(queuedPriorityAffiliation)}
                 </div>
               </div>
               <div className="card-body detail-cards">
@@ -2057,6 +2069,7 @@ export function AffiliationWorkspace({
                       .filter(Boolean)
                       .join(" ")}
                   </p>
+                  {renderSectionPrioritySummary(archivedPriorityAffiliation)}
                 </div>
               </div>
               <div className="card-body detail-cards">

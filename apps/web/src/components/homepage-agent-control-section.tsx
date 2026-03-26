@@ -381,7 +381,6 @@ export function HomepageAgentControlSection({
     return left.step.localeCompare(right.step);
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
-  const selectedSetupPath = `${selectedProvider?.label ?? "-"} -> ${selectedTeam?.name ?? "-"}`;
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
       kind === "connect" ? setupManifest?.commands.connect ?? "" : setupManifest?.commands.assign ?? "";
@@ -506,7 +505,6 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
-                <p className={styles.setupTitleHint}>{copy.setupSequenceIntro}</p>
                 <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
                   <div className={styles.setupCompactSummaryItem}>
                     <span className={styles.setupCompactSummaryOrdinal}>01</span>
@@ -568,11 +566,7 @@ export function HomepageAgentControlSection({
             <div className={styles.setupWorkbench}>
               <div className={styles.setupSelectionPanel} aria-label={getSetupInputLabel(locale)}>
                 <div className={styles.setupSelectionLead}>
-                  <div className={styles.setupSelectionLeadTop}>
-                    <span className={styles.setupSelectionLeadLabel}>{copy.activeSetup}</span>
-                    <span className={styles.setupSelectionLeadPath}>{selectedSetupPath}</span>
-                  </div>
-
+                  <span className={styles.setupSelectionLeadLabel}>{copy.activeSetup}</span>
                   <div className={styles.selectionDigestRow} aria-label={setupFlowLabel}>
                     <div className={`${styles.selectionDigestChip} ${styles.selectionDigestChipActive}`}>
                       <span className={styles.setupDigestKey}>{copy.selectedCli}</span>
@@ -678,10 +672,6 @@ export function HomepageAgentControlSection({
                         <strong>{nextSetupCommand.title}</strong>
                         <p className={styles.setupTitleHint}>{copy.nextCommandHelp}</p>
                       </div>
-                    </div>
-                    <div className={styles.setupCommandInlineMeta}>
-                      <span className={styles.metaLabel}>{copy.activeSetup}</span>
-                      <span className={styles.setupCommandInlinePath}>{selectedSetupPath}</span>
                     </div>
                   </div>
 
