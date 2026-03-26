@@ -427,8 +427,11 @@ export function HomepageAgentControlSection({
                 </div>
                 {setupFlowDigest ? (
                   <div className={styles.setupSummaryBar} aria-label={copy.setupStepsLabel}>
-                    <span className={styles.metaLabel}>{setupFlowLabel}</span>
-                    <div className={styles.setupSequenceInline}>
+                    <div className={styles.setupSummaryLead}>
+                      <span className={styles.metaLabel}>{setupFlowLabel}</span>
+                      <span className={styles.inlineMeta}>{copy.nextCommandHelp}</span>
+                    </div>
+                    <div className={styles.setupSequenceGrid}>
                       <div className={styles.setupSequencePill}>
                         <span className={styles.setupPickerStep}>01</span>
                         <div className={styles.setupSequencePillCopy}>
@@ -441,10 +444,6 @@ export function HomepageAgentControlSection({
                         </div>
                       </div>
 
-                      <span className={styles.setupSequenceArrow} aria-hidden="true">
-                        <ArrowRight size={14} />
-                      </span>
-
                       <div className={styles.setupSequencePill}>
                         <span className={styles.setupPickerStep}>02</span>
                         <div className={styles.setupSequencePillCopy}>
@@ -455,10 +454,6 @@ export function HomepageAgentControlSection({
                           </span>
                         </div>
                       </div>
-
-                      <span className={styles.setupSequenceArrow} aria-hidden="true">
-                        <ArrowRight size={14} />
-                      </span>
 
                       <div className={`${styles.setupSequencePill} ${styles.setupSequencePillAccent}`}>
                         <span className={styles.setupPickerStep}>03</span>

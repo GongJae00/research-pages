@@ -650,23 +650,22 @@
   margin-top: 0;
 }
 
-.setupSequenceInline {
+.setupSummaryLead {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.04rem;
-  align-items: center;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.08rem 0.18rem;
 }
 
-.setupSequenceArrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: #94a3b8;
-  flex: 0 0 auto;
+.setupSequenceGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.05rem;
 }
 
 .setupSequencePill {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 0.12rem;
   min-width: 0;
@@ -674,7 +673,7 @@
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 14px;
   background: rgba(248, 250, 252, 0.92);
-  flex: 1 1 10.5rem;
+  min-height: 100%;
 }
 
 .setupSequencePillCopy {
@@ -685,7 +684,7 @@
 
 .setupSequencePill strong {
   color: #0f172a;
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   line-height: 1.08;
   overflow-wrap: anywhere;
 }
@@ -704,9 +703,9 @@
 
 .setupSequenceMeta {
   color: #475569;
-  font-size: 0.66rem;
+  font-size: 0.62rem;
   font-weight: 700;
-  line-height: 1.15;
+  line-height: 1.1;
   overflow-wrap: anywhere;
 }
 
@@ -1882,8 +1881,12 @@
     display: none;
   }
 
-  .setupSequenceArrow {
-    display: none;
+  .setupSummaryLead {
+    align-items: flex-start;
+  }
+
+  .setupSequenceGrid {
+    grid-template-columns: 1fr;
   }
 
   .setupFlowLegend {
