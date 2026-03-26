@@ -495,8 +495,14 @@ export function HomepageAgentControlSection({
                 <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
+                  {nextSetupCommand ? (
+                    <span className={styles.setupTitleBadge}>
+                      <span className={styles.setupTitleBadgeStep}>03</span>
+                      <strong>{nextSetupCommand.title}</strong>
+                    </span>
+                  ) : null}
                 </div>
-                <p className={styles.setupSequenceIntro}>{copy.setupSequenceIntro}</p>
+                {!nextSetupCommand ? <p className={styles.setupSequenceIntro}>{copy.setupSequenceIntro}</p> : null}
                 {nextSetupCommand ? (
                   <>
                     <div className={`${styles.setupDigestLine} ${styles.setupHeaderScan}`} aria-label={setupFlowLabel}>
@@ -532,14 +538,15 @@ export function HomepageAgentControlSection({
                           <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
                           <strong>{`03. ${nextSetupCommand.title}`}</strong>
                         </div>
-                        <span className={styles.setupCommandInlinePath}>
-                          <span>{selectedProvider?.label ?? "-"}</span>
-                          <span aria-hidden="true">&rarr;</span>
-                          <span>{selectedTeam?.name ?? "-"}</span>
-                        </span>
-                        <span className={styles.nextCommandOutput}>{setupOutputLabel}</span>
+                        <div className={styles.setupCommandInlineMeta}>
+                          <span className={styles.setupCommandInlinePath}>
+                            <span>{selectedProvider?.label ?? "-"}</span>
+                            <span aria-hidden="true">&rarr;</span>
+                            <span>{selectedTeam?.name ?? "-"}</span>
+                          </span>
+                          <span className={styles.nextCommandOutput}>{setupOutputLabel}</span>
+                        </div>
                       </div>
-                      <p className={styles.nextCommandHint}>{copy.nextCommandHelp}</p>
 
                       <div className={styles.setupCommandInlineMain}>
                         <code>{nextSetupCommand.command}</code>

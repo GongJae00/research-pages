@@ -565,6 +565,42 @@
   margin-top: 0;
 }
 
+.setupTitleBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.18rem;
+  min-width: 0;
+  padding: 0.08rem 0.14rem;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  border-radius: 999px;
+  background: rgba(241, 245, 249, 0.98);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+}
+
+.setupTitleBadgeStep {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.02rem;
+  min-height: 1.02rem;
+  padding: 0 0.24rem;
+  border-radius: 999px;
+  background: #0f766e;
+  color: #f8fafc;
+  font-size: 0.54rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
+.setupTitleBadge strong {
+  min-width: 0;
+  color: #0f172a;
+  font-size: 0.68rem;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
 .setupHeaderFlow {
   display: flex;
   flex-wrap: wrap;
@@ -905,6 +941,14 @@
   color: #0f172a;
   font-size: 0.78rem;
   line-height: 1.08;
+}
+
+.setupCommandInlineMeta {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.05rem;
 }
 
 .setupCommandInlinePath {
@@ -2681,6 +2725,11 @@
   .setupCommandInlineMain {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .setupCommandInlineMeta {
+    width: 100%;
+    justify-content: flex-start;
   }
 
   .setupCommandInlineMain .copyIconButton {
