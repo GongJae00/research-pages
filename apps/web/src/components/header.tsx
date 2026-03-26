@@ -25,10 +25,26 @@ const navItems = [
   { key: "ops", href: "/ops" },
 ] as const;
 
+function getOpsNavigationLabel(locale: string): string {
+  return locale === "ko" ? "내부 관제실" : "Internal control room";
+}
+
+function getNavigationLabel(
+  key: (typeof navItems)[number]["key"],
+  locale: string,
+  dict: Dictionary,
+): string {
+  if (key === "ops") {
+    return getOpsNavigationLabel(locale);
+  }
+
+  return t(dict, `nav.${key}`);
+}
+
 function getPageTitle(pathname: string, locale: string, dict: Dictionary): string {
   const segment = pathname.replace(`/${locale}`, "").split("/").filter(Boolean)[0] ?? "profile";
   if (segment === "ops") {
-    return locale === "ko" ? "에이전트 관제실" : "Agent Ops";
+    return getOpsNavigationLabel(locale);
   }
   return t(dict, `nav.${segment}`);
 }
@@ -76,7 +92,7 @@ export function Header({ locale, dict }: HeaderProps) {
                 className={`mobile-nav-link${active ? " mobile-nav-link-active" : ""}`}
                 onClick={() => setMobileOpen(false)}
               >
-                {t(dict, `nav.${item.key}`)}
+                {getNavigationLabel(item.key, locale, dict)}
               </Link>
             );
           })}

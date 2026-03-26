@@ -25,6 +25,22 @@ const internalNavItems = [
   { key: "ops", icon: LayoutGrid, href: "/ops" },
 ] as const;
 
+function getOpsNavigationLabel(locale: string): string {
+  return locale === "ko" ? "내부 관제실" : "Internal control room";
+}
+
+function getNavigationLabel(
+  key: (typeof personalNavItems)[number]["key"] | (typeof internalNavItems)[number]["key"],
+  locale: string,
+  dict: Dictionary,
+): string {
+  if (key === "ops") {
+    return getOpsNavigationLabel(locale);
+  }
+
+  return t(dict, `nav.${key}`);
+}
+
 export function Sidebar({ locale, dict }: SidebarProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -79,7 +95,7 @@ export function Sidebar({ locale, dict }: SidebarProps) {
                 className={`sidebar-link${active ? " sidebar-link-active" : ""}`}
               >
                 <Icon size={18} />
-                <span>{t(dict, `nav.${item.key}`)}</span>
+                <span>{getNavigationLabel(item.key, locale, dict)}</span>
               </Link>
             );
           })}
@@ -100,7 +116,7 @@ export function Sidebar({ locale, dict }: SidebarProps) {
                 className={`sidebar-link${active ? " sidebar-link-active" : ""}`}
               >
                 <Icon size={18} />
-                <span>{t(dict, `nav.${item.key}`)}</span>
+                <span>{getNavigationLabel(item.key, locale, dict)}</span>
               </Link>
             );
           })}
