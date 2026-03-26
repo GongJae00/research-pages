@@ -430,10 +430,56 @@ function getPrimaryEditActionLabel(
   locale: Locale,
 ) {
   if (needsTimelineCorrection(entry)) {
-    return locale === "ko" ? "\ud0c0\uc784\ub77c\uc778 \uba3c\uc800 \uc815\ub9ac" : "Fix timeline first";
+    return getTimelineCorrectionActionLabel(entry, locale);
   }
 
   return getEditActionLabel(entry, locale);
+}
+
+function getTimelineCorrectionActionLabel(
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+) {
+  if (entry.active && entry.appointmentStatus !== "active") {
+    return locale === "ko" ? "\uc0c1\ud0dc \ub9de\ucd94\uae30" : "Match status";
+  }
+
+  if (!entry.active && entry.appointmentStatus === "active") {
+    return locale === "ko" ? "\ud604\uc7ac \uc5ec\ubd80 \uc815\ud558\uae30" : "Set current or close";
+  }
+
+  if (entry.active && entry.endDate) {
+    return locale === "ko" ? "\uc885\ub8cc\uc77c \ube44\uc6b0\uae30" : "Clear end date";
+  }
+
+  if (!entry.active && entry.appointmentStatus === "completed" && !entry.endDate) {
+    return locale === "ko" ? "\uc885\ub8cc\uc77c \ucd94\uac00" : "Add end date";
+  }
+
+  return locale === "ko" ? "\ub0a0\uc9dc \ub2e4\uc2dc \ud655\uc778" : "Recheck dates";
+}
+
+function getTimelineCorrectionBadgeLabel(
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+) {
+  if (entry.active && entry.appointmentStatus !== "active") {
+    return locale === "ko" ? "\uc0c1\ud0dc \ubd88\uc77c\uce58" : "Status mismatch";
+  }
+
+  if (!entry.active && entry.appointmentStatus === "active") {
+    return locale === "ko" ? "\ud604\uc7ac \uc5ec\ubd80 \ud655\uc778" : "Current state check";
+  }
+
+  if (entry.active && entry.endDate) {
+    return locale === "ko" ? "\uc885\ub8cc\uc77c \ucda9\ub3cc" : "End date conflict";
+  }
+
+  if (!entry.active && entry.appointmentStatus === "completed" && !entry.endDate) {
+    return locale === "ko" ? "\uc885\ub8cc\uc77c \ud544\uc694" : "End date needed";
+  }
+
+  return locale === "ko" ? "\uc608\uc815 \ub0a0\uc9dc \ud655\uc778" : "Planned date check";
 }
 
 function getNextActionSummary(entry: AffiliationTimelineEntry, locale: Locale) {
@@ -724,8 +770,7 @@ function getAffiliationActionBadge(
   if (needsTimelineCorrection(entry)) {
     return {
       className: "pill-amber",
-      label:
-        locale === "ko" ? "\ud0c0\uc784\ub77c\uc778 \uc218\uc815 \ud544\uc694" : "Fix timeline first",
+      label: getTimelineCorrectionBadgeLabel(entry, locale),
     };
   }
 

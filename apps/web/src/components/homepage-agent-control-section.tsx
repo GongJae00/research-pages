@@ -98,14 +98,6 @@ function getSetupInputLabel(locale: string) {
   return "Selection";
 }
 
-function getSetupOutputLabel(locale: string) {
-  if (isKoreanLocale(locale)) {
-    return "실행 명령";
-  }
-
-  return "Command output";
-}
-
 function getSurfaceEntryCopy(locale: string, opsEnabled: boolean) {
   if (isKoreanLocale(locale)) {
     return {
@@ -390,7 +382,6 @@ export function HomepageAgentControlSection({
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
   const selectedSetupPath = `${selectedProvider?.label ?? "-"} -> ${selectedTeam?.name ?? "-"}`;
-  const setupOutputLabel = getSetupOutputLabel(locale);
   const copyCommand = async (kind: "connect" | "assign") => {
     const value =
       kind === "connect" ? setupManifest?.commands.connect ?? "" : setupManifest?.commands.assign ?? "";
@@ -512,7 +503,6 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
-                <p className={styles.setupTitleHint}>{copy.setupSequenceIntro}</p>
                 <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
                   <div className={styles.setupCompactSummaryItem}>
                     <span className={styles.setupCompactSummaryOrdinal}>01</span>
@@ -523,6 +513,10 @@ export function HomepageAgentControlSection({
                       </div>
                     </div>
                   </div>
+
+                  <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
+                    →
+                  </span>
 
                   <div className={styles.setupCompactSummaryItem}>
                     <span className={styles.setupCompactSummaryOrdinal}>02</span>
@@ -535,17 +529,22 @@ export function HomepageAgentControlSection({
                   </div>
 
                   {nextSetupCommand ? (
-                    <div
-                      className={`${styles.setupCompactSummaryItem} ${styles.setupCompactSummaryItemAccent}`}
-                    >
-                      <span className={styles.setupCompactSummaryOrdinal}>03</span>
-                      <div className={styles.setupCompactSummaryContent}>
-                        <span className={styles.setupDigestKey}>{copy.runCommandLabel}</span>
-                        <div className={styles.setupCompactSummaryValueRow}>
-                          <strong>{nextSetupCommand.title}</strong>
+                    <>
+                      <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
+                        →
+                      </span>
+                      <div
+                        className={`${styles.setupCompactSummaryItem} ${styles.setupCompactSummaryItemAccent}`}
+                      >
+                        <span className={styles.setupCompactSummaryOrdinal}>03</span>
+                        <div className={styles.setupCompactSummaryContent}>
+                          <span className={styles.setupDigestKey}>{copy.runCommandLabel}</span>
+                          <div className={styles.setupCompactSummaryValueRow}>
+                            <strong>{nextSetupCommand.title}</strong>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </>
                   ) : null}
                 </div>
               </div>
@@ -638,13 +637,15 @@ export function HomepageAgentControlSection({
               {nextSetupCommand ? (
                 <div className={styles.setupCommandInline}>
                   <div className={styles.setupCommandInlineHead}>
-                    <div className={styles.setupCommandInlineCopy}>
-                      <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
-                      <strong>{`03. ${nextSetupCommand.title}`}</strong>
+                    <div className={styles.copyTitleGroup}>
+                      <span className={styles.commandStep}>03</span>
+                      <div className={styles.setupCommandInlineCopy}>
+                        <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
+                        <strong>{nextSetupCommand.title}</strong>
+                      </div>
                     </div>
                     <div className={styles.setupCommandInlineMeta}>
                       <span className={styles.setupCommandInlinePath}>{selectedSetupPath}</span>
-                      <span className={styles.nextCommandOutput}>{setupOutputLabel}</span>
                     </div>
                   </div>
 
