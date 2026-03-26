@@ -63,7 +63,9 @@ function getOptionalRuntimeString(
   entry: Record<string, unknown>,
   key: string,
 ): string | undefined {
-  return typeof entry[key] === "string" ? entry[key] : undefined;
+  return typeof entry[key] === "string" && entry[key].trim().length > 0
+    ? entry[key]
+    : undefined;
 }
 
 function hasNonEmptyRuntimeString(

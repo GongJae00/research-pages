@@ -572,6 +572,26 @@ function getAffiliationStats(items: AffiliationTimelineEntry[], locale: Locale) 
   ];
 }
 
+function prioritizeAffiliation(
+  items: AffiliationTimelineEntry[],
+  prioritizedId: string | null,
+) {
+  if (!prioritizedId) {
+    return items;
+  }
+
+  const prioritizedIndex = items.findIndex((item) => item.id === prioritizedId);
+  if (prioritizedIndex <= 0) {
+    return items;
+  }
+
+  return [
+    items[prioritizedIndex],
+    ...items.slice(0, prioritizedIndex),
+    ...items.slice(prioritizedIndex + 1),
+  ];
+}
+
 export function AffiliationWorkspace({
   locale,
   affiliations,
@@ -586,8 +606,12 @@ export function AffiliationWorkspace({
   const [draftAffiliations, setDraftAffiliations] =
     useState<AffiliationTimelineEntry[]>(affiliations);
   const [isEditing, setIsEditing] = useState(false);
+  const [focusedAffiliationId, setFocusedAffiliationId] = useState<string | null>(null);
   const orderedResolvedAffiliations = sortAffiliations(resolvedAffiliations);
-  const orderedDraftAffiliations = sortAffiliations(draftAffiliations);
+  const orderedDraftAffiliations = prioritizeAffiliation(
+    sortAffiliations(draftAffiliations),
+    focusedAffiliationId,
+  );
   const affiliationOverview = getAffiliationOverview(orderedResolvedAffiliations, locale);
   const affiliationStats = getAffiliationStats(orderedResolvedAffiliations, locale);
   const {
@@ -619,6 +643,7 @@ export function AffiliationWorkspace({
   useEffect(() => {
     if (!isEditing) {
       setDraftAffiliations(resolvedAffiliations);
+      setFocusedAffiliationId(null);
     }
   }, [isEditing, resolvedAffiliations]);
 
@@ -668,33 +693,26 @@ export function AffiliationWorkspace({
 
   const handleOpenEdit = () => {
     setDraftAffiliations(resolvedAffiliations);
+    setFocusedAffiliationId(null);
     setIsEditing(true);
   };
 
   const handleEditAffiliation = (id: string) => {
-    const nextDraft = sortAffiliations(resolvedAffiliations);
-    const targetIndex = nextDraft.findIndex((item) => item.id === id);
-    if (targetIndex <= 0) {
-      setDraftAffiliations(nextDraft);
-      setIsEditing(true);
-      return;
-    }
-
-    setDraftAffiliations([
-      nextDraft[targetIndex],
-      ...nextDraft.slice(0, targetIndex),
-      ...nextDraft.slice(targetIndex + 1),
-    ]);
+    setDraftAffiliations(resolvedAffiliations);
+    setFocusedAffiliationId(id);
     setIsEditing(true);
   };
 
   const handleCancelEdit = () => {
     setDraftAffiliations(resolvedAffiliations);
+    setFocusedAffiliationId(null);
     setIsEditing(false);
   };
 
   const handleAddAffiliation = () => {
-    setDraftAffiliations((current) => [...current, createEmptyAffiliation(currentAccount?.id ?? null)]);
+    const nextAffiliation = createEmptyAffiliation(currentAccount?.id ?? null);
+    setDraftAffiliations((current) => [...current, nextAffiliation]);
+    setFocusedAffiliationId(nextAffiliation.id);
   };
 
   const handleUpdateAffiliation = (
@@ -708,6 +726,7 @@ export function AffiliationWorkspace({
 
   const handleRemoveAffiliation = (id: string) => {
     setDraftAffiliations((current) => current.filter((item) => item.id !== id));
+    setFocusedAffiliationId((current) => (current === id ? null : current));
   };
 
   const handleSaveAffiliations = async () => {
@@ -729,6 +748,7 @@ export function AffiliationWorkspace({
       );
       setResolvedAffiliations(persistedAffiliations);
       setDraftAffiliations(persistedAffiliations);
+      setFocusedAffiliationId(null);
       setIsEditing(false);
     } catch {
       // Keep the editor open so the user can retry.
