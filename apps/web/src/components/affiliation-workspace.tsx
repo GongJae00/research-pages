@@ -1292,6 +1292,10 @@ export function AffiliationWorkspace({
           </dd>
         </div>
         <div className="field-row">
+          <dt>{getTimelineSnapshotLabel(locale)}</dt>
+          <dd>{getAffiliationScanSummary(affiliation, locale)}</dd>
+        </div>
+        <div className="field-row">
           <dt>{getNextUpdateLabel(locale)}</dt>
           <dd>{getPrimaryNextActionSummary(affiliation, locale)}</dd>
         </div>

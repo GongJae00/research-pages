@@ -505,42 +505,6 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupTitleRow}>
                   <h4>{copy.setupBuilderTitle}</h4>
                 </div>
-                <div className={styles.setupHeaderFlow} aria-label={setupFlowLabel}>
-                  <div className={styles.setupHeaderFlowChip}>
-                    <span className={styles.setupHeaderFlowStep}>01</span>
-                    <div className={styles.setupFlowChipCopy}>
-                      <span className={styles.setupFlowMeta}>{copy.selectedCli}</span>
-                      <strong>{selectedProvider?.label ?? "-"}</strong>
-                    </div>
-                  </div>
-
-                  <span className={styles.setupHeaderFlowArrow} aria-hidden="true">
-                    →
-                  </span>
-
-                  <div className={styles.setupHeaderFlowChip}>
-                    <span className={styles.setupHeaderFlowStep}>02</span>
-                    <div className={styles.setupFlowChipCopy}>
-                      <span className={styles.setupFlowMeta}>{copy.selectedTeamLabel}</span>
-                      <strong>{selectedTeam?.name ?? "-"}</strong>
-                    </div>
-                  </div>
-
-                  {nextSetupCommand ? (
-                    <>
-                      <span className={styles.setupHeaderFlowArrow} aria-hidden="true">
-                        →
-                      </span>
-                      <div className={`${styles.setupHeaderFlowChip} ${styles.setupHeaderFlowChipAccent}`}>
-                        <span className={styles.setupHeaderFlowStep}>03</span>
-                        <div className={styles.setupFlowChipCopy}>
-                          <span className={styles.setupFlowMeta}>{copy.runCommandLabel}</span>
-                          <strong>{nextSetupCommand.title}</strong>
-                        </div>
-                      </div>
-                    </>
-                  ) : null}
-                </div>
                 <p className={styles.setupTitleHint}>{copy.setupSequenceIntro}</p>
               </div>
               <div className={styles.setupHeaderActions}>
