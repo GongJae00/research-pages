@@ -104,6 +104,10 @@ function getSetupOutputLabel(locale: string) {
   return "Command output";
 }
 
+function formatSetupPair(providerLabel: string | undefined, teamName: string | undefined) {
+  return `${providerLabel ?? "-"} -> ${teamName ?? "-"}`;
+}
+
 function getCopy(locale: string, opsEnabled: boolean) {
   if (isKoreanLocale(locale)) {
     return {
@@ -474,23 +478,6 @@ export function HomepageAgentControlSection({
                 <div className={styles.setupSectionHead}>
                   <div className={styles.setupSectionCopy}>
                     <span className={styles.metaLabel}>{getSetupInputLabel(locale)}</span>
-                    <div className={styles.selectionDigestRow}>
-                      <span className={styles.selectionDigestChip}>
-                        <span className={styles.setupFlowMeta}>{copy.chooseProvider}</span>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
-                        <span className={styles.selectionDigestMeta}>
-                          {copy.selectedCliStatusLabel}:{" "}
-                          {selectedProvider ? getProviderStatusLabel(locale, selectedProvider.status) : "-"}
-                        </span>
-                      </span>
-                      <span className={styles.selectionDigestChip}>
-                        <span className={styles.setupFlowMeta}>{copy.chooseTeam}</span>
-                        <strong>{selectedTeam?.name ?? "-"}</strong>
-                        <span className={styles.selectionDigestMeta}>
-                          {copy.selectedLaneLabel}: {selectedTeam?.lane ?? "-"}
-                        </span>
-                      </span>
-                    </div>
                   </div>
                 </div>
                 <div className={styles.setupPickerGrid}>
@@ -560,16 +547,9 @@ export function HomepageAgentControlSection({
                       </div>
                       <strong>{nextSetupCommand.title}</strong>
                       <span className={styles.inlineMeta}>{copy.activeSetup}</span>
-                      <div className={styles.setupMetaChipRow}>
-                        <span className={styles.setupMetaChip}>
-                          <span className={styles.setupFlowMeta}>{copy.chooseProvider}</span>
-                          <strong>{selectedProvider?.label ?? "-"}</strong>
-                        </span>
-                        <span className={styles.setupMetaChip}>
-                          <span className={styles.setupFlowMeta}>{copy.chooseTeam}</span>
-                          <strong>{selectedTeam?.name ?? "-"}</strong>
-                        </span>
-                      </div>
+                      <span className={styles.nextCommandContext}>
+                        {formatSetupPair(selectedProvider?.label, selectedTeam?.name)}
+                      </span>
                     </div>
                     <span className={styles.inlineMeta}>{setupOutputLabel}</span>
                   </div>
