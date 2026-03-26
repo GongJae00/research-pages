@@ -43,12 +43,34 @@ const shellNavLabelStyle = {
   minWidth: 0,
 } as const;
 
+const shellNavTitleRowStyle = {
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "center",
+  gap: "6px",
+  minWidth: 0,
+} as const;
+
 const shellNavHintStyle = {
   fontSize: "11px",
   fontWeight: 700,
   letterSpacing: "0.01em",
   lineHeight: 1.2,
   overflowWrap: "anywhere",
+} as const;
+
+const shellNavScopeBadgeStyle = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  minHeight: "18px",
+  padding: "0 6px",
+  borderRadius: "999px",
+  fontSize: "10px",
+  fontWeight: 800,
+  letterSpacing: "0.08em",
+  lineHeight: 1,
+  textTransform: "uppercase",
 } as const;
 
 function getOpsNavigationLabel(locale: string): string {
@@ -80,20 +102,20 @@ function getNavigationLabel(
 }
 
 function getShellNavigationHint(
+  href: string,
+) {
+  return href;
+}
+
+function getShellNavigationScopeLabel(
   key: (typeof shellNavItems)[number]["key"],
   locale: string,
-  href: string,
-): string {
-  const scopeLabel =
-    key === "home"
-      ? locale === "ko"
-        ? "\uACF5\uAC1C \uACBD\uB85C"
-        : "Public route"
-      : locale === "ko"
-        ? "\uB0B4\uBD80 \uACBD\uB85C"
-        : "Internal route";
+) {
+  if (key === "home") {
+    return locale === "ko" ? "\uACF5\uAC1C" : "Public";
+  }
 
-  return `${scopeLabel} | ${href}`;
+  return locale === "ko" ? "\uB0B4\uBD80" : "Internal";
 }
 
 export function Sidebar({ locale, dict }: SidebarProps) {
@@ -175,13 +197,26 @@ export function Sidebar({ locale, dict }: SidebarProps) {
               item.key === "home"
                 ? getHomepageNavigationLabel(locale)
                 : getNavigationLabel(item.key, locale, dict);
-            const hint = getShellNavigationHint(item.key, locale, href);
+            const hint = getShellNavigationHint(href);
+            const scopeLabel = getShellNavigationScopeLabel(item.key, locale);
 
             return (
               <Link key={item.key} href={href} className={`sidebar-link${active ? " sidebar-link-active" : ""}`}>
                 <Icon size={18} />
                 <span style={shellNavLabelStyle}>
-                  <span>{label}</span>
+                  <span style={shellNavTitleRowStyle}>
+                    <span>{label}</span>
+                    <span
+                      style={{
+                        ...shellNavScopeBadgeStyle,
+                        border: active ? "1px solid rgba(255, 255, 255, 0.32)" : "1px solid rgba(15, 23, 42, 0.12)",
+                        background: active ? "rgba(255, 255, 255, 0.18)" : "rgba(15, 23, 42, 0.06)",
+                        color: active ? "rgba(255, 255, 255, 0.96)" : "#334155",
+                      }}
+                    >
+                      {scopeLabel}
+                    </span>
+                  </span>
                   <span
                     style={{
                       ...shellNavHintStyle,

@@ -1432,16 +1432,9 @@ export function AffiliationWorkspace({
               <strong>{getEditingNowLabel(locale)}</strong>
             </p>
           ) : null}
+          <p className="card-support-text">{getAffiliationOnePassSummary(affiliation, locale)}</p>
           <p className="card-support-text">
-            {[
-              affiliation.roleTitle || affiliation.institutionName || text.institution,
-              affiliation.startDate ? getTimelineSummary(affiliation, locale) : text.startDate,
-              affiliation.active
-                ? locale === "ko"
-                  ? "?꾩옱 吏꾪뻾 以?"
-                  : "Current role"
-                : text.appointmentLabels[affiliation.appointmentStatus],
-            ].join(" / ")}
+            {joinAffiliationSummary(affiliation) || text.institution}
           </p>
           <dl className="field-list">
             <div className="field-row">
