@@ -971,11 +971,15 @@ function getPriorityEntryLabel(
   locale: Locale,
   section: AffiliationSectionKey = "current",
 ) {
-  if (section === "queued") {
-    return locale === "ko" ? "\ub2e4\uc74c \ud655\uc778 \ud56d\ubaa9" : "Next follow-up";
+  if (section === "archived") {
+    return locale === "ko" ? "\uba3c\uc800 \ub2e4\uc2dc \ubcf4\uae30" : "Recheck first";
   }
 
-  return locale === "ko" ? "\uc6b0\uc120 \ud655\uc778 \ud56d\ubaa9" : "Priority entry";
+  if (section === "queued") {
+    return locale === "ko" ? "\ub2e4\uc74c\uc73c\ub85c \uc5f4\uae30" : "Open next";
+  }
+
+  return locale === "ko" ? "\uba3c\uc800 \uc5f4\uae30" : "Open first";
 }
 
 function getAffiliationDisplayLabel(
@@ -1000,6 +1004,39 @@ function getEditableAffiliationHeading(
   }
 
   return locale === "ko" ? `${text.item} ${index + 1}` : `${text.item} ${index + 1}`;
+}
+
+function getPriorityEntrySummary(
+  section: AffiliationSectionKey,
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+  text: (typeof copy)[Locale],
+) {
+  const entryLabel = getAffiliationDisplayLabel(entry, text);
+  const institutionLabel = joinAffiliationSummary(entry) || text.institution;
+  const nextAction = getPrimaryNextActionSummary(entry, locale);
+
+  if (locale === "ko") {
+    if (section === "queued") {
+      return `${entryLabel} / ${institutionLabel}. \ub2e4\uc74c \uc0c1\ud0dc \uacb0\uc815\uc774 \ud544\uc694\ud55c \ud56d\ubaa9\uc785\ub2c8\ub2e4. ${nextAction}`;
+    }
+
+    if (section === "archived") {
+      return `${entryLabel} / ${institutionLabel}. \ubcf4\uad00 \uc774\ub825 \uc911 \uba3c\uc800 \ub2e4\uc2dc \ud655\uc778\ud560 \ud56d\ubaa9\uc785\ub2c8\ub2e4. ${nextAction}`;
+    }
+
+    return `${entryLabel} / ${institutionLabel}. \ud604\uc7ac \uc18c\uc18d \uc911 \uba3c\uc800 \uc5f4\uc5b4 \ubd10\uc57c \ud560 \ud56d\ubaa9\uc785\ub2c8\ub2e4. ${nextAction}`;
+  }
+
+  if (section === "queued") {
+    return `${entryLabel} / ${institutionLabel}. Open this next to resolve the role's next status. ${nextAction}`;
+  }
+
+  if (section === "archived") {
+    return `${entryLabel} / ${institutionLabel}. Recheck this archived timeline first when you need a correction. ${nextAction}`;
+  }
+
+  return `${entryLabel} / ${institutionLabel}. Open this first when the current timeline changes. ${nextAction}`;
 }
 
 type AffiliationSectionKey = "current" | "queued" | "archived";
@@ -1406,6 +1443,9 @@ export function AffiliationWorkspace({
 
     return (
       <>
+        <p className="card-support-text">
+          {getPriorityEntrySummary(section, affiliation, locale, text)}
+        </p>
         <dl className="field-list">
           <div className="field-row">
             <dt>{getPriorityEntryLabel(locale, section)}</dt>
