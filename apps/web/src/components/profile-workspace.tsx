@@ -1094,15 +1094,24 @@ export function ProfileWorkspace({
     [savedKeywordList],
   );
   const heroLinks = useMemo(() => savedLinks.slice(0, 3), [savedLinks]);
+  const primarySavedEmail = savedEmails[0] ?? null;
   const primarySavedLink = savedLinks[0] ?? null;
+  const primarySavedLinkDisplayUrl = primarySavedLink
+    ? getProfileLinkDisplayUrl(primarySavedLink.url)
+    : "";
   const coreContactSummary = useMemo(() => {
-    const parts = [
-      savedEmails.length > 0 ? savedEmailCountLabel : undefined,
-      savedLinks.length > 0 ? savedLinkCountLabel : undefined,
-    ];
+    const parts = [primarySavedEmail ?? undefined, primarySavedLinkDisplayUrl || undefined];
 
     return joinUniqueTextParts(parts) || text.emptyValue;
-  }, [savedEmailCountLabel, savedEmails.length, savedLinkCountLabel, savedLinks.length, text.emptyValue]);
+  }, [primarySavedEmail, primarySavedLinkDisplayUrl, text.emptyValue]);
+  const coreContactHighlights = useMemo(
+    () =>
+      [
+        savedEmails.length > 0 ? savedEmailCountLabel : undefined,
+        savedLinks.length > 0 ? savedLinkCountLabel : undefined,
+      ].filter(isDefined),
+    [savedEmailCountLabel, savedEmails.length, savedLinkCountLabel, savedLinks.length],
+  );
   const coreIdentifierSummary = useMemo(() => {
     const parts = [
       savedProfile.nationalResearcherNumber ? text.nationalId : undefined,
@@ -2236,50 +2245,46 @@ export function ProfileWorkspace({
                   <dd>
                     {savedEmails.length > 0 || savedLinks.length > 0 ? (
                       <div className="profile-career-status-list">
-                        <div className="profile-career-status-row">
-                          <div className="profile-career-status-main">
-                            <div className="profile-inline-list profile-inline-list-muted">
-                              <strong>{text.emailsLabel}</strong>
-                              <span className="pill pill-gray">{savedEmailCountLabel}</span>
-                            </div>
-                            {savedEmails.length > 0 ? (
-                              <a href={`mailto:${savedEmails[0]}`} className="profile-inline-link">
-                                {savedEmails[0]}
+                        {coreContactHighlights.length > 0 ? (
+                          <div className="profile-inline-list profile-inline-list-muted">
+                            {coreContactHighlights.map((item) => (
+                              <span className="pill pill-gray" key={item}>
+                                {item}
+                              </span>
+                            ))}
+                          </div>
+                        ) : null}
+                        {primarySavedEmail ? (
+                          <div className="profile-career-status-row">
+                            <div className="profile-career-status-main">
+                              <strong>{text.email}</strong>
+                              <a href={`mailto:${primarySavedEmail}`} className="profile-inline-link">
+                                {primarySavedEmail}
                               </a>
-                            ) : (
-                              <span>{text.emptyValue}</span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="profile-career-status-row">
-                          <div className="profile-career-status-main">
-                            <div className="profile-inline-list profile-inline-list-muted">
-                              <strong>{text.linksLabel}</strong>
-                              <span className="pill pill-gray">{savedLinkCountLabel}</span>
                             </div>
-                            {primarySavedLink ? (
-                              <div className="profile-link-stack">
-                                <a
-                                  href={primarySavedLink.url}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="profile-link-row"
-                                >
-                                  <strong>
-                                    {getProfileLinkLabel(locale, {
-                                      kind: primarySavedLink.kind,
-                                      label: primarySavedLink.label ?? "",
-                                    })}
-                                  </strong>
-                                  <span>{getProfileLinkDisplayUrl(primarySavedLink.url)}</span>
-                                  <ExternalLink size={13} />
-                                </a>
-                              </div>
-                            ) : (
-                              <span>{text.emptyValue}</span>
-                            )}
                           </div>
-                        </div>
+                        ) : null}
+                        {primarySavedLink ? (
+                          <div className="profile-career-status-row">
+                            <div className="profile-career-status-main">
+                              <strong>
+                                {getProfileLinkLabel(locale, {
+                                  kind: primarySavedLink.kind,
+                                  label: primarySavedLink.label ?? "",
+                                })}
+                              </strong>
+                              <a
+                                href={primarySavedLink.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="profile-inline-link"
+                              >
+                                <span>{primarySavedLinkDisplayUrl}</span>
+                                <ExternalLink size={13} />
+                              </a>
+                            </div>
+                          </div>
+                        ) : null}
                       </div>
                     ) : (
                       text.emptyValue
