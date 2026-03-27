@@ -457,28 +457,21 @@ export function HomepageAgentControlSection({
               </div>
             </div>
 
-            <div className={styles.nextCommandContext} aria-label={copy.activeSetup}>
-              <div className={styles.nextCommandContextStep}>
-                <span className={styles.nextCommandContextLabel}>{copy.selectedCli}</span>
+            <div className={styles.nextCommandPath} aria-label={copy.activeSetup}>
+              <div className={`${styles.nextCommandPathSegment} ${styles.nextCommandPathSegmentActive}`}>
+                <span className={styles.nextCommandPathMeta}>{copy.selectedCli}</span>
                 <div className={styles.nextCommandLabelRow}>
                   <strong>{selectedProvider?.label ?? "-"}</strong>
-                  {selectedProvider ? (
-                    <>
-                      <span className={styles.nextCommandSelectionPill}>{selectedProvider.cliName}</span>
-                      <span className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}>
-                        {selectedProviderStatusLabel}
-                      </span>
-                    </>
-                  ) : null}
+                  {selectedProvider ? <span className={styles.nextCommandSelectionPill}>{selectedProvider.cliName}</span> : null}
                 </div>
               </div>
 
-              <span className={styles.nextCommandContextArrow} aria-hidden="true">
+              <span className={styles.nextCommandPathArrow} aria-hidden="true">
                 &rarr;
               </span>
 
-              <div className={styles.nextCommandContextStep}>
-                <span className={styles.nextCommandContextLabel}>{copy.selectedTeamLabel}</span>
+              <div className={styles.nextCommandPathSegment}>
+                <span className={styles.nextCommandPathMeta}>{copy.selectedTeamLabel}</span>
                 <div className={styles.nextCommandLabelRow}>
                   <strong>{selectedTeam?.name ?? "-"}</strong>
                   {selectedTeam ? <span className={styles.nextCommandSelectionPill}>{selectedTeam.lane}</span> : null}
