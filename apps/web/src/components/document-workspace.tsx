@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import {
   documentCategories,
   documentListSchema,
@@ -46,6 +47,7 @@ import { ensureSeededDocumentFiles } from "@/lib/document-seeds";
 import { useAuth } from "@/components/auth-provider";
 import { CompactDocumentRow } from "@/components/compact-document-row";
 import { DocumentIntakePanel } from "@/components/document-intake-panel";
+import { RBotDocumentFinder } from "@/components/r-bot-document-finder";
 import type { Locale } from "@/lib/i18n";
 import { buildScopedStorageKey } from "@/lib/mock-auth-store";
 import {
@@ -334,9 +336,12 @@ export function DocumentWorkspace({ locale, initialDocuments }: DocumentWorkspac
   const { currentAccount, backendStatus } = useAuth();
   const ownerAccountId = currentAccount?.id ?? initialDocuments[0]?.owner.id ?? "user-local";
   const owner: OwnerScope = { type: "user", id: ownerAccountId };
+  const searchParams = useSearchParams();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const replaceInputRef = useRef<HTMLInputElement | null>(null);
   const queueRef = useRef<HTMLDivElement | null>(null);
+  const handledRBotOpenKeyRef = useRef<string | null>(null);
+  const openPreviewRef = useRef<((document: DocumentRecord) => Promise<void>) | null>(null);
 
   const [documents, setDocuments] = useState<DocumentRecord[]>(sortDocuments(initialDocuments));
   const [drafts, setDrafts] = useState<UploadDraft[]>([]);
@@ -671,6 +676,30 @@ export function DocumentWorkspace({ locale, initialDocuments }: DocumentWorkspac
     }
   };
 
+  openPreviewRef.current = openPreview;
+
+  useEffect(() => {
+    const requestedDocumentId = searchParams.get("rbotDocumentId");
+    const requestedNonce = searchParams.get("rbotNonce") ?? "";
+
+    if (!requestedDocumentId) {
+      return;
+    }
+
+    const requestedOpenKey = `${requestedDocumentId}:${requestedNonce}`;
+    if (handledRBotOpenKeyRef.current === requestedOpenKey) {
+      return;
+    }
+
+    const target = documents.find((item) => item.id === requestedDocumentId);
+    if (!target) {
+      return;
+    }
+
+    handledRBotOpenKeyRef.current = requestedOpenKey;
+    void openPreviewRef.current?.(target);
+  }, [documents, searchParams]);
+
   const requestReplaceFile = (documentId: string) => {
     setReplaceTargetId(documentId);
     replaceInputRef.current?.click();
@@ -802,6 +831,14 @@ export function DocumentWorkspace({ locale, initialDocuments }: DocumentWorkspac
           ))}
         </div>
       </section>
+
+      <RBotDocumentFinder
+        locale={locale}
+        documents={documents}
+        onOpenDocument={(document) => {
+          void openPreview(document);
+        }}
+      />
 
       <DocumentIntakePanel
         title={text.uploadTitle}

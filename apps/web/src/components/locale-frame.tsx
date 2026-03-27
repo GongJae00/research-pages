@@ -1,14 +1,9 @@
 "use client";
 
-import Link from "next/link";
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
+
 import type { Dictionary, Locale } from "@/lib/i18n";
-import { t } from "@/lib/i18n";
-import { AuthProvider, WorkspaceAuthGate } from "./auth-provider";
-import { Header } from "./header";
-import { LanguageSwitcher } from "./language-switcher";
-import { PreviewModeBanner } from "./preview-mode-banner";
-import { Sidebar } from "./sidebar";
 
 interface LocaleFrameProps {
   children: React.ReactNode;
@@ -16,67 +11,32 @@ interface LocaleFrameProps {
   dict: Dictionary;
 }
 
+const MarketingLocaleFrame = dynamic(() =>
+  import("./locale-frame-marketing").then((module) => module.MarketingLocaleFrame),
+);
+const WorkspaceLocaleFrame = dynamic(() =>
+  import("./locale-frame-workspace").then((module) => module.WorkspaceLocaleFrame),
+);
+
 export function LocaleFrame({ children, locale, dict }: LocaleFrameProps) {
   const pathname = usePathname();
   const isHome = pathname === `/${locale}` || pathname === `/${locale}/`;
   const isAccessPage = pathname === `/${locale}/access`;
   const isPublicResearcherPage = pathname.startsWith(`/${locale}/researcher/`);
   const isPublicLabPage = pathname.startsWith(`/${locale}/labs/`);
+  const isMarketingRoute = isHome || isPublicResearcherPage || isPublicLabPage || isAccessPage;
 
-  if (isHome || isPublicResearcherPage || isPublicLabPage || isAccessPage) {
-    const headerLinks = [
-      { href: "#overview", label: t(dict, "header.overview") },
-      { href: "#workflow", label: t(dict, "header.workflow") },
-      { href: "#modules", label: t(dict, "header.modules") },
-      { href: "#outputs", label: t(dict, "header.outputs") },
-      { href: "#security", label: t(dict, "header.security") },
-    ];
-
+  if (isMarketingRoute) {
     return (
-      <>
-        <header className="marketing-header">
-          <Link href={`/${locale}`} className="marketing-brand">
-            <span className="marketing-brand-mark">R</span>
-            <span className="marketing-brand-text">ResearchPages</span>
-          </Link>
-          {isHome ? (
-            <nav className="marketing-nav" aria-label="Primary">
-              {headerLinks.map((item) => (
-                <a key={item.href} href={item.href} className="marketing-nav-link">
-                  {item.label}
-                </a>
-              ))}
-            </nav>
-          ) : (
-            <div className="marketing-nav marketing-nav-public-spacer" aria-hidden="true" />
-          )}
-          <div className="marketing-header-right">
-            {!isAccessPage ? (
-              <Link href={`/${locale}/profile`} className="marketing-header-cta">
-                {t(dict, "common.openWorkspace")}
-              </Link>
-            ) : null}
-            <LanguageSwitcher locale={locale} />
-          </div>
-        </header>
-        {!isAccessPage ? <PreviewModeBanner locale={locale} /> : null}
-        <main>{children}</main>
-      </>
+      <MarketingLocaleFrame isAccessPage={isAccessPage} isHome={isHome} locale={locale} dict={dict}>
+        {children}
+      </MarketingLocaleFrame>
     );
   }
 
   return (
-    <AuthProvider>
-      <WorkspaceAuthGate locale={locale}>
-        <div className="app-layout">
-          <Sidebar locale={locale} dict={dict} />
-          <div className="app-main">
-            <Header locale={locale} dict={dict} />
-            <PreviewModeBanner locale={locale} />
-            <main className="app-content">{children}</main>
-          </div>
-        </div>
-      </WorkspaceAuthGate>
-    </AuthProvider>
+    <WorkspaceLocaleFrame locale={locale} dict={dict}>
+      {children}
+    </WorkspaceLocaleFrame>
   );
 }

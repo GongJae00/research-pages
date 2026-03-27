@@ -1,0 +1,185 @@
+.shell {
+  display: grid;
+  gap: 0.95rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(22, 64, 57, 0.14);
+  background:
+    radial-gradient(circle at top left, rgba(214, 237, 231, 0.85), transparent 34%),
+    linear-gradient(165deg, rgba(250, 249, 244, 0.98), rgba(240, 246, 242, 0.98));
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  align-items: start;
+}
+
+.titleBlock {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.eyebrow {
+  display: inline-flex;
+  width: fit-content;
+  padding: 0.25rem 0.54rem;
+  border-radius: 999px;
+  background: rgba(16, 78, 70, 0.1);
+  color: #104e46;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  color: #173833;
+  font-size: 1.02rem;
+}
+
+.body {
+  margin: 0;
+  color: rgba(23, 56, 51, 0.82);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(17, 57, 51, 0.08);
+  color: rgba(17, 57, 51, 0.86);
+  font-size: 0.74rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.promptRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.48rem;
+}
+
+.promptButton {
+  border: 1px solid rgba(16, 78, 70, 0.12);
+  background: rgba(255, 255, 255, 0.78);
+  border-radius: 999px;
+  padding: 0.45rem 0.72rem;
+  color: #17413b;
+  font-size: 0.83rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.form {
+  display: grid;
+  gap: 0.68rem;
+}
+
+.fieldLabel {
+  display: grid;
+  gap: 0.42rem;
+  color: #1f4b44;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.inputRow {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid rgba(17, 57, 51, 0.14);
+  border-radius: 0.95rem;
+  background: rgba(255, 255, 255, 0.86);
+  color: #163933;
+  padding: 0.78rem 0.9rem;
+  font: inherit;
+}
+
+.input:focus {
+  outline: 2px solid rgba(18, 112, 100, 0.18);
+  border-color: rgba(18, 112, 100, 0.42);
+}
+
+.submitButton {
+  border: none;
+  border-radius: 999px;
+  padding: 0.74rem 0.95rem;
+  background: linear-gradient(135deg, #113933, #1a6257);
+  color: #f4f8f4;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.hint {
+  color: rgba(17, 57, 51, 0.68);
+  font-size: 0.8rem;
+}
+
+.results {
+  display: grid;
+  gap: 0.72rem;
+}
+
+.resultHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.resultCount {
+  color: rgba(17, 57, 51, 0.72);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.reasonList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+}
+
+.reasonChip {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 0.26rem 0.5rem;
+  background: rgba(18, 85, 76, 0.08);
+  color: rgba(18, 85, 76, 0.84);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.emptyCard {
+  border-radius: 0.95rem;
+  border: 1px dashed rgba(17, 57, 51, 0.14);
+  padding: 0.95rem 1rem;
+  color: rgba(17, 57, 51, 0.78);
+  background: rgba(255, 255, 255, 0.54);
+}
+
+@media (max-width: 720px) {
+  .header,
+  .inputRow,
+  .resultHeader {
+    display: grid;
+    justify-content: start;
+  }
+
+  .submitButton {
+    width: 100%;
+  }
+}

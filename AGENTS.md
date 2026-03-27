@@ -40,14 +40,25 @@ ResearchOS is a cross-platform platform for graduate students, professors, and l
 - Every sub-agent handoff must report changed files, commands run, docs consulted, overlap risks, and unresolved assumptions.
 - Use optional skills only when the task actually matches them. Skills are specialist overlays, not a substitute for correct role ownership.
 
+## Autonomy Teams and Lanes
+
+The local autonomy daemon operates through four specialized teams, each owning a specific "lane" of continuous improvement:
+
+- **Shell and Experience Team** (`surface QA lane`): Led by `Shell Builder`. Owns the landing page, global navigation, and internal ops control room. Focused on UI density, clarity, and team-flow readability.
+- **Workflow Systems Team** (`workflow polish lane`): Led by `Research Flow Lead`. Owns profile, affiliations, funding, and document slices. Focused on tightening real researcher workflows.
+- **Reliability Desk** (`collaboration and reliability lane`): Led by `Release Guard`. Owns API routes, runtime glue, and internal documentation. Focused on route health and CLI bridge stability.
+- **Executive Desk** (`docs drift lane`): Led by `Operator Liaison`. Owns operational guidance and agent-ops model documentation. Focused on keeping the control plane and docs aligned.
+
 ## Default sub-agent roster
 
-- `docs-scope-agent`: owns `README.md` and `docs/**`; handles product wording, contributor guidance, rollout notes, and architecture or roadmap documentation.
-- `web-shell-agent`: owns route shells, navigation, locale framing, marketing home composition, and global styling under `apps/web/src/app/**`, `apps/web/src/components/{header,sidebar,language-switcher,locale-frame,preview-mode-banner}.tsx`, and `apps/web/src/app/globals.css`.
-- `researcher-workspace-agent`: owns the private profile, affiliations, funding, and timetable slices under `apps/web/src/app/[locale]/{profile,affiliations,funding,timetable}` plus the matching workspace components and stores.
-- `document-workflow-agent`: owns the document bank route, document workspace components, document stores, taxonomy, evidence linking, and related file-handling flows.
-- `lab-collaboration-agent`: owns lab workspace flows, public researcher or lab pages, collaboration repositories, activity logs, publications, and shared auth-facing collaboration behavior.
-- `platform-contracts-agent`: owns `packages/types`, `supabase/schema.sql`, `apps/web/src/lib/supabase/**`, `apps/web/src/app/api/**`, preview access plumbing, runtime config, and deployment-facing environment handling.
+Implementation work is mapped to these functional roles:
+
+- `docs-scope-agent`: Primary owner for `README.md` and `docs/**`. Used by **Executive Desk**.
+- `web-shell-agent`: Primary owner for route shells, navigation, and global styling. Used by **Shell and Experience Team**.
+- `researcher-workspace-agent`: Primary owner for profile, affiliations, funding, and timetable slices. Used by **Workflow Systems Team**.
+- `document-workflow-agent`: Primary owner for document bank and evidence linking. Used by **Workflow Systems Team**.
+- `lab-collaboration-agent`: Primary owner for lab workspace and public pages. Used by **Workflow Systems Team**.
+- `platform-contracts-agent`: Primary owner for shared contracts, Supabase wiring, and API boundaries. Used by **Reliability Desk**.
 
 ## Escalate instead of editing
 

@@ -32,36 +32,30 @@ Agents may not:
 
 ## Lane-based planning
 
-Continuous work should run through lanes, not through one giant backlog.
+Continuous work runs through four specialized lanes, each owned by a specific team and lead:
 
-Recommended lanes:
+- **surface QA lane**: Managed by **Shell and Experience Team** (Lead: `Shell Builder`). Bounded to landing page, navigation shells, and ops dashboard clarity.
+- **workflow polish lane**: Managed by **Workflow Systems Team** (Lead: `Research Flow Lead`). Bounded to profile, affiliations, funding, and document workflows.
+- **collaboration and reliability lane**: Managed by **Reliability Desk** (Lead: `Release Guard`). Bounded to route health, CLI bridge stability, and runtime safety.
+- **docs drift lane**: Managed by **Executive Desk** (Lead: `Operator Liaison`). Bounded to operator guidance, repo playbooks, and agent-ops model documentation.
 
-- surface QA for visible shell, landing page, and responsiveness issues
-- workflow polish for one researcher workflow at a time
-- collaboration and reliability for auth, preview, boundary, and CI issues
-- docs drift for operational docs, playbooks, and rollout guidance
-
-Each lane must define:
+Each lane cycle must define:
 
 - one workflow target
 - one owning role
 - one validation target
 - one stop condition
 
-When a lane completes, the team chooses the next lane. If the operator is absent, the team should keep selecting the next smallest safe lane rather than expanding the current one.
-
 ## Role model
 
-The default roles in this repo remain the source of truth:
+The team operates through functional sub-agents assigned to specific file-tree boundaries. Ownership is serialized to prevent overlapping edits:
 
-- `docs-scope-agent` for operating guidance, rollout notes, and product wording
-- `web-shell-agent` for route shell, navigation, locale framing, and global styling
-- `researcher-workspace-agent` for private profile, affiliations, funding, and timetable work
-- `document-workflow-agent` for document bank and evidence-linked workflow work
-- `lab-collaboration-agent` for collaboration, public surfaces, and activity history
-- `platform-contracts-agent` for shared contracts, Supabase wiring, API routes, preview access, and env/runtime boundaries
-
-Role expansion should happen only when the repo adds a clear need and ownership boundary for a new role. Until then, the team should improve depth before growing breadth.
+- `docs-scope-agent`: Owns `README.md` and `docs/**`.
+- `web-shell-agent`: Owns route shells, navigation, global styling, and the internal ops board.
+- `researcher-workspace-agent`: Owns profile, affiliations, funding, and timetable slices.
+- `document-workflow-agent`: Owns document bank and evidence-linked flows.
+- `lab-collaboration-agent`: Owns lab workspace and public researcher surfaces.
+- `platform-contracts-agent`: Owns shared contracts, API routes, and environment glue.
 
 ## Self-scheduling rules
 

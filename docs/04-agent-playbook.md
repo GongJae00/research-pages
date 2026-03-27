@@ -13,6 +13,15 @@ For operator-facing launch steps and copy-paste prompts, use:
 - `docs/11-agent-capability-matrix.md`
 - `docs/12-continuous-improvement-loop.md`
 
+## Autonomy Teams and Lanes
+
+The local autonomy loop rotates through four specialized teams, each managing a specific "lane" of continuous improvement:
+
+- **Shell and Experience Team** (`surface QA lane`): Led by `Shell Builder`. Owns the landing page, global navigation, and internal ops board.
+- **Workflow Systems Team** (`workflow polish lane`): Led by `Research Flow Lead`. Owns profile, affiliations, funding, and document slices.
+- **Reliability Desk** (`collaboration and reliability lane`): Led by `Release Guard`. Owns API routes, runtime glue, and internal documentation.
+- **Executive Desk** (`docs drift lane`): Led by `Operator Liaison`. Owns operator guidance, repo playbooks, and agent-ops model documentation.
+
 ## Baseline reading order
 
 Every implementation agent should read:
@@ -20,7 +29,8 @@ Every implementation agent should read:
 1. `AGENTS.md`
 2. `docs/00-product-vision.md`
 3. `docs/02-architecture.md`
-4. `docs/03-roadmap.md`
+4. `docs/13-agent-operations-model.md`
+5. `docs/15-local-autonomy-daemon.md`
 
 Then read the role-specific docs before editing:
 
@@ -33,8 +43,11 @@ Then read the role-specific docs before editing:
 
 ## Default sub-agent roster
 
+Implementation work is mapped to these functional roles, which are assigned to workers by the active Autonomy Team.
+
 ### `docs-scope-agent`
 
+Used by: **Executive Desk**
 Owned paths:
 
 - `README.md`
@@ -54,6 +67,7 @@ Do not use for:
 
 ### `web-shell-agent`
 
+Used by: **Shell and Experience Team**
 Owned paths:
 
 - `apps/web/src/app/layout.tsx`
@@ -65,7 +79,7 @@ Owned paths:
 - `apps/web/src/components/language-switcher.tsx`
 - `apps/web/src/components/locale-frame.tsx`
 - `apps/web/src/components/preview-mode-banner.tsx`
-- `apps/web/messages/**` when introduced
+- `apps/web/src/components/agent-operations-control-room.tsx`
 
 Use for:
 
@@ -74,6 +88,7 @@ Use for:
 - locale switching
 - marketing home structure
 - global styling
+- internal ops board clarity
 
 Do not use for:
 
@@ -82,6 +97,7 @@ Do not use for:
 
 ### `researcher-workspace-agent`
 
+Used by: **Workflow Systems Team**
 Owned paths:
 
 - `apps/web/src/app/[locale]/profile/**`
@@ -112,6 +128,7 @@ Do not use for:
 
 ### `document-workflow-agent`
 
+Used by: **Workflow Systems Team**
 Owned paths:
 
 - `apps/web/src/app/[locale]/documents/**`
@@ -137,6 +154,7 @@ Do not use for:
 
 ### `lab-collaboration-agent`
 
+Used by: **Workflow Systems Team**
 Owned paths:
 
 - `apps/web/src/app/[locale]/dashboard/**`
@@ -170,6 +188,7 @@ Do not use for:
 
 ### `platform-contracts-agent`
 
+Used by: **Reliability Desk**
 Owned paths:
 
 - `packages/types/src/**`

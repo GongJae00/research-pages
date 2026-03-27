@@ -541,25 +541,39 @@ function sanitizeProviderConnectionUpdates(runtimeState: AgentOpsRuntimeState) {
 function sanitizeRuntimeTeamUpdates(teams: TeamUnit[], runtimeState: AgentOpsRuntimeState) {
   const knownTeamIds = new Set(teams.map((team) => team.id));
 
-  const teamUpdates = runtimeState.teamUpdates.flatMap((entry) => {
-    if (!isRuntimeMergeEntry(entry) || typeof entry.teamId !== "string") {
-      return [];
-    }
+  const teamUpdates = Array.from(
+    runtimeState.teamUpdates.reduce((updates, entry) => {
+      if (!isRuntimeMergeEntry(entry) || typeof entry.teamId !== "string") {
+        return updates;
+      }
 
-    if (!knownTeamIds.has(entry.teamId)) {
-      return [];
-    }
+      if (!knownTeamIds.has(entry.teamId)) {
+        return updates;
+      }
 
-    return [
-      {
-        ...entry,
-        state: entry.state && validTeamStates.has(entry.state) ? entry.state : undefined,
-        objective: getOptionalRuntimeString(entry, "objective"),
-        currentDeliverable: getOptionalRuntimeString(entry, "currentDeliverable"),
-        nextHandoff: getOptionalRuntimeString(entry, "nextHandoff"),
-      },
-    ];
-  });
+      const previous = updates.get(entry.teamId);
+
+      updates.set(entry.teamId, {
+        teamId: entry.teamId,
+        state:
+          entry.state && validTeamStates.has(entry.state)
+            ? entry.state
+            : previous?.state,
+        objective: getOptionalRuntimeString(entry, "objective") ?? previous?.objective,
+        currentDeliverable:
+          getOptionalRuntimeString(entry, "currentDeliverable") ?? previous?.currentDeliverable,
+        nextHandoff: getOptionalRuntimeString(entry, "nextHandoff") ?? previous?.nextHandoff,
+      });
+
+      return updates;
+    }, new Map<string, {
+      teamId: string;
+      state?: TeamUnit["state"];
+      objective?: string;
+      currentDeliverable?: string;
+      nextHandoff?: string;
+    }>()).values(),
+  );
 
   const memberDirectory = new Map(
     teams.map((team) => [team.id, new Set(team.members.map((member) => member.name))]),
