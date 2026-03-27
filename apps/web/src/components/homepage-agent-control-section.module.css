@@ -280,6 +280,15 @@
   gap: 0.08rem;
 }
 
+.surfaceEntryHeadMeta {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.06rem;
+  min-width: 0;
+}
+
 .surfaceEntryKindBadge {
   display: inline-flex;
   align-items: center;

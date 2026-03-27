@@ -491,14 +491,16 @@ export function HomepageAgentControlSection({
                     <Globe2 size={12} />
                     {surfaceEntryCopy.publicLabel}
                   </span>
+                  <div className={styles.surfaceEntryHeadMeta}>
+                    <span className={`${styles.surfaceEntryState} ${styles.surfaceEntryStatePublic}`}>
+                      {surfaceEntryCopy.publicStatus}
+                    </span>
+                  </div>
                 </div>
                 <div className={styles.surfaceEntryRouteRow}>
                   <span className={styles.surfaceEntryRouteBadge}>{surfaceEntryCopy.publicRoute}</span>
                   <span className={styles.surfaceEntryRoute}>{`/${locale}`}</span>
                 </div>
-                <span className={`${styles.surfaceEntryState} ${styles.surfaceEntryStatePublic}`}>
-                  {surfaceEntryCopy.publicStatus}
-                </span>
                 <div className={styles.surfaceEntryBody}>
                   <strong>{surfaceEntryCopy.publicTitle}</strong>
                   <span className={styles.surfaceEntryHint}>{surfaceEntryCopy.publicHint}</span>
@@ -511,12 +513,17 @@ export function HomepageAgentControlSection({
                     <LayoutGrid size={12} />
                     {surfaceEntryCopy.internalLabel}
                   </span>
-                  {opsEnabled ? (
-                    <Link href={`/${locale}/ops`} className={styles.surfaceEntryLink}>
-                      {copy.openOps}
-                      <ArrowRight size={14} />
-                    </Link>
-                  ) : null}
+                  <div className={styles.surfaceEntryHeadMeta}>
+                    <span className={`${styles.surfaceEntryState} ${styles.surfaceEntryStateAccent}`}>
+                      {surfaceEntryCopy.internalState}
+                    </span>
+                    {opsEnabled ? (
+                      <Link href={`/${locale}/ops`} className={styles.surfaceEntryLink}>
+                        {copy.openOps}
+                        <ArrowRight size={14} />
+                      </Link>
+                    ) : null}
+                  </div>
                 </div>
                 <div className={styles.surfaceEntryRouteRow}>
                   <span className={`${styles.surfaceEntryRouteBadge} ${styles.surfaceEntryRouteBadgeAccent}`}>
@@ -524,9 +531,6 @@ export function HomepageAgentControlSection({
                   </span>
                   <span className={styles.surfaceEntryRoute}>{`/${locale}/ops`}</span>
                 </div>
-                <span className={`${styles.surfaceEntryState} ${styles.surfaceEntryStateAccent}`}>
-                  {surfaceEntryCopy.internalState}
-                </span>
                 <div className={styles.surfaceEntryBody}>
                   <strong>{surfaceEntryCopy.internalTitle}</strong>
                   <span className={styles.surfaceEntryHint}>{surfaceEntryCopy.internalHint}</span>
