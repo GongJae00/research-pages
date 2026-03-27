@@ -124,6 +124,37 @@ function getShellNavigationScopeLabel(
   return locale === "ko" ? "\uB0B4\uBD80" : "Internal";
 }
 
+function getShellNavigationScopeBadgeStyle(
+  key: (typeof shellNavItems)[number]["key"],
+  active: boolean,
+) {
+  if (key === "home") {
+    return active
+      ? {
+          border: "1px solid rgba(252, 231, 168, 0.34)",
+          background: "rgba(252, 231, 168, 0.16)",
+          color: "#fff2c6",
+        }
+      : {
+          border: "1px solid rgba(252, 231, 168, 0.24)",
+          background: "rgba(252, 231, 168, 0.08)",
+          color: "#f7e7b7",
+        };
+  }
+
+  return active
+    ? {
+        border: "1px solid rgba(167, 243, 208, 0.34)",
+        background: "rgba(16, 185, 129, 0.18)",
+        color: "#d1fae5",
+      }
+    : {
+        border: "1px solid rgba(167, 243, 208, 0.24)",
+        background: "rgba(16, 185, 129, 0.12)",
+        color: "#b7f0d3",
+      };
+}
+
 export function Sidebar({ locale, dict }: SidebarProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -205,6 +236,7 @@ export function Sidebar({ locale, dict }: SidebarProps) {
                 : getNavigationLabel(item.key, locale, dict);
             const hint = getShellNavigationHint(item.key, href, locale);
             const scopeLabel = getShellNavigationScopeLabel(item.key, locale);
+            const scopeBadgeStyle = getShellNavigationScopeBadgeStyle(item.key, active);
 
             return (
               <Link key={item.key} href={href} className={`sidebar-link${active ? " sidebar-link-active" : ""}`}>
@@ -215,9 +247,7 @@ export function Sidebar({ locale, dict }: SidebarProps) {
                     <span
                       style={{
                         ...shellNavScopeBadgeStyle,
-                        border: active ? "1px solid rgba(255, 255, 255, 0.32)" : "1px solid rgba(15, 23, 42, 0.12)",
-                        background: active ? "rgba(255, 255, 255, 0.18)" : "rgba(15, 23, 42, 0.06)",
-                        color: active ? "rgba(255, 255, 255, 0.96)" : "#334155",
+                        ...scopeBadgeStyle,
                       }}
                     >
                       {scopeLabel}
