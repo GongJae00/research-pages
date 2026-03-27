@@ -412,8 +412,8 @@ function getCurrentTimelineHint(
 
   if (entry.appointmentStatus === "planned" || entry.appointmentStatus === "paused") {
     return locale === "ko"
-      ? "\uc608\uc815 \ub610\ub294 \ubcf4\ub958 \uc18c\uc18d\uc740 \ub044\uace0 \ub450\uc5b4 \ub2e4\uc74c \ud655\uc778 \uc139\uc158\uc5d0 \ub0a8\uac8c \ud558\uc138\uc694."
-      : "Leave this off so planned or paused roles stay in Needs follow-up.";
+      ? "\uc608\uc815 \ub610\ub294 \ubcf4\ub958 \uc18c\uc18d\uc740 \uaebc \ub450\uc5b4 \uc0c1\ud0dc \uacb0\uc815 \ub300\uae30\uc5d0 \ub0a8\uac8c \ud558\uc138\uc694."
+      : "Leave this off so planned or paused roles stay in Needs status decision.";
   }
 
   return locale === "ko"
@@ -688,18 +688,18 @@ function getCurrentEditSectionHint(locale: Locale, count: number) {
 
 function getQueuedSectionLabel(locale: Locale, count: number) {
   return locale === "ko"
-    ? `\ub2e4\uc74c \ud655\uc778 \uc18c\uc18d ${count}\uac74`
-    : `Needs follow-up (${count})`;
+    ? `\uc0c1\ud0dc \uacb0\uc815 \ub300\uae30 ${count}\uac74`
+    : `Needs status decision (${count})`;
 }
 
 function getQueuedSectionHint(locale: Locale, count: number) {
   return locale === "ko"
     ? count > 0
-      ? "\ubcf4\ub958\ub418\uac70\ub098 \uc608\uc815\ub41c \uc18c\uc18d\uc744 \uba3c\uc800 \ubcf4\uace0 \uc7ac\uac1c, \uc720\uc9c0, \uc885\ub8cc \uc5ec\ubd80\ub97c \uc815\ud558\uc138\uc694."
-      : "\ub2e4\uc74c \uc5c5\ub370\uc774\ud2b8\uac00 \ud544\uc694\ud55c \ubcf4\ub958 \ub610\ub294 \uc608\uc815 \uc18c\uc18d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4."
+      ? "\ubcf4\ub958\ub418\uac70\ub098 \uc608\uc815\ub41c \uc18c\uc18d\uc740 \uc5ec\uae30\uc11c \uba3c\uc800 \ubcf4\uace0 \ud604\uc7ac \uc18c\uc18d\uc73c\ub85c \uc62e\uae38\uc9c0, \uadf8\ub300\ub85c \ub458\uc9c0, \uc885\ub8cc\ud560\uc9c0 \uacb0\uc815\ud558\uc138\uc694."
+      : "\uc0c1\ud0dc \uacb0\uc815\uc744 \uae30\ub2e4\ub9ac\ub294 \ubcf4\ub958 \ub610\ub294 \uc608\uc815 \uc18c\uc18d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4."
     : count > 0
-      ? "Review planned and paused roles here first so it is clear whether they should resume, stay queued, or close."
-      : "No planned or paused roles need follow-up right now.";
+      ? "Review planned and paused roles here first so it is clear whether each one should become current, stay queued, or close."
+      : "No planned or paused roles are waiting on a status decision right now.";
 }
 
 function getArchivedSectionLabel(locale: Locale, count: number) {
@@ -721,11 +721,11 @@ function getArchivedSectionHint(locale: Locale, count: number) {
 function getQueuedEditSectionHint(locale: Locale, count: number) {
   return locale === "ko"
     ? count > 0
-      ? "\uc7ac\uac1c \uc5ec\ubd80\uc640 \uc0c1\ud0dc \uacb0\uc815\uc774 \uba3c\uc800\uc778 \ud56d\ubaa9\ub4e4\uc785\ub2c8\ub2e4."
-      : "\uc218\uc815\ud560 \ubcf4\ub958 \ub610\ub294 \uc608\uc815 \uc18c\uc18d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4."
+      ? "\uc774 \uc139\uc158\uc740 \ud604\uc7ac\u00b7\ubcf4\ub958\u00b7\uc885\ub8cc \uc911 \ub2e4\uc74c \uc0c1\ud0dc\ub97c \uba3c\uc800 \uacb0\uc815\ud574\uc57c \ud558\ub294 \ud56d\ubaa9\uc785\ub2c8\ub2e4."
+      : "\uc0c1\ud0dc \uacb0\uc815\uc744 \uae30\ub2e4\ub9ac\ub294 \ud56d\ubaa9\uc774 \uc5c6\uc2b5\ub2c8\ub2e4."
     : count > 0
-      ? "Use this section for entries that still need a resume, pause, or completion decision."
-      : "No planned or paused items need edits right now.";
+      ? "Use this section for entries that still need a current, paused, or completed decision before anything else."
+      : "No entries are waiting on a status decision right now.";
 }
 
 function getArchivedEditSectionHint(locale: Locale, count: number) {
@@ -770,7 +770,7 @@ function getAffiliationSectionName(
   }
 
   if (section === "queued") {
-    return locale === "ko" ? "\ub2e4\uc74c \ud655\uc778" : "Needs follow-up";
+    return locale === "ko" ? "\uc0c1\ud0dc \uacb0\uc815 \ub300\uae30" : "Needs status decision";
   }
 
   return locale === "ko" ? "\ubcf4\uad00 \uc774\ub825" : "Archived timeline";
@@ -817,8 +817,8 @@ function getTimelinePlacementSummary(
 
   if (section === "queued") {
     return locale === "ko"
-      ? `${sectionName} \uc139\uc158\uc5d0 \ubcf4\uc785\ub2c8\ub2e4. \uc7ac\uac1c, \uc720\uc9c0, \uc644\ub8cc \uacb0\uc815\uc774 \ub0a8\uc544 \uc788\ub294 \ud56d\ubaa9\uc785\ub2c8\ub2e4.`
-      : `${sectionName}. Review here until the role resumes or closes.`;
+      ? `${sectionName} \uc139\uc158\uc5d0 \ubcf4\uc785\ub2c8\ub2e4. \ud604\uc7ac\ub85c \uc62e\uae38\uc9c0, \uadf8\ub300\ub85c \ub458\uc9c0, \uc885\ub8cc\ud560\uc9c0 \uba3c\uc800 \uc815\ud558\ub294 \ud56d\ubaa9\uc785\ub2c8\ub2e4.`
+      : `${sectionName}. Review here until you decide whether the role becomes current, stays queued, or closes.`;
   }
 
   return locale === "ko"
@@ -840,8 +840,8 @@ function getTimelinePlacementScanSummary(
 
   if (section === "queued") {
     return locale === "ko"
-      ? "\ub2e4\uc74c \ud655\uc778 \uc139\uc158\uc5d0 \ubc30\uce58\ub418\uc5b4 \uc7ac\uac1c \uc5ec\ubd80\ub97c \uacb0\uc815\ud569\ub2c8\ub2e4."
-      : "Shown in needs follow-up until you decide whether it resumes or closes.";
+      ? "\uc0c1\ud0dc \uacb0\uc815 \ub300\uae30\uc5d0 \ub450\uace0 \uc7ac\uac1c\ud560\uc9c0 \uc885\ub8cc\ud560\uc9c0 \uba3c\uc800 \uc815\ud569\ub2c8\ub2e4."
+      : "Shown in Needs status decision until you decide whether it becomes current or closes.";
   }
 
   return locale === "ko"
