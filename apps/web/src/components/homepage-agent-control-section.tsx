@@ -385,6 +385,48 @@ export function HomepageAgentControlSection({
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
   const nextSetupCommandTitle = nextSetupCommand?.title ?? copy.nextCommandLabel;
+  const setupHeaderFlow =
+    selectedProvider && selectedTeam && nextSetupCommand ? (
+      <div className={styles.setupHeaderFlow} aria-label={copy.activeSetup}>
+        <div className={`${styles.setupHeaderFlowChip} ${styles.setupHeaderFlowChipAccent}`}>
+          <span className={styles.setupHeaderFlowStep}>01</span>
+          <span className={styles.setupStatusLabel}>{copy.chooseProvider}</span>
+          <div className={styles.setupHeaderFlowValueRow}>
+            <strong>{selectedProvider.label}</strong>
+            <span className={styles.setupHeaderFlowTag}>{selectedProvider.cliName}</span>
+            <span className={styles.setupHeaderFlowTag}>
+              {getProviderStatusLabel(locale, selectedProvider.status)}
+            </span>
+          </div>
+        </div>
+
+        <span className={styles.setupHeaderFlowArrow} aria-hidden="true">
+          &rarr;
+        </span>
+
+        <div className={styles.setupHeaderFlowChip}>
+          <span className={styles.setupHeaderFlowStep}>02</span>
+          <span className={styles.setupStatusLabel}>{copy.chooseTeam}</span>
+          <div className={styles.setupHeaderFlowValueRow}>
+            <strong>{selectedTeam.name}</strong>
+            <span className={styles.setupHeaderFlowTag}>{selectedTeam.lane}</span>
+          </div>
+        </div>
+
+        <span className={styles.setupHeaderFlowArrow} aria-hidden="true">
+          &rarr;
+        </span>
+
+        <div className={`${styles.setupHeaderFlowChip} ${styles.setupHeaderFlowChipAccent}`}>
+          <span className={styles.setupHeaderFlowStep}>03</span>
+          <span className={styles.setupStatusLabel}>{copy.runCommandLabel}</span>
+          <div className={styles.setupHeaderFlowValueRow}>
+            <strong>{nextSetupCommandTitle}</strong>
+            <span className={styles.setupHeaderFlowTag}>{copy.nextCommandLabel}</span>
+          </div>
+        </div>
+      </div>
+    ) : null;
   const nextCommandStrip = nextSetupCommand ? (
     <div className={styles.nextCommandStrip}>
       <div className={styles.nextCommandLead}>
@@ -545,6 +587,7 @@ export function HomepageAgentControlSection({
             <div className={styles.setupHeader}>
               <div className={styles.setupHeaderTop}>
                 <div className={styles.setupTitleBlock}>
+                  <span className={styles.metaLabel}>{copy.setupBuilderLabel}</span>
                   <div className={styles.setupTitleRow}>
                     <h4>{copy.setupBuilderTitle}</h4>
                   </div>
@@ -562,6 +605,7 @@ export function HomepageAgentControlSection({
                 </div>
               </div>
 
+              {setupHeaderFlow}
             </div>
 
             <div className={styles.setupWorkbench}>
