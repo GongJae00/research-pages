@@ -1695,6 +1695,10 @@ export function AffiliationWorkspace({
           <div>
             <h4>{getTimelineEditorSectionLabel(locale)}</h4>
             <p className="card-support-text">
+              <strong>{getNextUpdateLabel(locale)}</strong>{" "}
+              {getPrimaryNextActionSummary(affiliation, locale)}
+            </p>
+            <p className="card-support-text">
               {getTimelineEditorSectionHint(affiliation, locale)}
             </p>
           </div>
