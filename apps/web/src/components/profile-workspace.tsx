@@ -611,14 +611,16 @@ export function ProfileWorkspace({
     ? getProfileLinkDisplayUrl(primaryDraftLinkHref)
     : "";
   const contactSectionDescription = isKo
-    ? "공개 가능한 연락처만 두고, 첫 번째로 채운 이메일과 링크가 대표 요약으로 쓰이게 맞춰두세요."
-    : "Keep only public-facing contacts here. The first filled email and link become the primary summary.";
+    ? "공개 가능한 연락처만 두고, 첫 번째 이메일과 링크를 대표 항목으로 맞춰두세요."
+    : "Keep only public-facing contacts here. The first email and link become the primary summary.";
   const emailCountLabel = isKo
     ? `이메일 ${enteredEmailCount}`
     : `${enteredEmailCount} email${enteredEmailCount === 1 ? "" : "s"}`;
   const linkCountLabel = isKo
     ? `링크 ${enteredLinkCount}`
     : `${enteredLinkCount} link${enteredLinkCount === 1 ? "" : "s"}`;
+  const primaryEmailLabel = isKo ? "기본 이메일" : "Primary email";
+  const primaryLinkLabel = isKo ? "기본 링크" : "Primary link";
   const careerDocumentsTitle = isKo ? "커리어 문서" : "Career documents";
   const careerHubTitle = isKo ? "커리어 운영 허브" : "Career hub";
   const careerHubDescription = isKo
@@ -1825,8 +1827,8 @@ export function ProfileWorkspace({
                       [
                         {
                           key: "draft-primary-email",
-                          label: text.email,
-                          badge: text.primaryItem,
+                          label: primaryEmailLabel,
+                          badge: emailCountLabel,
                           value: primaryDraftEmail ? (
                             <span className="profile-inline-list profile-inline-list-muted">
                               <a href={`mailto:${primaryDraftEmail}`} className="profile-inline-link">
@@ -1839,8 +1841,8 @@ export function ProfileWorkspace({
                         },
                         {
                           key: "draft-primary-link",
-                          label: onlineLinksLabel,
-                          badge: text.primaryItem,
+                          label: primaryLinkLabel,
+                          badge: linkCountLabel,
                           value:
                             primaryDraftLink && primaryDraftLinkHref ? (
                               <span className="profile-inline-list profile-inline-list-muted">
@@ -1871,10 +1873,7 @@ export function ProfileWorkspace({
 
                   <div className="profile-array-section editor-field-full">
                     <div className="profile-array-header">
-                      <div className="profile-inline-list profile-inline-list-muted">
-                        <span>{text.email}</span>
-                        <span className="pill pill-gray">{emailCountLabel}</span>
-                      </div>
+                      <span>{text.email}</span>
                       <button
                         type="button"
                         className="secondary-cta profile-inline-btn"
@@ -1915,10 +1914,7 @@ export function ProfileWorkspace({
 
                   <div className="profile-array-section editor-field-full">
                     <div className="profile-array-header">
-                      <div className="profile-inline-list profile-inline-list-muted">
-                        <span>{onlineLinksLabel}</span>
-                        <span className="pill pill-gray">{linkCountLabel}</span>
-                      </div>
+                      <span>{onlineLinksLabel}</span>
                       <button
                         type="button"
                         className="secondary-cta profile-inline-btn"

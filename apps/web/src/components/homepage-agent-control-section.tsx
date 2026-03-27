@@ -555,6 +555,7 @@ export function HomepageAgentControlSection({
                   <div className={styles.setupTitleRow}>
                     <h4>{copy.setupBuilderTitle}</h4>
                   </div>
+                  <p className={styles.setupTitleHint}>{copy.setupSequenceIntro}</p>
                 </div>
                 <div className={styles.setupHeaderActions}>
                   <div className={styles.panelHeadIcon}>
