@@ -439,7 +439,6 @@ export function HomepageAgentControlSection({
               <span className={styles.setupFlowMeta}>{copy.nextCommandLabel}</span>
               <div className={styles.setupCompactSummaryValueRow}>
                 <strong>{nextSetupCommandTitle}</strong>
-                <span className={styles.setupCompactSummaryMetaBadge}>{copy.runCommandLabel}</span>
               </div>
             </div>
           </div>
@@ -449,21 +448,9 @@ export function HomepageAgentControlSection({
       {nextSetupCommand ? (
         <div className={styles.nextCommandStrip}>
           <div className={styles.nextCommandLead}>
-            <div className={styles.nextCommandIntro}>
-              <span className={`${styles.setupPickerStep} ${styles.nextCommandStep}`}>03</span>
-              <div className={styles.nextCommandIntroCopy}>
-                <div className={styles.nextCommandTitleRow}>
-                  <span className={styles.setupSelectionLeadLabel}>{copy.nextCommandLabel}</span>
-                  <span className={styles.nextCommandOutput}>{copy.runCommandLabel}</span>
-                </div>
-                <strong>{nextSetupCommandTitle}</strong>
-                <p className={styles.nextCommandHelp}>{copy.nextCommandHelp}</p>
-              </div>
-            </div>
-
             <div className={styles.nextCommandPath} aria-label={copy.activeSetup}>
-              <div className={`${styles.nextCommandPathSegment} ${styles.nextCommandPathSegmentActive}`}>
-                <span className={styles.nextCommandPathMeta}>{copy.selectedCli}</span>
+              <div className={styles.nextCommandPathSegment}>
+                <span className={styles.nextCommandPathMeta}>01 {copy.selectedCli}</span>
                 <div className={styles.nextCommandLabelRow}>
                   <strong>{selectedProvider?.label ?? "-"}</strong>
                   {selectedProvider ? <span className={styles.nextCommandSelectionPill}>{selectedProvider.cliName}</span> : null}
@@ -475,10 +462,21 @@ export function HomepageAgentControlSection({
               </span>
 
               <div className={styles.nextCommandPathSegment}>
-                <span className={styles.nextCommandPathMeta}>{copy.selectedTeamLabel}</span>
+                <span className={styles.nextCommandPathMeta}>02 {copy.selectedTeamLabel}</span>
                 <div className={styles.nextCommandLabelRow}>
                   <strong>{selectedTeam?.name ?? "-"}</strong>
                   {selectedTeam ? <span className={styles.nextCommandSelectionPill}>{selectedTeam.lane}</span> : null}
+                </div>
+              </div>
+
+              <span className={styles.nextCommandPathArrow} aria-hidden="true">
+                &rarr;
+              </span>
+
+              <div className={`${styles.nextCommandPathSegment} ${styles.nextCommandPathSegmentActive}`}>
+                <span className={styles.nextCommandPathMeta}>03 {copy.nextCommandLabel}</span>
+                <div className={styles.nextCommandLabelRow}>
+                  <strong>{nextSetupCommandTitle}</strong>
                 </div>
               </div>
             </div>
@@ -610,7 +608,6 @@ export function HomepageAgentControlSection({
             <div className={styles.setupHeader}>
               <div className={styles.setupHeaderTop}>
                 <div className={styles.setupTitleBlock}>
-                  <span className={styles.setupEyebrow}>{copy.setupBuilderLabel}</span>
                   <div className={styles.setupTitleRow}>
                     <h4>{copy.setupBuilderTitle}</h4>
                   </div>
