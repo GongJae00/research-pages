@@ -1500,7 +1500,7 @@ export function AffiliationWorkspace({
     const actionBadge = getAffiliationActionBadge(affiliation, locale);
     const sectionBadge = getAffiliationSectionBadge(affiliation, locale);
     const nextEditLabel = getPrimaryEditButtonLabel(affiliation, locale);
-    const nextEditFocus = getPrimaryNextActionSummary(affiliation, locale);
+    const nextEditSummary = getNextEditSummary(affiliation, locale);
     const timelineSnapshot = getAffiliationScanSummary(affiliation, locale);
     const institutionSummary = joinAffiliationSummary(affiliation) || text.institution;
     const needsCorrection = needsTimelineCorrection(affiliation);
@@ -1522,11 +1522,7 @@ export function AffiliationWorkspace({
               </div>
               <div className="field-row">
                 <dt>{getNextUpdateLabel(locale)}</dt>
-                <dd>{nextEditLabel}</dd>
-              </div>
-              <div className="field-row">
-                <dt>{getEditFocusLabel(locale)}</dt>
-                <dd>{nextEditFocus}</dd>
+                <dd>{nextEditSummary}</dd>
               </div>
               {needsCorrection ? (
                 <div className="field-row">

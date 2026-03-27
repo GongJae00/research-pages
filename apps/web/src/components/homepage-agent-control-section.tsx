@@ -584,11 +584,12 @@ export function HomepageAgentControlSection({
                       <div className={styles.nextCommandIntroCopy}>
                         <span className={styles.setupSelectionLeadLabel}>{copy.nextCommandLabel}</span>
                         <strong>{nextSetupCommandTitle}</strong>
+                        <p className={styles.nextCommandHelp}>{copy.nextCommandHelp}</p>
                       </div>
                     </div>
 
                     <div className={styles.nextCommandPath} aria-label={copy.activeSetup}>
-                      <div className={styles.nextCommandPathSegment}>
+                      <div className={`${styles.nextCommandPathSegment} ${styles.nextCommandPathSegmentActive}`}>
                         <span className={styles.nextCommandPathMeta}>{copy.selectedCli}</span>
                         <div className={styles.nextCommandLabelRow}>
                           <strong>{selectedProvider?.label ?? "-"}</strong>
@@ -611,7 +612,7 @@ export function HomepageAgentControlSection({
                         &rarr;
                       </span>
 
-                      <div className={styles.nextCommandPathSegment}>
+                      <div className={`${styles.nextCommandPathSegment} ${styles.nextCommandPathSegmentActive}`}>
                         <span className={styles.nextCommandPathMeta}>{copy.selectedTeamLabel}</span>
                         <div className={styles.nextCommandLabelRow}>
                           <strong>{selectedTeam?.name ?? "-"}</strong>
@@ -642,6 +643,13 @@ export function HomepageAgentControlSection({
               ) : null}
 
               <div className={styles.setupSelectionPanel} aria-label={getSetupInputLabel(locale)}>
+                <div className={styles.setupSelectionLead}>
+                  <div className={styles.setupSelectionLeadTop}>
+                    <span className={styles.setupSelectionLeadLabel}>{copy.setupStepsLabel}</span>
+                  </div>
+                  <p className={styles.setupSelectionLeadHint}>{copy.setupSteps[0]}</p>
+                </div>
+
                 <div className={styles.setupPickerGrid}>
                   <div className={`${styles.setupPicker} ${styles.setupPickerPrimary}`} aria-label={copy.chooseProvider}>
                     <div className={styles.setupPickerLabelGroup}>
