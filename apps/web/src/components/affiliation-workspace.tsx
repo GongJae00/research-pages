@@ -349,12 +349,31 @@ function getAffiliationScanSummary(
   entry: AffiliationTimelineEntry,
   locale: Locale,
 ) {
+  const text = copy[locale];
+  const separator = ` ${String.fromCharCode(51724)} `;
+  const legacySummary = getLegacyAffiliationScanSummary(entry, locale);
+  const fallbackPeriodSummary = legacySummary.includes(separator)
+    ? legacySummary.split(separator).slice(-1)[0]
+    : legacySummary;
+  const startLabel =
+    entry.startDate || (locale === "ko" ? "\uc2dc\uc791\uc77c \ud544\uc694" : "Start date needed");
+  const endLabel = entry.active
+    ? entry.endDate || text.present
+    : entry.endDate ||
+      (entry.appointmentStatus === "planned" || entry.appointmentStatus === "paused"
+        ? text.appointmentLabels[entry.appointmentStatus]
+        : locale === "ko"
+          ? "\uc885\ub8cc\uc77c \ud544\uc694"
+          : "End date needed");
+  const periodSummary =
+    entry.startDate || entry.endDate
+      ? `${startLabel} -> ${endLabel}`
+      : fallbackPeriodSummary;
+
   return [
     getAffiliationSectionName(getAffiliationSectionKey(entry), locale),
-    getLegacyAffiliationScanSummary(entry, locale).replace(
-      ` ${String.fromCharCode(51724)} `,
-      " / ",
-    ),
+    text.appointmentLabels[entry.appointmentStatus],
+    periodSummary,
   ].join(" / ");
 }
 

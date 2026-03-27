@@ -393,9 +393,14 @@ export function HomepageAgentControlSection({
         <div className={styles.setupCompactSummaryItem}>
           <span className={styles.setupCompactSummaryOrdinal}>01</span>
           <div className={styles.setupCompactSummaryContent}>
-            <span className={styles.setupFlowMeta}>{copy.selectedCliStatusLabel}</span>
+            <span className={styles.setupFlowMeta}>{copy.selectedCli}</span>
             <div className={styles.setupCompactSummaryValueRow}>
-              <strong>{selectedProviderStatusLabel}</strong>
+              <strong>{selectedProvider?.label ?? "-"}</strong>
+              {selectedProvider ? (
+                <span className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}>
+                  {selectedProviderStatusLabel}
+                </span>
+              ) : null}
             </div>
           </div>
         </div>
@@ -405,9 +410,12 @@ export function HomepageAgentControlSection({
         <div className={styles.setupCompactSummaryItem}>
           <span className={styles.setupCompactSummaryOrdinal}>02</span>
           <div className={styles.setupCompactSummaryContent}>
-            <span className={styles.setupFlowMeta}>{copy.selectedLaneLabel}</span>
+            <span className={styles.setupFlowMeta}>{copy.selectedTeamLabel}</span>
             <div className={styles.setupCompactSummaryValueRow}>
-              <strong>{selectedTeam?.lane ?? "-"}</strong>
+              <strong>{selectedTeam?.name ?? "-"}</strong>
+              {selectedTeam ? (
+                <span className={styles.setupCompactSummaryMetaBadge}>{selectedTeam.lane}</span>
+              ) : null}
             </div>
           </div>
         </div>
@@ -417,7 +425,7 @@ export function HomepageAgentControlSection({
         <div className={`${styles.setupCompactSummaryItem} ${styles.setupCompactSummaryItemAccent}`}>
           <span className={styles.setupCompactSummaryOrdinal}>03</span>
           <div className={styles.setupCompactSummaryContent}>
-            <span className={styles.setupFlowMeta}>{copy.nextActionLabel}</span>
+            <span className={styles.setupFlowMeta}>{copy.nextCommandLabel}</span>
             <div className={styles.setupCompactSummaryValueRow}>
               <strong>{nextSetupCommandTitle}</strong>
               <span className={styles.setupCompactSummaryMetaBadge}>{copy.runCommandLabel}</span>
@@ -643,8 +651,9 @@ export function HomepageAgentControlSection({
                     <div className={styles.nextCommandIntro}>
                       <span className={`${styles.setupPickerStep} ${styles.nextCommandStep}`}>03</span>
                       <div className={styles.nextCommandIntroCopy}>
-                        <span className={styles.setupSelectionLeadLabel}>{copy.activeSetup}</span>
+                        <span className={styles.setupSelectionLeadLabel}>{copy.nextCommandLabel}</span>
                         <strong>{nextSetupCommandTitle}</strong>
+                        <p className={styles.nextCommandHelp}>{copy.nextCommandHelp}</p>
                       </div>
                     </div>
 
