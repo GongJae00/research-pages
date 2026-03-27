@@ -494,7 +494,6 @@ export function HomepageAgentControlSection({
           <div className={styles.surfaceEntrySection}>
             <div className={styles.surfaceEntrySectionCopy}>
               <span className={styles.metaLabel}>{surfaceEntryCopy.sectionLabel}</span>
-              <p className={styles.surfaceEntrySectionHint}>{surfaceEntryCopy.sectionHint}</p>
             </div>
 
             <div className={styles.surfaceEntryGrid} aria-label={surfaceEntryCopy.ariaLabel}>
@@ -643,13 +642,6 @@ export function HomepageAgentControlSection({
               ) : null}
 
               <div className={styles.setupSelectionPanel} aria-label={getSetupInputLabel(locale)}>
-                <div className={styles.setupSelectionLead}>
-                  <div className={styles.setupSelectionLeadTop}>
-                    <span className={styles.setupSelectionLeadLabel}>{copy.setupStepsLabel}</span>
-                  </div>
-                  <p className={styles.setupSelectionLeadHint}>{copy.setupSteps[0]}</p>
-                </div>
-
                 <div className={styles.setupPickerGrid}>
                   <div className={`${styles.setupPicker} ${styles.setupPickerPrimary}`} aria-label={copy.chooseProvider}>
                     <div className={styles.setupPickerLabelGroup}>

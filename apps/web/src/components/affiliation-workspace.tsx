@@ -379,6 +379,21 @@ function getCurrentTimelineValue(active: boolean, locale: Locale) {
     : "Not included in Current affiliations";
 }
 
+function getStatusOverviewLabel(locale: Locale) {
+  return locale === "ko" ? "\uc0c1\ud0dc \uc694\uc57d" : "Status overview";
+}
+
+function getStatusOverviewSummary(
+  entry: AffiliationTimelineEntry,
+  locale: Locale,
+  text: (typeof copy)[Locale],
+) {
+  return [
+    text.appointmentLabels[entry.appointmentStatus],
+    getCurrentTimelineValue(entry.active, locale),
+  ].join(" / ");
+}
+
 function getCurrentTimelineOptionLabel(active: boolean, locale: Locale) {
   if (active) {
     return locale === "ko"
@@ -1502,6 +1517,7 @@ export function AffiliationWorkspace({
     const nextEditLabel = getPrimaryEditButtonLabel(affiliation, locale);
     const nextEditSummary = getNextEditSummary(affiliation, locale);
     const timelineSnapshot = getAffiliationScanSummary(affiliation, locale);
+    const statusOverview = getStatusOverviewSummary(affiliation, locale, text);
     const institutionSummary = joinAffiliationSummary(affiliation) || text.institution;
     const needsCorrection = needsTimelineCorrection(affiliation);
 
@@ -1517,8 +1533,8 @@ export function AffiliationWorkspace({
                 <dd>{timelineSnapshot}</dd>
               </div>
               <div className="field-row">
-                <dt>{getCurrentTimelineLabel(locale)}</dt>
-                <dd>{getCurrentTimelineValue(affiliation.active, locale)}</dd>
+                <dt>{getStatusOverviewLabel(locale)}</dt>
+                <dd>{statusOverview}</dd>
               </div>
               <div className="field-row">
                 <dt>{getNextUpdateLabel(locale)}</dt>
@@ -1615,6 +1631,7 @@ export function AffiliationWorkspace({
     const appointmentStatusHint = getAppointmentStatusFieldHint(affiliation, locale);
     const endDateHint = getEndDateFieldHint(affiliation, locale);
     const timelineSnapshot = getAffiliationScanSummary(affiliation, locale);
+    const statusOverview = getStatusOverviewSummary(affiliation, locale, text);
     const institutionSummary = joinAffiliationSummary(affiliation) || text.institution;
     const needsCorrection = needsTimelineCorrection(affiliation);
 
@@ -1654,8 +1671,8 @@ export function AffiliationWorkspace({
                 <dd>{getTimelinePlacementSummary(affiliation, locale)}</dd>
               </div>
               <div className="field-row">
-                <dt>{getCurrentTimelineLabel(locale)}</dt>
-                <dd>{getCurrentTimelineValue(affiliation.active, locale)}</dd>
+                <dt>{getStatusOverviewLabel(locale)}</dt>
+                <dd>{statusOverview}</dd>
               </div>
               {needsCorrection ? (
                 <div className="field-row">
