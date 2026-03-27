@@ -275,6 +275,10 @@ export function HomepageAgentControlSection({
   const surfaceEntryCopy = getSurfaceEntryCopy(locale, opsEnabled);
 
   useEffect(() => {
+    if (!opsEnabled) {
+      return;
+    }
+
     let mounted = true;
 
     const refresh = async () => {
@@ -302,7 +306,7 @@ export function HomepageAgentControlSection({
       mounted = false;
       window.clearInterval(timer);
     };
-  }, [locale]);
+  }, [locale, opsEnabled]);
 
   const connectedCount = useMemo(
     () => snapshot.providerConnections.filter((entry) => entry.status === "connected").length,
