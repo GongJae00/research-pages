@@ -390,6 +390,12 @@
   color: #475569;
 }
 
+.surfaceEntryStatePublic {
+  border-color: rgba(15, 118, 110, 0.18);
+  background: rgba(240, 253, 250, 0.98);
+  color: #0f766e;
+}
+
 .surfaceEntryStateAccent {
   border-color: rgba(15, 23, 42, 0.14);
   background: rgba(15, 23, 42, 0.08);

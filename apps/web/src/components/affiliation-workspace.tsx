@@ -1518,6 +1518,7 @@ export function AffiliationWorkspace({
     const nextEdit = getNextEditSummary(affiliation, locale);
     const timelineSnapshot = getAffiliationScanSummary(affiliation, locale);
     const institutionSummary = joinAffiliationSummary(affiliation) || text.institution;
+    const needsCorrection = needsTimelineCorrection(affiliation);
 
     return (
       <section className="card profile-detail-card" key={affiliation.id}>
@@ -1534,18 +1535,12 @@ export function AffiliationWorkspace({
                 <dt>{getNextUpdateLabel(locale)}</dt>
                 <dd>{nextEdit}</dd>
               </div>
-              <div className="field-row">
-                <dt>{getEditFocusLabel(locale)}</dt>
-                <dd>{getEditFocusHint(affiliation, locale)}</dd>
-              </div>
-              <div className="field-row">
-                <dt>{getTimelinePlacementLabel(locale)}</dt>
-                <dd>{getTimelinePlacementSummary(affiliation, locale)}</dd>
-              </div>
-              <div className="field-row">
-                <dt>{getTimelineCheckLabel(locale)}</dt>
-                <dd>{getTimelineCheckSummary(affiliation, locale, text)}</dd>
-              </div>
+              {needsCorrection ? (
+                <div className="field-row">
+                  <dt>{getTimelineCheckLabel(locale)}</dt>
+                  <dd>{getTimelineCheckSummary(affiliation, locale, text)}</dd>
+                </div>
+              ) : null}
             </dl>
           </div>
           <div className="profile-history-side">
@@ -1636,6 +1631,7 @@ export function AffiliationWorkspace({
     const endDateHint = getEndDateFieldHint(affiliation, locale);
     const timelineSnapshot = getAffiliationScanSummary(affiliation, locale);
     const institutionSummary = joinAffiliationSummary(affiliation) || text.institution;
+    const needsCorrection = needsTimelineCorrection(affiliation);
 
     return (
       <section
@@ -1673,17 +1669,15 @@ export function AffiliationWorkspace({
                 <dd>{getTimelinePlacementSummary(affiliation, locale)}</dd>
               </div>
               <div className="field-row">
-                <dt>{getEditFocusLabel(locale)}</dt>
-                <dd>{getEditFocusHint(affiliation, locale)}</dd>
-              </div>
-              <div className="field-row">
                 <dt>{getCurrentTimelineLabel(locale)}</dt>
                 <dd>{getCurrentTimelineValue(affiliation.active, locale)}</dd>
               </div>
-              <div className="field-row">
-                <dt>{getTimelineCheckLabel(locale)}</dt>
-                <dd>{getTimelineCheckSummary(affiliation, locale, text)}</dd>
-              </div>
+              {needsCorrection ? (
+                <div className="field-row">
+                  <dt>{getTimelineCheckLabel(locale)}</dt>
+                  <dd>{getTimelineCheckSummary(affiliation, locale, text)}</dd>
+                </div>
+              ) : null}
               <div className="field-row">
                 <dt>{getSaveReadinessLabel(locale)}</dt>
                 <dd>{getAffiliationEditReadiness(affiliation, locale, text)}</dd>
