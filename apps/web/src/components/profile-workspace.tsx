@@ -1100,22 +1100,24 @@ export function ProfileWorkspace({
   const primarySavedLinkDisplayUrl = primarySavedLink
     ? getProfileLinkDisplayUrl(primarySavedLink.url)
     : "";
-  const savedEmailTotalLabel = isKo ? `${savedEmails.length}개` : `${savedEmails.length} total`;
-  const savedLinkTotalLabel = isKo ? `${savedLinks.length}개` : `${savedLinks.length} total`;
+  const savedEmailCountLabel = isKo
+    ? `${text.emailsLabel} ${savedEmails.length}개`
+    : `${savedEmails.length} email${savedEmails.length === 1 ? "" : "s"}`;
+  const savedLinkCountLabel = isKo
+    ? `${onlineLinksLabel} ${savedLinks.length}개`
+    : `${savedLinks.length} link${savedLinks.length === 1 ? "" : "s"}`;
   const coreContactSummary = useMemo(() => {
     const contactCountParts = [
-      savedEmails.length > 0 ? `${text.emailsLabel}: ${savedEmailTotalLabel}` : undefined,
-      savedLinks.length > 0 ? `${onlineLinksLabel}: ${savedLinkTotalLabel}` : undefined,
+      savedEmails.length > 0 ? savedEmailCountLabel : undefined,
+      savedLinks.length > 0 ? savedLinkCountLabel : undefined,
     ];
 
     return joinUniqueTextParts(contactCountParts) || text.emptyValue;
   }, [
-    onlineLinksLabel,
-    savedEmailTotalLabel,
+    savedEmailCountLabel,
     savedEmails.length,
-    savedLinkTotalLabel,
+    savedLinkCountLabel,
     savedLinks.length,
-    text.emailsLabel,
     text.emptyValue,
   ]);
   const coreIdentifierSummary = useMemo(() => {
@@ -2327,8 +2329,8 @@ export function ProfileWorkspace({
                         primarySavedEmail
                           ? {
                               key: "primary-email",
-                              label: text.email,
-                              badge: text.primaryItem,
+                              label: primaryEmailLabel,
+                              badge: savedEmailCountLabel,
                               value: (
                                 <span className="profile-inline-list profile-inline-list-muted">
                                   <a href={`mailto:${primarySavedEmail}`} className="profile-inline-link">
@@ -2341,8 +2343,8 @@ export function ProfileWorkspace({
                         primarySavedLink
                           ? {
                               key: "primary-link",
-                              label: onlineLinksLabel,
-                              badge: text.primaryItem,
+                              label: primaryLinkLabel,
+                              badge: savedLinkCountLabel,
                               value: (
                                 <span className="profile-inline-list profile-inline-list-muted">
                                   <span className="pill pill-gray">

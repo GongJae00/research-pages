@@ -1936,7 +1936,7 @@
 .nextCommandLead {
   flex-direction: column;
   justify-content: space-between;
-  gap: 0.02rem;
+  gap: 0.04rem;
 }
 
 .nextCommandIntro {
@@ -1981,8 +1981,8 @@
 }
 
 .nextCommandContext {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: 0.04rem;
   width: 100%;
@@ -1992,11 +1992,10 @@
   display: grid;
   gap: 0.01rem;
   min-width: 0;
-  padding: 0.07rem 0.1rem;
+  padding: 0.05rem 0.08rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.88);
-  flex: 1 1 8.5rem;
 }
 
 .nextCommandContextStep strong {
@@ -3041,6 +3040,7 @@
   }
 
   .nextCommandContext {
+    grid-template-columns: 1fr;
     align-items: stretch;
   }
 
