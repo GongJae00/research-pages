@@ -380,31 +380,31 @@ function getAffiliationScanSummary(
 function getCurrentTimelineLabel(locale: Locale) {
   return locale === "ko"
     ? "\ud604\uc7ac \uc18c\uc18d \ubc30\uce58"
-    : "Current section";
+    : "Current affiliations placement";
 }
 
 function getCurrentTimelineValue(active: boolean, locale: Locale) {
   if (active) {
     return locale === "ko"
-      ? "\ud604\uc7ac \uc18c\uc18d\uc5d0 \ud45c\uc2dc"
-      : "Shown in Current affiliations";
+      ? "\ud604\uc7ac \uc18c\uc18d\uc5d0 \ud3ec\ud568"
+      : "Included in Current affiliations";
   }
 
   return locale === "ko"
     ? "\ud604\uc7ac \uc18c\uc18d\uc5d0\uc11c \uc81c\uc678"
-    : "Moved out of Current affiliations";
+    : "Not included in Current affiliations";
 }
 
 function getCurrentTimelineOptionLabel(active: boolean, locale: Locale) {
   if (active) {
     return locale === "ko"
-      ? "\ud604\uc7ac \uc18c\uc18d\uc5d0 \ud45c\uc2dc"
-      : "Show in Current affiliations";
+      ? "\ud604\uc7ac \uc18c\uc18d\uc5d0 \ud3ec\ud568"
+      : "Keep in Current affiliations";
   }
 
   return locale === "ko"
     ? "\ud604\uc7ac \uc18c\uc18d\uc5d0\uc11c \uc81c\uc678"
-    : "Move out of Current affiliations";
+    : "Remove from Current affiliations";
 }
 
 function getCurrentTimelineHint(
@@ -414,30 +414,30 @@ function getCurrentTimelineHint(
   if (entry.active && entry.appointmentStatus !== "active") {
     return locale === "ko"
       ? "\ud604\uc7ac \uc18c\uc18d\uc5d0 \ub0a8\uae38 \uac83\uc774\uba74 \uc774 \uac12\uc740 \uc720\uc9c0\ud558\uace0, \uc0c1\ud0dc\ub97c \uc9c4\ud589 \uc911\uc73c\ub85c \ub9de\ucdb0\uc8fc\uc138\uc694."
-      : "Leave this on if the role is still current, then align the status to Active.";
+      : "Keep this included if the role is still current, then align the status to Active.";
   }
 
   if (!entry.active && entry.appointmentStatus === "active") {
     return locale === "ko"
       ? "\uc0c1\ud0dc\ub294 \uc9c4\ud589 \uc911\uc774\ubbc0\ub85c \uc5ec\uc804\ud788 \ud604\uc7ac \uc18c\uc18d\uc774\uba74 \ub2e4\uc2dc \ucf1c\uc8fc\uc138\uc694."
-      : "Status says Active. Turn this back on if the role still belongs with Current affiliations.";
+      : "Status says Active. Include this again if the role still belongs with Current affiliations.";
   }
 
   if (entry.active) {
     return locale === "ko"
       ? "\uc774 \ud56d\ubaa9\uc774 \ud604\uc7ac \uc18c\uc18d \uc139\uc158\uc5d0 \ub0a8\uc544\uc57c \ud55c\ub2e4\uba74 \ucf1c \ub450\uc138\uc694."
-      : "Keep this on when the role should stay in Current affiliations.";
+      : "Keep this included when the role should stay in Current affiliations.";
   }
 
   if (entry.appointmentStatus === "planned" || entry.appointmentStatus === "paused") {
     return locale === "ko"
       ? "\uc608\uc815 \ub610\ub294 \ubcf4\ub958 \uc18c\uc18d\uc740 \uaebc \ub450\uc5b4 \uc0c1\ud0dc \uacb0\uc815 \ub300\uae30\uc5d0 \ub0a8\uac8c \ud558\uc138\uc694."
-      : "Leave this off so planned or paused roles stay in Needs status decision.";
+      : "Leave this removed so planned or paused roles stay in Needs status decision.";
   }
 
   return locale === "ko"
     ? "\uc885\ub8cc\ub41c \uc5ed\ud560\uc740 \ub044\uace0 \ub450\uc5b4 \ubcf4\uad00 \uc774\ub825\uc5d0 \ub0a8\uac8c \ud558\uc138\uc694."
-    : "Leave this off so closed roles stay in Archived timeline.";
+    : "Leave this removed so closed roles stay in Archived timeline.";
 }
 
 function getAppointmentStatusFieldHint(
