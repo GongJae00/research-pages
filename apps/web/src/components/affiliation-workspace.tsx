@@ -367,20 +367,8 @@ function getCurrentTimelineLabel(locale: Locale) {
     : "Current affiliations placement";
 }
 
-function getCurrentTimelineValue(active: boolean, locale: Locale) {
-  if (active) {
-    return locale === "ko"
-      ? "\ud604\uc7ac \uc18c\uc18d\uc5d0 \ud3ec\ud568"
-      : "Included in Current affiliations";
-  }
-
-  return locale === "ko"
-    ? "\ud604\uc7ac \uc18c\uc18d\uc5d0\uc11c \uc81c\uc678"
-    : "Not included in Current affiliations";
-}
-
 function getStatusOverviewLabel(locale: Locale) {
-  return locale === "ko" ? "\uc0c1\ud0dc \uc694\uc57d" : "Status overview";
+  return locale === "ko" ? "\uc0c1\ud0dc\uc640 \ubc30\uce58" : "Status and placement";
 }
 
 function getStatusOverviewSummary(
@@ -388,10 +376,12 @@ function getStatusOverviewSummary(
   locale: Locale,
   text: (typeof copy)[Locale],
 ) {
-  return [
-    text.appointmentLabels[entry.appointmentStatus],
-    getCurrentTimelineValue(entry.active, locale),
-  ].join(" / ");
+  const sectionName = getAffiliationSectionName(
+    getAffiliationSectionKey(entry),
+    locale,
+  );
+
+  return [text.appointmentLabels[entry.appointmentStatus], sectionName].join(" / ");
 }
 
 function getCurrentTimelineOptionLabel(active: boolean, locale: Locale) {
