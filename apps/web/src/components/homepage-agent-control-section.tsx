@@ -82,14 +82,6 @@ function getSetupCommandTitle(locale: string, kind: "connect" | "assign") {
   return kind === "connect" ? "Connect CLI" : "Assign team";
 }
 
-function getSetupFlowLabel(locale: string) {
-  if (isKoreanLocale(locale)) {
-    return "설정 흐름";
-  }
-
-  return "Setup flow";
-}
-
 function getSetupInputLabel(locale: string) {
   if (isKoreanLocale(locale)) {
     return "선택 입력";
@@ -281,7 +273,6 @@ export function HomepageAgentControlSection({
   const [copiedCommand, setCopiedCommand] = useState<"connect" | "assign" | null>(null);
   const copy = getCopy(locale, opsEnabled);
   const surfaceEntryCopy = getSurfaceEntryCopy(locale, opsEnabled);
-  const setupFlowLabel = getSetupFlowLabel(locale);
 
   useEffect(() => {
     let mounted = true;
@@ -335,9 +326,6 @@ export function HomepageAgentControlSection({
     snapshot.teams.find((entry) => entry.id === selectedTeamId) ?? snapshot.teams[0];
   const nextCommandKind: "connect" | "assign" =
     selectedProvider?.status === "connected" ? "assign" : "connect";
-  const selectedProviderStatusLabel = selectedProvider
-    ? getProviderStatusLabel(locale, selectedProvider.status)
-    : "-";
   const setupManifest = useMemo(() => {
     if (!selectedProvider || !selectedTeam) {
       return null;
@@ -397,52 +385,6 @@ export function HomepageAgentControlSection({
   });
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
   const nextSetupCommandTitle = nextSetupCommand?.title ?? copy.nextCommandLabel;
-  const setupHeaderSummary = (
-    <div className={styles.setupHeaderSummaryRow} aria-label={setupFlowLabel}>
-      <span className={styles.setupHeaderSummaryLabel}>{setupFlowLabel}</span>
-      <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
-        <div className={styles.setupCompactSummaryItem}>
-          <span className={styles.setupCompactSummaryOrdinal}>01</span>
-          <div className={styles.setupCompactSummaryContent}>
-            <span className={styles.setupFlowMeta}>{copy.selectedCli}</span>
-            <div className={styles.setupCompactSummaryValueRow}>
-              <strong>{selectedProvider?.label ?? "-"}</strong>
-              {selectedProvider ? (
-                <span className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}>
-                  {selectedProviderStatusLabel}
-                </span>
-              ) : null}
-            </div>
-          </div>
-        </div>
-        <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
-          &rarr;
-        </span>
-        <div className={styles.setupCompactSummaryItem}>
-          <span className={styles.setupCompactSummaryOrdinal}>02</span>
-          <div className={styles.setupCompactSummaryContent}>
-            <span className={styles.setupFlowMeta}>{copy.selectedTeamLabel}</span>
-            <div className={styles.setupCompactSummaryValueRow}>
-              <strong>{selectedTeam?.name ?? "-"}</strong>
-              {selectedTeam ? <span className={styles.setupCompactSummaryMetaBadge}>{selectedTeam.lane}</span> : null}
-            </div>
-          </div>
-        </div>
-        <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
-          &rarr;
-        </span>
-        <div className={`${styles.setupCompactSummaryItem} ${styles.setupCompactSummaryItemAccent}`}>
-          <span className={styles.setupCompactSummaryOrdinal}>03</span>
-          <div className={styles.setupCompactSummaryContent}>
-            <span className={styles.setupFlowMeta}>{copy.nextCommandLabel}</span>
-            <div className={styles.setupCompactSummaryValueRow}>
-              <strong>{nextSetupCommandTitle}</strong>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
   const nextCommandStrip = nextSetupCommand ? (
     <div className={styles.nextCommandStrip}>
       <div className={styles.nextCommandLead}>
@@ -616,7 +558,6 @@ export function HomepageAgentControlSection({
                 </div>
               </div>
 
-              {setupHeaderSummary}
             </div>
 
             <div className={styles.setupWorkbench}>
