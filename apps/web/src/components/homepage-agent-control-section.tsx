@@ -430,7 +430,6 @@ export function HomepageAgentControlSection({
   const nextCommandStrip = nextSetupCommand ? (
     <div className={styles.nextCommandStrip}>
       <div className={styles.nextCommandLead}>
-        <span className={styles.metaLabel}>{copy.activeSetup}</span>
         <div className={styles.nextCommandContext} aria-label={copy.activeSetup}>
           <div className={styles.nextCommandContextStep}>
             <span className={styles.nextCommandContextLabel}>01 {copy.selectedCli}</span>
@@ -521,10 +520,7 @@ export function HomepageAgentControlSection({
           </div>
 
           <div className={styles.surfaceEntrySection}>
-            <div className={styles.surfaceEntrySectionCopy}>
-              <span className={styles.metaLabel}>{surfaceEntryCopy.sectionLabel}</span>
-              <p className={styles.surfaceEntrySectionHint}>{surfaceEntryCopy.sectionHint}</p>
-            </div>
+            <span className={styles.metaLabel}>{surfaceEntryCopy.sectionLabel}</span>
 
             <div className={styles.surfaceEntryGrid} aria-label={surfaceEntryCopy.ariaLabel}>
               <div className={styles.surfaceEntryCard}>
@@ -606,6 +602,8 @@ export function HomepageAgentControlSection({
               </div>
 
               {setupHeaderFlow}
+
+              {nextCommandStrip}
             </div>
 
             <div className={styles.setupWorkbench}>
@@ -676,8 +674,6 @@ export function HomepageAgentControlSection({
                   </div>
                 </div>
               </div>
-
-              {nextCommandStrip}
             </div>
 
             <details className={styles.setupCommandsDisclosure}>
