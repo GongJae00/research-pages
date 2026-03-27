@@ -1106,20 +1106,29 @@ export function ProfileWorkspace({
   const savedLinkCountLabel = isKo
     ? `${onlineLinksLabel} ${savedLinks.length}개`
     : `${savedLinks.length} link${savedLinks.length === 1 ? "" : "s"}`;
-  const coreContactSummary = useMemo(() => {
-    const contactCountParts = [
-      savedEmails.length > 0 ? savedEmailCountLabel : undefined,
-      savedLinks.length > 0 ? savedLinkCountLabel : undefined,
-    ];
-
-    return joinUniqueTextParts(contactCountParts) || text.emptyValue;
-  }, [
-    savedEmailCountLabel,
-    savedEmails.length,
-    savedLinkCountLabel,
-    savedLinks.length,
-    text.emptyValue,
-  ]);
+  const coreContactSummaryBadges = useMemo(
+    () =>
+      [
+        savedEmails.length > 0
+          ? {
+              key: "emails",
+              label: savedEmailCountLabel,
+            }
+          : null,
+        savedLinks.length > 0
+          ? {
+              key: "links",
+              label: savedLinkCountLabel,
+            }
+          : null,
+      ].filter(isDefined),
+    [
+      savedEmailCountLabel,
+      savedEmails.length,
+      savedLinkCountLabel,
+      savedLinks.length,
+    ],
+  );
   const coreIdentifierSummary = useMemo(() => {
     const parts = [
       savedProfile.nationalResearcherNumber ? text.nationalId : undefined,
@@ -2320,7 +2329,17 @@ export function ProfileWorkspace({
                   <dt>
                     <div className="profile-career-status-main">
                       <strong>{text.contactPanel}</strong>
-                      <span>{coreContactSummary}</span>
+                      {coreContactSummaryBadges.length > 0 ? (
+                        <span className="profile-inline-list profile-inline-list-muted">
+                          {coreContactSummaryBadges.map((item) => (
+                            <span className="pill pill-gray" key={item.key}>
+                              {item.label}
+                            </span>
+                          ))}
+                        </span>
+                      ) : (
+                        <span>{text.emptyValue}</span>
+                      )}
                     </div>
                   </dt>
                   <dd>
@@ -2330,7 +2349,6 @@ export function ProfileWorkspace({
                           ? {
                               key: "primary-email",
                               label: primaryEmailLabel,
-                              badge: savedEmailCountLabel,
                               value: (
                                 <span className="profile-inline-list profile-inline-list-muted">
                                   <a href={`mailto:${primarySavedEmail}`} className="profile-inline-link">
@@ -2344,7 +2362,6 @@ export function ProfileWorkspace({
                           ? {
                               key: "primary-link",
                               label: primaryLinkLabel,
-                              badge: savedLinkCountLabel,
                               value: (
                                 <span className="profile-inline-list profile-inline-list-muted">
                                   <span className="pill pill-gray">

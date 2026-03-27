@@ -647,6 +647,7 @@ export function HomepageAgentControlSection({
                   <div className={styles.setupSectionHead}>
                     <div className={styles.setupSectionCopy}>
                       <span className={styles.setupSelectionLeadLabel}>{setupFlowLabel}</span>
+                      <p className={styles.setupSelectionLeadHint}>{copy.setupSequenceIntro}</p>
                     </div>
                   </div>
                 </div>

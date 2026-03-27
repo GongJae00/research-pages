@@ -2211,6 +2211,12 @@
   gap: 0.04rem;
 }
 
+@media (max-width: 900px) {
+  .setupSelectionPanel {
+    order: -1;
+  }
+}
+
 .providerSummaryChips {
   display: flex;
   flex-wrap: wrap;
