@@ -249,11 +249,153 @@ function simplifyUrl(url: string): string {
   return url.replace(/^https?:\/\//i, "").replace(/\/$/, "");
 }
 
+function getHeroEntryPointCopy(locale: string) {
+  if (locale === "ko") {
+    return {
+      sectionLabel: "\uC9C4\uC785 \uACBD\uB85C",
+      sectionHint:
+        "\uD648\uD398\uC774\uC9C0\uC5D0\uC11C \uACF5\uAC1C \uC250 \uACBD\uB85C\uC640 \uB0B4\uBD80 \uC124\uC815 \uD074\uB7EC\uC2A4\uD130\uB97C \uBC14\uB85C \uAD6C\uBD84\uD569\uB2C8\uB2E4.",
+      internalScope: "\uB0B4\uBD80 \uBBF8\uB9AC\uBCF4\uAE30",
+      publicScope: "\uACF5\uAC1C \uC250",
+      internalMeta: "\uC124\uC815 \uD074\uB7EC\uC2A4\uD130",
+      publicMeta: "\uACF5\uAC1C \uACBD\uB85C",
+    };
+  }
+
+  return {
+    sectionLabel: "Entry points",
+    sectionHint: "Keep the public shell routes separate from the internal setup cluster.",
+    internalScope: "Internal preview",
+    publicScope: "Public shell",
+    internalMeta: "Setup cluster",
+    publicMeta: "Shareable route",
+  };
+}
+
+const heroEntrySectionStyle = {
+  display: "grid",
+  gap: "8px",
+  marginTop: "4px",
+} as const;
+
+const heroEntrySectionHeaderStyle = {
+  display: "grid",
+  gap: "4px",
+} as const;
+
+const heroEntrySectionLabelStyle = {
+  color: "#7c6d5d",
+  fontSize: "11px",
+  fontWeight: 800,
+  letterSpacing: "0.08em",
+  lineHeight: 1,
+  textTransform: "uppercase",
+} as const;
+
+const heroEntrySectionHintStyle = {
+  margin: 0,
+  color: "#6b5f54",
+  fontSize: "13px",
+  fontWeight: 700,
+  lineHeight: 1.45,
+  maxWidth: "46rem",
+} as const;
+
+const heroEntryRowStyle = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+  gap: "10px",
+} as const;
+
+const heroEntryLinkStyle = {
+  display: "grid",
+  gridTemplateColumns: "minmax(0, 1fr) auto",
+  alignItems: "center",
+  gap: "10px",
+  minWidth: 0,
+  padding: "12px 14px",
+  borderRadius: "18px",
+  border: "1px solid rgba(62, 48, 35, 0.08)",
+  background: "rgba(255, 255, 255, 0.84)",
+  boxShadow: "0 12px 24px rgba(62, 48, 35, 0.06)",
+  color: "#1e1a16",
+  textDecoration: "none",
+} as const;
+
+const heroEntryLinkAccentStyle = {
+  border: "1px solid rgba(19, 57, 48, 0.12)",
+  background: "linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(233, 243, 239, 0.96))",
+} as const;
+
+const heroEntryLinkCopyStyle = {
+  display: "grid",
+  gap: "4px",
+  minWidth: 0,
+} as const;
+
+const heroEntryMetaRowStyle = {
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "center",
+  gap: "6px",
+  minWidth: 0,
+} as const;
+
+const heroEntryScopeBadgeStyle = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  minHeight: "20px",
+  padding: "0 8px",
+  borderRadius: "999px",
+  fontSize: "11px",
+  fontWeight: 800,
+  letterSpacing: "0.06em",
+  lineHeight: 1,
+  textTransform: "uppercase",
+} as const;
+
+const heroEntryPublicBadgeStyle = {
+  background: "rgba(62, 48, 35, 0.06)",
+  color: "#5d5349",
+} as const;
+
+const heroEntryInternalBadgeStyle = {
+  background: "rgba(15, 71, 57, 0.1)",
+  color: "#0f4739",
+} as const;
+
+const heroEntryMetaStyle = {
+  color: "#6b5f54",
+  fontSize: "11px",
+  fontWeight: 700,
+  lineHeight: 1.2,
+} as const;
+
+const heroEntryTitleStyle = {
+  color: "#1e1a16",
+  fontSize: "15px",
+  fontWeight: 800,
+  lineHeight: 1.25,
+  overflowWrap: "anywhere",
+} as const;
+
+const heroEntryRouteStyle = {
+  color: "#6b5f54",
+  fontSize: "11px",
+  fontWeight: 700,
+  lineHeight: 1.1,
+  fontFamily:
+    'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+  overflowWrap: "anywhere",
+} as const;
+
 export default async function LocaleRoot({ params }: Props) {
   const { locale } = await params;
   const resolvedLocale = locale === "en" ? "en" : "ko";
   const dict = await getDictionary(resolvedLocale);
   const copy = resolvedLocale === "ko" ? landingCopy.ko : landingCopy.en;
+  const heroEntryPointCopy = getHeroEntryPointCopy(resolvedLocale);
   const opsSnapshot = await getLiveAgentOperationsSnapshot(resolvedLocale);
   const opsEnabled = process.env.NODE_ENV !== "production" || isDemoPreviewRuntimeEnabled();
 
@@ -371,10 +513,38 @@ export default async function LocaleRoot({ params }: Props) {
   ];
 
   const heroRoutes = [
-    { href: "#agent-control", label: copy.agentSetup },
-    { href: `/${resolvedLocale}/profile`, label: copy.researcherPage },
-    { href: `/${resolvedLocale}/documents`, label: copy.careerKit },
-    { href: `/${resolvedLocale}/lab`, label: copy.labPage },
+    {
+      href: "#agent-control",
+      label: copy.agentSetup,
+      route: "#agent-control",
+      scope: heroEntryPointCopy.internalScope,
+      meta: heroEntryPointCopy.internalMeta,
+      accent: true,
+    },
+    {
+      href: `/${resolvedLocale}/profile`,
+      label: copy.researcherPage,
+      route: `/${resolvedLocale}/profile`,
+      scope: heroEntryPointCopy.publicScope,
+      meta: heroEntryPointCopy.publicMeta,
+      accent: false,
+    },
+    {
+      href: `/${resolvedLocale}/documents`,
+      label: copy.careerKit,
+      route: `/${resolvedLocale}/documents`,
+      scope: heroEntryPointCopy.publicScope,
+      meta: heroEntryPointCopy.publicMeta,
+      accent: false,
+    },
+    {
+      href: `/${resolvedLocale}/lab`,
+      label: copy.labPage,
+      route: `/${resolvedLocale}/lab`,
+      scope: heroEntryPointCopy.publicScope,
+      meta: heroEntryPointCopy.publicMeta,
+      accent: false,
+    },
   ];
 
   return (
@@ -406,13 +576,42 @@ export default async function LocaleRoot({ params }: Props) {
                 ))}
               </div>
 
-              <div className="rp-hero-route-row">
-                {heroRoutes.map((item) => (
-                  <Link href={item.href} key={item.href} className="rp-hero-route-chip">
-                    {item.label}
-                    <ArrowRight size={14} />
-                  </Link>
-                ))}
+              <div style={heroEntrySectionStyle}>
+                <div style={heroEntrySectionHeaderStyle}>
+                  <span style={heroEntrySectionLabelStyle}>{heroEntryPointCopy.sectionLabel}</span>
+                  <p style={heroEntrySectionHintStyle}>{heroEntryPointCopy.sectionHint}</p>
+                </div>
+
+                <div className="rp-hero-route-row" style={heroEntryRowStyle}>
+                  {heroRoutes.map((item) => (
+                    <Link
+                      href={item.href}
+                      key={item.href}
+                      className="rp-hero-route-chip"
+                      style={{
+                        ...heroEntryLinkStyle,
+                        ...(item.accent ? heroEntryLinkAccentStyle : {}),
+                      }}
+                    >
+                      <span style={heroEntryLinkCopyStyle}>
+                        <span style={heroEntryMetaRowStyle}>
+                          <span
+                            style={{
+                              ...heroEntryScopeBadgeStyle,
+                              ...(item.accent ? heroEntryInternalBadgeStyle : heroEntryPublicBadgeStyle),
+                            }}
+                          >
+                            {item.scope}
+                          </span>
+                          <span style={heroEntryMetaStyle}>{item.meta}</span>
+                        </span>
+                        <span style={heroEntryTitleStyle}>{item.label}</span>
+                        <span style={heroEntryRouteStyle}>{item.route}</span>
+                      </span>
+                      <ArrowRight size={14} />
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -507,7 +706,7 @@ export default async function LocaleRoot({ params }: Props) {
           </div>
         </article>
 
-        <div id="agent-control">
+        <div id="agent-control" style={{ scrollMarginTop: "88px" }}>
           <HomepageAgentControlSection
             initialSnapshot={opsSnapshot}
             locale={resolvedLocale}
