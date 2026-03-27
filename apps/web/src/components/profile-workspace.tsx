@@ -1833,58 +1833,24 @@ export function ProfileWorkspace({
                   <p>{contactSectionDescription}</p>
                 </div>
                 <div className="profile-form-grid">
-                  <div className="editor-field-full">
-                    {renderProfileSummaryRows(
-                      [
-                        {
-                          key: "draft-primary-email",
-                          label: primaryEmailLabel,
-                          badge: emailCountLabel,
-                          value: primaryDraftEmail ? (
-                            <span className="profile-inline-list profile-inline-list-muted">
+                  <div className="profile-array-section editor-field-full">
+                    <div className="profile-array-header">
+                      <div className="profile-career-status-main">
+                        <strong>{text.emailsLabel}</strong>
+                        <span className="profile-inline-list profile-inline-list-muted">
+                          <span className="pill pill-gray">{emailCountLabel}</span>
+                          {primaryDraftEmail ? (
+                            <>
+                              <span className="pill pill-blue">{text.primaryItem}</span>
                               <a href={`mailto:${primaryDraftEmail}`} className="profile-inline-link">
                                 {primaryDraftEmail}
                               </a>
-                            </span>
+                            </>
                           ) : (
-                            <span className="profile-empty-copy">{text.emptyValue}</span>
-                          ),
-                        },
-                        {
-                          key: "draft-primary-link",
-                          label: primaryLinkLabel,
-                          badge: linkCountLabel,
-                          value:
-                            primaryDraftLink && primaryDraftLinkHref ? (
-                              <span className="profile-inline-list profile-inline-list-muted">
-                                <span className="pill pill-gray">
-                                  {getProfileLinkLabel(locale, {
-                                    kind: primaryDraftLink.kind,
-                                    label: primaryDraftLink.label,
-                                  })}
-                                </span>
-                                <a
-                                  href={primaryDraftLinkHref}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="profile-inline-link"
-                                >
-                                  <span>{primaryDraftLinkDisplayUrl}</span>
-                                  <ExternalLink size={13} />
-                                </a>
-                              </span>
-                            ) : (
-                              <span className="profile-empty-copy">{text.emptyValue}</span>
-                            ),
-                        },
-                      ],
-                      text.emptyValue,
-                    )}
-                  </div>
-
-                  <div className="profile-array-section editor-field-full">
-                    <div className="profile-array-header">
-                      <span>{text.email}</span>
+                            <span>{text.emptyValue}</span>
+                          )}
+                        </span>
+                      </div>
                       <button
                         type="button"
                         className="secondary-cta profile-inline-btn"
@@ -1925,7 +1891,34 @@ export function ProfileWorkspace({
 
                   <div className="profile-array-section editor-field-full">
                     <div className="profile-array-header">
-                      <span>{onlineLinksLabel}</span>
+                      <div className="profile-career-status-main">
+                        <strong>{onlineLinksLabel}</strong>
+                        <span className="profile-inline-list profile-inline-list-muted">
+                          <span className="pill pill-gray">{linkCountLabel}</span>
+                          {primaryDraftLink && primaryDraftLinkHref ? (
+                            <>
+                              <span className="pill pill-blue">{text.primaryItem}</span>
+                              <span className="pill pill-gray">
+                                {getProfileLinkLabel(locale, {
+                                  kind: primaryDraftLink.kind,
+                                  label: primaryDraftLink.label,
+                                })}
+                              </span>
+                              <a
+                                href={primaryDraftLinkHref}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="profile-inline-link"
+                              >
+                                <span>{primaryDraftLinkDisplayUrl}</span>
+                                <ExternalLink size={13} />
+                              </a>
+                            </>
+                          ) : (
+                            <span>{text.emptyValue}</span>
+                          )}
+                        </span>
+                      </div>
                       <button
                         type="button"
                         className="secondary-cta profile-inline-btn"

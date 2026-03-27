@@ -158,7 +158,6 @@ function getCopy(locale: string, opsEnabled: boolean) {
         "브라우저가 로컬 터미널을 직접 제어하지는 않지만, 각 개발자는 CLI 세션을 로컬 브리지에 등록하고 이 페이지에서 연결 상태를 확인할 수 있습니다.",
       setupBuilderLabel: "홈페이지 셋업 빌더",
       setupBuilderTitle: "CLI 설정 한눈에 보기",
-      setupSequenceIntro: "CLI를 먼저 고르고 팀을 붙인 뒤, 아래 강조된 다음 명령을 바로 실행합니다.",
       selectedCliStatusLabel: "CLI 상태",
       selectedLaneLabel: "팀 lane",
       connectCommand: "연결 명령 복사",
@@ -222,7 +221,6 @@ function getCopy(locale: string, opsEnabled: boolean) {
       "Each developer registers a local CLI session with the bridge, and this page keeps connection state and team ownership visible.",
     setupBuilderLabel: "Homepage setup builder",
     setupBuilderTitle: "CLI setup at a glance",
-    setupSequenceIntro: "Choose the CLI first, assign the team second, then run the highlighted command below.",
     selectedCliStatusLabel: "CLI status",
     selectedLaneLabel: "Team lane",
     connectCommand: "Copy connect command",
@@ -560,7 +558,6 @@ export function HomepageAgentControlSection({
                   <div className={styles.setupTitleRow}>
                     <h4>{copy.setupBuilderTitle}</h4>
                   </div>
-                  <p className={styles.setupTitleHint}>{copy.setupSequenceIntro}</p>
                 </div>
                 <div className={styles.setupHeaderActions}>
                   <div className={styles.panelHeadIcon}>

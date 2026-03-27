@@ -940,15 +940,6 @@
   max-width: 100%;
 }
 
-.setupTitleHint {
-  margin: 0;
-  max-width: 34rem;
-  color: #64748b;
-  font-size: 0.66rem;
-  font-weight: 700;
-  line-height: 1.15;
-}
-
 .setupDigestLine {
   display: flex;
   flex-wrap: wrap;
