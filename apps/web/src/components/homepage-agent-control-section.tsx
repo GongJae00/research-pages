@@ -108,16 +108,17 @@ function getSurfaceEntryCopy(locale: string, opsEnabled: boolean) {
         : "\uD648\uD398\uC774\uC9C0\uB294 \uACF5\uAC1C \uC9C4\uC785\uC810\uC73C\uB85C \uB450\uACE0, \uC0C1\uC138 \uC635\uC2A4 \uBCF4\uB4DC\uB294 \uB0B4\uBD80 \uBBF8\uB9AC\uBCF4\uAE30\uC5D0\uC11C\uB9CC \uC5FD\uB2C8\uB2E4.",
       publicLabel: "\uACF5\uAC1C \uC250",
       publicRoute: "\uACF5\uAC1C \uACBD\uB85C",
+      publicState: "\uACF5\uC720 \uAC00\uB2A5",
       publicTitle: "\uD648\uD398\uC774\uC9C0 \uC250",
       publicHint: "\uACF5\uAC1C \uD648\uD398\uC774\uC9C0\uC5D0\uC11C \uBCF4\uC774\uB294 \uAE30\uBCF8 \uC9C4\uC785 \uACBD\uB85C",
       openPublic: "\uACF5\uAC1C \uC250 \uC5F4\uAE30",
       internalLabel: "\uB0B4\uBD80 \uC635\uC2A4",
       internalRoute: "\uB0B4\uBD80 \uACBD\uB85C",
+      internalState: opsEnabled ? "\uB0B4\uBD80 \uBBF8\uB9AC\uBCF4\uAE30" : "\uBBF8\uB9AC\uBCF4\uAE30 \uC804\uC6A9",
       internalTitle: "\uB0B4\uBD80 \uC635\uC2A4 \uBCF4\uB4DC",
       internalHint: opsEnabled
         ? "\uB85C\uCEEC \uAC1C\uBC1C \uB610\uB294 \uB370\uBAA8 \uBBF8\uB9AC\uBCF4\uAE30\uC5D0\uC11C \uC0C1\uC138 \uD050\uC640 \uD578\uB4DC\uC624\uD504 \uD750\uB984 \uD655\uC778"
         : "\uC0C1\uC138 \uC635\uC2A4 \uBCF4\uB4DC\uB294 \uB0B4\uBD80 \uBBF8\uB9AC\uBCF4\uAE30\uC5D0\uC11C\uB9CC \uC5F4\uB9BC",
-      previewOnly: "\uB0B4\uBD80 \uBBF8\uB9AC\uBCF4\uAE30 \uC804\uC6A9",
     };
   }
 
@@ -129,16 +130,17 @@ function getSurfaceEntryCopy(locale: string, opsEnabled: boolean) {
       : "Keep the homepage as the shareable public route; the detailed ops board stays in internal preview only.",
     publicLabel: "Public shell",
     publicRoute: "Public route",
+    publicState: "Shareable",
     publicTitle: "Homepage shell",
     publicHint: "Default shareable entry for the public-facing product shell.",
     openPublic: "Open public shell",
     internalLabel: "Internal ops",
     internalRoute: "Internal route",
+    internalState: opsEnabled ? "Internal preview" : "Preview only",
     internalTitle: "Internal ops board",
     internalHint: opsEnabled
       ? "Open the detailed queue and handoff board in local or demo preview."
       : "The detailed ops board is available only in internal preview deployments.",
-    previewOnly: "Internal preview only",
   };
 }
 
@@ -513,6 +515,7 @@ export function HomepageAgentControlSection({
                   <span className={styles.surfaceEntryRouteBadge}>{surfaceEntryCopy.publicRoute}</span>
                   <span className={styles.surfaceEntryRoute}>{`/${locale}`}</span>
                 </div>
+                <span className={styles.surfaceEntryState}>{surfaceEntryCopy.publicState}</span>
                 <div className={styles.surfaceEntryBody}>
                   <strong>{surfaceEntryCopy.publicTitle}</strong>
                   <span className={styles.surfaceEntryHint}>{surfaceEntryCopy.publicHint}</span>
@@ -530,9 +533,7 @@ export function HomepageAgentControlSection({
                       {copy.openOps}
                       <ArrowRight size={14} />
                     </Link>
-                  ) : (
-                    <span className={styles.surfaceEntryState}>{surfaceEntryCopy.previewOnly}</span>
-                  )}
+                  ) : null}
                 </div>
                 <div className={styles.surfaceEntryRouteRow}>
                   <span className={`${styles.surfaceEntryRouteBadge} ${styles.surfaceEntryRouteBadgeAccent}`}>
@@ -540,6 +541,9 @@ export function HomepageAgentControlSection({
                   </span>
                   <span className={styles.surfaceEntryRoute}>{`/${locale}/ops`}</span>
                 </div>
+                <span className={`${styles.surfaceEntryState} ${styles.surfaceEntryStateAccent}`}>
+                  {surfaceEntryCopy.internalState}
+                </span>
                 <div className={styles.surfaceEntryBody}>
                   <strong>{surfaceEntryCopy.internalTitle}</strong>
                   <span className={styles.surfaceEntryHint}>{surfaceEntryCopy.internalHint}</span>

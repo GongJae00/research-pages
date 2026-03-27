@@ -1435,6 +1435,8 @@ export function AffiliationWorkspace({
       return null;
     }
 
+    const priorityNeedsTimelineCorrection = needsTimelineCorrection(affiliation);
+
     return (
       <>
         <p className="card-support-text">
@@ -1452,6 +1454,12 @@ export function AffiliationWorkspace({
             <dt>{getTimelineSnapshotLabel(locale)}</dt>
             <dd>{getAffiliationScanSummary(affiliation, locale)}</dd>
           </div>
+          {priorityNeedsTimelineCorrection ? (
+            <div className="field-row">
+              <dt>{getTimelineCheckLabel(locale)}</dt>
+              <dd>{getTimelineCheckSummary(affiliation, locale, text)}</dd>
+            </div>
+          ) : null}
           <div className="field-row">
             <dt>{getNextUpdateLabel(locale)}</dt>
             <dd>{getNextEditSummary(affiliation, locale)}</dd>
