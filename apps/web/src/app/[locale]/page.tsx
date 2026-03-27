@@ -549,7 +549,7 @@ export default async function LocaleRoot({ params }: Props) {
 
   return (
     <div className="marketing-shell rp-landing">
-      <section className="rp-hero-section" id="overview" style={{ gap: "10px" }}>
+      <section className="rp-hero-section" id="overview" style={{ gap: "8px" }}>
         <article className="card document-intro-card rp-hero-card">
           <div className="rp-hero-grid">
             <div className="rp-hero-copy">

@@ -446,35 +446,25 @@ export function HomepageAgentControlSection({
   const nextCommandStrip = nextSetupCommand ? (
     <div className={styles.nextCommandStrip}>
       <div className={styles.nextCommandLead}>
-        <div className={styles.nextCommandPath} aria-label={copy.activeSetup}>
-          <div className={styles.nextCommandPathSegment}>
-            <span className={styles.nextCommandPathMeta}>01 {copy.selectedCli}</span>
+        <span className={styles.metaLabel}>{copy.activeSetup}</span>
+        <div className={styles.nextCommandContext} aria-label={copy.activeSetup}>
+          <div className={styles.nextCommandContextStep}>
+            <span className={styles.nextCommandContextLabel}>01 {copy.selectedCli}</span>
             <div className={styles.nextCommandLabelRow}>
               <strong>{selectedProvider?.label ?? "-"}</strong>
               {selectedProvider ? <span className={styles.nextCommandSelectionPill}>{selectedProvider.cliName}</span> : null}
             </div>
           </div>
 
-          <span className={styles.nextCommandPathArrow} aria-hidden="true">
+          <span className={styles.nextCommandContextArrow} aria-hidden="true">
             &rarr;
           </span>
 
-          <div className={styles.nextCommandPathSegment}>
-            <span className={styles.nextCommandPathMeta}>02 {copy.selectedTeamLabel}</span>
+          <div className={styles.nextCommandContextStep}>
+            <span className={styles.nextCommandContextLabel}>02 {copy.selectedTeamLabel}</span>
             <div className={styles.nextCommandLabelRow}>
               <strong>{selectedTeam?.name ?? "-"}</strong>
               {selectedTeam ? <span className={styles.nextCommandSelectionPill}>{selectedTeam.lane}</span> : null}
-            </div>
-          </div>
-
-          <span className={styles.nextCommandPathArrow} aria-hidden="true">
-            &rarr;
-          </span>
-
-          <div className={`${styles.nextCommandPathSegment} ${styles.nextCommandPathSegmentActive}`}>
-            <span className={styles.nextCommandPathMeta}>03 {copy.nextCommandLabel}</span>
-            <div className={styles.nextCommandLabelRow}>
-              <strong>{nextSetupCommandTitle}</strong>
             </div>
           </div>
         </div>
@@ -482,7 +472,8 @@ export function HomepageAgentControlSection({
 
       <div className={styles.nextCommandMain}>
         <div className={styles.nextCommandCopy}>
-          <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
+          <span className={styles.metaLabel}>03 {copy.runCommandLabel}</span>
+          <strong className={styles.nextCommandCommandTitle}>{nextSetupCommandTitle}</strong>
           <code>{nextSetupCommand.command}</code>
         </div>
         <button
