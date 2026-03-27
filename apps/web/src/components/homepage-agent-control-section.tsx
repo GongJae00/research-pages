@@ -398,109 +398,108 @@ export function HomepageAgentControlSection({
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
   const nextSetupCommandTitle = nextSetupCommand?.title ?? copy.nextCommandLabel;
   const setupHeaderSummary = (
-    <>
-      <div className={styles.setupHeaderSummaryRow} aria-label={setupFlowLabel}>
-        <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
-          <div className={styles.setupCompactSummaryItem}>
-            <span className={styles.setupCompactSummaryOrdinal}>01</span>
-            <div className={styles.setupCompactSummaryContent}>
-              <span className={styles.setupFlowMeta}>{copy.selectedCli}</span>
-              <div className={styles.setupCompactSummaryValueRow}>
-                <strong>{selectedProvider?.label ?? "-"}</strong>
-                {selectedProvider ? (
-                  <span className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}>
-                    {selectedProviderStatusLabel}
-                  </span>
-                ) : null}
-              </div>
+    <div className={styles.setupHeaderSummaryRow} aria-label={setupFlowLabel}>
+      <span className={styles.setupHeaderSummaryLabel}>{setupFlowLabel}</span>
+      <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
+        <div className={styles.setupCompactSummaryItem}>
+          <span className={styles.setupCompactSummaryOrdinal}>01</span>
+          <div className={styles.setupCompactSummaryContent}>
+            <span className={styles.setupFlowMeta}>{copy.selectedCli}</span>
+            <div className={styles.setupCompactSummaryValueRow}>
+              <strong>{selectedProvider?.label ?? "-"}</strong>
+              {selectedProvider ? (
+                <span className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}>
+                  {selectedProviderStatusLabel}
+                </span>
+              ) : null}
             </div>
           </div>
-          <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
-            &rarr;
-          </span>
-          <div className={styles.setupCompactSummaryItem}>
-            <span className={styles.setupCompactSummaryOrdinal}>02</span>
-            <div className={styles.setupCompactSummaryContent}>
-              <span className={styles.setupFlowMeta}>{copy.selectedTeamLabel}</span>
-              <div className={styles.setupCompactSummaryValueRow}>
-                <strong>{selectedTeam?.name ?? "-"}</strong>
-                {selectedTeam ? (
-                  <span className={styles.setupCompactSummaryMetaBadge}>{selectedTeam.lane}</span>
-                ) : null}
-              </div>
+        </div>
+        <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
+          &rarr;
+        </span>
+        <div className={styles.setupCompactSummaryItem}>
+          <span className={styles.setupCompactSummaryOrdinal}>02</span>
+          <div className={styles.setupCompactSummaryContent}>
+            <span className={styles.setupFlowMeta}>{copy.selectedTeamLabel}</span>
+            <div className={styles.setupCompactSummaryValueRow}>
+              <strong>{selectedTeam?.name ?? "-"}</strong>
+              {selectedTeam ? <span className={styles.setupCompactSummaryMetaBadge}>{selectedTeam.lane}</span> : null}
             </div>
           </div>
-          <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
+        </div>
+        <span className={styles.setupCompactSummaryDivider} aria-hidden="true">
+          &rarr;
+        </span>
+        <div className={`${styles.setupCompactSummaryItem} ${styles.setupCompactSummaryItemAccent}`}>
+          <span className={styles.setupCompactSummaryOrdinal}>03</span>
+          <div className={styles.setupCompactSummaryContent}>
+            <span className={styles.setupFlowMeta}>{copy.nextCommandLabel}</span>
+            <div className={styles.setupCompactSummaryValueRow}>
+              <strong>{nextSetupCommandTitle}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+  const nextCommandStrip = nextSetupCommand ? (
+    <div className={styles.nextCommandStrip}>
+      <div className={styles.nextCommandLead}>
+        <div className={styles.nextCommandPath} aria-label={copy.activeSetup}>
+          <div className={styles.nextCommandPathSegment}>
+            <span className={styles.nextCommandPathMeta}>01 {copy.selectedCli}</span>
+            <div className={styles.nextCommandLabelRow}>
+              <strong>{selectedProvider?.label ?? "-"}</strong>
+              {selectedProvider ? <span className={styles.nextCommandSelectionPill}>{selectedProvider.cliName}</span> : null}
+            </div>
+          </div>
+
+          <span className={styles.nextCommandPathArrow} aria-hidden="true">
             &rarr;
           </span>
-          <div className={`${styles.setupCompactSummaryItem} ${styles.setupCompactSummaryItemAccent}`}>
-            <span className={styles.setupCompactSummaryOrdinal}>03</span>
-            <div className={styles.setupCompactSummaryContent}>
-              <span className={styles.setupFlowMeta}>{copy.nextCommandLabel}</span>
-              <div className={styles.setupCompactSummaryValueRow}>
-                <strong>{nextSetupCommandTitle}</strong>
-              </div>
+
+          <div className={styles.nextCommandPathSegment}>
+            <span className={styles.nextCommandPathMeta}>02 {copy.selectedTeamLabel}</span>
+            <div className={styles.nextCommandLabelRow}>
+              <strong>{selectedTeam?.name ?? "-"}</strong>
+              {selectedTeam ? <span className={styles.nextCommandSelectionPill}>{selectedTeam.lane}</span> : null}
+            </div>
+          </div>
+
+          <span className={styles.nextCommandPathArrow} aria-hidden="true">
+            &rarr;
+          </span>
+
+          <div className={`${styles.nextCommandPathSegment} ${styles.nextCommandPathSegmentActive}`}>
+            <span className={styles.nextCommandPathMeta}>03 {copy.nextCommandLabel}</span>
+            <div className={styles.nextCommandLabelRow}>
+              <strong>{nextSetupCommandTitle}</strong>
             </div>
           </div>
         </div>
       </div>
 
-      {nextSetupCommand ? (
-        <div className={styles.nextCommandStrip}>
-          <div className={styles.nextCommandLead}>
-            <div className={styles.nextCommandPath} aria-label={copy.activeSetup}>
-              <div className={styles.nextCommandPathSegment}>
-                <span className={styles.nextCommandPathMeta}>01 {copy.selectedCli}</span>
-                <div className={styles.nextCommandLabelRow}>
-                  <strong>{selectedProvider?.label ?? "-"}</strong>
-                  {selectedProvider ? <span className={styles.nextCommandSelectionPill}>{selectedProvider.cliName}</span> : null}
-                </div>
-              </div>
-
-              <span className={styles.nextCommandPathArrow} aria-hidden="true">
-                &rarr;
-              </span>
-
-              <div className={styles.nextCommandPathSegment}>
-                <span className={styles.nextCommandPathMeta}>02 {copy.selectedTeamLabel}</span>
-                <div className={styles.nextCommandLabelRow}>
-                  <strong>{selectedTeam?.name ?? "-"}</strong>
-                  {selectedTeam ? <span className={styles.nextCommandSelectionPill}>{selectedTeam.lane}</span> : null}
-                </div>
-              </div>
-
-              <span className={styles.nextCommandPathArrow} aria-hidden="true">
-                &rarr;
-              </span>
-
-              <div className={`${styles.nextCommandPathSegment} ${styles.nextCommandPathSegmentActive}`}>
-                <span className={styles.nextCommandPathMeta}>03 {copy.nextCommandLabel}</span>
-                <div className={styles.nextCommandLabelRow}>
-                  <strong>{nextSetupCommandTitle}</strong>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.nextCommandMain}>
-            <code>{nextSetupCommand.command}</code>
-            <button
-              type="button"
-              className={`${styles.copyButton} ${styles.copyIconButton} ${styles.nextCommandCopyButton}`}
-              onClick={() => void copyCommand(nextSetupCommand.kind)}
-              aria-label={nextSetupCommand.buttonLabel}
-              title={nextSetupCommand.buttonLabel}
-            >
-              {copiedCommand === nextSetupCommand.kind ? <Check size={14} /> : <Copy size={14} />}
-              <span className={styles.nextCommandCopyButtonText}>
-                {copiedCommand === nextSetupCommand.kind ? copy.copied : nextSetupCommand.buttonLabel}
-              </span>
-            </button>
-          </div>
+      <div className={styles.nextCommandMain}>
+        <div className={styles.nextCommandCopy}>
+          <span className={styles.metaLabel}>{copy.runCommandLabel}</span>
+          <code>{nextSetupCommand.command}</code>
         </div>
-      ) : null}
-    </>
-  );
+        <button
+          type="button"
+          className={`${styles.copyButton} ${styles.copyIconButton} ${styles.nextCommandCopyButton}`}
+          onClick={() => void copyCommand(nextSetupCommand.kind)}
+          aria-label={nextSetupCommand.buttonLabel}
+          title={nextSetupCommand.buttonLabel}
+        >
+          {copiedCommand === nextSetupCommand.kind ? <Check size={14} /> : <Copy size={14} />}
+          <span className={styles.nextCommandCopyButtonText}>
+            {copiedCommand === nextSetupCommand.kind ? copy.copied : nextSetupCommand.buttonLabel}
+          </span>
+        </button>
+      </div>
+    </div>
+  ) : null;
   return (
     <div className={styles.shell}>
       <div className={styles.header}>
@@ -697,6 +696,8 @@ export function HomepageAgentControlSection({
                   </div>
                 </div>
               </div>
+
+              {nextCommandStrip}
             </div>
 
             <details className={styles.setupCommandsDisclosure}>

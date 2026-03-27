@@ -1707,6 +1707,7 @@
 
 .setupHeaderSummaryRow {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.03rem;
   min-width: 0;
@@ -1776,7 +1777,7 @@
 
 .setupWorkbench {
   display: grid;
-  gap: 0.03rem;
+  gap: 0.05rem;
   margin-top: 0;
   padding: 0.03rem;
 }
