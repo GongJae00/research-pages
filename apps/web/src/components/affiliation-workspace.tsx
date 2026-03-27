@@ -590,16 +590,6 @@ function getNextEditSummary(
   ].join(" / ");
 }
 
-function getAffiliationCardScanLine(
-  entry: AffiliationTimelineEntry,
-  locale: Locale,
-) {
-  return [
-    getAffiliationScanSummary(entry, locale),
-    `${getNextUpdateLabel(locale)}: ${getPrimaryEditButtonLabel(entry, locale)}`,
-  ].join(" / ");
-}
-
 function getTimelineCorrectionBadgeLabel(
   entry: AffiliationTimelineEntry,
   locale: Locale,
@@ -1526,7 +1516,7 @@ export function AffiliationWorkspace({
     const actionBadge = getAffiliationActionBadge(affiliation, locale);
     const sectionBadge = getAffiliationSectionBadge(affiliation, locale);
     const nextEdit = getNextEditSummary(affiliation, locale);
-    const cardScanLine = getAffiliationCardScanLine(affiliation, locale);
+    const timelineSnapshot = getAffiliationScanSummary(affiliation, locale);
     const institutionSummary = joinAffiliationSummary(affiliation) || text.institution;
 
     return (
@@ -1534,23 +1524,23 @@ export function AffiliationWorkspace({
         <div className="card-header">
           <div>
             <h3>{affiliation.roleTitle}</h3>
-            <p className="card-support-text">{cardScanLine}</p>
+            <p className="card-support-text">{institutionSummary}</p>
             <dl className="field-list">
+              <div className="field-row">
+                <dt>{getTimelineSnapshotLabel(locale)}</dt>
+                <dd>{timelineSnapshot}</dd>
+              </div>
               <div className="field-row">
                 <dt>{getNextUpdateLabel(locale)}</dt>
                 <dd>{nextEdit}</dd>
               </div>
               <div className="field-row">
-                <dt>{text.institution}</dt>
-                <dd>{institutionSummary}</dd>
+                <dt>{getEditFocusLabel(locale)}</dt>
+                <dd>{getEditFocusHint(affiliation, locale)}</dd>
               </div>
               <div className="field-row">
                 <dt>{getTimelinePlacementLabel(locale)}</dt>
                 <dd>{getTimelinePlacementSummary(affiliation, locale)}</dd>
-              </div>
-              <div className="field-row">
-                <dt>{getEditFocusLabel(locale)}</dt>
-                <dd>{getEditFocusHint(affiliation, locale)}</dd>
               </div>
               <div className="field-row">
                 <dt>{getTimelineCheckLabel(locale)}</dt>
@@ -1644,7 +1634,8 @@ export function AffiliationWorkspace({
     const sectionBadge = getAffiliationSectionBadge(affiliation, locale);
     const appointmentStatusHint = getAppointmentStatusFieldHint(affiliation, locale);
     const endDateHint = getEndDateFieldHint(affiliation, locale);
-    const cardScanLine = getAffiliationCardScanLine(affiliation, locale);
+    const timelineSnapshot = getAffiliationScanSummary(affiliation, locale);
+    const institutionSummary = joinAffiliationSummary(affiliation) || text.institution;
 
     return (
       <section
@@ -1662,7 +1653,7 @@ export function AffiliationWorkspace({
         <div className="card-header">
           <div>
             <h3>{getEditableAffiliationHeading(affiliation, index, locale, text)}</h3>
-            <p className="card-support-text">{cardScanLine}</p>
+            <p className="card-support-text">{institutionSummary}</p>
             {isEditingNow ? (
               <p className="card-support-text">
                 <strong>{getEditingNowLabel(locale)}</strong>
@@ -1670,8 +1661,8 @@ export function AffiliationWorkspace({
             ) : null}
             <dl className="field-list">
               <div className="field-row">
-                <dt>{text.institution}</dt>
-                <dd>{joinAffiliationSummary(affiliation) || text.institution}</dd>
+                <dt>{getTimelineSnapshotLabel(locale)}</dt>
+                <dd>{timelineSnapshot}</dd>
               </div>
               <div className="field-row">
                 <dt>{getNextUpdateLabel(locale)}</dt>

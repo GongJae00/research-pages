@@ -576,12 +576,75 @@ export function HomepageAgentControlSection({
             </div>
 
             <div className={styles.setupWorkbench}>
+              {nextSetupCommand ? (
+                <div className={styles.nextCommandStrip}>
+                  <div className={styles.nextCommandLead}>
+                    <div className={styles.nextCommandIntro}>
+                      <span className={`${styles.setupPickerStep} ${styles.nextCommandStep}`}>03</span>
+                      <div className={styles.nextCommandIntroCopy}>
+                        <span className={styles.setupSelectionLeadLabel}>{copy.nextCommandLabel}</span>
+                        <strong>{nextSetupCommandTitle}</strong>
+                        <p className={styles.nextCommandHelp}>{copy.nextCommandHelp}</p>
+                      </div>
+                    </div>
+
+                    <div className={styles.nextCommandContext} aria-label={copy.activeSetup}>
+                      <div className={styles.nextCommandContextStep}>
+                        <span className={styles.nextCommandContextLabel}>{copy.selectedCli}</span>
+                        <strong>{selectedProvider?.label ?? "-"}</strong>
+                        {selectedProvider ? (
+                          <div className={styles.nextCommandLabelRow}>
+                            <span className={styles.nextCommandSelectionPill}>{selectedProvider.cliName}</span>
+                            <span
+                              className={`${styles.inlineStatusBadge} ${getProviderStatusClass(
+                                selectedProvider.status,
+                              )}`}
+                            >
+                              {selectedProviderStatusLabel}
+                            </span>
+                          </div>
+                        ) : null}
+                      </div>
+
+                      <span className={styles.nextCommandContextArrow} aria-hidden="true">
+                        &rarr;
+                      </span>
+
+                      <div className={styles.nextCommandContextStep}>
+                        <span className={styles.nextCommandContextLabel}>{copy.selectedTeamLabel}</span>
+                        <strong>{selectedTeam?.name ?? "-"}</strong>
+                        {selectedTeam ? (
+                          <div className={styles.nextCommandLabelRow}>
+                            <span className={styles.nextCommandSelectionPill}>{selectedTeam.lane}</span>
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className={styles.nextCommandMain}>
+                    <code>{nextSetupCommand.command}</code>
+                    <button
+                      type="button"
+                      className={`${styles.copyButton} ${styles.copyIconButton}`}
+                      onClick={() => void copyCommand(nextSetupCommand.kind)}
+                      aria-label={nextSetupCommand.buttonLabel}
+                      title={nextSetupCommand.buttonLabel}
+                    >
+                      {copiedCommand === nextSetupCommand.kind ? <Check size={14} /> : <Copy size={14} />}
+                      <span className={styles.copyButtonText}>
+                        {copiedCommand === nextSetupCommand.kind ? copy.copied : nextSetupCommand.buttonLabel}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+
               <div className={styles.setupSelectionPanel} aria-label={getSetupInputLabel(locale)}>
                 <div className={styles.setupSelectionLead}>
                   <div className={styles.setupSectionHead}>
                     <div className={styles.setupSectionCopy}>
                       <span className={styles.setupSelectionLeadLabel}>{setupFlowLabel}</span>
-                      <p className={styles.setupSelectionLeadHint}>{copy.setupSequenceIntro}</p>
                     </div>
                   </div>
                 </div>
@@ -652,70 +715,6 @@ export function HomepageAgentControlSection({
                   </div>
                 </div>
               </div>
-
-              {nextSetupCommand ? (
-                <div className={styles.nextCommandStrip}>
-                  <div className={styles.nextCommandLead}>
-                    <div className={styles.nextCommandIntro}>
-                      <span className={`${styles.setupPickerStep} ${styles.nextCommandStep}`}>03</span>
-                      <div className={styles.nextCommandIntroCopy}>
-                        <span className={styles.setupSelectionLeadLabel}>{copy.nextCommandLabel}</span>
-                        <strong>{nextSetupCommandTitle}</strong>
-                        <p className={styles.nextCommandHelp}>{copy.nextCommandHelp}</p>
-                      </div>
-                    </div>
-
-                    <div className={styles.nextCommandContext} aria-label={copy.activeSetup}>
-                      <div className={styles.nextCommandContextStep}>
-                        <span className={styles.nextCommandContextLabel}>{copy.selectedCli}</span>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
-                        {selectedProvider ? (
-                          <div className={styles.nextCommandLabelRow}>
-                            <span className={styles.nextCommandSelectionPill}>{selectedProvider.cliName}</span>
-                            <span
-                              className={`${styles.inlineStatusBadge} ${getProviderStatusClass(
-                                selectedProvider.status,
-                              )}`}
-                            >
-                              {selectedProviderStatusLabel}
-                            </span>
-                          </div>
-                        ) : null}
-                      </div>
-
-                      <span className={styles.nextCommandContextArrow} aria-hidden="true">
-                        &rarr;
-                      </span>
-
-                      <div className={styles.nextCommandContextStep}>
-                        <span className={styles.nextCommandContextLabel}>{copy.selectedTeamLabel}</span>
-                        <strong>{selectedTeam?.name ?? "-"}</strong>
-                        {selectedTeam ? (
-                          <div className={styles.nextCommandLabelRow}>
-                            <span className={styles.nextCommandSelectionPill}>{selectedTeam.lane}</span>
-                          </div>
-                        ) : null}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className={styles.nextCommandMain}>
-                    <code>{nextSetupCommand.command}</code>
-                    <button
-                      type="button"
-                      className={`${styles.copyButton} ${styles.copyIconButton}`}
-                      onClick={() => void copyCommand(nextSetupCommand.kind)}
-                      aria-label={nextSetupCommand.buttonLabel}
-                      title={nextSetupCommand.buttonLabel}
-                    >
-                      {copiedCommand === nextSetupCommand.kind ? <Check size={14} /> : <Copy size={14} />}
-                      <span className={styles.copyButtonText}>
-                        {copiedCommand === nextSetupCommand.kind ? copy.copied : nextSetupCommand.buttonLabel}
-                      </span>
-                    </button>
-                  </div>
-                </div>
-              ) : null}
             </div>
 
             <details className={styles.setupCommandsDisclosure}>

@@ -1788,15 +1788,15 @@
 
 .setupWorkbench {
   display: grid;
-  gap: 0.06rem;
+  gap: 0.04rem;
   margin-top: 0;
-  padding: 0.06rem;
+  padding: 0.04rem;
 }
 
 .setupSelectionPanel {
   display: grid;
   gap: 0.03rem;
-  padding: 0.06rem;
+  padding: 0.05rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 16px;
   background: rgba(248, 250, 252, 0.92);
@@ -1804,8 +1804,8 @@
 
 .setupSelectionLead {
   display: grid;
-  gap: 0.01rem;
-  padding: 0.02rem 0.05rem 0.04rem;
+  gap: 0;
+  padding: 0 0.05rem 0.03rem;
   border-bottom: 1px solid rgba(203, 213, 225, 0.72);
 }
 
