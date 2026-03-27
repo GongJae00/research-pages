@@ -549,6 +549,7 @@ export function HomepageAgentControlSection({
           <div className={styles.surfaceEntrySection}>
             <div className={styles.surfaceEntrySectionCopy}>
               <span className={styles.metaLabel}>{surfaceEntryCopy.sectionLabel}</span>
+              <p className={styles.surfaceEntrySectionHint}>{surfaceEntryCopy.sectionHint}</p>
             </div>
 
             <div className={styles.surfaceEntryGrid} aria-label={surfaceEntryCopy.ariaLabel}>
