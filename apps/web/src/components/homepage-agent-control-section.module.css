@@ -1911,43 +1911,43 @@
 
 .nextCommandStrip {
   display: grid;
-  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
-  align-items: start;
-  gap: 0.01rem;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  align-items: center;
+  gap: 0.05rem;
   margin-top: 0;
-  padding: 0.015rem;
-  border: 1px solid rgba(15, 23, 42, 0.24);
-  border-radius: 16px;
+  padding: 0.05rem 0.06rem;
+  border: 1px solid rgba(15, 23, 42, 0.18);
+  border-radius: 14px;
   background:
     radial-gradient(circle at top right, rgba(14, 165, 233, 0.1), transparent 34%),
     linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(241, 245, 249, 0.98));
-  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
-}
-
-.nextCommandLead,
-.nextCommandMain {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.08rem;
-  min-width: 0;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.06);
 }
 
 .nextCommandLead {
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 0.03rem;
+  display: grid;
+  gap: 0.04rem;
+  min-width: 0;
+}
+
+.nextCommandMain {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.05rem;
+  min-width: 0;
 }
 
 .nextCommandIntro {
   display: flex;
   align-items: flex-start;
-  gap: 0.08rem;
+  gap: 0.06rem;
   width: 100%;
 }
 
 .nextCommandIntroCopy {
   display: grid;
-  gap: 0.02rem;
+  gap: 0.01rem;
   min-width: 0;
 }
 
@@ -1984,7 +1984,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  gap: 0.04rem;
+  gap: 0.03rem;
   width: 100%;
 }
 
@@ -1992,7 +1992,7 @@
   display: grid;
   gap: 0.01rem;
   min-width: 0;
-  padding: 0.04rem 0.07rem;
+  padding: 0.05rem 0.07rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.88);
@@ -2118,22 +2118,28 @@
 
 .nextCommandLead strong {
   color: #0f172a;
-  font-size: 0.8rem;
-  line-height: 1.1;
+  font-size: 0.78rem;
+  line-height: 1.08;
 }
 
 .nextCommandMain code {
   display: block;
   flex: 1 1 auto;
   min-width: 0;
-  padding: 0.05rem 0.07rem;
+  padding: 0.06rem 0.08rem;
   border: 1px solid rgba(148, 163, 184, 0.52);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.94);
   overflow-wrap: anywhere;
   color: #0f172a;
-  font-size: 0.66rem;
-  line-height: 1.2;
+  font-size: 0.64rem;
+  line-height: 1.18;
+}
+
+.nextCommandMain .copyIconButton {
+  width: auto;
+  min-width: 2.05rem;
+  justify-self: end;
 }
 
 .setupCommands {
@@ -2659,7 +2665,7 @@
   }
 
   .setupWorkbench {
-    grid-template-columns: minmax(0, 1.14fr) minmax(280px, 0.86fr);
+    grid-template-columns: 1fr;
     align-items: start;
   }
 
@@ -2673,38 +2679,25 @@
   }
 
   .nextCommandStrip {
-    grid-column: 2;
-    grid-row: 1;
     align-self: stretch;
-    grid-template-columns: 1fr;
-    align-content: start;
-    padding: 0.08rem;
-  }
-
-  .nextCommandStrip .setupSectionHead {
-    margin-bottom: 0.02rem;
-  }
-
-  .nextCommandLead,
-  .nextCommandMain {
-    flex-direction: column;
-    align-items: flex-start;
+    grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+    padding: 0.05rem 0.06rem;
   }
 
   .nextCommandMain {
-    gap: 0.08rem;
+    grid-template-columns: minmax(0, 1fr) auto;
   }
 
   .nextCommandMain code {
     width: 100%;
   }
 
-  .nextCommandLead .inlineMeta {
+  .copyIconButton {
     width: 100%;
   }
 
-  .copyIconButton {
-    width: 100%;
+  .nextCommandMain .copyIconButton {
+    width: auto;
   }
 
   .setupCommands {
@@ -3116,5 +3109,14 @@
 
   .nextCommandStrip {
     grid-template-columns: 1fr;
+  }
+
+  .nextCommandMain {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .nextCommandMain .copyIconButton {
+    width: 100%;
   }
 }
