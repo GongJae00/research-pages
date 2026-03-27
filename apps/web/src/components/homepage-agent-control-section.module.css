@@ -1908,6 +1908,19 @@
   min-width: 0;
 }
 
+.nextCommandLeadIntro {
+  display: grid;
+  gap: 0.015rem;
+  min-width: 0;
+}
+
+.nextCommandLeadHelp {
+  margin: 0;
+  color: #475569;
+  font-size: 0.66rem;
+  line-height: 1.24;
+}
+
 .nextCommandMain {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;

@@ -434,6 +434,11 @@ export function HomepageAgentControlSection({
   const nextCommandStrip = nextSetupCommand ? (
     <div className={styles.nextCommandStrip}>
       <div className={styles.nextCommandLead}>
+        <div className={styles.nextCommandLeadIntro}>
+          <span className={styles.metaLabel}>{copy.commandOrder}</span>
+          <p className={styles.nextCommandLeadHelp}>{copy.nextCommandHelp}</p>
+        </div>
+
         <div className={styles.nextCommandContext} aria-label={copy.activeSetup}>
           <div className={styles.nextCommandContextStep}>
             <span className={styles.nextCommandContextLabel}>01 {copy.selectedCli}</span>
