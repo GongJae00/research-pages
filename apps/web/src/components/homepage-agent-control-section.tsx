@@ -452,8 +452,12 @@ export function HomepageAgentControlSection({
             <div className={styles.nextCommandIntro}>
               <span className={`${styles.setupPickerStep} ${styles.nextCommandStep}`}>03</span>
               <div className={styles.nextCommandIntroCopy}>
-                <span className={styles.setupSelectionLeadLabel}>{copy.nextCommandLabel}</span>
+                <div className={styles.nextCommandTitleRow}>
+                  <span className={styles.setupSelectionLeadLabel}>{copy.nextCommandLabel}</span>
+                  <span className={styles.nextCommandOutput}>{copy.runCommandLabel}</span>
+                </div>
                 <strong>{nextSetupCommandTitle}</strong>
+                <p className={styles.nextCommandHelp}>{copy.nextCommandHelp}</p>
               </div>
             </div>
 
@@ -484,13 +488,13 @@ export function HomepageAgentControlSection({
             <code>{nextSetupCommand.command}</code>
             <button
               type="button"
-              className={`${styles.copyButton} ${styles.copyIconButton}`}
+              className={`${styles.copyButton} ${styles.copyIconButton} ${styles.nextCommandCopyButton}`}
               onClick={() => void copyCommand(nextSetupCommand.kind)}
               aria-label={nextSetupCommand.buttonLabel}
               title={nextSetupCommand.buttonLabel}
             >
               {copiedCommand === nextSetupCommand.kind ? <Check size={14} /> : <Copy size={14} />}
-              <span className={styles.copyButtonText}>
+              <span className={styles.nextCommandCopyButtonText}>
                 {copiedCommand === nextSetupCommand.kind ? copy.copied : nextSetupCommand.buttonLabel}
               </span>
             </button>
