@@ -393,14 +393,9 @@ export function HomepageAgentControlSection({
         <div className={styles.setupCompactSummaryItem}>
           <span className={styles.setupCompactSummaryOrdinal}>01</span>
           <div className={styles.setupCompactSummaryContent}>
-            <span className={styles.setupFlowMeta}>{copy.chooseProvider}</span>
+            <span className={styles.setupFlowMeta}>{copy.selectedCliStatusLabel}</span>
             <div className={styles.setupCompactSummaryValueRow}>
-              <strong>{selectedProvider?.label ?? "-"}</strong>
-              {selectedProvider ? (
-                <span className={`${styles.inlineStatusBadge} ${getProviderStatusClass(selectedProvider.status)}`}>
-                  {selectedProviderStatusLabel}
-                </span>
-              ) : null}
+              <strong>{selectedProviderStatusLabel}</strong>
             </div>
           </div>
         </div>
@@ -410,10 +405,9 @@ export function HomepageAgentControlSection({
         <div className={styles.setupCompactSummaryItem}>
           <span className={styles.setupCompactSummaryOrdinal}>02</span>
           <div className={styles.setupCompactSummaryContent}>
-            <span className={styles.setupFlowMeta}>{copy.chooseTeam}</span>
+            <span className={styles.setupFlowMeta}>{copy.selectedLaneLabel}</span>
             <div className={styles.setupCompactSummaryValueRow}>
-              <strong>{selectedTeam?.name ?? "-"}</strong>
-              {selectedTeam ? <span className={styles.setupCompactSummaryMetaBadge}>{selectedTeam.lane}</span> : null}
+              <strong>{selectedTeam?.lane ?? "-"}</strong>
             </div>
           </div>
         </div>
@@ -423,9 +417,10 @@ export function HomepageAgentControlSection({
         <div className={`${styles.setupCompactSummaryItem} ${styles.setupCompactSummaryItemAccent}`}>
           <span className={styles.setupCompactSummaryOrdinal}>03</span>
           <div className={styles.setupCompactSummaryContent}>
-            <span className={styles.setupFlowMeta}>{copy.nextCommandLabel}</span>
+            <span className={styles.setupFlowMeta}>{copy.nextActionLabel}</span>
             <div className={styles.setupCompactSummaryValueRow}>
               <strong>{nextSetupCommandTitle}</strong>
+              <span className={styles.setupCompactSummaryMetaBadge}>{copy.runCommandLabel}</span>
             </div>
           </div>
         </div>

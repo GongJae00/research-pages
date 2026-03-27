@@ -1429,13 +1429,17 @@ export function AffiliationWorkspace({
   const renderSectionPrioritySummary = (
     section: AffiliationSectionKey,
     affiliation: AffiliationTimelineEntry | undefined,
-    enableDirectEdit = false,
+    actionMode: "none" | "edit" | "focus" = "none",
   ) => {
     if (!affiliation) {
       return null;
     }
 
     const priorityNeedsTimelineCorrection = needsTimelineCorrection(affiliation);
+    const priorityActionLabel =
+      actionMode === "focus"
+        ? getPriorityEntryLabel(locale, section)
+        : getPrimaryEditButtonLabel(affiliation, locale);
 
     return (
       <>
@@ -1465,15 +1469,23 @@ export function AffiliationWorkspace({
             <dd>{getNextEditSummary(affiliation, locale)}</dd>
           </div>
         </dl>
-        {enableDirectEdit ? (
+        {actionMode !== "none" ? (
           <div className="editor-actions">
             <button
               type="button"
               className="secondary-cta profile-inline-btn"
-              onClick={() => handleEditAffiliation(affiliation.id)}
+              onClick={() => {
+                if (actionMode === "edit") {
+                  handleEditAffiliation(affiliation.id);
+                  return;
+                }
+
+                setActiveAffiliation(affiliation.id);
+              }}
+              aria-label={`${priorityActionLabel}: ${getAffiliationDisplayLabel(affiliation, text)}`}
             >
               <PencilLine size={15} />
-              {getPrimaryEditButtonLabel(affiliation, locale)}
+              {priorityActionLabel}
             </button>
           </div>
         ) : null}
@@ -1971,10 +1983,7 @@ export function AffiliationWorkspace({
                             .filter(Boolean)
                             .join(" ")}
                         </p>
-                        {renderSectionPrioritySummary(
-                          "current",
-                          currentDraftPriorityAffiliation,
-                        )}
+                        {renderSectionPrioritySummary("current", currentDraftPriorityAffiliation, "focus")}
                       </div>
                     </div>
                     <div className="card-body detail-cards">
@@ -2000,10 +2009,7 @@ export function AffiliationWorkspace({
                             .filter(Boolean)
                             .join(" ")}
                         </p>
-                        {renderSectionPrioritySummary(
-                          "queued",
-                          queuedDraftPriorityAffiliation,
-                        )}
+                        {renderSectionPrioritySummary("queued", queuedDraftPriorityAffiliation, "focus")}
                       </div>
                     </div>
                     <div className="card-body detail-cards">
@@ -2035,6 +2041,7 @@ export function AffiliationWorkspace({
                         {renderSectionPrioritySummary(
                           "archived",
                           archivedDraftPriorityAffiliation,
+                          "focus",
                         )}
                       </div>
                     </div>
@@ -2272,7 +2279,7 @@ export function AffiliationWorkspace({
                       .filter(Boolean)
                       .join(" ")}
                   </p>
-                  {renderSectionPrioritySummary("current", currentPriorityAffiliation, true)}
+                  {renderSectionPrioritySummary("current", currentPriorityAffiliation, "edit")}
                 </div>
               </div>
               <div className="card-body detail-cards">
@@ -2294,7 +2301,7 @@ export function AffiliationWorkspace({
                       .filter(Boolean)
                       .join(" ")}
                   </p>
-                  {renderSectionPrioritySummary("queued", queuedPriorityAffiliation, true)}
+                  {renderSectionPrioritySummary("queued", queuedPriorityAffiliation, "edit")}
                 </div>
               </div>
               <div className="card-body detail-cards">
@@ -2316,7 +2323,7 @@ export function AffiliationWorkspace({
                       .filter(Boolean)
                       .join(" ")}
                   </p>
-                  {renderSectionPrioritySummary("archived", archivedPriorityAffiliation, true)}
+                  {renderSectionPrioritySummary("archived", archivedPriorityAffiliation, "edit")}
                 </div>
               </div>
               <div className="card-body detail-cards">
