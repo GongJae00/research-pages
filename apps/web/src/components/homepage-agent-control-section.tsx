@@ -587,40 +587,41 @@ export function HomepageAgentControlSection({
                       <div className={styles.nextCommandIntroCopy}>
                         <span className={styles.setupSelectionLeadLabel}>{copy.nextCommandLabel}</span>
                         <strong>{nextSetupCommandTitle}</strong>
-                        <p className={styles.nextCommandHelp}>{copy.nextCommandHelp}</p>
                       </div>
                     </div>
 
-                    <div className={styles.nextCommandContext} aria-label={copy.activeSetup}>
-                      <div className={styles.nextCommandContextStep}>
-                        <span className={styles.nextCommandContextLabel}>{copy.selectedCli}</span>
-                        <strong>{selectedProvider?.label ?? "-"}</strong>
-                        {selectedProvider ? (
-                          <div className={styles.nextCommandLabelRow}>
-                            <span className={styles.nextCommandSelectionPill}>{selectedProvider.cliName}</span>
-                            <span
-                              className={`${styles.inlineStatusBadge} ${getProviderStatusClass(
-                                selectedProvider.status,
-                              )}`}
-                            >
-                              {selectedProviderStatusLabel}
-                            </span>
-                          </div>
-                        ) : null}
+                    <div className={styles.nextCommandPath} aria-label={copy.activeSetup}>
+                      <div className={styles.nextCommandPathSegment}>
+                        <span className={styles.nextCommandPathMeta}>{copy.selectedCli}</span>
+                        <div className={styles.nextCommandLabelRow}>
+                          <strong>{selectedProvider?.label ?? "-"}</strong>
+                          {selectedProvider ? (
+                            <>
+                              <span className={styles.nextCommandSelectionPill}>{selectedProvider.cliName}</span>
+                              <span
+                                className={`${styles.inlineStatusBadge} ${getProviderStatusClass(
+                                  selectedProvider.status,
+                                )}`}
+                              >
+                                {selectedProviderStatusLabel}
+                              </span>
+                            </>
+                          ) : null}
+                        </div>
                       </div>
 
-                      <span className={styles.nextCommandContextArrow} aria-hidden="true">
+                      <span className={styles.nextCommandPathArrow} aria-hidden="true">
                         &rarr;
                       </span>
 
-                      <div className={styles.nextCommandContextStep}>
-                        <span className={styles.nextCommandContextLabel}>{copy.selectedTeamLabel}</span>
-                        <strong>{selectedTeam?.name ?? "-"}</strong>
-                        {selectedTeam ? (
-                          <div className={styles.nextCommandLabelRow}>
+                      <div className={styles.nextCommandPathSegment}>
+                        <span className={styles.nextCommandPathMeta}>{copy.selectedTeamLabel}</span>
+                        <div className={styles.nextCommandLabelRow}>
+                          <strong>{selectedTeam?.name ?? "-"}</strong>
+                          {selectedTeam ? (
                             <span className={styles.nextCommandSelectionPill}>{selectedTeam.lane}</span>
-                          </div>
-                        ) : null}
+                          ) : null}
+                        </div>
                       </div>
                     </div>
                   </div>

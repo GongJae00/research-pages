@@ -1499,7 +1499,8 @@ export function AffiliationWorkspace({
   const renderReadOnlyAffiliationCard = (affiliation: AffiliationTimelineEntry) => {
     const actionBadge = getAffiliationActionBadge(affiliation, locale);
     const sectionBadge = getAffiliationSectionBadge(affiliation, locale);
-    const nextEdit = getNextEditSummary(affiliation, locale);
+    const nextEditLabel = getPrimaryEditButtonLabel(affiliation, locale);
+    const nextEditFocus = getPrimaryNextActionSummary(affiliation, locale);
     const timelineSnapshot = getAffiliationScanSummary(affiliation, locale);
     const institutionSummary = joinAffiliationSummary(affiliation) || text.institution;
     const needsCorrection = needsTimelineCorrection(affiliation);
@@ -1516,8 +1517,16 @@ export function AffiliationWorkspace({
                 <dd>{timelineSnapshot}</dd>
               </div>
               <div className="field-row">
+                <dt>{getCurrentTimelineLabel(locale)}</dt>
+                <dd>{getCurrentTimelineValue(affiliation.active, locale)}</dd>
+              </div>
+              <div className="field-row">
                 <dt>{getNextUpdateLabel(locale)}</dt>
-                <dd>{nextEdit}</dd>
+                <dd>{nextEditLabel}</dd>
+              </div>
+              <div className="field-row">
+                <dt>{getEditFocusLabel(locale)}</dt>
+                <dd>{nextEditFocus}</dd>
               </div>
               {needsCorrection ? (
                 <div className="field-row">
@@ -1537,10 +1546,10 @@ export function AffiliationWorkspace({
               type="button"
               className="profile-inline-btn"
               onClick={() => handleEditAffiliation(affiliation.id)}
-              aria-label={getPrimaryEditButtonLabel(affiliation, locale)}
+              aria-label={nextEditLabel}
             >
               <PencilLine size={15} />
-              {getPrimaryEditButtonLabel(affiliation, locale)}
+              {nextEditLabel}
             </button>
           </div>
         </div>
@@ -1556,10 +1565,6 @@ export function AffiliationWorkspace({
                 <div className="field-row">
                   <dt>{text.appointmentStatus}</dt>
                   <dd>{text.appointmentLabels[affiliation.appointmentStatus]}</dd>
-                </div>
-                <div className="field-row">
-                  <dt>{getCurrentTimelineLabel(locale)}</dt>
-                  <dd>{getCurrentTimelineValue(affiliation.active, locale)}</dd>
                 </div>
                 <div className="field-row">
                   <dt>{getTimelinePlacementLabel(locale)}</dt>
