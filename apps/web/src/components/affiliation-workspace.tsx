@@ -335,6 +335,7 @@ function getAffiliationStateLabel(
   return locale === "ko" ? "\uc885\ub8cc \uc18c\uc18d" : "Past role";
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getLegacyAffiliationScanSummary(
   entry: AffiliationTimelineEntry,
   locale: Locale,
@@ -350,31 +351,14 @@ function getAffiliationScanSummary(
   locale: Locale,
 ) {
   const text = copy[locale];
-  const separator = ` ${String.fromCharCode(51724)} `;
-  const legacySummary = getLegacyAffiliationScanSummary(entry, locale);
-  const fallbackPeriodSummary = legacySummary.includes(separator)
-    ? legacySummary.split(separator).slice(-1)[0]
-    : legacySummary;
+  const hasAnyDate = Boolean(entry.startDate || entry.endDate);
   const startLabel =
     entry.startDate || (locale === "ko" ? "\uc2dc\uc791\uc77c \ud544\uc694" : "Start date needed");
-  const endLabel = entry.active
-    ? entry.endDate || text.present
-    : entry.endDate ||
-      (entry.appointmentStatus === "planned" || entry.appointmentStatus === "paused"
-        ? text.appointmentLabels[entry.appointmentStatus]
-        : locale === "ko"
-          ? "\uc885\ub8cc\uc77c \ud544\uc694"
-          : "End date needed");
-  const periodSummary =
-    entry.startDate || entry.endDate
-      ? `${startLabel} -> ${endLabel}`
-      : fallbackPeriodSummary;
+  const periodSummary = hasAnyDate
+    ? `${startLabel} -> ${getTimelineEndLabel(entry, locale, text)}`
+    : startLabel;
 
-  return [
-    getAffiliationSectionName(getAffiliationSectionKey(entry), locale),
-    text.appointmentLabels[entry.appointmentStatus],
-    periodSummary,
-  ].join(" / ");
+  return [periodSummary, getAffiliationStateLabel(entry, locale)].join(" / ");
 }
 
 function getCurrentTimelineLabel(locale: Locale) {

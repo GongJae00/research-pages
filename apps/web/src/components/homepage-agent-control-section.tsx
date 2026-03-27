@@ -560,6 +560,7 @@ export function HomepageAgentControlSection({
                   <div className={styles.setupTitleRow}>
                     <h4>{copy.setupBuilderTitle}</h4>
                   </div>
+                  <p className={styles.setupTitleHint}>{copy.setupSequenceIntro}</p>
                 </div>
                 <div className={styles.setupHeaderActions}>
                   <div className={styles.panelHeadIcon}>
@@ -586,6 +587,7 @@ export function HomepageAgentControlSection({
                       <div className={styles.nextCommandIntroCopy}>
                         <span className={styles.setupSelectionLeadLabel}>{copy.nextCommandLabel}</span>
                         <strong>{nextSetupCommandTitle}</strong>
+                        <p className={styles.nextCommandHelp}>{copy.nextCommandHelp}</p>
                       </div>
                     </div>
 
