@@ -1493,9 +1493,15 @@ export function AffiliationWorkspace({
         <div className="card-header">
           <div>
             <h3>{affiliation.roleTitle}</h3>
-            <p className="card-support-text">{timelineSnapshot}</p>
-            <p className="card-support-text">{nextEdit}</p>
             <dl className="field-list">
+              <div className="field-row">
+                <dt>{getTimelineSnapshotLabel(locale)}</dt>
+                <dd>{timelineSnapshot}</dd>
+              </div>
+              <div className="field-row">
+                <dt>{getNextUpdateLabel(locale)}</dt>
+                <dd>{nextEdit}</dd>
+              </div>
               <div className="field-row">
                 <dt>{text.institution}</dt>
                 <dd>{institutionSummary}</dd>
@@ -1622,11 +1628,6 @@ export function AffiliationWorkspace({
                 <strong>{getEditingNowLabel(locale)}</strong>
               </p>
             ) : null}
-            <p className="card-support-text">{getAffiliationScanSummary(affiliation, locale)}</p>
-            <p className="card-support-text">{getNextEditSummary(affiliation, locale)}</p>
-            <p className="card-support-text">
-              {joinAffiliationSummary(affiliation) || text.institution}
-            </p>
             <dl className="field-list">
               <div className="field-row">
                 <dt>{text.institution}</dt>

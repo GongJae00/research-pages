@@ -390,8 +390,7 @@ export function HomepageAgentControlSection({
   const nextSetupCommand = setupCommandCards.find((item) => item.kind === nextCommandKind) ?? null;
   const nextSetupCommandTitle = nextSetupCommand?.title ?? copy.nextCommandLabel;
   const setupHeaderSummary = (
-    <div className={styles.setupHeaderSummaryRow}>
-      <span className={styles.setupHeaderSummaryLabel}>{setupFlowLabel}</span>
+    <div className={styles.setupHeaderSummaryRow} aria-label={setupFlowLabel}>
       <div className={styles.setupCompactSummary} aria-label={setupFlowLabel}>
         <div className={styles.setupCompactSummaryItem}>
           <span className={styles.setupCompactSummaryOrdinal}>01</span>
@@ -654,9 +653,46 @@ export function HomepageAgentControlSection({
                     <div className={styles.nextCommandIntro}>
                       <span className={`${styles.setupPickerStep} ${styles.nextCommandStep}`}>03</span>
                       <div className={styles.nextCommandIntroCopy}>
-                        <span className={styles.setupSelectionLeadLabel}>{copy.nextCommandLabel}</span>
-                        <div className={styles.nextCommandTitleRow}>
-                          <strong>{nextSetupCommandTitle}</strong>
+                        <span className={styles.setupSelectionLeadLabel}>{copy.activeSetup}</span>
+                        <div className={styles.nextCommandPath} aria-label={copy.activeSetup}>
+                          <div className={styles.nextCommandPathSegment}>
+                            <span className={styles.nextCommandPathMeta}>{copy.selectedCli}</span>
+                            <strong>{selectedProvider?.label ?? "-"}</strong>
+                            {selectedProvider ? (
+                              <div className={styles.nextCommandLabelRow}>
+                                <span className={styles.nextCommandSelectionPill}>{selectedProvider.cliName}</span>
+                                <span
+                                  className={`${styles.inlineStatusBadge} ${getProviderStatusClass(
+                                    selectedProvider.status,
+                                  )}`}
+                                >
+                                  {selectedProviderStatusLabel}
+                                </span>
+                              </div>
+                            ) : null}
+                          </div>
+                          <span className={styles.nextCommandPathArrow} aria-hidden="true">
+                            &rarr;
+                          </span>
+                          <div className={styles.nextCommandPathSegment}>
+                            <span className={styles.nextCommandPathMeta}>{copy.selectedTeamLabel}</span>
+                            <strong>{selectedTeam?.name ?? "-"}</strong>
+                            {selectedTeam ? (
+                              <div className={styles.nextCommandLabelRow}>
+                                <span className={styles.nextCommandSelectionPill}>{selectedTeam.lane}</span>
+                              </div>
+                            ) : null}
+                          </div>
+                          <span className={styles.nextCommandPathArrow} aria-hidden="true">
+                            &rarr;
+                          </span>
+                          <div className={`${styles.nextCommandPathSegment} ${styles.nextCommandPathSegmentActive}`}>
+                            <span className={styles.nextCommandPathMeta}>{copy.nextCommandLabel}</span>
+                            <strong>{nextSetupCommandTitle}</strong>
+                            <div className={styles.nextCommandLabelRow}>
+                              <span className={styles.nextCommandOutput}>{copy.runCommandLabel}</span>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>

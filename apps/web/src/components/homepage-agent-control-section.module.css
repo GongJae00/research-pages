@@ -1718,8 +1718,10 @@
 }
 
 .setupHeaderSummaryRow {
-  display: grid;
+  display: flex;
+  align-items: center;
   gap: 0.04rem;
+  min-width: 0;
 }
 
 .setupHeaderSummaryLabel {
@@ -1732,11 +1734,22 @@
 }
 
 .setupHeaderSummaryRow .setupCompactSummary {
+  flex: 1 1 auto;
+  gap: 0.03rem;
   margin-top: 0;
 }
 
 .setupHeaderSummaryRow .setupCompactSummaryItem {
-  flex: 1 1 9rem;
+  flex: 1 1 8rem;
+  padding: 0.02rem 0.05rem;
+  border-radius: 8px;
+}
+
+.setupHeaderSummaryRow .setupCompactSummaryOrdinal {
+  width: 0.94rem;
+  height: 0.94rem;
+  flex: 0 0 0.94rem;
+  font-size: 0.5rem;
 }
 
 .setupHeaderActions {
@@ -1920,7 +1933,7 @@
 
 .nextCommandIntroCopy {
   display: grid;
-  gap: 0.04rem;
+  gap: 0.03rem;
   min-width: 0;
 }
 
@@ -1988,7 +2001,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.04rem;
+  gap: 0.03rem;
   width: 100%;
 }
 
@@ -1996,11 +2009,11 @@
   display: grid;
   gap: 0.01rem;
   min-width: 0;
-  padding: 0.07rem 0.1rem;
+  padding: 0.05rem 0.08rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.88);
-  flex: 1 1 7.75rem;
+  flex: 1 1 7.25rem;
 }
 
 .nextCommandPathSegment strong {
@@ -2027,6 +2040,7 @@
 
 .nextCommandPathArrow {
   color: #94a3b8;
+  align-self: center;
   flex: 0 0 auto;
 }
 
@@ -2041,6 +2055,7 @@
   align-items: center;
   gap: 0.06rem;
   flex-wrap: wrap;
+  min-width: 0;
 }
 
 .nextCommandLabelRow .metaLabel {
@@ -2050,13 +2065,13 @@
 .nextCommandOutput {
   display: inline-flex;
   align-items: center;
-  min-height: 1rem;
+  min-height: 0.9rem;
   padding: 0.05rem 0.1rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.9);
   color: #475569;
-  font-size: 0.58rem;
+  font-size: 0.54rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   line-height: 1;
@@ -2066,14 +2081,14 @@
 .nextCommandSelectionPill {
   display: inline-flex;
   align-items: center;
-  min-height: 0.94rem;
+  min-height: 0.86rem;
   max-width: 100%;
   padding: 0.05rem 0.1rem;
   border: 1px solid rgba(203, 213, 225, 0.72);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.9);
   color: #475569;
-  font-size: 0.58rem;
+  font-size: 0.54rem;
   font-weight: 800;
   line-height: 1;
   overflow-wrap: anywhere;
